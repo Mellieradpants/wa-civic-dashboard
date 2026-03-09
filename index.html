@@ -1,13 +1,93 @@
+
 <!DOCTYPE html>
 <html>
+
 <head>
 <title>Washington Civic Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 30px;
+background: #f5f7fb;
+color: #1a1a1a;
+}
+
+h1 {
+margin-bottom: 5px;
+}
+
+p {
+max-width: 700px;
+}
+
+.section-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 16px;
+margin-top: 30px;
+}
+
+.card {
+background: white;
+border-radius: 8px;
+padding: 20px;
+border: 1px solid #ddd;
+font-weight: bold;
+}
+
+.card:hover {
+background: #f0f4ff;
+}
+
+footer {
+margin-top: 60px;
+font-size: 14px;
+color: #555;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
 <h1>Washington Civic Dashboard</h1>
-<p>This site explains Washington legislation, voting information, and public services.</p>
+
+<p>
+Clear explanations of Washington legislation, voting information, and public services.
+</p>
+
+<h2>Main Sections</h2>
+
+<div class="section-grid">
+
+<div class="card">Government & Legislation</div>
+
+<div class="card">Elections & Voting</div>
+
+<div class="card">Education Funding</div>
+
+<div class="card">Public Safety</div>
+
+<div class="card">Transportation</div>
+
+<div class="card">Environment & Parks</div>
+
+<div class="card">National Guard Updates</div>
+
+<div class="card">Public Programs</div>
+
+</div>
+
+<footer>
+Washington Civic Dashboard — public information project
+</footer>
 
 </body>
+
 </html>
