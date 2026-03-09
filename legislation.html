@@ -2,217 +2,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Washington Legislative Analysis</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington State Legislative Language Analyzer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f3f8f4;
+      color: #1b2b1d;
+    }
 
-<style>
+    header {
+      background: #1f7a4d;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
 
-body{
-font-family: Arial, sans-serif;
-margin:0;
-background:#f3f8f4;
-color:#1b2b1d;
-}
+    main {
+      max-width: 1150px;
+      margin: auto;
+      padding: 2rem;
+    }
 
-header{
-background:#1f7a4d;
-color:white;
-padding:2rem;
-text-align:center;
-}
+    .section {
+      background: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
-main{
-max-width:1100px;
-margin:auto;
-padding:2rem;
-}
+    h2 {
+      margin-top: 0;
+      color: #1f7a4d;
+    }
 
-.section{
-background:white;
-padding:1.5rem;
-margin-bottom:1.5rem;
-border-radius:10px;
-box-shadow:0 4px 12px rgba(0,0,0,0.08);
-}
+    h3 {
+      margin-bottom: 0.5rem;
+      color: #1f7a4d;
+    }
 
-h2{
-margin-top:0;
-color:#1f7a4d;
-}
+    .note {
+      color: #4b5e4d;
+      font-size: 0.95rem;
+    }
 
-.note{
-color:#4b5e4d;
-font-size:0.95rem;
-}
+    a {
+      color: #1f7a4d;
+      text-decoration: none;
+      font-weight: 600;
+    }
 
-a{
-color:#1f7a4d;
-text-decoration:none;
-font-weight:600;
-}
+    a:hover {
+      text-decoration: underline;
+    }
 
-a:hover{
-text-decoration:underline;
-}
+    .bill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:1rem;
-}
+    .bill-card {
+      border: 1px solid #d9e8dd;
+      background: #f8fcf9;
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
 
-th,td{
-padding:12px;
-border-bottom:1px solid #e0e6e2;
-text-align:left;
-}
+    .bill-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      border-color: #1f7a4d;
+    }
 
-th{
-background:#e8f3ec;
-}
+    .bill-card.active {
+      border: 2px solid #1f7a4d;
+      background: #eef8f1;
+    }
 
-tr:hover{
-background:#f6fbf8;
-}
+    .bill-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #1f7a4d;
+    }
 
-footer{
-text-align:center;
-padding:1.5rem;
-color:#5a6b5d;
-font-size:0.9rem;
-}
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
 
-</style>
+    .analysis-box {
+      background: #f8fcf9;
+      border: 1px solid #d9e8dd;
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    ul.tool-list {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: #5a6b5d;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 800px) {
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>Washington State Legislative Language Analyzer</h1>
-<p>Plain-language interpretation of legislative changes</p>
-</header>
+  <header>
+    <h1>Washington State Legislative Language Analyzer</h1>
+    <p>Plain-language interpretation of legislative changes</p>
+  </header>
 
-<main>
+  <main>
+    <div class="section">
+      <h2>Language Analysis</h2>
+      <p class="note">
+        Click a bill card below to update this panel.
+      </p>
 
-<div class="section">
+      <div class="analysis-grid">
+        <div class="analysis-box">
+          <h3 id="analysisBill">HB 1132</h3>
+          <p><strong>Topic:</strong> <span id="analysisTopic">Public safety</span></p>
+          <p><strong>Detected change:</strong> <span id="analysisChange">Language indicates expanded procedural requirements and notice conditions.</span></p>
+          <p><strong>Operational effect:</strong> <span id="analysisEffect">Agencies or covered actors may have additional compliance steps before action can proceed.</span></p>
+        </div>
 
-<h2>Language Analysis</h2>
+        <div class="analysis-box">
+          <h3>Impact Summary</h3>
+          <p><strong>Authority shift:</strong> <span id="analysisAuthority">Moderate procedural constraint added.</span></p>
+          <p><strong>Scope effect:</strong> <span id="analysisScope">Applies to a broader set of situations than the earlier baseline.</span></p>
+          <p><strong>Official bill page:</strong> <a id="analysisLink" href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">Open official page</a></p>
+        </div>
+      </div>
+    </div>
 
-<p class="note">
-This section will display automated explanations of legislative language
-changes and their operational effects.
-</p>
+    <div class="section">
+      <h2>Bill Tracker</h2>
+      <p class="note">
+        These cards should stay on this page and update the analysis section above.
+      </p>
 
-<p class="note">
-The system will analyze bill text, amendments, and revisions to explain
-how legal wording changes affect real-world rules, authority, and obligations.
-</p>
+      <div class="bill-grid">
+        <div class="bill-card active"
+             data-bill="HB 1132"
+             data-topic="Public safety"
+             data-change="Language indicates expanded procedural requirements and notice conditions."
+             data-effect="Agencies or covered actors may have additional compliance steps before action can proceed."
+             data-authority="Moderate procedural constraint added."
+             data-scope="Applies to a broader set of situations than the earlier baseline."
+             data-link="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025">
+          <div class="bill-label">HB 1132</div>
+          <div>Public safety</div>
+        </div>
 
-</div>
+        <div class="bill-card"
+             data-bill="HB 1730"
+             data-topic="Aeronautics account"
+             data-change="Funding and allocation language appears to refine where resources may be directed."
+             data-effect="Administrative handling of aeronautics-related funds may become more specific or restricted."
+             data-authority="Allocation rules clarified."
+             data-scope="Narrower financial handling conditions."
+             data-link="https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025">
+          <div class="bill-label">HB 1730</div>
+          <div>Aeronautics account</div>
+        </div>
 
-<div class="section">
+        <div class="bill-card"
+             data-bill="SB 5853"
+             data-topic="Political violence notification"
+             data-change="Notification duties appear to be made more explicit for certain reporting situations."
+             data-effect="Covered parties may face clearer or more mandatory reporting expectations."
+             data-authority="Notification obligations strengthened."
+             data-scope="Additional reporting scenarios may now be included."
+             data-link="https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025">
+          <div class="bill-label">SB 5853</div>
+          <div>Political violence notification</div>
+        </div>
+      </div>
+    </div>
 
-<h2>Bill Tracker</h2>
+    <div class="section">
+      <h2>Official Washington Legislature Tools</h2>
+      <ul class="tool-list">
+        <li><a href="https://app.leg.wa.gov/billsummary/" target="_blank">Bill Summary Search</a></li>
+        <li><a href="https://leg.wa.gov/search/" target="_blank">LegSearch</a></li>
+        <li><a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank">Bills by Topic</a></li>
+        <li><a href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank">How to Track a Bill</a></li>
+      </ul>
+      <p class="note">
+        These links go directly to the official Washington State Legislature resources.
+      </p>
+    </div>
+  </main>
 
-<table>
+  <footer>
+    Washington prototype state example
+  </footer>
 
-<thead>
-<tr>
-<th>Bill</th>
-<th>Topic</th>
-<th>Status</th>
-<th>Official Page</th>
-</tr>
-</thead>
+  <script>
+    const cards = document.querySelectorAll('.bill-card');
 
-<tbody>
+    const analysisBill = document.getElementById('analysisBill');
+    const analysisTopic = document.getElementById('analysisTopic');
+    const analysisChange = document.getElementById('analysisChange');
+    const analysisEffect = document.getElementById('analysisEffect');
+    const analysisAuthority = document.getElementById('analysisAuthority');
+    const analysisScope = document.getElementById('analysisScope');
+    const analysisLink = document.getElementById('analysisLink');
 
-<tr>
-<td>HB 1132</td>
-<td>Public safety</td>
-<td>Track on official site</td>
-<td>
-<a href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">
-Open
-</a>
-</td>
-</tr>
+    cards.forEach(card => {
+      card.addEventListener('click', function () {
+        cards.forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
 
-<tr>
-<td>HB 1730</td>
-<td>Aeronautics account</td>
-<td>Track on official site</td>
-<td>
-<a href="https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025" target="_blank">
-Open
-</a>
-</td>
-</tr>
-
-<tr>
-<td>SB 5853</td>
-<td>Political violence notification</td>
-<td>Track on official site</td>
-<td>
-<a href="https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025" target="_blank">
-Open
-</a>
-</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>Official Washington Legislature Tools</h2>
-
-<ul>
-
-<li>
-<a href="https://app.leg.wa.gov/billsummary/" target="_blank">
-Bill Summary Search
-</a>
-</li>
-
-<li>
-<a href="https://leg.wa.gov/search/" target="_blank">
-LegSearch
-</a>
-</li>
-
-<li>
-<a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank">
-Bills by Topic
-</a>
-</li>
-
-<li>
-<a href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank">
-How to Track a Bill
-</a>
-</li>
-
-</ul>
-
-<p class="note">
-All legislative data originates from official Washington State Legislature resources.
-</p>
-
-</div>
-
-</main>
-
-<footer>
-Washington Civic Legislative Prototype
-</footer>
+        analysisBill.textContent = this.dataset.bill;
+        analysisTopic.textContent = this.dataset.topic;
+        analysisChange.textContent = this.dataset.change;
+        analysisEffect.textContent = this.dataset.effect;
+        analysisAuthority.textContent = this.dataset.authority;
+        analysisScope.textContent = this.dataset.scope;
+        analysisLink.href = this.dataset.link;
+      });
+    });
+  </script>
 
 </body>
 </html>
-    
-  
-  
