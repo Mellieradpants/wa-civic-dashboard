@@ -1,23 +1,112 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Washington Civic Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington Civic Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f7fb;
+      color: #222;
+    }
+
+    header {
+      background: #1f4d7a;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #1f4d7a;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1>Washington Civic Dashboard</h1>
+    <p>Track voting information and legislation in one place.</p>
+  </header>
 
-<h1>Washington Civic Dashboard</h1>
+  <main>
+    <section class="intro">
+      <p>
+        This dashboard is a simple public-facing starting point for Washington civic information.
+        Choose a section below.
+      </p>
+    </section>
 
-<p>Public information and civic updates for Washington State.</p>
+    <section class="card-grid">
+      <a class="card-link" href="voting.html">
+        <div class="card">
+          <h2>Voting</h2>
+          <p>
+            View voting-related information, election resources, and participation tools.
+          </p>
+        </div>
+      </a>
 
-<h2>Sections</h2>
+      <a class="card-link" href="legislation.html">
+        <div class="card">
+          <h2>Legislation</h2>
+          <p>
+            Explore legislation tracking, bill summaries, and public policy navigation.
+          </p>
+        </div>
+      </a>
+    </section>
+  </main>
 
-<ul>
-<a href="/wa-civic-dashboard/legislation.html">Government & Legislation</a>
-<a href="/wa-civic-dashboard/voting.html">Elections & Voting</a>
-</ul>
-
+  <footer>
+    <p>Washington Civic Dashboard</p>
+  </footer>
 </body>
 </html>
