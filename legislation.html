@@ -106,6 +106,11 @@
       padding: 1rem;
     }
 
+    .analysis-box p {
+      margin: 0.65rem 0;
+      line-height: 1.45;
+    }
+
     ul.tool-list {
       margin: 0;
       padding-left: 1.2rem;
@@ -143,12 +148,16 @@
         <div class="analysis-box">
           <h3 id="analysisBill">HB 1132</h3>
           <p><strong>Topic:</strong> <span id="analysisTopic">Public safety</span></p>
-          <p><strong>Detected change:</strong> <span id="analysisChange">Language indicates expanded procedural requirements and notice conditions.</span></p>
-          <p><strong>Operational effect:</strong> <span id="analysisEffect">Agencies or covered actors may have additional compliance steps before action can proceed.</span></p>
+          <p><strong>What the bill is about:</strong> <span id="analysisAbout">This bill focuses on public safety reporting and response requirements.</span></p>
+          <p><strong>Plain language meaning:</strong> <span id="analysisPlain">It adds clearer rules about what must be reported and how people must respond.</span></p>
+          <p><strong>Who it affects:</strong> <span id="analysisWho">Public agencies, law enforcement, and groups responsible for reporting incidents.</span></p>
+          <p><strong>What it means for them:</strong> <span id="analysisForThem">They may have to follow more steps, report incidents more clearly, and adjust their procedures.</span></p>
         </div>
 
         <div class="analysis-box">
-          <h3>Impact Summary</h3>
+          <h3>Structural Analysis</h3>
+          <p><strong>Detected change:</strong> <span id="analysisChange">Language indicates expanded procedural requirements and notice conditions.</span></p>
+          <p><strong>Operational effect:</strong> <span id="analysisEffect">Agencies or covered actors may have additional compliance steps before action can proceed.</span></p>
           <p><strong>Authority shift:</strong> <span id="analysisAuthority">Moderate procedural constraint added.</span></p>
           <p><strong>Scope effect:</strong> <span id="analysisScope">Applies to a broader set of situations than the earlier baseline.</span></p>
           <p><strong>Official bill page:</strong> <a id="analysisLink" href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">Open official page</a></p>
@@ -159,13 +168,17 @@
     <div class="section">
       <h2>Bill Tracker</h2>
       <p class="note">
-        These cards should stay on this page and update the analysis section above.
+        These cards stay on this page and update the analysis section above.
       </p>
 
       <div class="bill-grid">
         <div class="bill-card active"
              data-bill="HB 1132"
              data-topic="Public safety"
+             data-about="This bill focuses on public safety reporting and response requirements."
+             data-plain="It adds clearer rules about what must be reported and how people must respond."
+             data-who="Public agencies, law enforcement, and groups responsible for reporting incidents."
+             data-forthem="They may have to follow more steps, report incidents more clearly, and adjust their procedures."
              data-change="Language indicates expanded procedural requirements and notice conditions."
              data-effect="Agencies or covered actors may have additional compliance steps before action can proceed."
              data-authority="Moderate procedural constraint added."
@@ -178,6 +191,10 @@
         <div class="bill-card"
              data-bill="HB 1730"
              data-topic="Aeronautics account"
+             data-about="This bill deals with rules for how aeronautics account money can be used."
+             data-plain="It sets clearer limits or directions for aviation-related spending."
+             data-who="State agencies, transportation programs, and groups tied to aviation funding."
+             data-forthem="They may need to change how they plan projects or use money from this account."
              data-change="Funding and allocation language appears to refine where resources may be directed."
              data-effect="Administrative handling of aeronautics-related funds may become more specific or restricted."
              data-authority="Allocation rules clarified."
@@ -190,6 +207,10 @@
         <div class="bill-card"
              data-bill="SB 5853"
              data-topic="Political violence notification"
+             data-about="This bill deals with reporting and notification rules related to political violence."
+             data-plain="It makes the reporting process clearer and may require reports in more situations."
+             data-who="Law enforcement, reporting agencies, and organizations covered by the rule."
+             data-forthem="They may have to report incidents more often and follow clearer reporting rules."
              data-change="Notification duties appear to be made more explicit for certain reporting situations."
              data-effect="Covered parties may face clearer or more mandatory reporting expectations."
              data-authority="Notification obligations strengthened."
@@ -224,6 +245,10 @@
 
     const analysisBill = document.getElementById('analysisBill');
     const analysisTopic = document.getElementById('analysisTopic');
+    const analysisAbout = document.getElementById('analysisAbout');
+    const analysisPlain = document.getElementById('analysisPlain');
+    const analysisWho = document.getElementById('analysisWho');
+    const analysisForThem = document.getElementById('analysisForThem');
     const analysisChange = document.getElementById('analysisChange');
     const analysisEffect = document.getElementById('analysisEffect');
     const analysisAuthority = document.getElementById('analysisAuthority');
@@ -237,6 +262,10 @@
 
         analysisBill.textContent = this.dataset.bill;
         analysisTopic.textContent = this.dataset.topic;
+        analysisAbout.textContent = this.dataset.about;
+        analysisPlain.textContent = this.dataset.plain;
+        analysisWho.textContent = this.dataset.who;
+        analysisForThem.textContent = this.dataset.forthem;
         analysisChange.textContent = this.dataset.change;
         analysisEffect.textContent = this.dataset.effect;
         analysisAuthority.textContent = this.dataset.authority;
