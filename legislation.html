@@ -2,137 +2,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Washington Legislation</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f7fb;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Washington Legislative Analysis</title>
 
-    header {
-      background: #1f4d7a;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
+<style>
 
-    main {
-      max-width: 1000px;
-      margin: auto;
-      padding: 2rem;
-    }
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#f3f8f4;
+color:#1b2b1d;
+}
 
-    .section {
-      background: white;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    }
+header{
+background:#1f7a4d;
+color:white;
+padding:2rem;
+text-align:center;
+}
 
-    h2 {
-      margin-top: 0;
-      color: #1f4d7a;
-    }
+main{
+max-width:1100px;
+margin:auto;
+padding:2rem;
+}
 
-    a {
-      color: #1f4d7a;
-      text-decoration: none;
-    }
+.section{
+background:white;
+padding:1.5rem;
+margin-bottom:1.5rem;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
 
-    a:hover {
-      text-decoration: underline;
-    }
+h2{
+margin-top:0;
+color:#1f7a4d;
+}
 
-    ul {
-      padding-left: 1.2rem;
-    }
+.note{
+color:#4b5e4d;
+font-size:0.95rem;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      background: white;
-    }
+a{
+color:#1f7a4d;
+text-decoration:none;
+font-weight:600;
+}
 
-    th, td {
-      text-align: left;
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-    }
+a:hover{
+text-decoration:underline;
+}
 
-    th {
-      background: #eef2f7;
-    }
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:1rem;
+}
 
-    .note {
-      color: #555;
-      font-size: 0.95rem;
-    }
-  </style>
+th,td{
+padding:12px;
+border-bottom:1px solid #e0e6e2;
+text-align:left;
+}
+
+th{
+background:#e8f3ec;
+}
+
+tr:hover{
+background:#f6fbf8;
+}
+
+footer{
+text-align:center;
+padding:1.5rem;
+color:#5a6b5d;
+font-size:0.9rem;
+}
+
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>Washington Legislation</h1>
-    <p>Official bill lookup and tracking resources</p>
-  </header>
+<header>
+<h1>Washington Legislative Language Analyzer</h1>
+<p>Plain-language interpretation of legislative changes</p>
+</header>
 
-  <main>
-    <div class="section">
-      <h2>Official Washington Legislature Tools</h2>
-      <ul>
-        <li><a href="https://app.leg.wa.gov/billsummary/" target="_blank">Bill Summary Search</a></li>
-        <li><a href="https://leg.wa.gov/search/" target="_blank">LegSearch</a></li>
-        <li><a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank">Bills by Topic</a></li>
-        <li><a href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank">How to Track a Bill</a></li>
-      </ul>
-      <p class="note">
-        These links go to official Washington Legislature resources.
-      </p>
-    </div>
+<main>
 
-    <div class="section">
-      <h2>Prototype Bill Tracker</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Bill</th>
-            <th>Topic</th>
-            <th>Status</th>
-            <th>Link</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>HB 1132</td>
-            <td>Public safety</td>
-            <td>Track on official site</td>
-            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">Open</a></td>
-          </tr>
-          <tr>
-            <td>HB 1730</td>
-            <td>Aeronautics account</td>
-            <td>Track on official site</td>
-            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025" target="_blank">Open</a></td>
-          </tr>
-          <tr>
-            <td>SB 5853</td>
-            <td>Political violence notification</td>
-            <td>Track on official site</td>
-            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025" target="_blank">Open</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
+<div class="section">
+
+<h2>Language Analysis</h2>
+
+<p class="note">
+This section will display automated explanations of legislative language
+changes and their operational effects.
+</p>
+
+<p class="note">
+The system will analyze bill text, amendments, and revisions to explain
+how legal wording changes affect real-world rules, authority, and obligations.
+</p>
+
+</div>
+
+<div class="section">
+
+<h2>Bill Tracker</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Bill</th>
+<th>Topic</th>
+<th>Status</th>
+<th>Official Page</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>HB 1132</td>
+<td>Public safety</td>
+<td>Track on official site</td>
+<td>
+<a href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">
+Open
+</a>
+</td>
+</tr>
+
+<tr>
+<td>HB 1730</td>
+<td>Aeronautics account</td>
+<td>Track on official site</td>
+<td>
+<a href="https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025" target="_blank">
+Open
+</a>
+</td>
+</tr>
+
+<tr>
+<td>SB 5853</td>
+<td>Political violence notification</td>
+<td>Track on official site</td>
+<td>
+<a href="https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025" target="_blank">
+Open
+</a>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Official Washington Legislature Tools</h2>
+
+<ul>
+
+<li>
+<a href="https://app.leg.wa.gov/billsummary/" target="_blank">
+Bill Summary Search
+</a>
+</li>
+
+<li>
+<a href="https://leg.wa.gov/search/" target="_blank">
+LegSearch
+</a>
+</li>
+
+<li>
+<a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank">
+Bills by Topic
+</a>
+</li>
+
+<li>
+<a href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank">
+How to Track a Bill
+</a>
+</li>
+
+</ul>
+
+<p class="note">
+All legislative data originates from official Washington State Legislature resources.
+</p>
+
+</div>
+
+</main>
+
+<footer>
+Washington Civic Legislative Prototype
+</footer>
 
 </body>
-</html>   
-       
+</html>
     
-   
+  
+  
