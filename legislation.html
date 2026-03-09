@@ -1,11 +1,10 @@
 
-        
-      <!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Washington Legislation Tracker</title>
+  <title>Washington Legislation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,219 +21,140 @@
     }
 
     main {
-      max-width: 1100px;
+      max-width: 1000px;
       margin: auto;
       padding: 2rem;
     }
 
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
+    .section {
+      background: white;
+      padding: 1.5rem;
       margin-bottom: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
+    h2 {
+      margin-top: 0;
+      color: #1f4d7a;
     }
 
-    select, button {
-      padding: 10px 12px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #c9d3df;
+    a {
+      color: #1f4d7a;
+      text-decoration: none;
     }
 
-    button {
-      background: #1f4d7a;
-      color: white;
-      cursor: pointer;
-      border: none;
+    a:hover {
+      text-decoration: underline;
     }
 
-    button:hover {
-      opacity: 0.95;
-    }
-
-    .status {
-      margin: 0 0 1rem 0;
-      color: #555;
+    ul {
+      padding-left: 1.2rem;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      border-radius: 10px;
-      overflow: hidden;
+      margin-top: 1rem;
     }
 
     th, td {
-      padding: 12px;
-      border-bottom: 1px solid #e5e9ef;
       text-align: left;
-      vertical-align: top;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
     }
 
     th {
       background: #eef2f7;
     }
 
-    tr:hover {
-      background: #f8fbff;
-    }
-
-    .small {
-      font-size: 0.92rem;
-      color: #666;
-    }
-
-    .bill-link {
-      color: #1f4d7a;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .bill-link:hover {
-      text-decoration: underline;
+    .note {
+      color: #555;
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>Washington Legislation Tracker</h1>
-    <p>Live bill list from official Washington Legislature data</p>
+    <h1>Washington Legislation</h1>
+    <p>Official bill lookup and tracking resources</p>
   </header>
 
   <main>
-    <div class="topbar">
-      <div>
-        <h2 style="margin:0;">Bills</h2>
-        <p class="small" style="margin:6px 0 0 0;">
-          Source: Washington State Legislature web services
-        </p>
-      </div>
-
-      <div class="controls">
-        <label for="yearSelect">Year</label>
-        <select id="yearSelect">
-          <option value="2026" selected>2026</option>
-          <option value="2025">2025</option>
-        </select>
-        <button id="loadBtn">Load bills</button>
-      </div>
+    <div class="section">
+      <h2>Official Washington Legislature Tools</h2>
+      <ul>
+        <li><a href="https://app.leg.wa.gov/billsummary/" target="_blank">Bill Summary Search</a></li>
+        <li><a href="https://leg.wa.gov/search/" target="_blank">LegSearch</a></li>
+        <li><a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank">Bills by Topic</a></li>
+        <li><a href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank">How to Track a Bill</a></li>
+        <li><a href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/bill-tracking-with-rss-feeds/" target="_blank">Bill Tracking RSS Feeds</a></li>
+      </ul>
+      <p class="note">
+        These links go to official Washington Legislature resources.
+      </p>
     </div>
 
-    <p class="status" id="statusText">Loading bill data...</p>
+    <div class="section">
+      <h2>Quick Bill Examples</h2>
+      <ul>
+        <li><a href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">HB 1132</a></li>
+        <li><a href="https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025" target="_blank">HB 1730</a></li>
+        <li><a href="https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025" target="_blank">SB 5853</a></li>
+        <li><a href="https://app.leg.wa.gov/billsummary?BillNumber=5974&Year=2025" target="_blank">SB 5974</a></li>
+      </ul>
+    </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Bill</th>
-          <th>Type</th>
-          <th>Origin</th>
-          <th>Biennium</th>
-          <th>Active</th>
-        </tr>
-      </thead>
-      <tbody id="billTableBody">
-        <tr>
-          <td colspan="5">Loading...</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="section">
+      <h2>Prototype Bill Tracker</h2>
+      <p class="note">
+        This section is a manual prototype for now. Later, it can be upgraded to auto-load data through a backend or build step.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Bill</th>
+            <th>Topic</th>
+            <th>Status</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>HB 1132</td>
+            <td>Public safety</td>
+            <td>Track on official site</td>
+            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank">Open</a></td>
+          </tr>
+          <tr>
+            <td>HB 1730</td>
+            <td>Aeronautics account</td>
+            <td>Track on official site</td>
+            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025" target="_blank">Open</a></td>
+          </tr>
+          <tr>
+            <td>SB 5853</td>
+            <td>Political violence notification</td>
+            <td>Track on official site</td>
+            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025" target="_blank">Open</a></td>
+          </tr>
+          <tr>
+            <td>SB 5974</td>
+            <td>Law enforcement modernization</td>
+            <td>Track on official site</td>
+            <td><a href="https://app.leg.wa.gov/billsummary?BillNumber=5974&Year=2025" target="_blank">Open</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
 
-  <script>
-    const statusText = document.getElementById("statusText");
-    const billTableBody = document.getElementById("billTableBody");
-    const loadBtn = document.getElementById("loadBtn");
-    const yearSelect = document.getElementById("yearSelect");
-
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    async function loadBills() {
-      const year = yearSelect.value;
-      const url = `https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByYear?year=${year}`;
-
-      statusText.textContent = `Loading official bill data for ${year}...`;
-      billTableBody.innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        const xmlText = await response.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-
-        const items = Array.from(xml.getElementsByTagName("LegislationInfo"));
-
-        if (!items.length) {
-          billTableBody.innerHTML = `<tr><td colspan="5">No bills found.</td></tr>`;
-          statusText.textContent = `No bill records returned for ${year}.`;
-          return;
-        }
-
-        const rows = items.slice(0, 100).map(item => {
-          const displayNumber = item.getElementsByTagName("DisplayNumber")[0]?.textContent?.trim() || "Unknown";
-          const originalAgency = item.getElementsByTagName("OriginalAgency")[0]?.textContent?.trim() || "";
-          const biennium = item.getElementsByTagName("Biennium")[0]?.textContent?.trim() || "";
-          const active = item.getElementsByTagName("Active")[0]?.textContent?.trim() || "";
-          const longType = item.getElementsByTagName("LongLegislationType")[0]?.textContent?.trim() || "";
-          const billNumber = item.getElementsByTagName("BillNumber")[0]?.textContent?.trim() || "";
-
-          const summaryUrl = billNumber
-            ? `https://app.leg.wa.gov/billsummary?BillNumber=${encodeURIComponent(billNumber)}&Year=${encodeURIComponent(year)}`
-            : "#";
-
-          return `
-            <tr>
-              <td>
-                <a class="bill-link" href="${summaryUrl}" target="_blank" rel="noopener noreferrer">
-                  ${escapeHtml(displayNumber)}
-                </a>
-              </td>
-              <td>${escapeHtml(longType || "—")}</td>
-              <td>${escapeHtml(originalAgency || "—")}</td>
-              <td>${escapeHtml(biennium || "—")}</td>
-              <td>${escapeHtml(active || "—")}</td>
-            </tr>
-          `;
-        }).join("");
-
-        billTableBody.innerHTML = rows;
-        statusText.textContent = `Showing first 100 bills returned for ${year}.`;
-      } catch (error) {
-        billTableBody.innerHTML = `
-          <tr>
-            <td colspan="5">Could not load live data in the browser.</td>
-          </tr>
-        `;
-        statusText.textContent = `Load failed: ${error.message}`;
-      }
-    }
-
-    loadBtn.addEventListener("click", loadBills);
-    loadBills();
-  </script>
 </body>
-</html> 
+</html>
+    
   
-
-  
+        
+    
+   
