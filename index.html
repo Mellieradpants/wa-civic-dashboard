@@ -327,23 +327,12 @@
 
     <!-- ===== MAIN DASHBOARD ===== -->
     <main class="grid">
-<!-- ===== MEDIA / SOCIAL SIGNAL ===== -->
-<section class="panel" id="media-signal">
-  <h2>Media / Social Signal</h2>
-  <p class="section-note">
-    Start with what you already know. Enter a bill number or a few keywords to identify the bill people are talking about.
-  </p>
 
-  <label for="billSignal">Bill number or keywords</label>
-  <input
-    type="text"
-    id="billSignal"
-    placeholder="Example: HB 1234 or school funding"
+
+  
   />
 
-  <div class="button-row">
-    <button class="primary" type="button">Find Bill</button>
-  </div>
+  
 </section>
       <!-- ===== SEARCH A BILL ===== -->
       <section class="panel" id="follow-bill">
@@ -352,17 +341,16 @@
           Enter a Washington bill number to open official Washington Legislature pages.
         </p>
 
-        <label for="billNumber">Bill number</label>
+        ><label for="billNumber">Bill number or keyword</label>
         <input
           type="text"
           id="billNumber"
           placeholder="Example: HB 1234 or SB 5678"
         />
-
-        <div class="button-row">
-          <button class="primary" id="openBillPageBtn" type="button">Open Bill Page</button>
-          <button class="secondary" id="fillFromTextBtn" type="button">Detect from Text</button>
-        </div>
+<div class="button-row">
+  <button class="primary" id="openBillPageBtn" type="button">Search Bill or Keyword</button>
+</div>
+        
 
         <div class="follow-actions">
           <div class="follow-card">
