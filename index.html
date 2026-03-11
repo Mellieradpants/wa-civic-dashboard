@@ -327,7 +327,24 @@
 
     <!-- ===== MAIN DASHBOARD ===== -->
     <main class="grid">
+<!-- ===== MEDIA / SOCIAL SIGNAL ===== -->
+<section class="panel" id="media-signal">
+  <h2>Media / Social Signal</h2>
+  <p class="section-note">
+    Start with what you already know. Enter a bill number or a few keywords to identify the bill people are talking about.
+  </p>
 
+  <label for="billSignal">Bill number or keywords</label>
+  <input
+    type="text"
+    id="billSignal"
+    placeholder="Example: HB 1234 or school funding"
+  />
+
+  <div class="button-row">
+    <button class="primary" type="button">Find Bill</button>
+  </div>
+</section>
       <!-- ===== SEARCH A BILL ===== -->
       <section class="panel" id="follow-bill">
         <h2>Search a Bill</h2>
@@ -392,11 +409,7 @@
           <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
           <button class="secondary" id="clearBtn" type="button">Clear</button>
         </div>
-<section class>
 
-</section>
-       
-</section>
         <h3>Plain-Language Translation</h3>
         <div class="output-box" id="translationOutput">Plain-Language Summary
 Output will appear here.
