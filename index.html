@@ -788,22 +788,19 @@ Source anchor
     updateTetherPanel("", "");
   });
 
-  openBillPageBtn.addEventListener("click", () => {
-    const query = normalizeSpaces(billNumberInput.value);
+  openBillPageBtn.addEventListener("click", (event) => {
+  event.preventDefault();
 
-    if (!query) {
-      alert("Enter a bill number or keyword first.");
-      return;
-    }
+  const query = billNumberInput.value.trim();
 
-    updateBillLinks(query);
-    window.open(buildSearchUrl(query), "_blank", "noopener,noreferrer");
-  });
+  if (!query) {
+    alert("Enter a bill number or keyword first.");
+    return;
+  }
 
-  billNumberInput.addEventListener("input", (event) => {
-    updateBillLinks(event.target.value);
-  });
-
+  const url = "https://leg.wa.gov/bills-meetings-and-session/bills/?q=" + encodeURIComponent(query);
+  window.location.href = url;
+});
   translationOutput.textContent = getDefaultTranslationText();
   updateBillLinks("");
   updateTetherPanel("", "");
