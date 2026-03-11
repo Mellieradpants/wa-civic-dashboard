@@ -341,12 +341,12 @@
           Enter a Washington bill number to open official Washington Legislature pages.
         </p>
 
-        ><label for="billNumber">Bill number or keyword</label>
-        <input
-          type="text"
-          id="billNumber"
-          placeholder="Example: HB 1234 or SB 5678"
-        />
+  <label for="billNumber">Bill number or keyword</label>
+<input
+  type="text"
+  id="billNumber"
+  placeholder="Example: HB 1234 or housing"
+/>      
 <div class="button-row">
   <button class="primary" id="openBillPageBtn" type="button">Search Bill or Keyword</button>
 </div>
@@ -806,18 +806,23 @@ Source anchor
         alert("No Washington bill number was detected in the pasted text.");
       }
     });
+openBillPageBtn.addEventListener("click", () => {
+  const query = billNumberInput.value.trim();
 
-    openBillPageBtn.addEventListener("click", () => {
-      const billNumber = billNumberInput.value.trim();
+  if (!query) {
+    alert("Enter a bill number or keyword first.");
+    return;
+  }
 
-      if (!billNumber) {
-        alert("Enter a bill number first.");
-        return;
-      }
+  updateBillLinks(query);
 
-      updateBillLinks(billNumber);
-      window.open(summaryLink.href, "_blank", "noopener,noreferrer");
-    });
+  if (isBillNumber(query)) {
+    window.open(summaryLink.href, "_blank", "noopener,noreferrer");
+  } else {
+    window.open(searchLink.href, "_blank", "noopener,noreferrer");
+  }
+});
+   
 
     billNumberInput.addEventListener("input", (event) => {
       updateBillLinks(event.target.value);
