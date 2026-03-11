@@ -363,32 +363,7 @@
 
 </section>
     <main class="grid">
-      <section class="panel" id="follow-bill">
-
-  <h2>Search a Bill</h2>
-
-  <p class="section-note">
-  Enter a Washington bill number to open official Washington Legislature pages.
-  </p>
-
-  <label for="billNumber">Bill number</label>
-
-  <input
-    type="text"
-    id="billNumber"
-    placeholder="Example: HB 1234 or SB 5678"
-  />
-
-  <div class="button-row">
-    <button class="primary" id="openBillPageBtn">
-      Open Bill Page
-    </button>
-
-    <button class="secondary" id="fillFromTextBtn">
-      Try Detecting Bill Number
-    </button>
-  </div>
-
+    
 </section>
       <section class="panel" id="translator">
         <h2>Bill Translator</h2>
@@ -477,7 +452,7 @@ When you are ready, this box can be connected to your real structural translatio
 
         <div class="resource-columns">
           <div class="resource-group">
-            <h3>Voter access</h3>
+            <h3>Voter access</h3>k
             <ul class="resource-list">
               <li>
                 <a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">
