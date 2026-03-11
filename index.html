@@ -345,7 +345,7 @@
   type="text"
   id="billNumber"
   placeholder="Example: HB 1234 or housing"
-/> <button class="primary" id="openBillPageBtn" type="button">Search Bill or Keyword</button>     
+/> <button class="primary" id="" type="button">Search Bill or Keyword</button>     
 <div class="button-row">
  
         
@@ -558,7 +558,7 @@ Source anchor
     const billText = document.getElementById("billText");
     const translationOutput = document.getElementById("translationOutput");
     const billNumberInput = document.getElementById("billNumber");
-    const openBillPageBtn = document.getElementById("openBillPageBtn");
+    const  = document.getElementById("");
     const fillFromTextBtn = document.getElementById("fillFromTextBtn");
     const summaryLink = document.getElementById("summaryLink");
     const searchLink = document.getElementById("searchLink");
@@ -782,8 +782,8 @@ async function resolveAndAnalyzeBill(query) {
     return;
   }
 
-  openBillPageBtn.disabled = true;
-  openBillPageBtn.textContent = "Searching...";
+  .disabled = true;
+  .textContent = "Searching...";
 
   try {
     const billData = await fetchBillText(clean);
@@ -806,8 +806,8 @@ async function resolveAndAnalyzeBill(query) {
     console.error(error);
     alert("Could not retrieve bill text yet.");
   } finally {
-    openBillPageBtn.disabled = false;
-    openBillPageBtn.textContent = "Search Bill or Keyword";
+    .disabled = false;
+    .textContent = "Search Bill or Keyword";
   }
 }
     translateBtn.addEventListener("click", () => {
@@ -859,27 +859,7 @@ Source anchor
         alert("No Washington bill number was detected in the pasted text.");
       }
     });
-openBillPageBtn.addEventListener("click", () => {
-
-  const query = billNumberInput.value.trim();
-
-  if (!query) {
-    alert("Enter a bill number or keyword first.");
-    return;
-  }
-
-  const encoded = encodeURIComponent(query);
-
-  const searchURL =
-    "https://leg.wa.gov/bills-meetings-and-session/bills/?q=" + encoded;
-
-  window.open(searchURL, "_blank", "noopener,noreferrer");
-
-});
-    billNumberInput.addEventListener("input", (event) => {
-      updateBillLinks(event.target.value);
-    });
-
+openBillPageBtn.addEventListener("click", 
     updateBillLinks("");
     updateTetherPanel("", "");
   </script>
