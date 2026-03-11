@@ -345,7 +345,14 @@
   type="text"
   id="billNumber"
   placeholder="Example: HB 1234 or housing"
-/> <button class="primary" id="" type="button">Search Bill or Keyword</button>     
+/>   <button
+  class="primary"
+  id="openBillPageBtn"
+  type="button"
+  onclick="window.location.href='https://leg.wa.gov/bills-meetings-and-session/bills/?q=' + encodeURIComponent(document.getElementById('billNumber').value.trim())"
+>
+  Search Bill or Keyword
+</button>  
 <div class="button-row">
  
         
