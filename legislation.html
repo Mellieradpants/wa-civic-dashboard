@@ -1,73 +1,327 @@
-Bill number
-HB 1730
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington State Legislative Language Analyzer</title>
+  <style>
+    :root {
+      --wa-green: #1f4d3a;
+      --wa-green-dark: #173c2d;
+      --wa-green-soft: #eef5f1;
+      --wa-border: #d7e5df;
+      --text: #1f2937;
+      --muted: #5b6470;
+      --card-bg: #ffffff;
+      --page-bg: #f6f7f5;
+    }
 
-Topic
-Aeronautics account
+    * {
+      box-sizing: border-box;
+    }
 
-Change type
-Funding allocation clarification
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
 
-Affected actor
-State aviation fund administrators
+    .hero {
+      background: linear-gradient(180deg, var(--wa-green), var(--wa-green-dark));
+      color: white;
+      padding: 56px 20px 48px;
+      text-align: center;
+    }
 
-Required action
-Proceeds from aircraft fuel taxes must be directed into the aeronautics account.
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
 
-Operational effect
-Aviation-related tax revenue is routed more specifically into a designated account instead of remaining broadly handled.
+    .hero p {
+      margin: 16px 0 0;
+      font-size: 1.15rem;
+      opacity: 0.96;
+    }
 
-Authority shift
-Financial allocation rules are clarified rather than broadly expanded.
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
 
-Scope change
-The handling of these funds becomes narrower and more defined.
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--wa-border);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      margin-bottom: 24px;
+    }
 
-Bill number
-HB 1132
+    .section-title {
+      margin: 0 0 12px;
+      color: var(--wa-green);
+      font-size: 2rem;
+      font-weight: 700;
+    }
 
-Topic
-Public safety
+    .section-subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
 
-Change type
-Public safety requirement update
+    .analysis-card {
+      border: 1px solid var(--wa-border);
+      border-radius: 16px;
+      padding: 24px;
+      background: #fff;
+    }
 
-Affected actor
-Public agencies and affected residents
+    .bill-title {
+      margin: 0 0 16px;
+      color: var(--wa-green);
+      font-size: 2rem;
+      font-weight: 700;
+    }
 
-Required action
-Relevant agencies must follow updated safety-related procedures or notice requirements.
+    .analysis-row {
+      margin-bottom: 16px;
+      font-size: 1.08rem;
+    }
 
-Operational effect
-Public safety responsibilities become more explicit, which may change how agencies respond or communicate.
+    .analysis-row strong {
+      color: #111827;
+    }
 
-Authority shift
-Agency responsibility is clarified rather than left implied.
+    .analysis-row:last-child {
+      margin-bottom: 0;
+    }
 
-Scope change
-The bill appears to narrow when and how certain safety actions apply.
+    .bill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
 
-Bill number
-SB 5853
+    .bill-card {
+      width: 100%;
+      background: #fff;
+      border: 2px solid var(--wa-border);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+      color: var(--text);
+    }
 
-Topic
-Political violence notification
+    .bill-card:hover {
+      border-color: var(--wa-green);
+      background: var(--wa-green-soft);
+      transform: translateY(-1px);
+    }
 
-Change type
-Notification requirement expansion
+    .bill-card.active {
+      border-color: var(--wa-green);
+      background: var(--wa-green-soft);
+    }
 
-Affected actor
-Public agencies, institutions, or designated reporting bodies
+    .bill-card .number {
+      display: block;
+      color: var(--wa-green);
+      font-size: 1.95rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
 
-Required action
-Covered entities must provide notice or reporting when political violence-related conditions are met.
+    .bill-card .topic {
+      display: block;
+      font-size: 1.12rem;
+      color: #374151;
+    }
 
-Operational effect
-The bill creates a clearer expectation that certain threats, incidents, or qualifying events must trigger communication.
+    .resources-list {
+      margin: 0;
+      padding-left: 24px;
+    }
 
-Authority shift
-Notification authority becomes more formalized and less discretionary.
+    .resources-list li {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
 
-Scope change
-The situations requiring notice appear more specifically defined.
+    .resources-list a,
+    .analysis-card a {
+      color: var(--wa-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
 
-Prototype interpretation for demonstration purposes. Check the official bill page for source language.
+    .resources-list a:hover,
+    .analysis-card a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .panel {
+        padding: 22px;
+      }
+
+      .section-title {
+        font-size: 1.7rem;
+      }
+
+      .bill-title {
+        font-size: 1.6rem;
+      }
+
+      .bill-card .number {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Washington State Legislative Language Analyzer</h1>
+    <p>Plain-language translation of legislative bills</p>
+  </header>
+
+  <main class="page">
+    <section class="panel">
+      <h2 class="section-title">Bill Translation</h2>
+      <p class="section-subtitle">Click a bill card below to update this panel.</p>
+
+      <div class="analysis-card">
+        <h3 id="bill-number" class="bill-title">HB 1132</h3>
+
+        <div class="analysis-row">
+          <strong>Topic:</strong>
+          <span id="bill-topic">Public safety</span>
+        </div>
+
+        <div class="analysis-row">
+          <strong>What the bill is about:</strong>
+          <span id="bill-about">This bill focuses on public safety reporting and response requirements.</span>
+        </div>
+
+        <div class="analysis-row">
+          <strong>Who it affects:</strong>
+          <span id="bill-affects">Public agencies, law enforcement, and groups responsible for reporting incidents.</span>
+        </div>
+
+        <div class="analysis-row">
+          <strong>Official bill page:</strong>
+          <a id="bill-link" href="https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025" target="_blank" rel="noopener noreferrer">
+            Open official page
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Bill Tracker</h2>
+      <p class="section-subtitle">These cards stay on this page and update the translation section above.</p>
+
+      <div class="bill-grid">
+        <button class="bill-card active" data-bill="hb1132" type="button">
+          <span class="number">HB 1132</span>
+          <span class="topic">Public safety</span>
+        </button>
+
+        <button class="bill-card" data-bill="hb1730" type="button">
+          <span class="number">HB 1730</span>
+          <span class="topic">Aeronautics account</span>
+        </button>
+
+        <button class="bill-card" data-bill="sb5853" type="button">
+          <span class="number">SB 5853</span>
+          <span class="topic">Political violence notification</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Official Washington Legislature Tools</h2>
+
+      <ul class="resources-list">
+        <li><a href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
+        <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">LegSearch</a></li>
+        <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">Bills by Topic</a></li>
+        <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">How to Track a Bill</a></li>
+      </ul>
+
+      <p class="footer-note">
+        These links go directly to the official Washington State Legislature resources.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const bills = {
+      hb1132: {
+        number: "HB 1132",
+        topic: "Public safety",
+        about: "This bill focuses on public safety reporting and response requirements.",
+        affects: "Public agencies, law enforcement, and groups responsible for reporting incidents.",
+        link: "https://app.leg.wa.gov/billsummary?BillNumber=1132&Year=2025"
+      },
+      hb1730: {
+        number: "HB 1730",
+        topic: "Aeronautics account",
+        about: "This bill directs aircraft fuel tax proceeds into the aeronautics account.",
+        affects: "State fund administrators, aviation-related programs, and groups relying on those funds.",
+        link: "https://app.leg.wa.gov/billsummary?BillNumber=1730&Year=2025"
+      },
+      sb5853: {
+        number: "SB 5853",
+        topic: "Political violence notification",
+        about: "This bill focuses on notice or reporting requirements connected to political violence-related situations.",
+        affects: "Public agencies, institutions, and groups responsible for reporting or issuing notices.",
+        link: "https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2025"
+      }
+    };
+
+    const billNumber = document.getElementById("bill-number");
+    const billTopic = document.getElementById("bill-topic");
+    const billAbout = document.getElementById("bill-about");
+    const billAffects = document.getElementById("bill-affects");
+    const billLink = document.getElementById("bill-link");
+    const billCards = document.querySelectorAll(".bill-card");
+
+    function updateBillPanel(key) {
+      const bill = bills[key];
+      if (!bill) return;
+
+      billNumber.textContent = bill.number;
+      billTopic.textContent = bill.topic;
+      billAbout.textContent = bill.about;
+      billAffects.textContent = bill.affects;
+      billLink.href = bill.link;
+
+      billCards.forEach(card => {
+        card.classList.toggle("active", card.dataset.bill === key);
+      });
+    }
+
+    billCards.forEach(card => {
+      card.addEventListener("click", () => {
+        updateBillPanel(card.dataset.bill);
+      });
+    });
+  </script>
+</body>
+</html>
