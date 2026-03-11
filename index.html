@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
+<head>  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Washington State Civic Dashboard</title>
 
@@ -813,12 +812,20 @@ openBillPageBtn.addEventListener("click", () => {
     return;
   }
 
-  updateBillLinks(query);
+  const encoded = encodeURIComponent(query);
 
-  if (isBillNumber(query)) {
-    window.open(summaryLink.href, "_blank", "noopener,noreferrer");
+  const billPattern = /\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*\d{3,5}\b/i;
+
+  if (billPattern.test(query)) {
+    window.open(
+      `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`,
+      "_blank"
+    );
   } else {
-    window.open(searchLink.href, "_blank", "noopener,noreferrer");
+    window.open(
+      `https://search.leg.wa.gov/search?query=${encoded}`,
+      "_blank"
+    );
   }
 });
    
