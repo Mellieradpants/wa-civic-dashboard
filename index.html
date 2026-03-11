@@ -1,1 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington State Civic Dashboard</title>
 
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --border: #d7deea;
+      --accent: #1f6f43;
+      --accent-hover: #155a34;
+      --soft: #eef7f1;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 0 0 14px;
+      color: var(--muted);
+      max-width: 760px;
+      font-size: 1.05rem;
+    }
+
+    .how-toggle {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .how-toggle:hover {
+      background: #f8fafc;
+    }
+
+    .how-box {
+      margin-top: 16px;
+      background: var(--soft);
+      border: 1px solid #cfe0ff;
+      border-radius: 16px;
+      padding: 18px;
+      display: none;
+    }
+
+    .how-box.open {
+      display: block;
+    }
+
+    .how-box p {
+      margin: 0 0 10px;
+    }
+
+    .how-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+    }
+
+    #follow-bill h2 {
+      font-size: 1.1rem;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .section-note {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 220px;
+      resize: vertical;
+      margin-bottom: 14px;
+    }
+
+    input[type="text"] {
+      margin-bottom: 12px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    button.primary,
+    a.primary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 46px;
+    }
+
+    button.primary:hover,
+    a.primary-link:hover {
+      background: var(--accent-hover);
+    }
+
+    button.secondary {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      min-height: 46px;
+    }
+
+    button.secondary:hover {
+      background: #f8fafc;
+    }
+
+    .output-box {
+      border: 1px solid var(--border);
+      background: #fbfdff;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 220px;
+      white-space: pre-wrap;
+    }
+
+    .anchor-box {
+      margin-top: 14px;
+      border: 1px dashed #b9c8e4;
+      background: #fafcff;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .anchor-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .follow-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .follow-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fcfdff;
+    }
+
+    .follow-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .follow-card a,
+    .resource-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .follow-card a:hover,
+    .resource-list a:hover {
+      text-decoration: underline;
+    }
+
+    .resource-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .resource-group {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fcfdff;
+    }
+
+    .resource-group h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .resource-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .resource-list li + li {
+      margin-top: 8px;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        width: min(100% - 20px, 1100px);
+        padding-top: 18px;
+      }
+
+      .hero,
+      .panel {
+        padding: 18px;
+      }
+
+      .how-toggle {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <header class="hero">
+      <h1>Washington State Civic Dashboard</h1>
+      <p class="subtitle">
+        Understand bills, follow legislation, and access official Washington civic resources.
+      </p>
+
+      <button class="how-toggle" id="howToggle" type="button">
+        How to Use This Tool
+      </button>
+
+      <div class="how-box" id="howBox">
+        <p>1. Search a bill number if you already have one.</p>
+        <p>2. Paste bill text into the translator.</p>
+        <p>3. Review the extracted structure.</p>
+        <p>4. Use the official links to verify the source.</p>
+      </div>
+    </header>
+
+    <!-- ===== MAIN DASHBOARD ===== -->
+    <main class="grid">
+
+      <!-- ===== SEARCH A BILL ===== -->
+      <section class="panel" id="follow-bill">
+        <h2>Search a Bill</h2>
+        <p class="section-note">
+          Enter a Washington bill number to open official Washington Legislature pages.
+        </p>
+
+        <label for="billNumber">Bill number</label>
+        <input
+          type="text"
+          id="billNumber"
+          placeholder="Example: HB 1234 or SB 5678"
+        />
+
+        <div class="button-row">
+          <button class="primary" id="openBillPageBtn" type="button">Open Bill Page</button>
+          <button class="secondary" id="fillFromTextBtn" type="button">Try Detecting Bill Number</button>
+        </div>
+
+        <div class="follow-actions">
+          <div class="follow-card">
+            <strong>Bill summary</strong>
+            <a id="summaryLink" href="https://app.leg.wa.gov/billsummary/" target="_blank" rel="noopener noreferrer">
+              Open official bill summary
+            </a>
+          </div>
+
+          <div class="follow-card">
+            <strong>Bill search</strong>
+            <a id="searchLink" href="https://leg.wa.gov/bills-meetings-and-session/bills/" target="_blank" rel="noopener noreferrer">
+              Open official bill search
+            </a>
+          </div>
+
+          <div class="follow-card">
+            <strong>Track a bill</strong>
+            <a id="trackLink" href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">
+              Open tracking information
+            </a>
+          </div>
+
+          <div class="follow-card">
+            <strong>Legislature home</strong>
+            <a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
+              Open Washington Legislature
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== BILL TRANSLATOR ===== -->
+      <section class="panel" id="translator">
+        <h2>Bill Translator</h2>
+        <p class="section-note">
+          Paste bill text to reveal the structure of the rule.
+        </p>
+
+        <label for="billText">Bill text</label>
+        <textarea id="billText" placeholder="Paste bill text here..."></textarea>
+
+        <div class="button-row">
+          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
+          <button class="secondary" id="clearBtn" type="button">Clear</button>
+        </div>
+
+        <h3>Plain-Language Translation</h3>
+        <div class="output-box" id="translationOutput">Plain-Language Summary
+Output will appear here.
+
+Who the rule applies to
+• None detected
+
+Required actions
+• None detected
+
+Allowed actions
+• None detected
+
+Prohibited actions
+• None detected
+
+Timing or deadlines
+• None detected
+
+Source anchor
+• Bill identifier not detected
+• Section reference not detected</div>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid #d7deea;">
+
+        <div class="anchor-box">
+          <h3>Semantic Tether-Point</h3>
+          <ul class="anchor-list" id="anchorList">
+            <li>Bill ID anchor: not detected</li>
+            <li>Section anchor: not detected</li>
+            <li>Clause anchor: not detected</li>
+            <li>Source reference: attach official bill page once bill number is known</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== CIVIC PARTICIPATION ===== -->
+      <section class="panel" id="civic-participation">
+        <h2>Civic Participation</h2>
+        <p class="section-note">
+          Official Washington voter and election access links.
+        </p>
+
+        <div class="resource-columns">
+          <div class="resource-group">
+            <h3>Voter access</h3>
+            <ul class="resource-list">
+              <li>
+                <a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">
+                  Register to vote
+                </a>
+              </li>
+              <li>
+                <a href="https://www.sos.wa.gov/elections" target="_blank" rel="noopener noreferrer">
+                  Elections information
+                </a>
+              </li>
+              <li>
+                <a href="https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information" target="_blank" rel="noopener noreferrer">
+                  Current election information
+                </a>
+              </li>
+              <li>
+                <a href="https://www.sos.wa.gov/elections/voters/voter-registration/print-voter-registration-form" target="_blank" rel="noopener noreferrer">
+                  Print voter registration form
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="resource-group">
+            <h3>Voting locations</h3>
+            <ul class="resource-list">
+              <li>
+                <a href="https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations" target="_blank" rel="noopener noreferrer">
+                  Ballot drop box and voting center locations
+                </a>
+              </li>
+              <li>
+                <a href="https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-voting-mail" target="_blank" rel="noopener noreferrer">
+                  Voting by mail information
+                </a>
+              </li>
+              <li>
+                <a href="https://www.sos.wa.gov/" target="_blank" rel="noopener noreferrer">
+                  Secretary of State home
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== OFFICIAL RESOURCES ===== -->
+      <section class="panel" id="official-resources">
+        <h2>Official Resources</h2>
+        <p class="section-note">
+          Official legislative research and lookup links.
+        </p>
+
+        <div class="resource-columns">
+          <div class="resource-group">
+            <h3>Washington Legislature</h3>
+            <ul class="resource-list">
+              <li>
+                <a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
+                  Legislature home
+                </a>
+              </li>
+              <li>
+                <a href="https://leg.wa.gov/bills-meetings-and-session/" target="_blank" rel="noopener noreferrer">
+                  Bills, meetings, and session
+                </a>
+              </li>
+              <li>
+                <a href="https://search.leg.wa.gov/" target="_blank" rel="noopener noreferrer">
+                  Legislative search
+                </a>
+              </li>
+              <li>
+                <a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank" rel="noopener noreferrer">
+                  Bills by topic
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="resource-group">
+            <h3>Broader government resources</h3>
+            <ul class="resource-list">
+              <li>
+                <a href="https://www.congress.gov/" target="_blank" rel="noopener noreferrer">
+                  Congress.gov
+                </a>
+              </li>
+              <li>
+                <a href="voting.html">Local voting page</a>
+              </li>
+              <li>
+                <a href="legislation.html">Local legislation page</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <p class="footer-note">
+      This dashboard reveals structure and links to official sources. It does not provide political recommendations.
+    </p>
+  </div>
+
+  <!-- ===== DASHBOARD SCRIPT ===== -->
+  <script>
+    const howToggle = document.getElementById("howToggle");
+    const howBox = document.getElementById("howBox");
+    const translateBtn = document.getElementById("translateBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const billText = document.getElementById("billText");
+    const translationOutput = document.getElementById("translationOutput");
+    const billNumberInput = document.getElementById("billNumber");
+    const openBillPageBtn = document.getElementById("openBillPageBtn");
+    const fillFromTextBtn = document.getElementById("fillFromTextBtn");
+    const summaryLink = document.getElementById("summaryLink");
+    const searchLink = document.getElementById("searchLink");
+    const trackLink = document.getElementById("trackLink");
+    const anchorList = document.getElementById("anchorList");
+
+    howToggle.addEventListener("click", () => {
+      howBox.classList.toggle("open");
+    });
+
+    function detectBillNumber(text) {
+      const match = text.match(/\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*(\d{3,5})\b/i);
+      if (!match) return "";
+      return `${match[1].toUpperCase()} ${match[2]}`;
+    }
+
+    function extractSectionReference(text) {
+      const match = text.match(/\b(section|sec\.)\s+(\d+[a-zA-Z0-9().-]*)\b/i);
+      if (!match) return "Section reference not detected";
+      return `Section ${match[2]}`;
+    }
+
+    function extractActors(text) {
+      const actorPatterns = [
+        /\bcounty auditors?\b/gi,
+        /\bsecretary of state\b/gi,
+        /\bdepartment\b/gi,
+        /\bagency\b/gi,
+        /\bboard\b/gi,
+        /\bcommission\b/gi,
+        /\bemployer\b/gi,
+        /\bemployee\b/gi,
+        /\bperson\b/gi,
+        /\bresident\b/gi,
+        /\bvoter\b/gi,
+        /\bapplicant\b/gi,
+        /\bowner\b/gi,
+        /\blicensee\b/gi,
+        /\bcounty\b/gi,
+        /\bcity\b/gi
+      ];
+
+      const found = new Set();
+
+      actorPatterns.forEach((pattern) => {
+        const matches = text.match(pattern);
+        if (matches) {
+          matches.forEach((m) => found.add(m.trim()));
+        }
+      });
+
+      return [...found];
+    }
+
+    function extractSentences(text) {
+      return text
+        .replace(/\s+/g, " ")
+        .split(/(?<=[.!?])\s+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+
+    function findLines(sentences, regex) {
+      return sentences.filter((sentence) => regex.test(sentence));
+    }
+
+    function toBulletBlock(items) {
+      if (!items.length) return "• None detected";
+      return items.map((item) => `• ${item}`).join("\n");
+    }
+
+    function buildPlainSummary(text) {
+      const cleaned = text.replace(/\s+/g, " ").trim();
+      if (!cleaned) return "No text provided.";
+
+      let summary = cleaned.split(/(?<=[.!?])\s+/)[0] || cleaned;
+      summary = summary.slice(0, 220).trim();
+
+      summary = summary
+        .replace(/\bshall\b/gi, "must")
+        .replace(/\bprior to\b/gi, "before")
+        .replace(/\bpursuant to\b/gi, "under")
+        .replace(/\bnot less than\b/gi, "at least")
+        .replace(/\bnot more than\b/gi, "no more than");
+
+      return summary;
+    }
+
+    function updateBillLinks(billNumber) {
+      const clean = billNumber.trim().replace(/\s+/g, " ");
+      const encoded = encodeURIComponent(clean);
+
+      if (!clean) {
+        summaryLink.href = "https://app.leg.wa.gov/billsummary/";
+        searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
+        trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
+        return;
+      }
+
+      summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`;
+      searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
+      trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
+    }
+
+    function updateTetherPanel(billNumber, sectionRef) {
+      anchorList.innerHTML = `
+        <li>Bill ID anchor: ${billNumber || "not detected"}</li>
+        <li>Section anchor: ${sectionRef || "not detected"}</li>
+        <li>Clause anchor: not detected</li>
+        <li>Source reference: attach official bill page once bill number is known</li>
+      `;
+    }
+
+    function simpleTranslate(text) {
+      const trimmed = text.trim();
+
+      if (!trimmed) {
+        updateTetherPanel("", "");
+        return `Plain-Language Summary
+Output will appear here.
+
+Who the rule applies to
+• None detected
+
+Required actions
+• None detected
+
+Allowed actions
+• None detected
+
+Prohibited actions
+• None detected
+
+Timing or deadlines
+• None detected
+
+Source anchor
+• Bill identifier not detected
+• Section reference not detected`;
+      }
+
+      const sentences = extractSentences(trimmed);
+      const billNumber = detectBillNumber(trimmed);
+      const sectionRef = extractSectionReference(trimmed);
+      const actors = extractActors(trimmed);
+
+      const required = findLines(sentences, /\b(must|shall|required to|is required to)\b/i);
+      const allowed = findLines(sentences, /\bmay\b/i).filter(
+        (line) => !/\bmay not\b/i.test(line)
+      );
+      const prohibited = findLines(sentences, /\b(may not|shall not|must not|prohibited)\b/i);
+      const timing = findLines(
+        sentences,
+        /\b(within\s+\d+\s+(day|days|month|months|year|years)|before|after|no later than|deadline|by\s+\d{1,2}\/\d{1,2}|\bby\b)/i
+      );
+
+      updateTetherPanel(billNumber, sectionRef);
+
+      return `Plain-Language Summary
+${buildPlainSummary(trimmed)}
+
+Who the rule applies to
+${toBulletBlock(actors)}
+
+Required actions
+${toBulletBlock(required)}
+
+Allowed actions
+${toBulletBlock(allowed)}
+
+Prohibited actions
+${toBulletBlock(prohibited)}
+
+Timing or deadlines
+${toBulletBlock(timing)}
+
+Source anchor
+• ${billNumber || "Bill identifier not detected"}
+• ${sectionRef}`;
+    }
+
+    translateBtn.addEventListener("click", () => {
+      const text = billText.value;
+      const detected = detectBillNumber(text);
+
+      translationOutput.textContent = simpleTranslate(text);
+
+      if (detected) {
+        billNumberInput.value = detected;
+        updateBillLinks(detected);
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      billText.value = "";
+      translationOutput.textContent = `Plain-Language Summary
+Output will appear here.
+
+Who the rule applies to
+• None detected
+
+Required actions
+• None detected
+
+Allowed actions
+• None detected
+
+Prohibited actions
+• None detected
+
+Timing or deadlines
+• None detected
+
+Source anchor
+• Bill identifier not detected
+• Section reference not detected`;
+
+      updateTetherPanel("", "");
+    });
+
+    fillFromTextBtn.addEventListener("click", () => {
+      const detected = detectBillNumber(billText.value);
+
+      if (detected) {
+        billNumberInput.value = detected;
+        updateBillLinks(detected);
+      } else {
+        alert("No Washington bill number was detected in the pasted text.");
+      }
+    });
+
+    openBillPageBtn.addEventListener("click", () => {
+      const billNumber = billNumberInput.value.trim();
+
+      if (!billNumber) {
+        alert("Enter a bill number first.");
+        return;
+      }
+
+      updateBillLinks(billNumber);
+      window.open(summaryLink.href, "_blank", "noopener,noreferrer");
+    });
+
+    billNumberInput.addEventListener("input", (event) => {
+      updateBillLinks(event.target.value);
+    });
+
+    updateBillLinks("");
+    updateTetherPanel("", "");
+  </script>
+</body>
+</html>
