@@ -859,11 +859,23 @@ Source anchor
         alert("No Washington bill number was detected in the pasted text.");
       }
     });
-openBillPageBtn.addEventListener("click", async () => {
-  await resolveAndAnalyzeBill(billNumberInput.value);
-});
-   
+openBillPageBtn.addEventListener("click", () => {
 
+  const query = billNumberInput.value.trim();
+
+  if (!query) {
+    alert("Enter a bill number or keyword first.");
+    return;
+  }
+
+  const encoded = encodeURIComponent(query);
+
+  const searchURL =
+    "https://leg.wa.gov/bills-meetings-and-session/bills/?q=" + encoded;
+
+  window.open(searchURL, "_blank", "noopener,noreferrer");
+
+});
     billNumberInput.addEventListener("input", (event) => {
       updateBillLinks(event.target.value);
     });
