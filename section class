@@ -1,23 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Washington State Civic Dashboard</title>
+
   <style>
     :root {
-  --bg: #f5f7fb;
-  --panel: #ffffff;
-  --text: #1f2937;
-  --muted: #5b6472;
-  --border: #d7deea;
-
-  --accent: #1f6f43;        /* evergreen */
-  --accent-hover: #155a34;  /* darker evergreen */
-
-  --soft: #eef7f1;          /* light green highlight */
-}
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --border: #d7deea;
+      --accent: #1f6f43;
+      --accent-hover: #155a34;
+      --soft: #eef7f1;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
 
     * {
       box-sizing: border-box;
@@ -46,14 +46,6 @@
       margin-bottom: 24px;
     }
 
-    .hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
     h1 {
       margin: 0 0 10px;
       font-size: clamp(2rem, 4vw, 3rem);
@@ -61,7 +53,7 @@
     }
 
     .subtitle {
-      margin: 0;
+      margin: 0 0 14px;
       color: var(--muted);
       max-width: 760px;
       font-size: 1.05rem;
@@ -83,7 +75,7 @@
     }
 
     .how-box {
-      margin-top: 18px;
+      margin-top: 16px;
       background: var(--soft);
       border: 1px solid #cfe0ff;
       border-radius: 16px;
@@ -122,7 +114,16 @@
       font-size: 1.35rem;
     }
 
-    .panel p.section-note {
+    #follow-bill h2 {
+      font-size: 1.1rem;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .section-note {
       margin: 0 0 16px;
       color: var(--muted);
     }
@@ -202,7 +203,7 @@
       background: #fbfdff;
       border-radius: 14px;
       padding: 16px;
-      min-height: 160px;
+      min-height: 220px;
       white-space: pre-wrap;
     }
 
@@ -214,11 +215,6 @@
       padding: 14px;
     }
 
-    .anchor-box h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
-
     .anchor-list {
       margin: 0;
       padding-left: 18px;
@@ -227,34 +223,33 @@
 
     .follow-actions {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
       margin-top: 10px;
-    }
-
-    .follow-actions a,
-    .resource-list a,
-    .resource-columns a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .follow-actions a:hover,
-    .resource-list a:hover,
-    .resource-columns a:hover {
-      text-decoration: underline;
     }
 
     .follow-card {
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 12px;
       background: #fcfdff;
     }
 
     .follow-card strong {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .follow-card a,
+    .resource-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .follow-card a:hover,
+    .resource-list a:hover {
+      text-decoration: underline;
     }
 
     .resource-columns {
@@ -302,10 +297,6 @@
         padding: 18px;
       }
 
-      .hero-top {
-        align-items: stretch;
-      }
-
       .how-toggle {
         width: 100%;
       }
@@ -314,99 +305,42 @@
 </head>
 <body>
   <div class="container">
-    <header class="hero">
-      <div class="hero-top">
-        <div>
-          <h1>Washington State Civic Dashboard</h1>
-          <p class="subtitle">
-            Understand bills, follow legislation, and access official Washington civic resources.
-          </p>
-        </div>
 
-        <button class="how-toggle" id="howToggle" type="button">
-          How to Use This Tool
-        </button>
-      </div>
+    <!-- ===== HEADER ===== -->
+    <header class="hero">
+      <h1>Washington State Civic Dashboard</h1>
+      <p class="subtitle">
+        Understand bills, follow legislation, and access official Washington civic resources.
+      </p>
+
+      <button class="how-toggle" id="howToggle" type="button">
+        How to Use This Tool
+      </button>
 
       <div class="how-box" id="howBox">
-        <p>1. Paste bill text into the translator.</p>
-        <p>2. Click “Translate Bill Text” to turn dense language into plain meaning.</p>
-        <p>3. Enter a bill number below to open official Washington Legislature pages.</p>
-        <p>4. Use the civic and official resource links to verify details and take next steps.</p>
+        <p>1. Search a bill number if you already have one.</p>
+        <p>2. Paste bill text into the translator.</p>
+        <p>3. Review the extracted structure.</p>
+        <p>4. Use the official links to verify the source.</p>
       </div>
     </header>
-<section class="panel" id="follow-bill">
 
-  <h2>Search a Bill</h2>
-
-  <p class="section-note">
-  Enter a Washington bill number to open official Washington Legislature pages.
-  </p>
-
-  <label for="billNumber">Bill number</label>
-
-  <input
-    type="text"
-    id="billNumber"
-    placeholder="Example: HB 1234 or SB 5678"
-  />
-
-  <div class="button-row">
-    <button class="primary" id="openBillPageBtn">
-      Open Bill Page
-    </button>
-
-    <button class="secondary" id="fillFromTextBtn">
-      Try Detecting Bill Number
-    </button>
-  </div>
-
-</section>
+    <!-- ===== MAIN DASHBOARD ===== -->
     <main class="grid">
-    
-</section>
-      <section class="panel" id="translator">
-        <h2>Bill Translator</h2>
-        <p class="section-note">
-          Paste bill text to get a plain-language explanation of what changed.
-        </p>
 
-        <label for="billText">Bill text</label>
-        <textarea id="billText" placeholder="Paste bill text here..."></textarea>
-
-        <div class="button-row">
-          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
-          <button class="secondary" id="clearBtn" type="button">Clear</button>
-        </div>
-
-        <label for="translationOutput">Translation output</label>
-        <div class="output-box" id="translationOutput">
-Translation output will appear here.
-
-This MVP uses a local placeholder translator so the page works immediately.
-When you are ready, this box can be connected to your real structural translation layer.
-        </div>
-
-        <div class="anchor-box">
-          <h3>Semantic Tether-Point</h3>
-          <ul class="anchor-list">
-            <li>Bill ID anchor: not set yet</li>
-            <li>Section anchor: not set yet</li>
-            <li>Clause anchor: not set yet</li>
-            <li>Source reference: attach official bill page once bill number is known</li>
-          </ul>
-        </div>
-      </section>
-
-
-      <section class="panel" id="translator">
+      <!-- ===== SEARCH A BILL ===== -->
+      <section class="panel" id="follow-bill">
         <h2>Search a Bill</h2>
         <p class="section-note">
-          Enter a Washington bill number to open official Legislature pages.
+          Enter a Washington bill number to open official Washington Legislature pages.
         </p>
 
         <label for="billNumber">Bill number</label>
-        <input type="text" id="billNumber" placeholder="Example: HB 1234 or SB 5678" />
+        <input
+          type="text"
+          id="billNumber"
+          placeholder="Example: HB 1234 or SB 5678"
+        />
 
         <div class="button-row">
           <button class="primary" id="openBillPageBtn" type="button">Open Bill Page</button>
@@ -444,6 +378,58 @@ When you are ready, this box can be connected to your real structural translatio
         </div>
       </section>
 
+      <!-- ===== BILL TRANSLATOR ===== -->
+      <section class="panel" id="translator">
+        <h2>Bill Translator</h2>
+        <p class="section-note">
+          Paste bill text to reveal the structure of the rule.
+        </p>
+
+        <label for="billText">Bill text</label>
+        <textarea id="billText" placeholder="Paste bill text here..."></textarea>
+
+        <div class="button-row">
+          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
+          <button class="secondary" id="clearBtn" type="button">Clear</button>
+        </div>
+
+        <h3>Plain-Language Translation</h3>
+        <div class="output-box" id="translationOutput">Plain-Language Summary
+Output will appear here.
+
+Who the rule applies to
+• None detected
+
+Required actions
+• None detected
+
+Allowed actions
+• None detected
+
+Prohibited actions
+• None detected
+
+Timing or deadlines
+• None detected
+
+Source anchor
+• Bill identifier not detected
+• Section reference not detected</div>
+
+        <hr style="margin:24px 0;border:none;border-top:1px solid #d7deea;">
+
+        <div class="anchor-box">
+          <h3>Semantic Tether-Point</h3>
+          <ul class="anchor-list" id="anchorList">
+            <li>Bill ID anchor: not detected</li>
+            <li>Section anchor: not detected</li>
+            <li>Clause anchor: not detected</li>
+            <li>Source reference: attach official bill page once bill number is known</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== CIVIC PARTICIPATION ===== -->
       <section class="panel" id="civic-participation">
         <h2>Civic Participation</h2>
         <p class="section-note">
@@ -452,7 +438,7 @@ When you are ready, this box can be connected to your real structural translatio
 
         <div class="resource-columns">
           <div class="resource-group">
-            <h3>Voter access</h3>k
+            <h3>Voter access</h3>
             <ul class="resource-list">
               <li>
                 <a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">
@@ -500,6 +486,7 @@ When you are ready, this box can be connected to your real structural translatio
         </div>
       </section>
 
+      <!-- ===== OFFICIAL RESOURCES ===== -->
       <section class="panel" id="official-resources">
         <h2>Official Resources</h2>
         <p class="section-note">
@@ -542,26 +529,24 @@ When you are ready, this box can be connected to your real structural translatio
                 </a>
               </li>
               <li>
-                <a href="voting.html">
-                  Local voting page
-                </a>
+                <a href="voting.html">Local voting page</a>
               </li>
               <li>
-                <a href="legislation.html">
-                  Local legislation page
-                </a>
+                <a href="legislation.html">Local legislation page</a>
               </li>
             </ul>
           </div>
         </div>
       </section>
+
     </main>
 
     <p class="footer-note">
-      This dashboard is designed to reveal structure and link to official sources. It does not provide political recommendations.
+      This dashboard reveals structure and links to official sources. It does not provide political recommendations.
     </p>
   </div>
 
+  <!-- ===== DASHBOARD SCRIPT ===== -->
   <script>
     const howToggle = document.getElementById("howToggle");
     const howBox = document.getElementById("howBox");
@@ -575,6 +560,7 @@ When you are ready, this box can be connected to your real structural translatio
     const summaryLink = document.getElementById("summaryLink");
     const searchLink = document.getElementById("searchLink");
     const trackLink = document.getElementById("trackLink");
+    const anchorList = document.getElementById("anchorList");
 
     howToggle.addEventListener("click", () => {
       howBox.classList.toggle("open");
@@ -586,12 +572,80 @@ When you are ready, this box can be connected to your real structural translatio
       return `${match[1].toUpperCase()} ${match[2]}`;
     }
 
-    function formatBillNumberForSearch(raw) {
-      return raw.trim().replace(/\s+/g, " ");
+    function extractSectionReference(text) {
+      const match = text.match(/\b(section|sec\.)\s+(\d+[a-zA-Z0-9().-]*)\b/i);
+      if (!match) return "Section reference not detected";
+      return `Section ${match[2]}`;
+    }
+
+    function extractActors(text) {
+      const actorPatterns = [
+        /\bcounty auditors?\b/gi,
+        /\bsecretary of state\b/gi,
+        /\bdepartment\b/gi,
+        /\bagency\b/gi,
+        /\bboard\b/gi,
+        /\bcommission\b/gi,
+        /\bemployer\b/gi,
+        /\bemployee\b/gi,
+        /\bperson\b/gi,
+        /\bresident\b/gi,
+        /\bvoter\b/gi,
+        /\bapplicant\b/gi,
+        /\bowner\b/gi,
+        /\blicensee\b/gi,
+        /\bcounty\b/gi,
+        /\bcity\b/gi
+      ];
+
+      const found = new Set();
+
+      actorPatterns.forEach((pattern) => {
+        const matches = text.match(pattern);
+        if (matches) {
+          matches.forEach((m) => found.add(m.trim()));
+        }
+      });
+
+      return [...found];
+    }
+
+    function extractSentences(text) {
+      return text
+        .replace(/\s+/g, " ")
+        .split(/(?<=[.!?])\s+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+
+    function findLines(sentences, regex) {
+      return sentences.filter((sentence) => regex.test(sentence));
+    }
+
+    function toBulletBlock(items) {
+      if (!items.length) return "• None detected";
+      return items.map((item) => `• ${item}`).join("\n");
+    }
+
+    function buildPlainSummary(text) {
+      const cleaned = text.replace(/\s+/g, " ").trim();
+      if (!cleaned) return "No text provided.";
+
+      let summary = cleaned.split(/(?<=[.!?])\s+/)[0] || cleaned;
+      summary = summary.slice(0, 220).trim();
+
+      summary = summary
+        .replace(/\bshall\b/gi, "must")
+        .replace(/\bprior to\b/gi, "before")
+        .replace(/\bpursuant to\b/gi, "under")
+        .replace(/\bnot less than\b/gi, "at least")
+        .replace(/\bnot more than\b/gi, "no more than");
+
+      return summary;
     }
 
     function updateBillLinks(billNumber) {
-      const clean = formatBillNumberForSearch(billNumber);
+      const clean = billNumber.trim().replace(/\s+/g, " ");
       const encoded = encodeURIComponent(clean);
 
       if (!clean) {
@@ -606,64 +660,81 @@ When you are ready, this box can be connected to your real structural translatio
       trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
     }
 
+    function updateTetherPanel(billNumber, sectionRef) {
+      anchorList.innerHTML = `
+        <li>Bill ID anchor: ${billNumber || "not detected"}</li>
+        <li>Section anchor: ${sectionRef || "not detected"}</li>
+        <li>Clause anchor: not detected</li>
+        <li>Source reference: attach official bill page once bill number is known</li>
+      `;
+    }
+
     function simpleTranslate(text) {
       const trimmed = text.trim();
 
       if (!trimmed) {
-        return "Paste bill text first.";
+        updateTetherPanel("", "");
+        return `Plain-Language Summary
+Output will appear here.
+
+Who the rule applies to
+• None detected
+
+Required actions
+• None detected
+
+Allowed actions
+• None detected
+
+Prohibited actions
+• None detected
+
+Timing or deadlines
+• None detected
+
+Source anchor
+• Bill identifier not detected
+• Section reference not detected`;
       }
 
-      const lower = trimmed.toLowerCase();
-      const foundTypes = [];
-
-      if (/\bmust\b|\bshall\b|\brequired\b/.test(lower)) {
-        foundTypes.push("obligation change");
-      }
-      if (/\bmay\b|\bauthorized\b|\bauthority\b/.test(lower)) {
-        foundTypes.push("authority change");
-      }
-      if (/\beligible\b|\bineligible\b|\bqualification\b/.test(lower)) {
-        foundTypes.push("eligibility change");
-      }
-      if (/\bpenalty\b|\benforce\b|\bfine\b|\bviolation\b/.test(lower)) {
-        foundTypes.push("enforcement change");
-      }
-      if (/\bfund\b|\bappropriation\b|\bgrant\b|\bbudget\b/.test(lower)) {
-        foundTypes.push("funding change");
-      }
-      if (/\bwithin\b|\bdays\b|\bdeadline\b|\bbefore\b|\bafter\b/.test(lower)) {
-        foundTypes.push("timeline or procedure change");
-      }
-
+      const sentences = extractSentences(trimmed);
       const billNumber = detectBillNumber(trimmed);
+      const sectionRef = extractSectionReference(trimmed);
+      const actors = extractActors(trimmed);
 
-      const firstSentence = trimmed
-        .replace(/\s+/g, " ")
-        .split(/(?<=[.!?])\s+/)[0]
-        .slice(0, 280);
+      const required = findLines(sentences, /\b(must|shall|required to|is required to)\b/i);
+      const allowed = findLines(sentences, /\bmay\b/i).filter(
+        (line) => !/\bmay not\b/i.test(line)
+      );
+      const prohibited = findLines(sentences, /\b(may not|shall not|must not|prohibited)\b/i);
+      const timing = findLines(
+        sentences,
+        /\b(within\s+\d+\s+(day|days|month|months|year|years)|before|after|no later than|deadline|by\s+\d{1,2}\/\d{1,2}|\bby\b)/i
+      );
 
-      let output = "";
+      updateTetherPanel(billNumber, sectionRef);
 
-      if (billNumber) {
-        output += `Detected bill number: ${billNumber}\n\n`;
-      }
+      return `Plain-Language Summary
+${buildPlainSummary(trimmed)}
 
-      output += "Plain-language draft:\n";
-      output += "This section appears to change how a rule, process, or requirement works. ";
-      output += "Review the official source before relying on this summary.\n\n";
+Who the rule applies to
+${toBulletBlock(actors)}
 
-      output += "Source excerpt:\n";
-      output += `${firstSentence || trimmed.slice(0, 280)}\n\n`;
+Required actions
+${toBulletBlock(required)}
 
-      output += "Possible structural signals:\n";
-      output += foundTypes.length
-        ? `- ${foundTypes.join("\n- ")}`
-        : "- structural change type not yet detected by this MVP";
+Allowed actions
+${toBulletBlock(allowed)}
 
-      output += "\n\nSemantic tether suggestion:\n";
-      output += "- Attach bill ID\n- Attach section number\n- Attach exact clause quote\n- Attach official source link";
+Prohibited actions
+${toBulletBlock(prohibited)}
 
-      return output;
+Timing or deadlines
+${toBulletBlock(timing)}
+
+Source anchor
+• ${billNumber || "Bill identifier not detected"}
+• ${sectionRef}`;
     }
 
     translateBtn.addEventListener("click", () => {
@@ -680,11 +751,29 @@ When you are ready, this box can be connected to your real structural translatio
 
     clearBtn.addEventListener("click", () => {
       billText.value = "";
-      translationOutput.textContent =
-`Translation output will appear here.
+      translationOutput.textContent = `Plain-Language Summary
+Output will appear here.
 
-This MVP uses a local placeholder translator so the page works immediately.
-When you are ready, this box can be connected to your real structural translation layer.`;
+Who the rule applies to
+• None detected
+
+Required actions
+• None detected
+
+Allowed actions
+• None detected
+
+Prohibited actions
+• None detected
+
+Timing or deadlines
+• None detected
+
+Source anchor
+• Bill identifier not detected
+• Section reference not detected`;
+
+      updateTetherPanel("", "");
     });
 
     fillFromTextBtn.addEventListener("click", () => {
@@ -715,6 +804,7 @@ When you are ready, this box can be connected to your real structural translatio
     });
 
     updateBillLinks("");
- <script>
-  (new translator code here)
-</script>
+    updateTetherPanel("", "");
+  </script>
+</body>
+</html>
