@@ -754,13 +754,68 @@ Source anchor
 • ${billNumber || "Bill identifier not detected"}
 • ${sectionRef}`;
     }
+function structuralLanguageCompanion(text) {
+  return simpleTranslate(text);
+}
 
+async function fetchBillText(query) {
+  const response = await fetch(`/api/fetch-bill?query=${encodeURIComponent(query)}`);
+
+  if (!response.ok) {
+    throw new Error("Bill fetch failed.");
+  }
+
+  const data = await response.json();
+
+  if (!data || !data.text) {
+    throw new Error("No bill text returned.");
+  }
+
+  return data;
+}
+
+async function resolveAndAnalyzeBill(query) {
+  const clean = query.trim();
+
+  if (!clean) {
+    alert("Enter a bill number or keyword first.");
+    return;
+  }
+
+  openBillPageBtn.disabled = true;
+  openBillPageBtn.textContent = "Searching...";
+
+  try {
+    const billData = await fetchBillText(clean);
+
+    if (billData.billNumber) {
+      billNumberInput.value = billData.billNumber;
+      updateBillLinks(billData.billNumber);
+    } else {
+      updateBillLinks(clean);
+    }
+
+    billText.value = billData.text;
+    translationOutput.textContent = structuralLanguageCompanion(billData.text);
+
+    const detectedBill = billData.billNumber || detectBillNumber(billData.text);
+    const detectedSection = extractSectionReference(billData.text);
+
+    updateTetherPanel(detectedBill, detectedSection);
+  } catch (error) {
+    console.error(error);
+    alert("Could not retrieve bill text yet.");
+  } finally {
+    openBillPageBtn.disabled = false;
+    openBillPageBtn.textContent = "Search Bill or Keyword";
+  }
+}
     translateBtn.addEventListener("click", () => {
       const text = billText.value;
       const detected = detectBillNumber(text);
 
-      translationOutput.textContent = simpleTranslate(text);
-
+      translationOutput.textContent = structuralLanguageCompanion(text);
+     
       if (detected) {
         billNumberInput.value = detected;
         updateBillLinks(detected);
@@ -804,29 +859,8 @@ Source anchor
         alert("No Washington bill number was detected in the pasted text.");
       }
     });
-openBillPageBtn.addEventListener("click", () => {
-  const query = billNumberInput.value.trim();
-
-  if (!query) {
-    alert("Enter a bill number or keyword first.");
-    return;
-  }
-
-  const encoded = encodeURIComponent(query);
-
-  const billPattern = /\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*\d{3,5}\b/i;
-
-  if (billPattern.test(query)) {
-    window.open(
-      `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`,
-      "_blank"
-    );
-  } else {
-    window.open(
-      `https://search.leg.wa.gov/search?query=${encoded}`,
-      "_blank"
-    );
-  }
+openBillPageBtn.addEventListener("click", async () => {
+  await resolveAndAnalyzeBill(billNumberInput.value);
 });
    
 
