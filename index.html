@@ -649,16 +649,31 @@ Source anchor
       return summary;
     }
 
-    function updateBillLinks(billNumber) {
-      const clean = billNumber.trim().replace(/\s+/g, " ");
-      const encoded = encodeURIComponent(clean);
+   function isBillNumber(value) {
+  return /\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*\d{3,5}\b/i.test(value);
+}
 
-      if (!clean) {
-        summaryLink.href = "https://app.leg.wa.gov/billsummary/";
-        searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
-        trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
-        return;
-      }
+function updateBillLinks(query) {
+  const clean = query.trim().replace(/\s+/g, " ");
+  const encoded = encodeURIComponent(clean);
+
+  if (!clean) {
+    summaryLink.href = "https://app.leg.wa.gov/billsummary/";
+    searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
+    trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
+    return;
+  }
+
+  if (isBillNumber(clean)) {
+    summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`;
+    searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
+  } else {
+    summaryLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
+    searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
+  }
+
+  trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
+}
 
       summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`;
       searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
