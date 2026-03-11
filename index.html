@@ -551,317 +551,260 @@ Source anchor
 
   <!-- ===== DASHBOARD SCRIPT ===== -->
   <script>
-    const howToggle = document.getElementById("howToggle");
-    const howBox = document.getElementById("howBox");
-    const translateBtn = document.getElementById("translateBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const billText = document.getElementById("billText");
-    const translationOutput = document.getElementById("translationOutput");
-    const billNumberInput = document.getElementById("billNumber");
-    const  = document.getElementById("");
-    const fillFromTextBtn = document.getElementById("fillFromTextBtn");
-    const summaryLink = document.getElementById("summaryLink");
-    const searchLink = document.getElementById("searchLink");
-    const trackLink = document.getElementById("trackLink");
-    const anchorList = document.getElementById("anchorList");
+  const howToggle = document.getElementById("howToggle");
+  const howBox = document.getElementById("howBox");
+  const translateBtn = document.getElementById("translateBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const billText = document.getElementById("billText");
+  const translationOutput = document.getElementById("translationOutput");
+  const billNumberInput = document.getElementById("billNumber");
+  const openBillPageBtn = document.getElementById("openBillPageBtn");
+  const summaryLink = document.getElementById("summaryLink");
+  const searchLink = document.getElementById("searchLink");
+  const trackLink = document.getElementById("trackLink");
+  const anchorList = document.getElementById("anchorList");
 
-    howToggle.addEventListener("click", () => {
-      howBox.classList.toggle("open");
+  howToggle.addEventListener("click", () => {
+    howBox.classList.toggle("open");
+  });
+
+  function normalizeSpaces(text) {
+    return text.replace(/\s+/g, " ").trim();
+  }
+
+  function detectBillNumber(text) {
+    const match = text.match(/\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*(\d{3,5})\b/i);
+    if (!match) return "";
+    return `${match[1].toUpperCase()} ${match[2]}`;
+  }
+
+  function isBillNumber(value) {
+    return /\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*\d{3,5}\b/i.test(value);
+  }
+
+  function extractSectionReference(text) {
+    const match = text.match(/\b(section|sec\.)\s+(\d+[a-zA-Z0-9().-]*)\b/i);
+    if (!match) return "";
+    return `Section ${match[2]}`;
+  }
+
+  function extractActors(text) {
+    const actorPatterns = [
+      /\bcounty auditors?\b/gi,
+      /\bsecretary of state\b/gi,
+      /\bdepartment of [a-z\s]+\b/gi,
+      /\bdepartment\b/gi,
+      /\bagency\b/gi,
+      /\bboard\b/gi,
+      /\bcommission\b/gi,
+      /\bemployer\b/gi,
+      /\bemployee\b/gi,
+      /\bperson\b/gi,
+      /\bresident\b/gi,
+      /\bvoter\b/gi,
+      /\bapplicant\b/gi,
+      /\bowner\b/gi,
+      /\blicensee\b/gi,
+      /\bcounty\b/gi,
+      /\bcity\b/gi,
+      /\bdistrict\b/gi,
+      /\bdepartment of health\b/gi,
+      /\blocal health departments?\b/gi
+    ];
+
+    const found = new Set();
+
+    actorPatterns.forEach((pattern) => {
+      const matches = text.match(pattern);
+      if (matches) {
+        matches.forEach((m) => found.add(m.trim()));
+      }
     });
 
-    function detectBillNumber(text) {
-      const match = text.match(/\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*(\d{3,5})\b/i);
-      if (!match) return "";
-      return `${match[1].toUpperCase()} ${match[2]}`;
-    }
-
-    function extractSectionReference(text) {
-      const match = text.match(/\b(section|sec\.)\s+(\d+[a-zA-Z0-9().-]*)\b/i);
-      if (!match) return "Section reference not detected";
-      return `Section ${match[2]}`;
-    }
-
-    function extractActors(text) {
-      const actorPatterns = [
-        /\bcounty auditors?\b/gi,
-        /\bsecretary of state\b/gi,
-        /\bdepartment\b/gi,
-        /\bagency\b/gi,
-        /\bboard\b/gi,
-        /\bcommission\b/gi,
-        /\bemployer\b/gi,
-        /\bemployee\b/gi,
-        /\bperson\b/gi,
-        /\bresident\b/gi,
-        /\bvoter\b/gi,
-        /\bapplicant\b/gi,
-        /\bowner\b/gi,
-        /\blicensee\b/gi,
-        /\bcounty\b/gi,
-        /\bcity\b/gi
-      ];
-
-      const found = new Set();
-
-      actorPatterns.forEach((pattern) => {
-        const matches = text.match(pattern);
-        if (matches) {
-          matches.forEach((m) => found.add(m.trim()));
-        }
-      });
-
-      return [...found];
-    }
-
-    function extractSentences(text) {
-      return text
-        .replace(/\s+/g, " ")
-        .split(/(?<=[.!?])\s+/)
-        .map((s) => s.trim())
-        .filter(Boolean);
-    }
-
-    function findLines(sentences, regex) {
-      return sentences.filter((sentence) => regex.test(sentence));
-    }
-
-    function toBulletBlock(items) {
-      if (!items.length) return "• None detected";
-      return items.map((item) => `• ${item}`).join("\n");
-    }
-
-    function buildPlainSummary(text) {
-      const cleaned = text.replace(/\s+/g, " ").trim();
-      if (!cleaned) return "No text provided.";
-
-      let summary = cleaned.split(/(?<=[.!?])\s+/)[0] || cleaned;
-      summary = summary.slice(0, 220).trim();
-
-      summary = summary
-        .replace(/\bshall\b/gi, "must")
-        .replace(/\bprior to\b/gi, "before")
-        .replace(/\bpursuant to\b/gi, "under")
-        .replace(/\bnot less than\b/gi, "at least")
-        .replace(/\bnot more than\b/gi, "no more than");
-
-      return summary;
-    }
-
-   function isBillNumber(value) {
-  return /\b(HB|SB|SHB|SSB|EHB|ESB|2SHB|2SSB)\s*-?\s*\d{3,5}\b/i.test(value);
-}
-
-function updateBillLinks(query) {
-  const clean = query.trim().replace(/\s+/g, " ");
-  const encoded = encodeURIComponent(clean);
-
-  if (!clean) {
-    summaryLink.href = "https://app.leg.wa.gov/billsummary/";
-    searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
-    trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
-    return;
+    return [...found];
   }
 
-  if (isBillNumber(clean)) {
-    summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`;
-    searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
-  } else {
-    summaryLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
-    searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
+  function extractSentences(text) {
+    return text
+      .replace(/\s+/g, " ")
+      .split(/(?<=[.!?])\s+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
 
-  trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
-}
+  function findLines(sentences, regex) {
+    return sentences.filter((sentence) => regex.test(sentence));
+  }
 
-      summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encoded}&Year=2025`;
-      searchLink.href = `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encoded}`;
-      trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
-    }
+  function toBulletBlock(items, emptyText) {
+    if (!items.length) return `• ${emptyText}`;
+    return items.map((item) => `• ${item}`).join("\n");
+  }
 
-    function updateTetherPanel(billNumber, sectionRef) {
-      anchorList.innerHTML = `
-        <li>Bill ID anchor: ${billNumber || "not detected"}</li>
-        <li>Section anchor: ${sectionRef || "not detected"}</li>
-        <li>Clause anchor: not detected</li>
-        <li>Source reference: attach official bill page once bill number is known</li>
-      `;
-    }
+  function buildPlainSummary(text) {
+    const cleaned = normalizeSpaces(text);
+    if (!cleaned) return "No structured summary available yet.";
 
-    function simpleTranslate(text) {
-      const trimmed = text.trim();
+    let summary = cleaned.split(/(?<=[.!?])\s+/)[0] || cleaned;
+    summary = summary.slice(0, 220).trim();
 
-      if (!trimmed) {
-        updateTetherPanel("", "");
-        return `Plain-Language Summary
-Output will appear here.
+    summary = summary
+      .replace(/\bshall\b/gi, "must")
+      .replace(/\bprior to\b/gi, "before")
+      .replace(/\bpursuant to\b/gi, "under")
+      .replace(/\bnot less than\b/gi, "at least")
+      .replace(/\bnot more than\b/gi, "no more than");
+
+    return summary;
+  }
+
+  function updateTetherPanel(billNumber, sectionRef) {
+    anchorList.innerHTML = `
+      <li>Bill ID: ${billNumber || "not available"}</li>
+      <li>Section: ${sectionRef || "not available"}</li>
+      <li>Clause: not available</li>
+      <li>Official source: available after bill identification</li>
+    `;
+  }
+
+  function getDefaultTranslationText() {
+    return `Plain-Language Summary
+No structured summary available yet.
 
 Who the rule applies to
-• None detected
+• No target actors detected.
 
 Required actions
-• None detected
+• No required actions detected.
 
 Allowed actions
-• None detected
+• No allowed actions detected.
 
 Prohibited actions
-• None detected
+• No prohibited actions detected.
 
 Timing or deadlines
-• None detected
+• No timing signals detected.
 
 Source anchor
-• Bill identifier not detected
-• Section reference not detected`;
-      }
+• No bill identifier detected.
+• No section reference detected.`;
+  }
 
-      const sentences = extractSentences(trimmed);
-      const billNumber = detectBillNumber(trimmed);
-      const sectionRef = extractSectionReference(trimmed);
-      const actors = extractActors(trimmed);
+  function simpleTranslate(text) {
+    const trimmed = text.trim();
 
-      const required = findLines(sentences, /\b(must|shall|required to|is required to)\b/i);
-      const allowed = findLines(sentences, /\bmay\b/i).filter(
-        (line) => !/\bmay not\b/i.test(line)
-      );
-      const prohibited = findLines(sentences, /\b(may not|shall not|must not|prohibited)\b/i);
-      const timing = findLines(
-        sentences,
-        /\b(within\s+\d+\s+(day|days|month|months|year|years)|before|after|no later than|deadline|by\s+\d{1,2}\/\d{1,2}|\bby\b)/i
-      );
+    if (!trimmed) {
+      updateTetherPanel("", "");
+      return getDefaultTranslationText();
+    }
 
-      updateTetherPanel(billNumber, sectionRef);
+    const sentences = extractSentences(trimmed);
+    const billNumber = detectBillNumber(trimmed);
+    const sectionRef = extractSectionReference(trimmed);
+    const actors = extractActors(trimmed);
 
-      return `Plain-Language Summary
+    const required = findLines(sentences, /\b(must|shall|required to|is required to)\b/i);
+    const allowed = findLines(sentences, /\bmay\b/i).filter(
+      (line) => !/\bmay not\b/i.test(line)
+    );
+    const prohibited = findLines(sentences, /\b(may not|shall not|must not|prohibited)\b/i);
+    const timing = findLines(
+      sentences,
+      /\b(within\s+\d+\s+(day|days|month|months|year|years)|before|after|no later than|deadline|annually|each calendar year|by\s+\d{1,2}\/\d{1,2}|\bby\b)/i
+    );
+
+    updateTetherPanel(billNumber, sectionRef);
+
+    return `Plain-Language Summary
 ${buildPlainSummary(trimmed)}
 
 Who the rule applies to
-${toBulletBlock(actors)}
+${toBulletBlock(actors, "No target actors detected.")}
 
 Required actions
-${toBulletBlock(required)}
+${toBulletBlock(required, "No required actions detected.")}
 
 Allowed actions
-${toBulletBlock(allowed)}
+${toBulletBlock(allowed, "No allowed actions detected.")}
 
 Prohibited actions
-${toBulletBlock(prohibited)}
+${toBulletBlock(prohibited, "No prohibited actions detected.")}
 
 Timing or deadlines
-${toBulletBlock(timing)}
+${toBulletBlock(timing, "No timing signals detected.")}
 
 Source anchor
-• ${billNumber || "Bill identifier not detected"}
-• ${sectionRef}`;
+• ${billNumber || "No bill identifier detected."}
+• ${sectionRef || "No section reference detected."}`;
+  }
+
+  function structuralLanguageCompanion(text) {
+    return simpleTranslate(text);
+  }
+
+  function buildSearchUrl(query) {
+    return `https://leg.wa.gov/bills-meetings-and-session/bills/?q=${encodeURIComponent(query)}`;
+  }
+
+  function updateBillLinks(query) {
+    const clean = normalizeSpaces(query);
+
+    if (!clean) {
+      summaryLink.href = "https://app.leg.wa.gov/billsummary/";
+      searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
+      trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
+      return;
     }
-function structuralLanguageCompanion(text) {
-  return simpleTranslate(text);
-}
 
-async function fetchBillText(query) {
-  const response = await fetch(`/api/fetch-bill?query=${encodeURIComponent(query)}`);
+    searchLink.href = buildSearchUrl(clean);
+    trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
 
-  if (!response.ok) {
-    throw new Error("Bill fetch failed.");
-  }
-
-  const data = await response.json();
-
-  if (!data || !data.text) {
-    throw new Error("No bill text returned.");
-  }
-
-  return data;
-}
-
-async function resolveAndAnalyzeBill(query) {
-  const clean = query.trim();
-
-  if (!clean) {
-    alert("Enter a bill number or keyword first.");
-    return;
-  }
-
-  .disabled = true;
-  .textContent = "Searching...";
-
-  try {
-    const billData = await fetchBillText(clean);
-
-    if (billData.billNumber) {
-      billNumberInput.value = billData.billNumber;
-      updateBillLinks(billData.billNumber);
+    if (isBillNumber(clean)) {
+      const digitsMatch = clean.match(/\d{3,5}/);
+      const digits = digitsMatch ? digitsMatch[0] : clean;
+      summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(digits)}&Year=2025`;
     } else {
-      updateBillLinks(clean);
+      summaryLink.href = buildSearchUrl(clean);
+    }
+  }
+
+  translateBtn.addEventListener("click", () => {
+    const text = billText.value;
+    const detected = detectBillNumber(text);
+
+    translationOutput.textContent = structuralLanguageCompanion(text);
+
+    if (detected) {
+      billNumberInput.value = detected;
+      updateBillLinks(detected);
+    }
+  });
+
+  clearBtn.addEventListener("click", () => {
+    billText.value = "";
+    translationOutput.textContent = getDefaultTranslationText();
+    updateTetherPanel("", "");
+  });
+
+  openBillPageBtn.addEventListener("click", () => {
+    const query = normalizeSpaces(billNumberInput.value);
+
+    if (!query) {
+      alert("Enter a bill number or keyword first.");
+      return;
     }
 
-    billText.value = billData.text;
-    translationOutput.textContent = structuralLanguageCompanion(billData.text);
+    updateBillLinks(query);
+    window.open(buildSearchUrl(query), "_blank", "noopener,noreferrer");
+  });
 
-    const detectedBill = billData.billNumber || detectBillNumber(billData.text);
-    const detectedSection = extractSectionReference(billData.text);
+  billNumberInput.addEventListener("input", (event) => {
+    updateBillLinks(event.target.value);
+  });
 
-    updateTetherPanel(detectedBill, detectedSection);
-  } catch (error) {
-    console.error(error);
-    alert("Could not retrieve bill text yet.");
-  } finally {
-    .disabled = false;
-    .textContent = "Search Bill or Keyword";
-  }
-}
-    translateBtn.addEventListener("click", () => {
-      const text = billText.value;
-      const detected = detectBillNumber(text);
-
-      translationOutput.textContent = structuralLanguageCompanion(text);
-     
-      if (detected) {
-        billNumberInput.value = detected;
-        updateBillLinks(detected);
-      }
-    });
-
-    clearBtn.addEventListener("click", () => {
-      billText.value = "";
-      translationOutput.textContent = `Plain-Language Summary
-Output will appear here.
-
-Who the rule applies to
-• None detected
-
-Required actions
-• None detected
-
-Allowed actions
-• None detected
-
-Prohibited actions
-• None detected
-
-Timing or deadlines
-• None detected
-
-Source anchor
-• Bill identifier not detected
-• Section reference not detected`;
-
-      updateTetherPanel("", "");
-    });
-
-    fillFromTextBtn.addEventListener("click", () => {
-      const detected = detectBillNumber(billText.value);
-
-      if (detected) {
-        billNumberInput.value = detected;
-        updateBillLinks(detected);
-      } else {
-        alert("No Washington bill number was detected in the pasted text.");
-      }
-    });
-openBillPageBtn.addEventListener("click", 
-    updateBillLinks("");
-    updateTetherPanel("", "");
-  </script>
-</body>
-</html>
+  translationOutput.textContent = getDefaultTranslationText();
+  updateBillLinks("");
+  updateTetherPanel("", "");
+</script>
+  
