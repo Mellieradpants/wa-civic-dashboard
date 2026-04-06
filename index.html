@@ -317,10 +317,10 @@
       </button>
 
       <div class="how-box" id="howBox">
-        <p>1. Search a bill number if you already have one.</p>
-        <p>2. Load or paste bill text into the translator.</p>
-        <p>3. Review the extracted structure.</p>
-        <p>4. Use the official links to verify the source.</p>
+        <p>1. Load a sample bill or paste Washington bill text.</p>
+        <p>2. Run translation to extract structured meaning.</p>
+        <p>3. Review who it applies to, required actions, allowed actions, prohibited actions, timing, and source anchors.</p>
+        <p>4. Use the official links to verify the source record.</p>
       </div>
     </header>
 
@@ -386,10 +386,11 @@
         <textarea id="billText" placeholder="Paste bill text here..."></textarea>
 
         <div class="button-row">
-  <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
-  <button class="secondary" id="loadSampleBtn" type="button">Load Sample</button>
-  <button class="secondary" id="clearBtn" type="button">Clear</button>
-</div>
+          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
+          <button class="secondary" id="loadSampleBtn" type="button">Load Sample</button>
+          <button class="secondary" id="clearBtn" type="button">Clear</button>
+        </div>
+
         <h3>Plain-Language Translation</h3>
         <div class="output-box" id="translationOutput">Plain-Language Summary
 Output will appear here.
@@ -549,13 +550,14 @@ Source anchor
 
     const billText = document.getElementById("billText");
     const translateBtn = document.getElementById("translateBtn");
-    const clearBtn = document.getElementById("clearBtn");
     const loadSampleBtn = document.getElementById("loadSampleBtn");
+    const clearBtn = document.getElementById("clearBtn");
     const translationOutput = document.getElementById("translationOutput");
     const anchorList = document.getElementById("anchorList");
 
     const summaryLink = document.getElementById("summaryLink");
     const searchLink = document.getElementById("searchLink");
+    const trackLink = document.getElementById("trackLink");
 
     let loadedBill = null;
 
@@ -724,7 +726,27 @@ Source anchor
         }
 
         loadedBill = await response.json();
-        billText.value = joinBillSections(loadedBill);
+
+        const text = joinBillSections(loadedBill);
+        billText.value = text;
+
+        if (text) {
+          parseBillText(
+            text,
+            loadedBill.bill_id || null,
+            loadedBill.source_url || null
+          );
+        }
+
+        if (loadedBill.bill_id) {
+          billNumberInput.value = loadedBill.bill_id;
+
+          const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
+          const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
+
+          summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
+          searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
+        }
 
         console.log("Loaded bill JSON:", loadedBill);
       } catch (error) {
@@ -750,12 +772,17 @@ Source anchor
 
     clearBtn.addEventListener("click", () => {
       billText.value = "";
+      billNumberInput.value = "";
       loadedBill = null;
       safeSetDefaultOutput();
+      summaryLink.href = "https://app.leg.wa.gov/billsummary/";
+      searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
+      trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
     });
+
     loadSampleBtn.addEventListener("click", () => {
-  loadSampleBill();
-});
+      loadSampleBill();
+    });
 
     safeSetDefaultOutput();
     loadSampleBill();
