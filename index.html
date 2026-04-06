@@ -128,6 +128,13 @@
       color: var(--muted);
     }
 
+    .status-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      min-height: 20px;
+    }
+
     label {
       display: block;
       font-weight: 600;
@@ -252,6 +259,57 @@
       text-decoration: underline;
     }
 
+    .search-results {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fbfdff;
+      padding: 12px;
+    }
+
+    .search-results.open {
+      display: block;
+    }
+
+    .result-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .result-list li + li {
+      margin-top: 10px;
+    }
+
+    .result-button {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .result-button:hover {
+      background: #f8fafc;
+      border-color: #c5d3ea;
+    }
+
+    .result-title {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .result-meta {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     .resource-columns {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -317,9 +375,9 @@
       </button>
 
       <div class="how-box" id="howBox">
-        <p>1. Load a sample bill or paste Washington bill text.</p>
-        <p>2. Run translation to extract structured meaning.</p>
-        <p>3. Review who it applies to, required actions, allowed actions, prohibited actions, timing, and source anchors.</p>
+        <p>1. Search the local bill catalog by bill number, title word, or known variation.</p>
+        <p>2. Select a result to load the structured bill record into the translator.</p>
+        <p>3. Review who it applies to, required actions, allowed actions, prohibited actions, timing, and anchors.</p>
         <p>4. Use the official links to verify the source record.</p>
       </div>
     </header>
@@ -329,7 +387,7 @@
       <section class="panel" id="follow-bill">
         <h2>Search a Bill</h2>
         <p class="section-note">
-          Enter a Washington bill number to open official Washington Legislature pages.
+          Search the local Washington bill catalog. This loads a selected bill into the translator instead of opening an external site immediately.
         </p>
 
         <label for="billNumber">Bill number or keyword</label>
@@ -341,8 +399,14 @@
 
         <div class="button-row">
           <button class="primary" id="openBillPageBtn" type="button">
-            Search Bill or Keyword
+            Search Catalog
           </button>
+        </div>
+
+        <div class="status-note" id="searchStatus"></div>
+
+        <div class="search-results" id="searchResults">
+          <ul class="result-list" id="resultList"></ul>
         </div>
 
         <div class="follow-actions">
@@ -379,7 +443,7 @@
       <section class="panel" id="translator">
         <h2>Bill Translator</h2>
         <p class="section-note">
-          Paste bill text to reveal the structure of the rule.
+          Paste bill text or load a bill detail record to reveal the structure of the rule.
         </p>
 
         <label for="billText">Bill text</label>
@@ -547,6 +611,9 @@ Source anchor
     const howBox = document.getElementById("howBox");
     const billNumberInput = document.getElementById("billNumber");
     const openBillPageBtn = document.getElementById("openBillPageBtn");
+    const searchStatus = document.getElementById("searchStatus");
+    const searchResults = document.getElementById("searchResults");
+    const resultList = document.getElementById("resultList");
 
     const billText = document.getElementById("billText");
     const translateBtn = document.getElementById("translateBtn");
@@ -560,6 +627,7 @@ Source anchor
     const trackLink = document.getElementById("trackLink");
 
     let loadedBill = null;
+    let billIndex = [];
 
     function safeSetDefaultOutput() {
       translationOutput.textContent = `Plain-Language Summary
@@ -592,30 +660,109 @@ Source anchor
       `;
     }
 
-    howToggle.addEventListener("click", () => {
-      howBox.classList.toggle("open");
-    });
+    function setSearchStatus(message) {
+      searchStatus.textContent = message || "";
+    }
 
-    openBillPageBtn.addEventListener("click", () => {
-      const raw = billNumberInput.value.trim();
+    function clearSearchResults() {
+      resultList.innerHTML = "";
+      searchResults.classList.remove("open");
+    }
 
-      if (!raw) {
-        window.open("https://leg.wa.gov/bills-meetings-and-session/bills/", "_blank", "noopener,noreferrer");
+    function normalizeQuery(text) {
+      return (text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    }
+
+    function renderSearchResults(results) {
+      resultList.innerHTML = "";
+
+      if (!results.length) {
+        clearSearchResults();
         return;
       }
 
-      const cleaned = raw.toUpperCase().replace(/\s+/g, "");
-      const numberMatch = cleaned.match(/\d{3,4}/);
-      const billNumber = numberMatch ? numberMatch[0] : raw;
+      results.forEach((bill) => {
+        const item = document.createElement("li");
+        const button = document.createElement("button");
 
-      const summaryUrl = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
-      const searchUrl = `https://search.leg.wa.gov/search?query=${encodeURIComponent(raw)}`;
+        button.type = "button";
+        button.className = "result-button";
+        button.innerHTML = `
+          <span class="result-title">${bill.bill_id_display} — ${bill.title}</span>
+          <span class="result-meta">${bill.chamber} • ${bill.session} • ${bill.status}</span>
+        `;
 
-      summaryLink.href = summaryUrl;
-      searchLink.href = searchUrl;
+        button.addEventListener("click", () => {
+          loadBillDetail(bill.detail_json_path, bill);
+        });
 
-      window.open(summaryUrl, "_blank", "noopener,noreferrer");
-    });
+        item.appendChild(button);
+        resultList.appendChild(item);
+      });
+
+      searchResults.classList.add("open");
+    }
+
+    async function loadBillIndex() {
+      try {
+        const response = await fetch("./data/wa/bill-index.json", { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        billIndex = await response.json();
+        console.log("Loaded bill index:", billIndex);
+      } catch (error) {
+        console.error("Error loading bill index:", error);
+        setSearchStatus("Could not load local bill index.");
+      }
+    }
+
+    async function loadBillDetail(path, catalogRecord = null) {
+      try {
+        const response = await fetch(`./${path}`, { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        loadedBill = await response.json();
+
+        const combinedText = joinBillSections(loadedBill);
+        billText.value = combinedText;
+
+        if (catalogRecord && catalogRecord.bill_id_display) {
+          billNumberInput.value = catalogRecord.bill_id_display;
+        } else if (loadedBill.bill_id) {
+          billNumberInput.value = loadedBill.bill_id;
+        }
+
+        if (combinedText) {
+          parseBillText(
+            combinedText,
+            loadedBill.bill_id || null,
+            loadedBill.source_url || null
+          );
+        }
+
+        if (loadedBill.bill_id) {
+          const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
+          const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
+
+          summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
+          searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
+        }
+
+        setSearchStatus(`Loaded ${loadedBill.bill_id || "selected bill"} from local catalog.`);
+        clearSearchResults();
+
+        console.log("Loaded bill detail:", loadedBill);
+      } catch (error) {
+        console.error("Error loading bill detail:", error);
+        setSearchStatus("Could not load selected bill detail.");
+      }
+    }
 
     function joinBillSections(bill) {
       if (!bill || !bill.versions || !bill.versions.length) return "";
@@ -748,12 +895,56 @@ Source anchor
           searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
         }
 
+        setSearchStatus("Loaded sample bill.");
+        clearSearchResults();
+
         console.log("Loaded bill JSON:", loadedBill);
       } catch (error) {
         console.error("Error loading sample bill:", error);
         translationOutput.textContent = "Could not load sample bill JSON.";
       }
     }
+
+    howToggle.addEventListener("click", () => {
+      howBox.classList.toggle("open");
+    });
+
+    openBillPageBtn.addEventListener("click", () => {
+      const query = billNumberInput.value.trim();
+
+      if (!query) {
+        setSearchStatus("Enter a bill number or keyword.");
+        clearSearchResults();
+        return;
+      }
+
+      const normalized = normalizeQuery(query);
+
+      const results = billIndex.filter((bill) => {
+        const aliases = bill.aliases || [];
+        return (
+          normalizeQuery(bill.bill_id_normalized).includes(normalized) ||
+          normalizeQuery(bill.bill_number).includes(normalized) ||
+          normalizeQuery(bill.title).includes(normalized) ||
+          aliases.some(alias => normalizeQuery(alias).includes(normalized))
+        );
+      });
+
+      if (!results.length) {
+        setSearchStatus("No local catalog matches found.");
+        clearSearchResults();
+        return;
+      }
+
+      if (results.length === 1) {
+        setSearchStatus(`1 match found: ${results[0].bill_id_display}`);
+        loadBillDetail(results[0].detail_json_path, results[0]);
+        return;
+      }
+
+      setSearchStatus(`${results.length} matches found. Select a bill below.`);
+      renderSearchResults(results);
+    });
 
     translateBtn.addEventListener("click", () => {
       const text = billText.value.trim();
@@ -769,36 +960,14 @@ Source anchor
         loadedBill ? loadedBill.source_url : null
       );
     });
-async function loadBillDetail(path) {
-  try {
-    const response = await fetch(`./${path}`, { cache: "no-store" });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    const sections = data.versions?.[0]?.sections || [];
-
-    const combinedText = sections
-      .map(s => `Section ${s.section_number}\n${s.text}`)
-      .join("\n\n");
-
-    billText.value = combinedText;
-
-    translateBtn.click();
-
-  } catch (error) {
-    console.error("Error loading bill detail:", error);
-  }
-}
 
     clearBtn.addEventListener("click", () => {
       billText.value = "";
       billNumberInput.value = "";
       loadedBill = null;
       safeSetDefaultOutput();
+      clearSearchResults();
+      setSearchStatus("");
       summaryLink.href = "https://app.leg.wa.gov/billsummary/";
       searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
       trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
@@ -809,8 +978,8 @@ async function loadBillDetail(path) {
     });
 
     safeSetDefaultOutput();
+    loadBillIndex();
     loadSampleBill();
   </script>
 </body>
 </html>
-  
