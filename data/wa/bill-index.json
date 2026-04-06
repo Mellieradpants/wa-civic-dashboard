@@ -1,1 +1,14 @@
-
+[
+  {
+    "bill_id_display": "HB 1234",
+    "bill_id_normalized": "HB1234",
+    "bill_number": "1234",
+    "chamber": "House",
+    "title": "AN ACT Relating to example policy",
+    "session": "2025-26",
+    "status": "Sample",
+    "source_url": "https://example.com/hb1234.xml",
+    "detail_json_path": "data/wa/bills/HB1234.json",
+    "aliases": ["HOUSE BILL 1234", "1234"]
+  }
+]
