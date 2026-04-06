@@ -19,7 +19,16 @@
     * {
       box-sizing: border-box;
     }
-
+<script>
+fetch("data/wa/sample-bill.json")
+  .then(res => res.json())
+  .then(data => {
+    console.log("Loaded bill:", data);
+  })
+  .catch(err => {
+    console.error("Error loading JSON:", err);
+  });
+</script>
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
