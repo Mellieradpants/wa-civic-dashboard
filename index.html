@@ -769,6 +769,30 @@ Source anchor
         loadedBill ? loadedBill.source_url : null
       );
     });
+async function loadBillDetail(path) {
+  try {
+    const response = await fetch(`./${path}`, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const sections = data.versions?.[0]?.sections || [];
+
+    const combinedText = sections
+      .map(s => `Section ${s.section_number}\n${s.text}`)
+      .join("\n\n");
+
+    billText.value = combinedText;
+
+    translateBtn.click();
+
+  } catch (error) {
+    console.error("Error loading bill detail:", error);
+  }
+}
 
     clearBtn.addEventListener("click", () => {
       billText.value = "";
