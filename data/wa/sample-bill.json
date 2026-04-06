@@ -1,30 +1,17 @@
 {
-  "bill_id": "HB 1234",
-  "title": "AN ACT Relating to example policy",
+  "bill_id": "SB 5714",
+  "title": "SENATE BILL 5714",
   "versions": [
     {
       "version_id": "original",
       "sections": [
         {
           "section_number": "1",
-          "text": "A person must register with the department within 30 days of beginning operation."
-        },
-        {
-          "section_number": "2",
-          "text": "The department may impose penalties for failure to register."
-        },
-        {
-          "section_number": "3",
-          "text": "This act takes effect July 1, 2025."
+          "text": "PASTE REAL SECTION 1 TEXT HERE"
         }
       ]
     }
   ],
-  "actions": [
-    {
-      "date": "2025-01-10",
-      "text": "First reading"
-    }
-  ],
-  "source_url": "https://app.leg.wa.gov/"
+  "actions": [],
+  "source_url": "https://app.leg.wa.gov/documents/billdocs/2025-26/Xml/Bills/Senate%20Bills/5714.xml"
 }
