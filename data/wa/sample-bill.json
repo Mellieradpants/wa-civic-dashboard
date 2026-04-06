@@ -1,4 +1,33 @@
-
+{
+  "bill_id": "HB 1234",
+  "title": "AN ACT Relating to example policy",
+  "versions": [
+    {
+      "version_id": "original",
+      "sections": [
+        {
+          "section_number": "1",
+          "text": "A person must register with the department within 30 days of beginning operation."
+        },
+        {
+          "section_number": "2",
+          "text": "The department may impose penalties for failure to register."
+        },
+        {
+          "section_number": "3",
+          "text": "This act takes effect July 1, 2025."
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "date": "2025-01-10",
+      "text": "First reading"
+    }
+  ],
+  "source_url": "https://app.leg.wa.gov/"
+}
 {
   "bill_id": "HB 1234",
   "title": "Test Bill"
