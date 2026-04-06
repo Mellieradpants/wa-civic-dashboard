@@ -386,10 +386,10 @@
         <textarea id="billText" placeholder="Paste bill text here..."></textarea>
 
         <div class="button-row">
-          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
-          <button class="secondary" id="clearBtn" type="button">Clear</button>
-        </div>
-
+  <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
+  <button class="secondary" id="loadSampleBtn" type="button">Load Sample</button>
+  <button class="secondary" id="clearBtn" type="button">Clear</button>
+</div>
         <h3>Plain-Language Translation</h3>
         <div class="output-box" id="translationOutput">Plain-Language Summary
 Output will appear here.
@@ -550,6 +550,7 @@ Source anchor
     const billText = document.getElementById("billText");
     const translateBtn = document.getElementById("translateBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const loadSampleBtn = document.getElementById("loadSampleBtn");
     const translationOutput = document.getElementById("translationOutput");
     const anchorList = document.getElementById("anchorList");
 
