@@ -67,142 +67,300 @@ button {
 </div>
 
 <script>
+  const howToggle = document.getElementById("howToggle");
+  const howBox = document.getElementById("howBox");
+  const billNumberInput = document.getElementById("billNumber");
+  const openBillPageBtn = document.getElementById("openBillPageBtn");
+  const billText = document.getElementById("billText");
+  const translateBtn = document.getElementById("translateBtn");
+  const loadSampleBtn = document.getElementById("loadSampleBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const translationOutput = document.getElementById("translationOutput");
+  const anchorList = document.getElementById("anchorList");
+  const summaryLink = document.getElementById("summaryLink");
+  const searchLink = document.getElementById("searchLink");
+  const trackLink = document.getElementById("trackLink");
 
-let billIndex = [];
-let loadedBill = null;
+  let loadedBill = null;
+  let billIndex = [];
 
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
-const resultsDiv = document.getElementById("results");
+  function safeSetDefaultOutput() {
+    translationOutput.textContent = `Plain-Language Summary
+Output will appear here.
 
-const billText = document.getElementById("billText");
-const translateBtn = document.getElementById("translateBtn");
-const loadSampleBtn = document.getElementById("loadSampleBtn");
-const clearBtn = document.getElementById("clearBtn");
-const output = document.getElementById("output");
+Who the rule applies to
+• None detected
 
+Required actions
+• None detected
 
-// -------------------- LOAD INDEX --------------------
-async function loadBillIndex() {
-  const res = await fetch("./data/wa/bill-index.json");
-  billIndex = await res.json();
-  console.log("Index loaded:", billIndex);
-}
+Allowed actions
+• None detected
 
+Prohibited actions
+• None detected
 
-// -------------------- SEARCH --------------------
-function normalize(text) {
-  return text.toUpperCase().replace(/[^A-Z0-9]/g, "");
-}
+Timing or deadlines
+• None detected
 
-searchBtn.addEventListener("click", () => {
-  const query = normalize(searchInput.value);
+Source anchor
+• Bill identifier not detected
+• Section reference not detected`;
 
-  const matches = billIndex.filter(b =>
-    normalize(b.bill_id_normalized).includes(query) ||
-    normalize(b.title).includes(query) ||
-    (b.aliases || []).some(a => normalize(a).includes(query))
-  );
-
-  resultsDiv.innerHTML = "";
-
-  if (matches.length === 0) {
-    resultsDiv.innerHTML = "No results";
-    return;
+    anchorList.innerHTML = `
+      <li>Bill ID anchor: not detected</li>
+      <li>Section anchor: not detected</li>
+      <li>Clause anchor: not detected</li>
+      <li>Source reference: attach official bill page once bill number is known</li>
+    `;
   }
 
-  matches.forEach(bill => {
-    const btn = document.createElement("button");
-    btn.textContent = bill.bill_id_display + " — " + bill.title;
+  function normalizeQuery(text) {
+    return (text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  }
 
-    btn.onclick = () => loadBillDetail(bill.detail_json_path);
+  function joinBillSections(bill) {
+    if (!bill || !bill.versions || !bill.versions.length) return "";
 
-    resultsDiv.appendChild(btn);
-    resultsDiv.appendChild(document.createElement("br"));
+    const firstVersion = bill.versions[0];
+    if (!firstVersion.sections || !firstVersion.sections.length) return "";
+
+    return firstVersion.sections
+      .map(section => `Section ${section.section_number}\n${section.text}`)
+      .join("\n\n");
+  }
+
+  function detectBillId(text, fallbackBillId) {
+    const match = text.match(/\b(HB|SB|SHB|SSB|EHB|ESB)\s*\d{3,4}\b/i);
+    return match ? match[0].toUpperCase().replace(/\s+/, " ") : (fallbackBillId || "not detected");
+  }
+
+  function detectSections(text) {
+    const matches = [...text.matchAll(/Section\s+(\d+)/gi)].map(m => `Section ${m[1]}`);
+    return matches.length ? [...new Set(matches)] : ["not detected"];
+  }
+
+  function splitLines(text) {
+    return text
+      .split(/[\n.]+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+
+  function detectRequiredActions(text) {
+    return splitLines(text).filter(line => /\b(must|shall|required to)\b/i.test(line));
+  }
+
+  function detectAllowedActions(text) {
+    return splitLines(text).filter(line => /\b(may|authorized to|permitted to)\b/i.test(line));
+  }
+
+  function detectProhibitedActions(text) {
+    return splitLines(text).filter(line => /\b(may not|must not|shall not|prohibited)\b/i.test(line));
+  }
+
+  function detectTiming(text) {
+    return splitLines(text).filter(line =>
+      /\b(within\s+\d+\s+days?|by\s+[A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|takes effect|effective date|deadline)\b/i.test(line)
+    );
+  }
+
+  function detectAppliesTo(text) {
+    const hit = splitLines(text).find(line =>
+      /\b(a person|department|agency|employer|tenant|landlord|resident|applicant|licensee)\b/i.test(line)
+    );
+    return hit ? [hit] : ["None detected"];
+  }
+
+  function renderTranslation(parsed) {
+    translationOutput.textContent = `Plain-Language Summary
+
+Who the rule applies to
+${parsed.appliesTo.map(item => `• ${item}`).join("\n")}
+
+Required actions
+${parsed.requiredActions.length ? parsed.requiredActions.map(item => `• ${item}`).join("\n") : "• None detected"}
+
+Allowed actions
+${parsed.allowedActions.length ? parsed.allowedActions.map(item => `• ${item}`).join("\n") : "• None detected"}
+
+Prohibited actions
+${parsed.prohibitedActions.length ? parsed.prohibitedActions.map(item => `• ${item}`).join("\n") : "• None detected"}
+
+Timing or deadlines
+${parsed.timing.length ? parsed.timing.map(item => `• ${item}`).join("\n") : "• None detected"}
+
+Source anchor
+• Bill identifier: ${parsed.billId}
+• Section reference: ${parsed.sections.join(", ")}`;
+  }
+
+  function renderAnchors(parsed, sourceUrl) {
+    anchorList.innerHTML = `
+      <li>Bill ID anchor: ${parsed.billId}</li>
+      <li>Section anchor: ${parsed.sections.join(", ")}</li>
+      <li>Clause anchor: rule phrases detected from text-level parsing</li>
+      <li>Source reference: ${sourceUrl || "not detected"}</li>
+    `;
+  }
+
+  function parseBillText(text, fallbackBillId, sourceUrl) {
+    const parsed = {
+      billId: detectBillId(text, fallbackBillId),
+      sections: detectSections(text),
+      appliesTo: detectAppliesTo(text),
+      requiredActions: detectRequiredActions(text),
+      allowedActions: detectAllowedActions(text),
+      prohibitedActions: detectProhibitedActions(text),
+      timing: detectTiming(text)
+    };
+
+    renderTranslation(parsed);
+    renderAnchors(parsed, sourceUrl);
+  }
+
+  async function loadBillIndex() {
+    try {
+      const response = await fetch("./data/wa/bill-index.json", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      billIndex = await response.json();
+      console.log("Loaded bill index:", billIndex);
+    } catch (error) {
+      console.error("Error loading bill index:", error);
+    }
+  }
+
+  async function loadBillDetail(path) {
+    try {
+      const response = await fetch(`./${path}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      loadedBill = await response.json();
+
+      const text = joinBillSections(loadedBill);
+      billText.value = text;
+
+      if (text) {
+        parseBillText(
+          text,
+          loadedBill.bill_id || null,
+          loadedBill.source_url || null
+        );
+      }
+
+      if (loadedBill.bill_id) {
+        billNumberInput.value = loadedBill.bill_id;
+
+        const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
+        const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
+
+        summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
+        searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
+      }
+
+      console.log("Loaded bill detail:", loadedBill);
+    } catch (error) {
+      console.error("Error loading bill detail:", error);
+      translationOutput.textContent = "Could not load selected bill detail JSON.";
+    }
+  }
+
+  async function loadSampleBill() {
+    try {
+      const response = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      loadedBill = await response.json();
+
+      const text = joinBillSections(loadedBill);
+      billText.value = text;
+
+      if (text) {
+        parseBillText(
+          text,
+          loadedBill.bill_id || null,
+          loadedBill.source_url || null
+        );
+      }
+
+      if (loadedBill.bill_id) {
+        billNumberInput.value = loadedBill.bill_id;
+
+        const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
+        const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
+
+        summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
+        searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
+      }
+
+      console.log("Loaded sample bill:", loadedBill);
+    } catch (error) {
+      console.error("Error loading sample bill:", error);
+      translationOutput.textContent = "Could not load sample bill JSON.";
+    }
+  }
+
+  howToggle.addEventListener("click", () => {
+    howBox.classList.toggle("open");
   });
-});
 
+  openBillPageBtn.addEventListener("click", () => {
+    const query = billNumberInput.value.trim();
 
-// -------------------- LOAD BILL --------------------
-async function loadBillDetail(path) {
-  const res = await fetch("./" + path);
-  loadedBill = await res.json();
+    if (!query) {
+      console.log("No query entered");
+      return;
+    }
 
-  const text = loadedBill.versions[0].sections
-    .map(s => `Section ${s.section_number}\n${s.text}`)
-    .join("\n\n");
+    const normalizedQuery = normalizeQuery(query);
 
-  billText.value = text;
+    const match = billIndex.find(bill =>
+      normalizeQuery(bill.bill_id_normalized) === normalizedQuery ||
+      normalizeQuery(bill.bill_number) === normalizedQuery ||
+      normalizeQuery(bill.bill_id_display) === normalizedQuery ||
+      (bill.aliases || []).some(alias => normalizeQuery(alias) === normalizedQuery)
+    );
 
-  translate();
-}
+    if (!match) {
+      console.log("No local match found");
+      return;
+    }
 
+    loadBillDetail(match.detail_json_path);
+  });
 
-// -------------------- SAMPLE --------------------
-async function loadSample() {
-  const res = await fetch("./data/wa/sample-bill.json");
-  loadedBill = await res.json();
+  translateBtn.addEventListener("click", () => {
+    const text = billText.value.trim();
 
-  const text = loadedBill.versions[0].sections
-    .map(s => `Section ${s.section_number}\n${s.text}`)
-    .join("\n\n");
+    if (!text) {
+      translationOutput.textContent = "Paste bill text or load a bill first.";
+      return;
+    }
 
-  billText.value = text;
+    parseBillText(
+      text,
+      loadedBill ? loadedBill.bill_id : null,
+      loadedBill ? loadedBill.source_url : null
+    );
+  });
 
-  translate();
-}
+  clearBtn.addEventListener("click", () => {
+    billText.value = "";
+    billNumberInput.value = "";
+    loadedBill = null;
+    safeSetDefaultOutput();
+    summaryLink.href = "https://app.leg.wa.gov/billsummary/";
+    searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
+    trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
+  });
 
+  loadSampleBtn.addEventListener("click", () => {
+    loadSampleBill();
+  });
 
-// -------------------- TRANSLATE --------------------
-function translate() {
-  const text = billText.value;
-
-  if (!text) {
-    output.textContent = "No text";
-    return;
-  }
-
-  const lines = text.split("\n");
-
-  const required = lines.filter(l => /must|shall/i.test(l));
-  const allowed = lines.filter(l => /may/i.test(l));
-  const prohibited = lines.filter(l => /may not|must not|shall not/i.test(l));
-  const timing = lines.filter(l => /within|takes effect|deadline/i.test(l));
-
-  output.textContent =
-`Who
-• ${required[0] || "None"}
-
-Required
-${required.map(l => "• " + l).join("\n") || "• None"}
-
-Allowed
-${allowed.map(l => "• " + l).join("\n") || "• None"}
-
-Prohibited
-${prohibited.map(l => "• " + l).join("\n") || "• None"}
-
-Timing
-${timing.map(l => "• " + l).join("\n") || "• None"}
-`;
-}
-
-
-// -------------------- EVENTS --------------------
-translateBtn.onclick = translate;
-loadSampleBtn.onclick = loadSample;
-
-clearBtn.onclick = () => {
-  billText.value = "";
-  output.textContent = "";
-  resultsDiv.innerHTML = "";
-};
-
-
-// -------------------- INIT --------------------
-loadBillIndex();
-loadSample();
-
+  safeSetDefaultOutput();
+  loadBillIndex();
+  loadSampleBill();
 </script>
 </body>
 </html>
