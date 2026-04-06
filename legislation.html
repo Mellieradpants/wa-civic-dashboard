@@ -19,16 +19,7 @@
     * {
       box-sizing: border-box;
     }
-<script>
-fetch("data/wa/sample-bill.json")
-  .then(res => res.json())
-  .then(data => {
-    console.log("Loaded bill:", data);
-  })
-  .catch(err => {
-    console.error("Error loading JSON:", err);
-  });
-</script>
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
@@ -326,11 +317,39 @@ fetch("data/wa/sample-bill.json")
       });
     }
 
+    async function loadSampleBill() {
+      try {
+        const response = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const sampleBill = await response.json();
+
+        if (sampleBill && sampleBill.bill_id) {
+          bills.sample = {
+            number: sampleBill.bill_id,
+            topic: sampleBill.title || "Sample bill",
+            about: "Loaded from the normalized Washington bill JSON bridge.",
+            affects: "This panel is now able to read normalized WA bill data.",
+            link: sampleBill.source_url || "https://app.leg.wa.gov/"
+          };
+        }
+
+        console.log("Loaded legislation sample bill:", sampleBill);
+      } catch (error) {
+        console.error("Error loading legislation sample bill JSON:", error);
+      }
+    }
+
     billCards.forEach(card => {
       card.addEventListener("click", () => {
         updateBillPanel(card.dataset.bill);
       });
     });
+
+    updateBillPanel("hb1132");
+    loadSampleBill();
   </script>
 </body>
 </html>
