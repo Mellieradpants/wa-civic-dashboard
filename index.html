@@ -1,985 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Washington State Civic Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Washington Civic Dashboard</title>
 
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --panel: #ffffff;
-      --text: #1f2937;
-      --muted: #5b6472;
-      --border: #d7deea;
-      --accent: #1f6f43;
-      --accent-hover: #155a34;
-      --soft: #eef7f1;
-      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
-    }
+<style>
+body {
+  font-family: Arial;
+  background: #f5f7fb;
+  margin: 0;
+  padding: 20px;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+.container {
+  max-width: 900px;
+  margin: auto;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
+textarea {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 10px;
+}
 
-    .container {
-      width: min(1100px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 48px;
-    }
+button {
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
 
-    .hero {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 28px;
-      margin-bottom: 24px;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.1;
-    }
-
-    .subtitle {
-      margin: 0 0 14px;
-      color: var(--muted);
-      max-width: 760px;
-      font-size: 1.05rem;
-    }
-
-    .how-toggle {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 16px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      white-space: nowrap;
-    }
-
-    .how-toggle:hover {
-      background: #f8fafc;
-    }
-
-    .how-box {
-      margin-top: 16px;
-      background: var(--soft);
-      border: 1px solid #cfe0ff;
-      border-radius: 16px;
-      padding: 18px;
-      display: none;
-    }
-
-    .how-box.open {
-      display: block;
-    }
-
-    .how-box p {
-      margin: 0 0 10px;
-    }
-
-    .how-box p:last-child {
-      margin-bottom: 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-
-    .panel h2 {
-      margin: 0 0 8px;
-      font-size: 1.35rem;
-    }
-
-    #follow-bill h2 {
-      font-size: 1.1rem;
-    }
-
-    .panel h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    .section-note {
-      margin: 0 0 16px;
-      color: var(--muted);
-    }
-
-    .status-note {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      min-height: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    textarea,
-    input[type="text"] {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 1rem;
-      color: var(--text);
-      background: #fff;
-    }
-
-    textarea {
-      min-height: 220px;
-      resize: vertical;
-      margin-bottom: 14px;
-    }
-
-    input[type="text"] {
-      margin-bottom: 12px;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    button.primary,
-    a.primary-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background: var(--accent);
-      color: white;
-      padding: 13px 18px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      text-decoration: none;
-      min-height: 46px;
-    }
-
-    button.primary:hover,
-    a.primary-link:hover {
-      background: var(--accent-hover);
-    }
-
-    button.secondary {
-      border: 1px solid var(--border);
-      background: white;
-      color: var(--text);
-      padding: 13px 18px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      min-height: 46px;
-    }
-
-    button.secondary:hover {
-      background: #f8fafc;
-    }
-
-    .output-box {
-      border: 1px solid var(--border);
-      background: #fbfdff;
-      border-radius: 14px;
-      padding: 16px;
-      min-height: 220px;
-      white-space: pre-wrap;
-    }
-
-    .anchor-box {
-      margin-top: 14px;
-      border: 1px dashed #b9c8e4;
-      background: #fafcff;
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    .anchor-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-    }
-
-    .follow-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .follow-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      background: #fcfdff;
-    }
-
-    .follow-card strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.95rem;
-    }
-
-    .follow-card a,
-    .resource-list a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .follow-card a:hover,
-    .resource-list a:hover {
-      text-decoration: underline;
-    }
-
-    .search-results {
-      display: none;
-      margin-top: 14px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: #fbfdff;
-      padding: 12px;
-    }
-
-    .search-results.open {
-      display: block;
-    }
-
-    .result-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .result-list li + li {
-      margin-top: 10px;
-    }
-
-    .result-button {
-      width: 100%;
-      text-align: left;
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 12px;
-      padding: 12px;
-      cursor: pointer;
-      color: var(--text);
-    }
-
-    .result-button:hover {
-      background: #f8fafc;
-      border-color: #c5d3ea;
-    }
-
-    .result-title {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .result-meta {
-      display: block;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .resource-columns {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .resource-group {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      background: #fcfdff;
-    }
-
-    .resource-group h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    .resource-list {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .resource-list li + li {
-      margin-top: 8px;
-    }
-
-    .footer-note {
-      margin-top: 24px;
-      color: var(--muted);
-      font-size: 0.94rem;
-      text-align: center;
-    }
-
-    @media (max-width: 700px) {
-      .container {
-        width: min(100% - 20px, 1100px);
-        padding-top: 18px;
-      }
-
-      .hero,
-      .panel {
-        padding: 18px;
-      }
-
-      .how-toggle {
-        width: 100%;
-      }
-    }
-  </style>
+.output {
+  white-space: pre-wrap;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-
-    <header class="hero">
-      <h1>Washington State Civic Dashboard</h1>
-      <p class="subtitle">
-        Understand bills, follow legislation, and access official Washington civic resources.
-      </p>
-
-      <button class="how-toggle" id="howToggle" type="button">
-        How to Use This Tool
-      </button>
-
-      <div class="how-box" id="howBox">
-        <p>1. Search the local bill catalog by bill number, title word, or known variation.</p>
-        <p>2. Select a result to load the structured bill record into the translator.</p>
-        <p>3. Review who it applies to, required actions, allowed actions, prohibited actions, timing, and anchors.</p>
-        <p>4. Use the official links to verify the source record.</p>
-      </div>
-    </header>
-
-    <main class="grid">
-
-      <section class="panel" id="follow-bill">
-        <h2>Search a Bill</h2>
-        <p class="section-note">
-          Search the local Washington bill catalog. This loads a selected bill into the translator instead of opening an external site immediately.
-        </p>
-
-        <label for="billNumber">Bill number or keyword</label>
-        <input
-          type="text"
-          id="billNumber"
-          placeholder="Example: HB 1234 or housing"
-        />
-
-        <div class="button-row">
-          <button class="primary" id="openBillPageBtn" type="button">
-            Search Catalog
-          </button>
-        </div>
-
-        <div class="status-note" id="searchStatus"></div>
-
-        <div class="search-results" id="searchResults">
-          <ul class="result-list" id="resultList"></ul>
-        </div>
-
-        <div class="follow-actions">
-          <div class="follow-card">
-            <strong>Bill summary</strong>
-            <a id="summaryLink" href="https://app.leg.wa.gov/billsummary/" target="_blank" rel="noopener noreferrer">
-              Open official bill summary
-            </a>
-          </div>
-
-          <div class="follow-card">
-            <strong>Bill search</strong>
-            <a id="searchLink" href="https://leg.wa.gov/bills-meetings-and-session/bills/" target="_blank" rel="noopener noreferrer">
-              Open official bill search
-            </a>
-          </div>
-
-          <div class="follow-card">
-            <strong>Track a bill</strong>
-            <a id="trackLink" href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">
-              Open tracking information
-            </a>
-          </div>
-
-          <div class="follow-card">
-            <strong>Legislature home</strong>
-            <a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-              Open Washington Legislature
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="translator">
-        <h2>Bill Translator</h2>
-        <p class="section-note">
-          Paste bill text or load a bill detail record to reveal the structure of the rule.
-        </p>
-
-        <label for="billText">Bill text</label>
-        <textarea id="billText" placeholder="Paste bill text here..."></textarea>
-
-        <div class="button-row">
-          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
-          <button class="secondary" id="loadSampleBtn" type="button">Load Sample</button>
-          <button class="secondary" id="clearBtn" type="button">Clear</button>
-        </div>
-
-        <h3>Plain-Language Translation</h3>
-        <div class="output-box" id="translationOutput">Plain-Language Summary
-Output will appear here.
-
-Who the rule applies to
-• None detected
-
-Required actions
-• None detected
-
-Allowed actions
-• None detected
-
-Prohibited actions
-• None detected
-
-Timing or deadlines
-• None detected
-
-Source anchor
-• Bill identifier not detected
-• Section reference not detected</div>
-
-        <hr style="margin:24px 0;border:none;border-top:1px solid #d7deea;">
-
-        <div class="anchor-box">
-          <h3>Source Anchors</h3>
-          <ul class="anchor-list" id="anchorList">
-            <li>Bill ID anchor: not detected</li>
-            <li>Section anchor: not detected</li>
-            <li>Clause anchor: not detected</li>
-            <li>Source reference: attach official bill page once bill number is known</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="panel" id="civic-participation">
-        <h2>Civic Participation</h2>
-        <p class="section-note">
-          Official Washington voter and election access links.
-        </p>
-
-        <div class="resource-columns">
-          <div class="resource-group">
-            <h3>Voter access</h3>
-            <ul class="resource-list">
-              <li>
-                <a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">
-                  Register to vote
-                </a>
-              </li>
-              <li>
-                <a href="https://www.sos.wa.gov/elections" target="_blank" rel="noopener noreferrer">
-                  Elections information
-                </a>
-              </li>
-              <li>
-                <a href="https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information" target="_blank" rel="noopener noreferrer">
-                  Current election information
-                </a>
-              </li>
-              <li>
-                <a href="https://www.sos.wa.gov/elections/voters/voter-registration/print-voter-registration-form" target="_blank" rel="noopener noreferrer">
-                  Print voter registration form
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="resource-group">
-            <h3>Voting locations</h3>
-            <ul class="resource-list">
-              <li>
-                <a href="https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations" target="_blank" rel="noopener noreferrer">
-                  Ballot drop box and voting center locations
-                </a>
-              </li>
-              <li>
-                <a href="https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-voting-mail" target="_blank" rel="noopener noreferrer">
-                  Voting by mail information
-                </a>
-              </li>
-              <li>
-                <a href="https://www.sos.wa.gov/" target="_blank" rel="noopener noreferrer">
-                  Secretary of State home
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" id="official-resources">
-        <h2>Official Resources</h2>
-        <p class="section-note">
-          Official legislative research and lookup links.
-        </p>
-
-        <div class="resource-columns">
-          <div class="resource-group">
-            <h3>Washington Legislature</h3>
-            <ul class="resource-list">
-              <li>
-                <a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-                  Legislature home
-                </a>
-              </li>
-              <li>
-                <a href="https://leg.wa.gov/bills-meetings-and-session/" target="_blank" rel="noopener noreferrer">
-                  Bills, meetings, and session
-                </a>
-              </li>
-              <li>
-                <a href="https://search.leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-                  Legislative search
-                </a>
-              </li>
-              <li>
-                <a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank" rel="noopener noreferrer">
-                  Bills by topic
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="resource-group">
-            <h3>Broader government resources</h3>
-            <ul class="resource-list">
-              <li>
-                <a href="https://www.congress.gov/" target="_blank" rel="noopener noreferrer">
-                  Congress.gov
-                </a>
-              </li>
-              <li>
-                <a href="voting.html">Local voting page</a>
-              </li>
-              <li>
-                <a href="legislation.html">Local legislation page</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <p class="footer-note">
-      This dashboard reveals structure and links to official sources. It does not provide political recommendations.
-    </p>
-  </div>
-
-  <script>
-    const howToggle = document.getElementById("howToggle");
-    const howBox = document.getElementById("howBox");
-    const billNumberInput = document.getElementById("billNumber");
-    const openBillPageBtn = document.getElementById("openBillPageBtn");
-    const searchStatus = document.getElementById("searchStatus");
-    const searchResults = document.getElementById("searchResults");
-    const resultList = document.getElementById("resultList");
-
-    const billText = document.getElementById("billText");
-    const translateBtn = document.getElementById("translateBtn");
-    const loadSampleBtn = document.getElementById("loadSampleBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const translationOutput = document.getElementById("translationOutput");
-    const anchorList = document.getElementById("anchorList");
-
-    const summaryLink = document.getElementById("summaryLink");
-    const searchLink = document.getElementById("searchLink");
-    const trackLink = document.getElementById("trackLink");
-
-    let loadedBill = null;
-    let billIndex = [];
-
-    function safeSetDefaultOutput() {
-      translationOutput.textContent = `Plain-Language Summary
-Output will appear here.
-
-Who the rule applies to
-• None detected
-
-Required actions
-• None detected
-
-Allowed actions
-• None detected
-
-Prohibited actions
-• None detected
-
-Timing or deadlines
-• None detected
-
-Source anchor
-• Bill identifier not detected
-• Section reference not detected`;
-
-      anchorList.innerHTML = `
-        <li>Bill ID anchor: not detected</li>
-        <li>Section anchor: not detected</li>
-        <li>Clause anchor: not detected</li>
-        <li>Source reference: attach official bill page once bill number is known</li>
-      `;
-    }
-
-    function setSearchStatus(message) {
-      searchStatus.textContent = message || "";
-    }
-
-    function clearSearchResults() {
-      resultList.innerHTML = "";
-      searchResults.classList.remove("open");
-    }
-
-    function normalizeQuery(text) {
-      return (text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-    }
-
-    function renderSearchResults(results) {
-      resultList.innerHTML = "";
-
-      if (!results.length) {
-        clearSearchResults();
-        return;
-      }
-
-      results.forEach((bill) => {
-        const item = document.createElement("li");
-        const button = document.createElement("button");
-
-        button.type = "button";
-        button.className = "result-button";
-        button.innerHTML = `
-          <span class="result-title">${bill.bill_id_display} — ${bill.title}</span>
-          <span class="result-meta">${bill.chamber} • ${bill.session} • ${bill.status}</span>
-        `;
-
-        button.addEventListener("click", () => {
-          loadBillDetail(bill.detail_json_path, bill);
-        });
-
-        item.appendChild(button);
-        resultList.appendChild(item);
-      });
-
-      searchResults.classList.add("open");
-    }
-
-    async function loadBillIndex() {
-      try {
-        const response = await fetch("./data/wa/bill-index.json", { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        billIndex = await response.json();
-        console.log("Loaded bill index:", billIndex);
-      } catch (error) {
-        console.error("Error loading bill index:", error);
-        setSearchStatus("Could not load local bill index.");
-      }
-    }
-
-    async function loadBillDetail(path, catalogRecord = null) {
-      try {
-        const response = await fetch(`./${path}`, { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        loadedBill = await response.json();
-
-        const combinedText = joinBillSections(loadedBill);
-        billText.value = combinedText;
-
-        if (catalogRecord && catalogRecord.bill_id_display) {
-          billNumberInput.value = catalogRecord.bill_id_display;
-        } else if (loadedBill.bill_id) {
-          billNumberInput.value = loadedBill.bill_id;
-        }
-
-        if (combinedText) {
-          parseBillText(
-            combinedText,
-            loadedBill.bill_id || null,
-            loadedBill.source_url || null
-          );
-        }
-
-        if (loadedBill.bill_id) {
-          const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
-          const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
-
-          summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
-          searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
-        }
-
-        setSearchStatus(`Loaded ${loadedBill.bill_id || "selected bill"} from local catalog.`);
-        clearSearchResults();
-
-        console.log("Loaded bill detail:", loadedBill);
-      } catch (error) {
-        console.error("Error loading bill detail:", error);
-        setSearchStatus("Could not load selected bill detail.");
-      }
-    }
-
-    function joinBillSections(bill) {
-      if (!bill || !bill.versions || !bill.versions.length) return "";
-
-      const firstVersion = bill.versions[0];
-      if (!firstVersion.sections || !firstVersion.sections.length) return "";
-
-      return firstVersion.sections
-        .map(section => `Section ${section.section_number}\n${section.text}`)
-        .join("\n\n");
-    }
-
-    function detectBillId(text, fallbackBillId) {
-      const match = text.match(/\b(HB|SB|SHB|SSB|EHB|ESB)\s*\d{3,4}\b/i);
-      return match ? match[0].toUpperCase().replace(/\s+/, " ") : (fallbackBillId || "not detected");
-    }
-
-    function detectSections(text) {
-      const matches = [...text.matchAll(/Section\s+(\d+)/gi)].map(m => `Section ${m[1]}`);
-      return matches.length ? [...new Set(matches)] : ["not detected"];
-    }
-
-    function splitLines(text) {
-      return text
-        .split(/[\n.]+/)
-        .map(s => s.trim())
-        .filter(Boolean);
-    }
-
-    function detectRequiredActions(text) {
-      return splitLines(text).filter(line => /\b(must|shall|required to)\b/i.test(line));
-    }
-
-    function detectAllowedActions(text) {
-      return splitLines(text).filter(line => /\b(may|authorized to|permitted to)\b/i.test(line));
-    }
-
-    function detectProhibitedActions(text) {
-      return splitLines(text).filter(line => /\b(may not|must not|shall not|prohibited)\b/i.test(line));
-    }
-
-    function detectTiming(text) {
-      return splitLines(text).filter(line =>
-        /\b(within\s+\d+\s+days?|by\s+[A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|takes effect|effective date|deadline)\b/i.test(line)
-      );
-    }
-
-    function detectAppliesTo(text) {
-      const hit = splitLines(text).find(line =>
-        /\b(a person|department|agency|employer|tenant|landlord|resident|applicant|licensee)\b/i.test(line)
-      );
-      return hit ? [hit] : ["None detected"];
-    }
-
-    function renderTranslation(parsed) {
-      translationOutput.textContent = `Plain-Language Summary
-
-Who the rule applies to
-${parsed.appliesTo.map(item => `• ${item}`).join("\n")}
-
-Required actions
-${parsed.requiredActions.length ? parsed.requiredActions.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Allowed actions
-${parsed.allowedActions.length ? parsed.allowedActions.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Prohibited actions
-${parsed.prohibitedActions.length ? parsed.prohibitedActions.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Timing or deadlines
-${parsed.timing.length ? parsed.timing.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Source anchor
-• Bill identifier: ${parsed.billId}
-• Section reference: ${parsed.sections.join(", ")}`;
-    }
-
-    function renderAnchors(parsed, sourceUrl) {
-      anchorList.innerHTML = `
-        <li>Bill ID anchor: ${parsed.billId}</li>
-        <li>Section anchor: ${parsed.sections.join(", ")}</li>
-        <li>Clause anchor: rule phrases detected from text-level parsing</li>
-        <li>Source reference: ${sourceUrl || "not detected"}</li>
-      `;
-    }
-
-    function parseBillText(text, fallbackBillId, sourceUrl) {
-      const parsed = {
-        billId: detectBillId(text, fallbackBillId),
-        sections: detectSections(text),
-        appliesTo: detectAppliesTo(text),
-        requiredActions: detectRequiredActions(text),
-        allowedActions: detectAllowedActions(text),
-        prohibitedActions: detectProhibitedActions(text),
-        timing: detectTiming(text)
-      };
-
-      renderTranslation(parsed);
-      renderAnchors(parsed, sourceUrl);
-    }
-
-    async function loadSampleBill() {
-      try {
-        const response = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        loadedBill = await response.json();
-
-        const text = joinBillSections(loadedBill);
-        billText.value = text;
-
-        if (text) {
-          parseBillText(
-            text,
-            loadedBill.bill_id || null,
-            loadedBill.source_url || null
-          );
-        }
-
-        if (loadedBill.bill_id) {
-          billNumberInput.value = loadedBill.bill_id;
-
-          const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
-          const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
-
-          summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
-          searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
-        }
-
-        setSearchStatus("Loaded sample bill.");
-        clearSearchResults();
-
-        console.log("Loaded bill JSON:", loadedBill);
-      } catch (error) {
-        console.error("Error loading sample bill:", error);
-        translationOutput.textContent = "Could not load sample bill JSON.";
-      }
-    }
-
-    howToggle.addEventListener("click", () => {
-      howBox.classList.toggle("open");
-    });
-
-    openBillPageBtn.addEventListener("click", () => {
-      const query = billNumberInput.value.trim();
-
-      if (!query) {
-        setSearchStatus("Enter a bill number or keyword.");
-        clearSearchResults();
-        return;
-      }
-
-      const normalized = normalizeQuery(query);
-
-      const results = billIndex.filter((bill) => {
-        const aliases = bill.aliases || [];
-        return (
-          normalizeQuery(bill.bill_id_normalized).includes(normalized) ||
-          normalizeQuery(bill.bill_number).includes(normalized) ||
-          normalizeQuery(bill.title).includes(normalized) ||
-          aliases.some(alias => normalizeQuery(alias).includes(normalized))
-        );
-      });
-
-      if (!results.length) {
-        setSearchStatus("No local catalog matches found.");
-        clearSearchResults();
-        return;
-      }
-
-      if (results.length === 1) {
-        setSearchStatus(`1 match found: ${results[0].bill_id_display}`);
-        loadBillDetail(results[0].detail_json_path, results[0]);
-        return;
-      }
-
-      setSearchStatus(`${results.length} matches found. Select a bill below.`);
-      renderSearchResults(results);
-    });
-
-    translateBtn.addEventListener("click", () => {
-      const text = billText.value.trim();
-
-      if (!text) {
-        translationOutput.textContent = "Paste bill text or load a bill first.";
-        return;
-      }
-
-      parseBillText(
-        text,
-        loadedBill ? loadedBill.bill_id : null,
-        loadedBill ? loadedBill.source_url : null
-      );
-    });
-
-    clearBtn.addEventListener("click", () => {
-      billText.value = "";
-      billNumberInput.value = "";
-      loadedBill = null;
-      safeSetDefaultOutput();
-      clearSearchResults();
-      setSearchStatus("");
-      summaryLink.href = "https://app.leg.wa.gov/billsummary/";
-      searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
-      trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
-    });
-
-    loadSampleBtn.addEventListener("click", () => {
-      loadSampleBill();
-    });
-
-    safeSetDefaultOutput();
-    loadBillIndex();
-    loadSampleBill();
-  </script>
+<div class="container">
+
+<h1>Washington Civic Dashboard</h1>
+
+<!-- SEARCH -->
+<h2>Search Catalog</h2>
+<input id="searchInput" placeholder="HB 1234 or keyword">
+<button id="searchBtn">Search</button>
+
+<div id="results"></div>
+
+<hr>
+
+<!-- TRANSLATOR -->
+<h2>Bill Translator</h2>
+<textarea id="billText"></textarea>
+
+<br>
+<button id="translateBtn">Translate</button>
+<button id="loadSampleBtn">Load Sample</button>
+<button id="clearBtn">Clear</button>
+
+<div class="output" id="output"></div>
+
+</div>
+
+<script>
+
+let billIndex = [];
+let loadedBill = null;
+
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const resultsDiv = document.getElementById("results");
+
+const billText = document.getElementById("billText");
+const translateBtn = document.getElementById("translateBtn");
+const loadSampleBtn = document.getElementById("loadSampleBtn");
+const clearBtn = document.getElementById("clearBtn");
+const output = document.getElementById("output");
+
+
+// -------------------- LOAD INDEX --------------------
+async function loadBillIndex() {
+  const res = await fetch("./data/wa/bill-index.json");
+  billIndex = await res.json();
+  console.log("Index loaded:", billIndex);
+}
+
+
+// -------------------- SEARCH --------------------
+function normalize(text) {
+  return text.toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+searchBtn.addEventListener("click", () => {
+  const query = normalize(searchInput.value);
+
+  const matches = billIndex.filter(b =>
+    normalize(b.bill_id_normalized).includes(query) ||
+    normalize(b.title).includes(query) ||
+    (b.aliases || []).some(a => normalize(a).includes(query))
+  );
+
+  resultsDiv.innerHTML = "";
+
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = "No results";
+    return;
+  }
+
+  matches.forEach(bill => {
+    const btn = document.createElement("button");
+    btn.textContent = bill.bill_id_display + " — " + bill.title;
+
+    btn.onclick = () => loadBillDetail(bill.detail_json_path);
+
+    resultsDiv.appendChild(btn);
+    resultsDiv.appendChild(document.createElement("br"));
+  });
+});
+
+
+// -------------------- LOAD BILL --------------------
+async function loadBillDetail(path) {
+  const res = await fetch("./" + path);
+  loadedBill = await res.json();
+
+  const text = loadedBill.versions[0].sections
+    .map(s => `Section ${s.section_number}\n${s.text}`)
+    .join("\n\n");
+
+  billText.value = text;
+
+  translate();
+}
+
+
+// -------------------- SAMPLE --------------------
+async function loadSample() {
+  const res = await fetch("./data/wa/sample-bill.json");
+  loadedBill = await res.json();
+
+  const text = loadedBill.versions[0].sections
+    .map(s => `Section ${s.section_number}\n${s.text}`)
+    .join("\n\n");
+
+  billText.value = text;
+
+  translate();
+}
+
+
+// -------------------- TRANSLATE --------------------
+function translate() {
+  const text = billText.value;
+
+  if (!text) {
+    output.textContent = "No text";
+    return;
+  }
+
+  const lines = text.split("\n");
+
+  const required = lines.filter(l => /must|shall/i.test(l));
+  const allowed = lines.filter(l => /may/i.test(l));
+  const prohibited = lines.filter(l => /may not|must not|shall not/i.test(l));
+  const timing = lines.filter(l => /within|takes effect|deadline/i.test(l));
+
+  output.textContent =
+`Who
+• ${required[0] || "None"}
+
+Required
+${required.map(l => "• " + l).join("\n") || "• None"}
+
+Allowed
+${allowed.map(l => "• " + l).join("\n") || "• None"}
+
+Prohibited
+${prohibited.map(l => "• " + l).join("\n") || "• None"}
+
+Timing
+${timing.map(l => "• " + l).join("\n") || "• None"}
+`;
+}
+
+
+// -------------------- EVENTS --------------------
+translateBtn.onclick = translate;
+loadSampleBtn.onclick = loadSample;
+
+clearBtn.onclick = () => {
+  billText.value = "";
+  output.textContent = "";
+  resultsDiv.innerHTML = "";
+};
+
+
+// -------------------- INIT --------------------
+loadBillIndex();
+loadSample();
+
+</script>
 </body>
 </html>
