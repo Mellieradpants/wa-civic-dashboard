@@ -804,7 +804,7 @@ Source anchor
     });
 
     updateBillLinks("");
-    updateTetherPanel("", "");
-  </script>
+updateTetherPanel("", "");
+loadSampleBill();
 </body>
 </html>
