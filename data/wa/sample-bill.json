@@ -1,17 +1,353 @@
 {
-  "bill_id": "SB 5714",
-  "title": "SENATE BILL 5714",
-  "versions": [
+  "document": "examples/example-policy.txt",
+  "anchorCount": 6,
+  "analysis": [
     {
-      "version_id": "original",
-      "sections": [
-        {
-          "section_number": "1",
-         "text": "A person must register with the department within 30 days of beginning operation."
+      "tetherAnchor": {
+        "group": "meaning",
+        "type": "section",
+        "sourceSystem": "traceability_constraint_system",
+        "executionContext": "prototype_extractor",
+        "sourceLocation": "line_1",
+        "anchorText": "Section 3: Applicants must submit documentation within 30 days.",
+        "sourceDerivedText": "Section 3: Applicants must submit documentation within 30 days.",
+        "matchedSignals": [
+          "obligation"
+        ],
+        "traceReason": "Matched explicit signal language in source text"
+      },
+      "parse": {
+        "what": {
+          "claim": "Section 3: Applicants must submit documentation within 30 days.",
+          "action": null,
+          "conditions": []
+        },
+        "who": {
+          "actors": [],
+          "responsibleParty": null,
+          "decisionAuthority": null
+        },
+        "where": {
+          "system": null,
+          "jurisdiction": null,
+          "controllingEntity": null
+        },
+        "when": {
+          "timing": null,
+          "triggers": [],
+          "deadlines": [
+            "within 30 days"
+          ],
+          "sequence": []
+        },
+        "why": {
+          "statedReason": null,
+          "reasonActionAlignment": null
+        },
+        "how": {
+          "mechanism": null,
+          "implementation": [],
+          "enforcement": null
         }
-      ]
+      },
+      "missingSignals": [
+        "missing_enforcement"
+      ],
+      "controlFlags": [
+        "precision_claim_present"
+      ],
+      "driftDetected": false,
+      "status": "ok"
+    },
+    {
+      "tetherAnchor": {
+        "group": "meaning",
+        "type": "section",
+        "sourceSystem": "traceability_constraint_system",
+        "executionContext": "prototype_extractor",
+        "sourceLocation": "line_3",
+        "anchorText": "Section 5: The agency may extend deadlines under exceptional circumstances.",
+        "sourceDerivedText": "Section 5: The agency may extend deadlines under exceptional circumstances.",
+        "matchedSignals": [
+          "permission"
+        ],
+        "traceReason": "Matched explicit signal language in source text"
+      },
+      "parse": {
+        "what": {
+          "claim": "Section 5: The agency may extend deadlines under exceptional circumstances.",
+          "action": null,
+          "conditions": [
+            "under exceptional circumstances"
+          ]
+        },
+        "who": {
+          "actors": [],
+          "responsibleParty": null,
+          "decisionAuthority": null
+        },
+        "where": {
+          "system": null,
+          "jurisdiction": null,
+          "controllingEntity": null
+        },
+        "when": {
+          "timing": null,
+          "triggers": [],
+          "deadlines": [],
+          "sequence": []
+        },
+        "why": {
+          "statedReason": null,
+          "reasonActionAlignment": null
+        },
+        "how": {
+          "mechanism": "under exceptional circumstances",
+          "implementation": [],
+          "enforcement": null
+        }
+      },
+      "missingSignals": [],
+      "controlFlags": [
+        "precision_claim_present"
+      ],
+      "driftDetected": false,
+      "status": "ok"
+    },
+    {
+      "tetherAnchor": {
+        "group": "meaning",
+        "type": "text_span",
+        "sourceSystem": "traceability_constraint_system",
+        "executionContext": "prototype_extractor",
+        "sourceLocation": "line_6",
+        "anchorText": "Applicants must submit documentation within 30 days.",
+        "sourceDerivedText": "Applicants must submit documentation within 30 days.",
+        "matchedSignals": [
+          "obligation"
+        ],
+        "traceReason": "Matched explicit signal language in source text"
+      },
+      "parse": {
+        "what": {
+          "claim": "Applicants must submit documentation within 30 days.",
+          "action": "submit documentation within 30 days",
+          "conditions": []
+        },
+        "who": {
+          "actors": [
+            "Applicants"
+          ],
+          "responsibleParty": "Applicants",
+          "decisionAuthority": null
+        },
+        "where": {
+          "system": null,
+          "jurisdiction": null,
+          "controllingEntity": null
+        },
+        "when": {
+          "timing": null,
+          "triggers": [],
+          "deadlines": [
+            "within 30 days"
+          ],
+          "sequence": []
+        },
+        "why": {
+          "statedReason": null,
+          "reasonActionAlignment": null
+        },
+        "how": {
+          "mechanism": null,
+          "implementation": [],
+          "enforcement": null
+        }
+      },
+      "missingSignals": [
+        "missing_decision_authority",
+        "missing_enforcement"
+      ],
+      "controlFlags": [
+        "precision_claim_present",
+        "precision_claim_without_source_path"
+      ],
+      "driftDetected": false,
+      "status": "ok"
+    },
+    {
+      "tetherAnchor": {
+        "group": "meaning",
+        "type": "timestamp",
+        "sourceSystem": "traceability_constraint_system",
+        "executionContext": "prototype_extractor",
+        "sourceLocation": "line_7",
+        "anchorText": "The agency may extend deadlines under exceptional circumstances.",
+        "sourceDerivedText": "The agency may extend deadlines under exceptional circumstances.",
+        "matchedSignals": [
+          "permission"
+        ],
+        "traceReason": "Matched explicit signal language in source text"
+      },
+      "parse": {
+        "what": {
+          "claim": "The agency may extend deadlines under exceptional circumstances.",
+          "action": "extend deadlines under exceptional circumstances",
+          "conditions": [
+            "under exceptional circumstances"
+          ]
+        },
+        "who": {
+          "actors": [
+            "The agency"
+          ],
+          "responsibleParty": "The agency",
+          "decisionAuthority": null
+        },
+        "where": {
+          "system": null,
+          "jurisdiction": null,
+          "controllingEntity": null
+        },
+        "when": {
+          "timing": "The agency may extend deadlines under exceptional circumstances.",
+          "triggers": [],
+          "deadlines": [],
+          "sequence": []
+        },
+        "why": {
+          "statedReason": null,
+          "reasonActionAlignment": null
+        },
+        "how": {
+          "mechanism": "under exceptional circumstances",
+          "implementation": [],
+          "enforcement": null
+        }
+      },
+      "missingSignals": [
+        "missing_decision_authority"
+      ],
+      "controlFlags": [],
+      "driftDetected": false,
+      "status": "ok"
+    },
+    {
+      "tetherAnchor": {
+        "group": "meaning",
+        "type": "text_span",
+        "sourceSystem": "traceability_constraint_system",
+        "executionContext": "prototype_extractor",
+        "sourceLocation": "line_8",
+        "anchorText": "If a violation occurs, the contractor must notify the agency within 24 hours.",
+        "sourceDerivedText": "If a violation occurs, the contractor must notify the agency within 24 hours.",
+        "matchedSignals": [
+          "obligation"
+        ],
+        "traceReason": "Matched explicit signal language in source text"
+      },
+      "parse": {
+        "what": {
+          "claim": "If a violation occurs, the contractor must notify the agency within 24 hours.",
+          "action": null,
+          "conditions": [
+            "If a violation occurs"
+          ]
+        },
+        "who": {
+          "actors": [],
+          "responsibleParty": null,
+          "decisionAuthority": null
+        },
+        "where": {
+          "system": null,
+          "jurisdiction": null,
+          "controllingEntity": null
+        },
+        "when": {
+          "timing": null,
+          "triggers": [
+            "If a violation occurs"
+          ],
+          "deadlines": [],
+          "sequence": []
+        },
+        "why": {
+          "statedReason": null,
+          "reasonActionAlignment": null
+        },
+        "how": {
+          "mechanism": null,
+          "implementation": [],
+          "enforcement": "violation occurs"
+        }
+      },
+      "missingSignals": [],
+      "controlFlags": [
+        "precision_claim_present",
+        "precision_claim_without_source_path"
+      ],
+      "driftDetected": false,
+      "status": "ok"
+    },
+    {
+      "tetherAnchor": {
+        "group": "meaning",
+        "type": "text_span",
+        "sourceSystem": "traceability_constraint_system",
+        "executionContext": "prototype_extractor",
+        "sourceLocation": "line_9",
+        "anchorText": "The department must report 95% compliance annually.",
+        "sourceDerivedText": "The department must report 95% compliance annually.",
+        "matchedSignals": [
+          "obligation"
+        ],
+        "traceReason": "Matched explicit signal language in source text"
+      },
+      "parse": {
+        "what": {
+          "claim": "The department must report 95% compliance annually.",
+          "action": "report 95% compliance annually",
+          "conditions": []
+        },
+        "who": {
+          "actors": [
+            "The department"
+          ],
+          "responsibleParty": "The department",
+          "decisionAuthority": null
+        },
+        "where": {
+          "system": null,
+          "jurisdiction": null,
+          "controllingEntity": null
+        },
+        "when": {
+          "timing": null,
+          "triggers": [],
+          "deadlines": [],
+          "sequence": []
+        },
+        "why": {
+          "statedReason": null,
+          "reasonActionAlignment": null
+        },
+        "how": {
+          "mechanism": null,
+          "implementation": [],
+          "enforcement": null
+        }
+      },
+      "missingSignals": [
+        "missing_decision_authority",
+        "missing_enforcement"
+      ],
+      "controlFlags": [
+        "precision_claim_present",
+        "precision_claim_without_source_path"
+      ],
+      "driftDetected": false,
+      "status": "ok"
     }
-  ],
-  "actions": [],
-  "source_url": "https://app.leg.wa.gov/documents/billdocs/2025-26/Xml/Bills/Senate%20Bills/5714.xml"
+  ]
 }
