@@ -363,6 +363,19 @@
 
     run();
   </script>
+  <script type="module">
+  import { getNormalizedBill } from "./lib/wa-adapter/index.js";
+
+  async function run() {
+    console.log("adapter test script loaded");
+
+    const bill = await getNormalizedBill("2025-26", "6346");
+
+    console.log("TEST BILL:", bill);
+  }
+
+  run();
+</script>
 </body>
 </html>
   
