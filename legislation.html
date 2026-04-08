@@ -1,354 +1,328 @@
-{
-  "document": "examples/example-policy.txt",
-  "anchorCount": 6,
-  "analysis": [
-    {
-      "tetherAnchor": {
-        "group": "meaning",
-        "type": "section",
-        "sourceSystem": "traceability_constraint_system",
-        "executionContext": "prototype_extractor",
-        "sourceLocation": "line_1",
-        "anchorText": "Section 3: Applicants must submit documentation within 30 days.",
-        "sourceDerivedText": "Section 3: Applicants must submit documentation within 30 days.",
-        "matchedSignals": [
-          "obligation"
-        ],
-        "traceReason": "Matched explicit signal language in source text"
-      },
-      "parse": {
-        "what": {
-          "claim": "Section 3: Applicants must submit documentation within 30 days.",
-          "action": null,
-          "conditions": []
-        },
-        "who": {
-          "actors": [],
-          "responsibleParty": null,
-          "decisionAuthority": null
-        },
-        "where": {
-          "system": null,
-          "jurisdiction": null,
-          "controllingEntity": null
-        },
-        "when": {
-          "timing": null,
-          "triggers": [],
-          "deadlines": [
-            "within 30 days"
-          ],
-          "sequence": []
-        },
-        "why": {
-          "statedReason": null,
-          "reasonActionAlignment": null
-        },
-        "how": {
-          "mechanism": null,
-          "implementation": [],
-          "enforcement": null
-        }
-      },
-      "missingSignals": [
-        "missing_enforcement"
-      ],
-      "controlFlags": [
-        "precision_claim_present"
-      ],
-      "driftDetected": false,
-      "status": "ok"
-    },
-    {
-      "tetherAnchor": {
-        "group": "meaning",
-        "type": "section",
-        "sourceSystem": "traceability_constraint_system",
-        "executionContext": "prototype_extractor",
-        "sourceLocation": "line_3",
-        "anchorText": "Section 5: The agency may extend deadlines under exceptional circumstances.",
-        "sourceDerivedText": "Section 5: The agency may extend deadlines under exceptional circumstances.",
-        "matchedSignals": [
-          "permission"
-        ],
-        "traceReason": "Matched explicit signal language in source text"
-      },
-      "parse": {
-        "what": {
-          "claim": "Section 5: The agency may extend deadlines under exceptional circumstances.",
-          "action": null,
-          "conditions": [
-            "under exceptional circumstances"
-          ]
-        },
-        "who": {
-          "actors": [],
-          "responsibleParty": null,
-          "decisionAuthority": null
-        },
-        "where": {
-          "system": null,
-          "jurisdiction": null,
-          "controllingEntity": null
-        },
-        "when": {
-          "timing": null,
-          "triggers": [],
-          "deadlines": [],
-          "sequence": []
-        },
-        "why": {
-          "statedReason": null,
-          "reasonActionAlignment": null
-        },
-        "how": {
-          "mechanism": "under exceptional circumstances",
-          "implementation": [],
-          "enforcement": null
-        }
-      },
-      "missingSignals": [],
-      "controlFlags": [
-        "precision_claim_present"
-      ],
-      "driftDetected": false,
-      "status": "ok"
-    },
-    {
-      "tetherAnchor": {
-        "group": "meaning",
-        "type": "text_span",
-        "sourceSystem": "traceability_constraint_system",
-        "executionContext": "prototype_extractor",
-        "sourceLocation": "line_6",
-        "anchorText": "Applicants must submit documentation within 30 days.",
-        "sourceDerivedText": "Applicants must submit documentation within 30 days.",
-        "matchedSignals": [
-          "obligation"
-        ],
-        "traceReason": "Matched explicit signal language in source text"
-      },
-      "parse": {
-        "what": {
-          "claim": "Applicants must submit documentation within 30 days.",
-          "action": "submit documentation within 30 days",
-          "conditions": []
-        },
-        "who": {
-          "actors": [
-            "Applicants"
-          ],
-          "responsibleParty": "Applicants",
-          "decisionAuthority": null
-        },
-        "where": {
-          "system": null,
-          "jurisdiction": null,
-          "controllingEntity": null
-        },
-        "when": {
-          "timing": null,
-          "triggers": [],
-          "deadlines": [
-            "within 30 days"
-          ],
-          "sequence": []
-        },
-        "why": {
-          "statedReason": null,
-          "reasonActionAlignment": null
-        },
-        "how": {
-          "mechanism": null,
-          "implementation": [],
-          "enforcement": null
-        }
-      },
-      "missingSignals": [
-        "missing_decision_authority",
-        "missing_enforcement"
-      ],
-      "controlFlags": [
-        "precision_claim_present",
-        "precision_claim_without_source_path"
-      ],
-      "driftDetected": false,
-      "status": "ok"
-    },
-    {
-      "tetherAnchor": {
-        "group": "meaning",
-        "type": "timestamp",
-        "sourceSystem": "traceability_constraint_system",
-        "executionContext": "prototype_extractor",
-        "sourceLocation": "line_7",
-        "anchorText": "The agency may extend deadlines under exceptional circumstances.",
-        "sourceDerivedText": "The agency may extend deadlines under exceptional circumstances.",
-        "matchedSignals": [
-          "permission"
-        ],
-        "traceReason": "Matched explicit signal language in source text"
-      },
-      "parse": {
-        "what": {
-          "claim": "The agency may extend deadlines under exceptional circumstances.",
-          "action": "extend deadlines under exceptional circumstances",
-          "conditions": [
-            "under exceptional circumstances"
-          ]
-        },
-        "who": {
-          "actors": [
-            "The agency"
-          ],
-          "responsibleParty": "The agency",
-          "decisionAuthority": null
-        },
-        "where": {
-          "system": null,
-          "jurisdiction": null,
-          "controllingEntity": null
-        },
-        "when": {
-          "timing": "The agency may extend deadlines under exceptional circumstances.",
-          "triggers": [],
-          "deadlines": [],
-          "sequence": []
-        },
-        "why": {
-          "statedReason": null,
-          "reasonActionAlignment": null
-        },
-        "how": {
-          "mechanism": "under exceptional circumstances",
-          "implementation": [],
-          "enforcement": null
-        }
-      },
-      "missingSignals": [
-        "missing_decision_authority"
-      ],
-      "controlFlags": [],
-      "driftDetected": false,
-      "status": "ok"
-    },
-    {
-      "tetherAnchor": {
-        "group": "meaning",
-        "type": "text_span",
-        "sourceSystem": "traceability_constraint_system",
-        "executionContext": "prototype_extractor",
-        "sourceLocation": "line_8",
-        "anchorText": "If a violation occurs, the contractor must notify the agency within 24 hours.",
-        "sourceDerivedText": "If a violation occurs, the contractor must notify the agency within 24 hours.",
-        "matchedSignals": [
-          "obligation"
-        ],
-        "traceReason": "Matched explicit signal language in source text"
-      },
-      "parse": {
-        "what": {
-          "claim": "If a violation occurs, the contractor must notify the agency within 24 hours.",
-          "action": null,
-          "conditions": [
-            "If a violation occurs"
-          ]
-        },
-        "who": {
-          "actors": [],
-          "responsibleParty": null,
-          "decisionAuthority": null
-        },
-        "where": {
-          "system": null,
-          "jurisdiction": null,
-          "controllingEntity": null
-        },
-        "when": {
-          "timing": null,
-          "triggers": [
-            "If a violation occurs"
-          ],
-          "deadlines": [],
-          "sequence": []
-        },
-        "why": {
-          "statedReason": null,
-          "reasonActionAlignment": null
-        },
-        "how": {
-          "mechanism": null,
-          "implementation": [],
-          "enforcement": "violation occurs"
-        }
-      },
-      "missingSignals": [],
-      "controlFlags": [
-        "precision_claim_present",
-        "precision_claim_without_source_path"
-      ],
-      "driftDetected": false,
-      "status": "ok"
-    },
-    {
-      "tetherAnchor": {
-        "group": "meaning",
-        "type": "text_span",
-        "sourceSystem": "traceability_constraint_system",
-        "executionContext": "prototype_extractor",
-        "sourceLocation": "line_9",
-        "anchorText": "The department must report 95% compliance annually.",
-        "sourceDerivedText": "The department must report 95% compliance annually.",
-        "matchedSignals": [
-          "obligation"
-        ],
-        "traceReason": "Matched explicit signal language in source text"
-      },
-      "parse": {
-        "what": {
-          "claim": "The department must report 95% compliance annually.",
-          "action": "report 95% compliance annually",
-          "conditions": []
-        },
-        "who": {
-          "actors": [
-            "The department"
-          ],
-          "responsibleParty": "The department",
-          "decisionAuthority": null
-        },
-        "where": {
-          "system": null,
-          "jurisdiction": null,
-          "controllingEntity": null
-        },
-        "when": {
-          "timing": null,
-          "triggers": [],
-          "deadlines": [],
-          "sequence": []
-        },
-        "why": {
-          "statedReason": null,
-          "reasonActionAlignment": null
-        },
-        "how": {
-          "mechanism": null,
-          "implementation": [],
-          "enforcement": null
-        }
-      },
-      "missingSignals": [
-        "missing_decision_authority",
-        "missing_enforcement"
-      ],
-      "controlFlags": [
-        "precision_claim_present",
-        "precision_claim_without_source_path"
-      ],
-      "driftDetected": false,
-      "status": "ok"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington State Legislative Language Analyzer</title>
+  <style>
+    :root {
+      --wa-green: #1f4d3a;
+      --wa-green-dark: #173c2d;
+      --wa-green-soft: #eef5f1;
+      --wa-border: #d7e5df;
+      --text: #1f2937;
+      --muted: #5b6470;
+      --card-bg: #ffffff;
+      --page-bg: #f6f7f5;
     }
-  ]
-}
-  
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, var(--wa-green), var(--wa-green-dark));
+      color: white;
+      padding: 56px 20px 48px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 16px 0 0;
+      font-size: 1.15rem;
+      opacity: 0.96;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--wa-border);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      color: var(--wa-green);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .section-subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .analysis-card {
+      border: 1px solid var(--wa-border);
+      border-radius: 16px;
+      padding: 24px;
+      background: #fff;
+    }
+
+    .bill-title {
+      margin: 0 0 16px;
+      color: var(--wa-green);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .analysis-row {
+      margin-bottom: 16px;
+      font-size: 1.08rem;
+    }
+
+    .analysis-row strong {
+      color: #111827;
+    }
+
+    .analysis-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .signal-card {
+      border: 1px solid var(--wa-border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .signal-card h3 {
+      margin: 0 0 8px;
+      color: var(--wa-green);
+      font-size: 1.05rem;
+    }
+
+    .signal-card p {
+      margin: 6px 0;
+    }
+
+    .resources-list {
+      margin: 0;
+      padding-left: 24px;
+    }
+
+    .resources-list li {
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .resources-list a,
+    .analysis-card a {
+      color: var(--wa-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .resources-list a:hover,
+    .analysis-card a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .panel {
+        padding: 22px;
+      }
+
+      .section-title {
+        font-size: 1.7rem;
+      }
+
+      .bill-title {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Washington State Legislative Language Analyzer</h1>
+    <p>Rendering live Traceability Constraint System output from sample-bill.json</p>
+  </header>
+
+  <main class="page">
+    <section class="panel">
+      <h2 class="section-title">Live Signal View</h2>
+      <p class="section-subtitle">This panel reads the TCS structure directly from <code>./data/wa/sample-bill.json</code>.</p>
+
+      <div class="analysis-card">
+        <h3 id="bill-number" class="bill-title">Loading...</h3>
+
+        <div class="analysis-row">
+          <strong>Signal type:</strong>
+          <span id="bill-topic">Loading...</span>
+        </div>
+
+        <div class="analysis-row">
+          <strong>Source anchor:</strong>
+          <span id="bill-about">Loading...</span>
+        </div>
+
+        <div class="analysis-row">
+          <strong>Timing / condition:</strong>
+          <span id="bill-affects">Loading...</span>
+        </div>
+
+        <div class="analysis-row">
+          <strong>Source document:</strong>
+          <a id="bill-link" href="#" target="_blank" rel="noopener noreferrer">Open source</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Structured Signals</h2>
+      <p class="section-subtitle">Direct render of <code>analysis[]</code> without a transform layer.</p>
+      <div id="signal-list" class="signal-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Official Washington Legislature Tools</h2>
+      <ul class="resources-list">
+        <li><a href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
+        <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">LegSearch</a></li>
+        <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">Bills by Topic</a></li>
+        <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">How to Track a Bill</a></li>
+      </ul>
+
+      <p class="footer-note">
+        These links go directly to the official Washington State Legislature resources.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const billNumber = document.getElementById("bill-number");
+    const billTopic = document.getElementById("bill-topic");
+    const billAbout = document.getElementById("bill-about");
+    const billAffects = document.getElementById("bill-affects");
+    const billLink = document.getElementById("bill-link");
+    const signalList = document.getElementById("signal-list");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderSignalCard(item, index) {
+      const signalType = item?.tetherAnchor?.matchedSignals?.join(", ") || "unknown";
+      const anchorType = item?.tetherAnchor?.type || "unknown";
+      const anchorText = item?.tetherAnchor?.anchorText || "No anchor text";
+      const deadlines = item?.parse?.when?.deadlines || [];
+      const conditions = item?.parse?.what?.conditions || [];
+
+      const card = document.createElement("div");
+      card.className = "signal-card";
+      card.innerHTML = `
+        <h3>Signal ${index + 1}</h3>
+        <p><strong>Matched signals:</strong> ${escapeHtml(signalType)}</p>
+        <p><strong>Anchor type:</strong> ${escapeHtml(anchorType)}</p>
+        <p><strong>Anchor text:</strong> ${escapeHtml(anchorText)}</p>
+        <p><strong>Deadlines:</strong> ${escapeHtml(deadlines.length ? deadlines.join(" | ") : "none")}</p>
+        <p><strong>Conditions:</strong> ${escapeHtml(conditions.length ? conditions.join(" | ") : "none")}</p>
+      `;
+      return card;
+    }
+
+    async function loadTcsOutput() {
+      try {
+        const response = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("TCS OUTPUT:", data);
+
+        const first = data.analysis?.[0];
+
+        if (!first) {
+          billNumber.textContent = "No analysis";
+          billTopic.textContent = "No signal found";
+          billAbout.textContent = "sample-bill.json loaded, but analysis[] was empty.";
+          billAffects.textContent = "No timing or condition detected";
+          billLink.href = "#";
+          billLink.textContent = "No source path available";
+          signalList.innerHTML = "";
+          return;
+        }
+
+        const matchedSignals = first.tetherAnchor?.matchedSignals || [];
+        const anchorText = first.tetherAnchor?.anchorText || "No anchor text found";
+        const deadlines = first.parse?.when?.deadlines || [];
+        const conditions = first.parse?.what?.conditions || [];
+        const sourceDocument = data.document || "#";
+
+        billNumber.textContent = "TCS LIVE";
+        billTopic.textContent = matchedSignals.length ? matchedSignals.join(", ") : "unknown signal";
+        billAbout.textContent = anchorText;
+        billAffects.textContent =
+          deadlines.length ? deadlines.join(" | ")
+          : conditions.length ? conditions.join(" | ")
+          : "No timing or condition detected";
+
+        billLink.href = sourceDocument === "#" ? "#" : sourceDocument;
+        billLink.textContent = sourceDocument === "#" ? "No source path available" : sourceDocument;
+
+        signalList.innerHTML = "";
+        (data.analysis || []).forEach((item, index) => {
+          signalList.appendChild(renderSignalCard(item, index));
+        });
+
+      } catch (error) {
+        console.error("Error loading TCS output:", error);
+        billNumber.textContent = "Load error";
+        billTopic.textContent = "Unable to fetch sample-bill.json";
+        billAbout.textContent = "Check that sample-bill.json contains valid TCS output JSON.";
+        billAffects.textContent = "No timing or condition detected";
+        billLink.href = "#";
+        billLink.textContent = "No source path available";
+        signalList.innerHTML = "";
+      }
+    }
+
+    loadTcsOutput();
+  </script>
+</body>
+</html>
+     
