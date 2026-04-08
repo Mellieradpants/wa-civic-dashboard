@@ -342,24 +342,17 @@
       }
     }
 
-    billCards.forEach(card => {
-      card.addEventListener("click", () => {
-        updateBillPanel(card.dataset.bill);
-      });
-    });
-
-    updateBillPanel("hb1132");
-    loadSampleBill();
-  </script>
+</script>
   <script type="module">
-  import { getNormalizedBill } from "./lib/wa-adapter/index.js"
+  import { getNormalizedBill } from "./lib/wa-adapter/index.js";
 
   async function run() {
-    const bill = await getNormalizedBill("2025-26", "6346")
-    console.log("TEST BILL:", bill)
+    console.log("adapter test script loaded");
+    const bill = await getNormalizedBill("2025-26", "6346");
+    console.log("TEST BILL:", bill);
   }
 
-  run()
+  run();
 </script>
 </body>
 </html>
