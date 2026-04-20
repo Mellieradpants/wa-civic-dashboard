@@ -3,17 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Washington State Legislative Language Analyzer</title>
+  <title>Washington Civic Dashboard</title>
   <style>
     :root {
-      --wa-green: #1f4d3a;
-      --wa-green-dark: #173c2d;
-      --wa-green-soft: #eef5f1;
-      --wa-border: #d7e5df;
-      --text: #1f2937;
-      --muted: #5b6470;
-      --card-bg: #ffffff;
-      --page-bg: #f6f7f5;
+      --forest-dark: #2f463c;
+      --forest-mid: #4d695d;
+      --forest-light: #eef3f0;
+      --ink: #344054;
+      --muted: #667085;
+      --border: #d9dee7;
+      --panel: #ffffff;
+      --canvas: #f6f7fb;
+      --nav-active: #e7eefb;
+      --nav-active-text: #3b5f99;
+      --search-button: #5f7fb3;
+      --search-button-dark: #4f6ea3;
     }
 
     * {
@@ -23,133 +27,199 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--page-bg);
-      color: var(--text);
-      line-height: 1.5;
+      color: var(--ink);
+      background: var(--canvas);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .hero {
-      background: linear-gradient(180deg, var(--wa-green), var(--wa-green-dark));
+      min-height: 370px;
+      padding: 48px 28px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
       color: white;
-      padding: 56px 20px 48px;
-      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(240, 243, 246, 0.88) 0%, rgba(240, 243, 246, 0.48) 52%, rgba(37, 54, 46, 0.12) 100%),
+        linear-gradient(180deg, rgba(59, 78, 69, 0.12) 0%, rgba(44, 60, 52, 0.55) 100%),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
     }
 
     .hero h1 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
       letter-spacing: -0.02em;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
-    .hero p {
-      margin: 16px 0 0;
-      font-size: 1.15rem;
-      opacity: 0.96;
-    }
-
-    .page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 28px 20px 48px;
-    }
-
-    .panel {
-      background: var(--card-bg);
-      border: 1px solid var(--wa-border);
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-      margin-bottom: 24px;
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      color: var(--wa-green);
-      font-size: 2rem;
-      font-weight: 700;
-    }
-
-    .section-subtitle {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .search-entry {
-      margin-bottom: 20px;
-      border: 1px solid var(--wa-border);
-      border-radius: 16px;
-      padding: 18px;
-      background: #fff;
-    }
-
-    .search-entry label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--wa-green);
-      font-weight: 700;
-    }
-
-    .search-help {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 0.96rem;
-    }
-
-    .search-controls {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
       align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 28px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
     }
 
-    .search-controls input {
-      width: 100%;
-      min-height: 48px;
-      border: 1px solid var(--wa-border);
-      border-radius: 12px;
-      padding: 0 14px;
+    .tabs {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .tab-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 56px;
+      color: var(--muted);
+      text-decoration: none;
       font-size: 1rem;
-      color: var(--text);
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-link.active {
+      color: var(--ink);
+      border-bottom-color: #5b7bb2;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .toolbar select {
+      min-height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--muted);
+      padding: 0 14px;
+      font-size: 0.95rem;
+    }
+
+    .content-frame {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: calc(100vh - 426px);
+    }
+
+    .sidebar {
+      background: #f2f4f7;
+      border-right: 1px solid var(--border);
+      padding: 20px 14px;
+    }
+
+    .side-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .side-link.active {
+      background: var(--nav-active);
+      color: var(--nav-active-text);
+    }
+
+    .side-icon {
+      width: 16px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .main {
+      padding: 0;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 66px;
+      gap: 0;
+      padding: 16px 24px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-field {
+      min-height: 54px;
+      border: 1px solid var(--border);
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      padding: 0 16px;
+      font-size: 1rem;
+      color: var(--ink);
       background: #fff;
     }
 
-    .search-controls input:focus {
+    .search-field:focus {
       outline: none;
-      border-color: #9ab9ac;
-      box-shadow: 0 0 0 4px rgba(31, 77, 58, 0.08);
+      border-color: #9fb4cf;
+      box-shadow: inset 0 0 0 1px #9fb4cf;
     }
 
-    .search-controls button {
-      min-height: 48px;
-      border: none;
-      border-radius: 12px;
-      padding: 0 18px;
-      background: var(--wa-green);
+    .search-button {
+      border: 1px solid var(--search-button);
+      border-radius: 0 10px 10px 0;
+      background: var(--search-button);
       color: #fff;
-      font-size: 0.98rem;
-      font-weight: 700;
+      font-size: 1.4rem;
       cursor: pointer;
     }
 
-    .search-controls button:hover {
-      background: var(--wa-green-dark);
+    .search-button:hover {
+      background: var(--search-button-dark);
+      border-color: var(--search-button-dark);
+    }
+
+    .main-scroll {
+      padding: 20px 24px 32px;
+    }
+
+    .search-help {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
 
     .search-status {
-      margin-top: 10px;
       min-height: 20px;
+      margin-bottom: 12px;
       color: var(--muted);
-      font-size: 0.96rem;
+      font-size: 0.95rem;
     }
 
     .search-results {
       display: none;
-      margin-top: 14px;
-      border: 1px solid var(--wa-border);
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
       border-radius: 14px;
-      background: var(--wa-green-soft);
+      background: #fff;
       padding: 12px;
     }
 
@@ -168,22 +238,22 @@
     .search-result-button {
       width: 100%;
       text-align: left;
-      border: 1px solid var(--wa-border);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px;
       background: #fff;
-      color: var(--text);
+      color: var(--ink);
       cursor: pointer;
     }
 
     .search-result-button:hover {
-      background: #f9fbfa;
-      border-color: #bfd2c8;
+      background: #f9fbff;
+      border-color: #bfd0ea;
     }
 
     .search-result-title {
       display: block;
-      color: var(--wa-green);
+      color: #355a92;
       font-weight: 700;
       margin-bottom: 4px;
     }
@@ -191,51 +261,80 @@
     .search-result-meta {
       display: block;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.94rem;
       margin-bottom: 6px;
     }
 
     .search-result-summary {
       display: block;
-      color: var(--text);
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      color: #355a92;
+      font-size: 1.5rem;
+    }
+
+    .panel-note {
+      margin: 0 0 16px;
+      color: var(--muted);
       font-size: 0.96rem;
     }
 
     .analysis-card {
-      border: 1px solid var(--wa-border);
-      border-radius: 16px;
-      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
       background: #fff;
     }
 
     .bill-title {
       margin: 0 0 16px;
-      color: var(--wa-green);
-      font-size: 2rem;
-      font-weight: 700;
+      color: #355a92;
+      font-size: 1.75rem;
+      line-height: 1.15;
     }
 
     .analysis-row {
-      margin-bottom: 16px;
-      font-size: 1.08rem;
-    }
-
-    .analysis-row strong {
-      color: #111827;
+      margin-bottom: 12px;
+      font-size: 1rem;
     }
 
     .analysis-row:last-child {
       margin-bottom: 0;
     }
 
+    .analysis-row strong {
+      color: var(--ink);
+    }
+
+    .analysis-row a {
+      color: #355a92;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .analysis-row a:hover {
+      text-decoration: underline;
+    }
+
     .signal-list {
       display: grid;
       gap: 12px;
-      margin-top: 18px;
     }
 
     .signal-card {
-      border: 1px solid var(--wa-border);
+      border: 1px solid var(--border);
       border-radius: 14px;
       padding: 16px;
       background: #fff;
@@ -243,130 +342,182 @@
 
     .signal-card h3 {
       margin: 0 0 8px;
-      color: var(--wa-green);
+      color: #355a92;
       font-size: 1.05rem;
     }
 
     .signal-card p {
       margin: 6px 0;
+      font-size: 0.97rem;
     }
 
     .resources-list {
       margin: 0;
-      padding-left: 24px;
+      padding-left: 20px;
     }
 
     .resources-list li {
       margin-bottom: 8px;
-      font-size: 1.08rem;
+      font-size: 1rem;
     }
 
-    .resources-list a,
-    .analysis-card a {
-      color: var(--wa-green);
+    .resources-list a {
+      color: #355a92;
       font-weight: 700;
       text-decoration: none;
     }
 
-    .resources-list a:hover,
-    .analysis-card a:hover {
+    .resources-list a:hover {
       text-decoration: underline;
     }
 
     .footer-note {
-      margin-top: 14px;
+      margin-top: 12px;
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
-    @media (max-width: 700px) {
-      .panel {
-        padding: 22px;
+    @media (max-width: 960px) {
+      .content-frame {
+        grid-template-columns: 1fr;
       }
 
-      .section-title {
-        font-size: 1.7rem;
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
       }
 
-      .bill-title {
-        font-size: 1.6rem;
+      .side-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        min-height: 260px;
+        padding: 28px 20px 16px;
       }
 
-      .search-controls {
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .tabs {
+        gap: 18px;
+        overflow-x: auto;
+      }
+
+      .search-row,
+      .main-scroll {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .side-list {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <header class="hero">
-    <h1>Washington State Legislative Language Analyzer</h1>
-    <p>Search a bill, open it into the analysis view, and review live Meaning, Verification, and Origin output.</p>
-  </header>
+  <div class="app">
+    <header class="hero">
+      <h1>Washington Civic Dashboard</h1>
+    </header>
 
-  <main class="page">
-    <section class="panel">
-      <h2 class="section-title">Live Signal View</h2>
-      <p class="section-subtitle">This panel loads a selected bill from the local catalog and runs it through the live analysis flow.</p>
+    <div class="topbar">
+      <nav class="tabs" aria-label="Primary navigation">
+        <a class="tab-link" href="index.html">Bills</a>
+        <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
+        <a class="tab-link" href="#">Votes</a>
+        <a class="tab-link" href="#">Reports</a>
+      </nav>
 
-      <div class="search-entry">
-        <label for="bill-search">Search legislation</label>
-        <p id="bill-search-help" class="search-help">Search by bill number, title words, or partial matches. Select a result to load that bill into this page.</p>
-        <div class="search-controls">
-          <input id="bill-search" type="text" placeholder="Search by bill number, keyword, or partial title" aria-describedby="bill-search-help search-status" aria-controls="search-results" autocomplete="off" />
-          <button id="bill-search-button" type="button" aria-label="Search legislation catalog">Search</button>
-        </div>
-        <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
-        <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
-          <ul id="search-result-list" class="search-result-list"></ul>
-        </div>
+      <div class="toolbar" aria-label="Legislation controls">
+        <select aria-label="Session">
+          <option selected>Session 2024</option>
+          <option>Session 2025</option>
+          <option>Session 2026</option>
+        </select>
+        <select aria-label="Jurisdiction">
+          <option selected>Washington</option>
+        </select>
       </div>
+    </div>
 
-      <div class="analysis-card">
-        <h3 id="bill-number" class="bill-title">Loading...</h3>
+    <div class="content-frame">
+      <aside class="sidebar" aria-label="Section navigation">
+        <ul class="side-list">
+          <li><a class="side-link" href="#"><span class="side-icon">⌂</span><span>Overview</span></a></li>
+          <li><a class="side-link active" href="legislation.html" aria-current="page"><span class="side-icon">▤</span><span>Legislation</span></a></li>
+          <li><a class="side-link" href="#"><span class="side-icon">◫</span><span>Your Activity</span></a></li>
+          <li><a class="side-link" href="#"><span class="side-icon">⚙</span><span>Settings</span></a></li>
+        </ul>
+      </aside>
 
-        <div class="analysis-row">
-          <strong>Signal type:</strong>
-          <span id="bill-topic">Loading...</span>
+      <main class="main">
+        <div class="search-row">
+          <input id="bill-search" class="search-field" type="text" placeholder="Search Legislation..." aria-describedby="search-help search-status" aria-controls="search-results" autocomplete="off" />
+          <button id="bill-search-button" class="search-button" type="button" aria-label="Search legislation">⌕</button>
         </div>
 
-        <div class="analysis-row">
-          <strong>Source anchor:</strong>
-          <span id="bill-about">Loading...</span>
+        <div class="main-scroll">
+          <p id="search-help" class="search-help">Search by bill number, title words, or partial matches. Select a result to load that bill into the analysis view below.</p>
+          <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
+          <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
+            <ul id="search-result-list" class="search-result-list"></ul>
+          </div>
+
+          <section class="panel">
+            <h2>Live Signal View</h2>
+            <p class="panel-note">This section loads the selected legislation into the live Meaning, Verification, and Origin analysis flow.</p>
+
+            <div class="analysis-card">
+              <h3 id="bill-number" class="bill-title">Loading...</h3>
+
+              <div class="analysis-row">
+                <strong>Signal type:</strong>
+                <span id="bill-topic">Loading...</span>
+              </div>
+
+              <div class="analysis-row">
+                <strong>Source anchor:</strong>
+                <span id="bill-about">Loading...</span>
+              </div>
+
+              <div class="analysis-row">
+                <strong>Timing / condition:</strong>
+                <span id="bill-affects">Loading...</span>
+              </div>
+
+              <div class="analysis-row">
+                <strong>Source document:</strong>
+                <a id="bill-link" href="#" target="_blank" rel="noopener noreferrer">Open source</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2>Structured Signals</h2>
+            <p class="panel-note">Live node-by-node output from the current bill.</p>
+            <div id="signal-list" class="signal-list"></div>
+          </section>
+
+          <section class="panel">
+            <h2>Official Washington Legislature Tools</h2>
+            <ul class="resources-list">
+              <li><a href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
+              <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">LegSearch</a></li>
+              <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">Bills by Topic</a></li>
+              <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">How to Track a Bill</a></li>
+            </ul>
+
+            <p class="footer-note">These links go directly to the official Washington State Legislature resources.</p>
+          </section>
         </div>
-
-        <div class="analysis-row">
-          <strong>Timing / condition:</strong>
-          <span id="bill-affects">Loading...</span>
-        </div>
-
-        <div class="analysis-row">
-          <strong>Source document:</strong>
-          <a id="bill-link" href="#" target="_blank" rel="noopener noreferrer">Open source</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">Structured Signals</h2>
-      <p class="section-subtitle">Live node-by-node analysis output for the currently loaded bill.</p>
-      <div id="signal-list" class="signal-list"></div>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">Official Washington Legislature Tools</h2>
-      <ul class="resources-list">
-        <li><a href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
-        <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">LegSearch</a></li>
-        <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">Bills by Topic</a></li>
-        <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">How to Track a Bill</a></li>
-      </ul>
-
-      <p class="footer-note">
-        These links go directly to the official Washington State Legislature resources.
-      </p>
-    </section>
-  </main>
+      </main>
+    </div>
+  </div>
 
   <script>
     const billNumber = document.getElementById("bill-number");
