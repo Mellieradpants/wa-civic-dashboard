@@ -8,7 +8,8 @@
     "session": "2025-26",
     "status": "Sample",
     "source_url": "https://example.com/hb1234.xml",
-    "detail_json_path": "data/wa/bills/HB1234.json",
-    "aliases": ["HOUSE BILL 1234", "1234"]
+    "detail_json_path": "data/wa/sample-bill.json",
+    "plain_meaning_summary": "Applicants must submit documentation within 30 days, the agency may extend deadlines in exceptional circumstances, and the department reports annual compliance.",
+    "aliases": ["HOUSE BILL 1234", "1234", "EXAMPLE POLICY"]
   }
 ]
