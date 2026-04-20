@@ -243,77 +243,197 @@
         .replaceAll("'", "&#039;");
     }
 
-    function renderSignalCard(item, index) {
-      const signalType = item?.tetherAnchor?.matchedSignals?.join(", ") || "unknown";
-      const anchorType = item?.tetherAnchor?.type || "unknown";
-      const anchorText = item?.tetherAnchor?.anchorText || "No anchor text";
-      const deadlines = item?.parse?.when?.deadlines || [];
-      const conditions = item?.parse?.what?.conditions || [];
+    function uniqueItems(items) {
+      return [...new Set((items || []).filter(Boolean))];
+    }
+
+    async function resolveSourceContent(sample) {
+      if (sample && typeof sample.document === "string" && sample.document.trim()) {
+        try {
+          const response = await fetch(`./${sample.document}`, { cache: "no-store" });
+          if (response.ok) {
+            const content = await response.text();
+            if (content.trim()) {
+              return {
+                content,
+                sourceUrl: sample.document,
+              };
+            }
+          }
+        } catch (error) {
+          console.warn("Could not load source document directly:", error);
+        }
+      }
+
+      const fallbackText = uniqueItems(
+        (sample.analysis || []).map((item) =>
+          item?.tetherAnchor?.sourceDerivedText || item?.tetherAnchor?.anchorText || ""
+        )
+      ).join("\n\n");
+
+      return {
+        content: fallbackText,
+        sourceUrl: sample.document || null,
+      };
+    }
+
+    function getMeaningMap(data) {
+      return new Map((data?.meaning?.node_results || []).map((node) => [node.node_id, node]));
+    }
+
+    function getVerificationMap(data) {
+      return new Map((data?.verification?.node_results || []).map((node) => [node.node_id, node]));
+    }
+
+    function summarizeOrigin(data) {
+      const origin = data?.origin;
+      if (!origin) return null;
+
+      const identity = origin.origin_identity_signals || [];
+      const metadata = origin.origin_metadata_signals || [];
+      const distribution = origin.distribution_signals || [];
+      const evidence = origin.evidence_trace || [];
+
+      if (!identity.length && !metadata.length && !distribution.length && !evidence.length) {
+        return null;
+      }
+
+      return {
+        identity,
+        metadata,
+        distribution,
+        evidence,
+      };
+    }
+
+    function renderOriginCard(originSummary) {
+      const card = document.createElement("div");
+      card.className = "signal-card";
+
+      const identityText = originSummary.identity.length
+        ? originSummary.identity.map((item) => `${item.signal}: ${item.value}`).join(" | ")
+        : "none";
+      const metadataText = originSummary.metadata.length
+        ? originSummary.metadata.map((item) => `${item.signal}: ${item.value}`).join(" | ")
+        : "none";
+      const distributionText = originSummary.distribution.length
+        ? originSummary.distribution.map((item) => `${item.signal}: ${item.value}`).join(" | ")
+        : "none";
+
+      card.innerHTML = `
+        <h3>Document Origin</h3>
+        <p><strong>Identity:</strong> ${escapeHtml(identityText)}</p>
+        <p><strong>Metadata:</strong> ${escapeHtml(metadataText)}</p>
+        <p><strong>Distribution:</strong> ${escapeHtml(distributionText)}</p>
+        <p><strong>Evidence trace:</strong> ${escapeHtml(originSummary.evidence.length ? JSON.stringify(originSummary.evidence) : "none")}</p>
+      `;
+
+      return card;
+    }
+
+    function renderNodeCard(node, meaning, verification, index) {
+      const actors = meaning?.structured?.actors?.length ? meaning.structured.actors.join(", ") : "none";
+      const actions = meaning?.structured?.actions?.length ? meaning.structured.actions.join(", ") : "none";
+      const object = meaning?.structured?.object || "none";
+      const temporal = meaning?.structured?.temporal || node.temporal || "none";
+      const jurisdiction = meaning?.structured?.jurisdiction || node.jurisdiction || "none";
+      const verificationPath = verification?.verification_path_available ? "available" : "not available";
+      const expectedRecords = verification?.expected_record_systems?.length
+        ? verification.expected_record_systems.join(" | ")
+        : "none";
+      const notes = verification?.verification_notes || "none";
+      const meaningText = meaning?.plain_meaning || meaning?.reason || "No meaning returned";
 
       const card = document.createElement("div");
       card.className = "signal-card";
       card.innerHTML = `
-        <h3>Signal ${index + 1}</h3>
-        <p><strong>Matched signals:</strong> ${escapeHtml(signalType)}</p>
-        <p><strong>Anchor type:</strong> ${escapeHtml(anchorType)}</p>
-        <p><strong>Anchor text:</strong> ${escapeHtml(anchorText)}</p>
-        <p><strong>Deadlines:</strong> ${escapeHtml(deadlines.length ? deadlines.join(" | ") : "none")}</p>
-        <p><strong>Conditions:</strong> ${escapeHtml(conditions.length ? conditions.join(" | ") : "none")}</p>
+        <h3>Node ${index + 1}</h3>
+        <p><strong>Source text:</strong> ${escapeHtml(node.source_text || "none")}</p>
+        <p><strong>Plain meaning:</strong> ${escapeHtml(meaningText)}</p>
+        <p><strong>Actors:</strong> ${escapeHtml(actors)}</p>
+        <p><strong>Actions:</strong> ${escapeHtml(actions)}</p>
+        <p><strong>Object:</strong> ${escapeHtml(object)}</p>
+        <p><strong>Temporal:</strong> ${escapeHtml(temporal)}</p>
+        <p><strong>Jurisdiction:</strong> ${escapeHtml(jurisdiction)}</p>
+        <p><strong>Source anchor:</strong> ${escapeHtml(node.source_anchor || "none")}</p>
+        <p><strong>Verification path:</strong> ${escapeHtml(verificationPath)}</p>
+        <p><strong>Expected records:</strong> ${escapeHtml(expectedRecords)}</p>
+        <p><strong>Verification notes:</strong> ${escapeHtml(notes)}</p>
       `;
       return card;
     }
 
+    function renderAnalysis(data, sampleMeta) {
+      const meaningMap = getMeaningMap(data);
+      const verificationMap = getVerificationMap(data);
+      const selectedNodes = data?.selection?.selected_nodes || [];
+      const firstNode = selectedNodes[0] || data?.structure?.nodes?.[0] || null;
+      const firstMeaning = firstNode ? meaningMap.get(firstNode.node_id) : null;
+
+      billNumber.textContent = sampleMeta.billLabel || "Tetherpoint Live";
+      billTopic.textContent = `${selectedNodes.length} nodes analyzed | Meaning ${data?.meaning?.status || "unknown"} | Verification ${data?.verification?.status || "unknown"}`;
+      billAbout.textContent = firstNode?.source_anchor || "No source anchor returned";
+      billAffects.textContent =
+        firstMeaning?.structured?.temporal ||
+        firstNode?.condition ||
+        firstNode?.temporal ||
+        "No timing or condition detected";
+
+      billLink.href = sampleMeta.sourceUrl || "#";
+      billLink.textContent = sampleMeta.sourceUrl || "No source path available";
+
+      signalList.innerHTML = "";
+
+      const originSummary = summarizeOrigin(data);
+      if (originSummary) {
+        signalList.appendChild(renderOriginCard(originSummary));
+      }
+
+      selectedNodes.forEach((node, index) => {
+        const meaning = meaningMap.get(node.node_id);
+        const verification = verificationMap.get(node.node_id);
+        signalList.appendChild(renderNodeCard(node, meaning, verification, index));
+      });
+    }
+
     async function loadTcsOutput() {
       try {
-        const response = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
+        const sampleResponse = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
+        if (!sampleResponse.ok) {
+          throw new Error(`HTTP ${sampleResponse.status}`);
         }
 
-        const data = await response.json();
-        console.log("TCS OUTPUT:", data);
+        const sample = await sampleResponse.json();
+        const source = await resolveSourceContent(sample);
 
-        const first = data.analysis?.[0];
-
-        if (!first) {
-          billNumber.textContent = "No analysis";
-          billTopic.textContent = "No signal found";
-          billAbout.textContent = "sample-bill.json loaded, but analysis[] was empty.";
-          billAffects.textContent = "No timing or condition detected";
-          billLink.href = "#";
-          billLink.textContent = "No source path available";
-          signalList.innerHTML = "";
-          return;
-        }
-
-        const matchedSignals = first.tetherAnchor?.matchedSignals || [];
-        const anchorText = first.tetherAnchor?.anchorText || "No anchor text found";
-        const deadlines = first.parse?.when?.deadlines || [];
-        const conditions = first.parse?.what?.conditions || [];
-        const sourceDocument = data.document || "#";
-
-        billNumber.textContent = "TCS LIVE";
-        billTopic.textContent = matchedSignals.length ? matchedSignals.join(", ") : "unknown signal";
-        billAbout.textContent = anchorText;
-        billAffects.textContent =
-          deadlines.length ? deadlines.join(" | ")
-          : conditions.length ? conditions.join(" | ")
-          : "No timing or condition detected";
-
-        billLink.href = sourceDocument === "#" ? "#" : sourceDocument;
-        billLink.textContent = sourceDocument === "#" ? "No source path available" : sourceDocument;
-
-        signalList.innerHTML = "";
-        (data.analysis || []).forEach((item, index) => {
-          signalList.appendChild(renderSignalCard(item, index));
+        const analyzeResponse = await fetch("/api/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: source.content,
+            sourceUrl: source.sourceUrl,
+          }),
         });
 
+        if (!analyzeResponse.ok) {
+          const errorText = await analyzeResponse.text();
+          throw new Error(errorText || `HTTP ${analyzeResponse.status}`);
+        }
+
+        const data = await analyzeResponse.json();
+        console.log("TETHERPOINT OUTPUT:", data);
+
+        renderAnalysis(data, {
+          billLabel: sample.bill_id || sample.document || "Tetherpoint Live",
+          sourceUrl: sample.document || sample.source_url || source.sourceUrl || null,
+        });
       } catch (error) {
-        console.error("Error loading TCS output:", error);
+        console.error("Error loading Tetherpoint output:", error);
         billNumber.textContent = "Load error";
-        billTopic.textContent = "Unable to fetch sample-bill.json";
-        billAbout.textContent = "Check that sample-bill.json contains valid TCS output JSON.";
+        billTopic.textContent = "Unable to run Tetherpoint analysis";
+        billAbout.textContent = "Check that the legislation proxy and Tetherpoint backend are configured.";
         billAffects.textContent = "No timing or condition detected";
         billLink.href = "#";
         billLink.textContent = "No source path available";
@@ -325,4 +445,3 @@
   </script>
 </body>
 </html>
-     
