@@ -91,6 +91,12 @@
       font-weight: 700;
     }
 
+    .search-help {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
     .search-controls {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -295,22 +301,23 @@
 <body>
   <header class="hero">
     <h1>Washington State Legislative Language Analyzer</h1>
-    <p>Rendering live Traceability Constraint System output from sample-bill.json</p>
+    <p>Search a bill, open it into the analysis view, and review live Meaning, Verification, and Origin output.</p>
   </header>
 
   <main class="page">
     <section class="panel">
       <h2 class="section-title">Live Signal View</h2>
-      <p class="section-subtitle">This panel reads the TCS structure directly from <code>./data/wa/sample-bill.json</code>.</p>
+      <p class="section-subtitle">This panel loads a selected bill from the local catalog and runs it through the live analysis flow.</p>
 
       <div class="search-entry">
         <label for="bill-search">Search legislation</label>
+        <p id="bill-search-help" class="search-help">Search by bill number, title words, or partial matches. Select a result to load that bill into this page.</p>
         <div class="search-controls">
-          <input id="bill-search" type="text" placeholder="Search by bill number, keyword, or partial title" />
-          <button id="bill-search-button" type="button">Search</button>
+          <input id="bill-search" type="text" placeholder="Search by bill number, keyword, or partial title" aria-describedby="bill-search-help search-status" aria-controls="search-results" autocomplete="off" />
+          <button id="bill-search-button" type="button" aria-label="Search legislation catalog">Search</button>
         </div>
-        <div id="search-status" class="search-status"></div>
-        <div id="search-results" class="search-results">
+        <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
+        <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
           <ul id="search-result-list" class="search-result-list"></ul>
         </div>
       </div>
@@ -342,7 +349,7 @@
 
     <section class="panel">
       <h2 class="section-title">Structured Signals</h2>
-      <p class="section-subtitle">Direct render of <code>analysis[]</code> without a transform layer.</p>
+      <p class="section-subtitle">Live node-by-node analysis output for the currently loaded bill.</p>
       <div id="signal-list" class="signal-list"></div>
     </section>
 
@@ -425,10 +432,13 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "search-result-button";
+        const billLabel = record.bill_id_display || record.bill_number || "Unknown bill";
+        const summary = buildMeaningSummary(record);
+        button.setAttribute("aria-label", `Load ${billLabel}: ${summary}`);
         button.innerHTML = `
-          <span class="search-result-title">${escapeHtml(record.bill_id_display || record.bill_number || "Unknown bill")} — ${escapeHtml(shortenTitle(record.title || "Untitled"))}</span>
+          <span class="search-result-title">${escapeHtml(billLabel)} — ${escapeHtml(shortenTitle(record.title || "Untitled"))}</span>
           <span class="search-result-meta">${escapeHtml(record.session || "Session unavailable")} ${record.status ? `• ${escapeHtml(record.status)}` : ""}</span>
-          <span class="search-result-summary">${escapeHtml(buildMeaningSummary(record))}</span>
+          <span class="search-result-summary">${escapeHtml(summary)}</span>
         `;
 
         button.addEventListener("click", () => {
@@ -495,7 +505,7 @@
         return;
       }
 
-      setSearchStatus(`${results.length} match${results.length === 1 ? "" : "es"} found.`);
+      setSearchStatus(`${results.length} match${results.length === 1 ? "" : "es"} found. Select a bill to load it into the analysis view.`);
       renderSearchResults(results);
     }
 
@@ -734,6 +744,7 @@
 
         if (selectedRecord?.bill_id_display) {
           searchInput.value = selectedRecord.bill_id_display;
+          setSearchStatus(`Loaded ${selectedRecord.bill_id_display} into the analysis view.`);
         }
 
         renderAnalysis(data, {
@@ -749,6 +760,7 @@
         billLink.href = "#";
         billLink.textContent = "No source path available";
         signalList.innerHTML = "";
+        setSearchStatus("The selected bill could not be loaded into the analysis view.");
       }
     }
 
