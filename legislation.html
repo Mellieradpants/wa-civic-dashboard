@@ -588,13 +588,13 @@
 
           <section class="panel architecture-panel">
             <h2>Architecture</h2>
-            <p class="panel-note">A clear system view that keeps the dashboard readable while preserving the Input → Parsing → Output flow.</p>
+            <p class="panel-note">A clear system view of the API-backed legislation path, preserving the Input → Parsing → Output flow without adding extra steps.</p>
 
             <div class="architecture-flow" aria-label="Architecture flow">
               <article class="architecture-card">
                 <span class="architecture-card-label">Layer 1</span>
                 <h3>Input</h3>
-                <p>Receive legislation records, query context, and source references without changing the underlying material.</p>
+                <p>Load legislation records, selected bill context, and source references before anything is sent upstream.</p>
               </article>
 
               <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
@@ -602,7 +602,7 @@
               <article class="architecture-card">
                 <span class="architecture-card-label">Layer 2</span>
                 <h3>Parsing</h3>
-                <p>Extract rule structure into plain-language components, keeping anchors visible and interpretation restrained.</p>
+                <p>Send the selected source through <code>/api/analyze</code>, where the proxy forwards it to the analysis service for structured parsing.</p>
               </article>
 
               <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
@@ -610,7 +610,7 @@
               <article class="architecture-card">
                 <span class="architecture-card-label">Layer 3</span>
                 <h3>Output</h3>
-                <p>Present the result in a civic dashboard layout that stays calm, readable, and easy to navigate.</p>
+                <p>Return Meaning, Verification, and Origin results into the dashboard so the live analysis stays readable and low-friction.</p>
               </article>
             </div>
 
