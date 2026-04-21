@@ -18,6 +18,15 @@
       --nav-active-text: #3b5f99;
       --search-button: #5f7fb3;
       --search-button-dark: #4f6ea3;
+      --architecture-overlay: rgba(10, 27, 20, 0.66);
+      --architecture-overlay-soft: rgba(18, 48, 36, 0.55);
+      --architecture-card: rgba(15, 37, 28, 0.82);
+      --architecture-card-border: rgba(186, 216, 195, 0.18);
+      --architecture-text: #eff6f1;
+      --architecture-muted: #c0d0c6;
+      --architecture-accent: #b5d1bf;
+      --architecture-button: rgba(28, 58, 44, 0.84);
+      --architecture-button-hover: rgba(39, 76, 58, 0.92);
     }
 
     * {
@@ -291,6 +300,104 @@
       font-size: 0.96rem;
     }
 
+    .architecture-panel {
+      background:
+        linear-gradient(180deg, var(--architecture-overlay-soft) 0%, var(--architecture-overlay) 100%),
+        linear-gradient(135deg, rgba(17, 54, 39, 0.78) 0%, rgba(10, 28, 21, 0.88) 100%),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center 58% / cover no-repeat;
+      border-color: rgba(63, 92, 75, 0.34);
+      overflow: hidden;
+    }
+
+    .architecture-panel h2 {
+      color: var(--architecture-text);
+    }
+
+    .architecture-panel .panel-note {
+      color: var(--architecture-muted);
+      max-width: 720px;
+    }
+
+    .architecture-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 14px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .architecture-card {
+      min-height: 170px;
+      border: 1px solid var(--architecture-card-border);
+      border-radius: 14px;
+      padding: 18px;
+      background: var(--architecture-card);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+    }
+
+    .architecture-card-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--architecture-accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .architecture-card h3 {
+      margin: 0 0 10px;
+      color: var(--architecture-text);
+      font-size: 1.08rem;
+    }
+
+    .architecture-card p {
+      margin: 0;
+      color: var(--architecture-muted);
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .architecture-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d7e4db;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .architecture-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .architecture-nav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--architecture-card-border);
+      border-radius: 12px;
+      background: var(--architecture-button);
+      color: var(--architecture-text);
+      text-decoration: none;
+      font-size: 0.94rem;
+      font-weight: 600;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .architecture-nav-button:hover,
+    .architecture-nav-button:focus-visible {
+      background: var(--architecture-button-hover);
+      border-color: rgba(205, 228, 214, 0.26);
+      color: #ffffff;
+    }
+
     .analysis-card {
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -392,6 +499,12 @@
       }
     }
 
+    @media (max-width: 860px) {
+      .architecture-flow {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 760px) {
       .hero {
         min-height: 260px;
@@ -414,6 +527,11 @@
       }
 
       .side-list {
+        grid-template-columns: 1fr;
+      }
+
+      .architecture-nav {
+        display: grid;
         grid-template-columns: 1fr;
       }
     }
@@ -450,7 +568,7 @@
         <ul class="side-list">
           <li><a class="side-link" href="#"><span class="side-icon">⌂</span><span>Overview</span></a></li>
           <li><a class="side-link active" href="legislation.html" aria-current="page"><span class="side-icon">▤</span><span>Legislation</span></a></li>
-          <li><a class="side-link" href="#"><span class="side-icon">◫</span><span>Your Activity</span></a></li>
+          <li><a class="side-link" href="#"><span class="side-icon">▫</span><span>Your Activity</span></a></li>
           <li><a class="side-link" href="#"><span class="side-icon">⚙</span><span>Settings</span></a></li>
         </ul>
       </aside>
@@ -468,7 +586,42 @@
             <ul id="search-result-list" class="search-result-list"></ul>
           </div>
 
-          <section class="panel">
+          <section class="panel architecture-panel">
+            <h2>Architecture</h2>
+            <p class="panel-note">A clear system view that keeps the dashboard readable while preserving the Input → Parsing → Output flow.</p>
+
+            <div class="architecture-flow" aria-label="Architecture flow">
+              <article class="architecture-card">
+                <span class="architecture-card-label">Layer 1</span>
+                <h3>Input</h3>
+                <p>Receive legislation records, query context, and source references without changing the underlying material.</p>
+              </article>
+
+              <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
+
+              <article class="architecture-card">
+                <span class="architecture-card-label">Layer 2</span>
+                <h3>Parsing</h3>
+                <p>Extract rule structure into plain-language components, keeping anchors visible and interpretation restrained.</p>
+              </article>
+
+              <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
+
+              <article class="architecture-card">
+                <span class="architecture-card-label">Layer 3</span>
+                <h3>Output</h3>
+                <p>Present the result in a civic dashboard layout that stays calm, readable, and easy to navigate.</p>
+              </article>
+            </div>
+
+            <div class="architecture-nav" aria-label="Legislation section navigation">
+              <a class="architecture-nav-button" href="#live-signal-view">Live Signal View</a>
+              <a class="architecture-nav-button" href="#structured-signals">Structured Signals</a>
+              <a class="architecture-nav-button" href="#official-tools">Official Tools</a>
+            </div>
+          </section>
+
+          <section class="panel" id="live-signal-view">
             <h2>Live Signal View</h2>
             <p class="panel-note">This section loads the selected legislation into the live Meaning, Verification, and Origin analysis flow.</p>
 
@@ -497,13 +650,13 @@
             </div>
           </section>
 
-          <section class="panel">
+          <section class="panel" id="structured-signals">
             <h2>Structured Signals</h2>
             <p class="panel-note">Live node-by-node output from the current bill.</p>
             <div id="signal-list" class="signal-list"></div>
           </section>
 
-          <section class="panel">
+          <section class="panel" id="official-tools">
             <h2>Official Washington Legislature Tools</h2>
             <ul class="resources-list">
               <li><a href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
@@ -539,7 +692,7 @@
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
+        .replaceAll("\"", "&quot;")
         .replaceAll("'", "&#039;");
     }
 
