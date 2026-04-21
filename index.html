@@ -22,6 +22,15 @@
       --radius-lg: 18px;
       --radius-md: 14px;
       --radius-sm: 12px;
+      --architecture-bg: #121820;
+      --architecture-panel: #181f28;
+      --architecture-panel-soft: #1d2631;
+      --architecture-text: #e8eef5;
+      --architecture-muted: #9eacbb;
+      --architecture-border: #2a3644;
+      --architecture-accent: #9fb7d0;
+      --architecture-button: #202a35;
+      --architecture-button-hover: #273340;
     }
 
     * {
@@ -146,6 +155,93 @@
     .section-note {
       margin: 0 0 16px;
       color: var(--muted);
+    }
+
+    .architecture-panel {
+      background:
+        linear-gradient(180deg, rgba(159, 183, 208, 0.06) 0%, rgba(159, 183, 208, 0) 100%),
+        var(--architecture-bg);
+      border-color: var(--architecture-border);
+      color: var(--architecture-text);
+    }
+
+    .architecture-panel h2,
+    .architecture-panel h3 {
+      color: var(--architecture-text);
+    }
+
+    .architecture-panel .section-note {
+      color: var(--architecture-muted);
+      max-width: 720px;
+    }
+
+    .architecture-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 14px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .architecture-card {
+      min-height: 168px;
+      padding: 18px;
+      border: 1px solid var(--architecture-border);
+      border-radius: var(--radius-md);
+      background: var(--architecture-panel);
+    }
+
+    .architecture-card-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--architecture-accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .architecture-card p {
+      margin: 0;
+      color: var(--architecture-muted);
+      font-size: 0.96rem;
+    }
+
+    .architecture-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--architecture-muted);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .architecture-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .architecture-nav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--architecture-border);
+      border-radius: 999px;
+      background: var(--architecture-button);
+      color: var(--architecture-text);
+      text-decoration: none;
+      font-size: 0.94rem;
+      font-weight: 600;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .architecture-nav-button:hover,
+    .architecture-nav-button:focus-visible {
+      background: var(--architecture-button-hover);
+      border-color: #344355;
+      color: var(--architecture-text);
     }
 
     .status-note {
@@ -370,6 +466,16 @@
       text-align: center;
     }
 
+    @media (max-width: 900px) {
+      .architecture-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .architecture-arrow {
+        min-height: 14px;
+      }
+    }
+
     @media (max-width: 700px) {
       .container {
         width: min(100% - 20px, 1140px);
@@ -383,6 +489,11 @@
 
       .how-toggle {
         width: 100%;
+      }
+
+      .architecture-nav {
+        display: grid;
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -408,6 +519,44 @@
     </header>
 
     <main class="grid">
+
+      <section class="panel architecture-panel" id="architecture">
+        <h2>Architecture</h2>
+        <p class="section-note">
+          A simple view of the dashboard flow. Each layer stays focused so people can understand the system without reading a dense diagram.
+        </p>
+
+        <div class="architecture-flow" aria-label="Architecture flow">
+          <article class="architecture-card">
+            <span class="architecture-card-label">Layer 1</span>
+            <h3>Input</h3>
+            <p>Bring source bill records into the dashboard and keep the source material visible and intact.</p>
+          </article>
+
+          <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
+
+          <article class="architecture-card">
+            <span class="architecture-card-label">Layer 2</span>
+            <h3>Parsing</h3>
+            <p>Extract the rule structure into plain, reviewable parts with source anchors and minimal interpretation overhead.</p>
+          </article>
+
+          <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
+
+          <article class="architecture-card">
+            <span class="architecture-card-label">Layer 3</span>
+            <h3>Output</h3>
+            <p>Present the result in a readable civic interface so people can move from source text to usable understanding.</p>
+          </article>
+        </div>
+
+        <div class="architecture-nav" aria-label="Section navigation">
+          <a class="architecture-nav-button" href="#follow-bill">Search Catalog</a>
+          <a class="architecture-nav-button" href="#translator">Bill Translator</a>
+          <a class="architecture-nav-button" href="#civic-participation">Civic Participation</a>
+          <a class="architecture-nav-button" href="#official-resources">Official Resources</a>
+        </div>
+      </section>
 
       <section class="panel" id="follow-bill">
         <h2>Search Catalog</h2>
