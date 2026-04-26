@@ -1,164 +1,373 @@
 
-    }    }
 
-    .architecture-nav-button {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington Legislation Reader</title>
+  <style>
+    :root {
+      --evergreen: #173c2d;
+      --forest: #1f4d3a;
+      --moss: #5f7f62;
+      --sage: #a9b9aa;
+      --mist: #edf2ee;
+      --cream: #f8f6ef;
+      --panel: #fffdf8;
+      --ink: #1f2924;
+      --muted: #66736a;
+      --border: #d9e2d8;
+      --gold: #b99a5f;
+      --shadow: 0 18px 42px rgba(23, 60, 45, 0.12);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(169, 185, 170, 0.26), transparent 30%),
+        linear-gradient(180deg, #f7f9f5 0%, var(--mist) 42%, #f4f3ed 100%);
+      line-height: 1.5;
+    }
+    .app {
+      min-height: 100vh;
+    }
+    .hero {
+      min-height: 280px;
+      padding: 34px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 14px;
+      color: white;
+      background:
+        linear-gradient(180deg, rgba(10, 28, 21, 0.18) 0%, rgba(10, 28, 21, 0.58) 52%, rgba(8, 22, 16, 0.88) 100%),
+        linear-gradient(135deg, rgba(23, 60, 45, 0.55), rgba(95, 127, 98, 0.18)),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center 55% / cover no-repeat;
+    }
+    .eyebrow {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      margin: 0;
+      max-width: 920px;
+      font-size: clamp(2.15rem, 5vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
+    }
+    .hero p:last-child {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 1.05rem;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 28px;
+      background: rgba(255, 253, 248, 0.94);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .tabs {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      min-height: 58px;
+      overflow-x: auto;
+    }
+    .tab-link {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 0 14px;
-      border: 1px solid var(--architecture-card-border);
-      border-radius: 12px;
-      background: var(--architecture-button);
-      color: var(--architecture-text);
+      min-height: 58px;
+      color: var(--muted);
       text-decoration: none;
+      font-weight: 800;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+    .tab-link.active {
+      color: var(--evergreen);
+      border-bottom-color: var(--forest);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+    }
+    .toolbar select {
+      min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--ink);
+      padding: 0 16px;
+      font-size: 0.96rem;
+      outline: none;
+    }
+    .toolbar select:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 4px rgba(31, 77, 58, 0.11);
+    }
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+    .search-panel,
+    .panel {
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+    .search-panel {
+      padding: 18px;
+      margin-bottom: 22px;
+    }
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .search-field {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 18px;
+      color: var(--ink);
+      background: white;
+      font-size: 1rem;
+      outline: none;
+    }
+    .search-field:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 4px rgba(31, 77, 58, 0.11);
+    }
+    .search-button {
+      min-height: 54px;
+      border: none;
+      border-radius: 999px;
+      background: var(--forest);
+      color: white;
+      padding: 0 22px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .search-button:hover {
+      background: var(--evergreen);
+    }
+    .search-help {
+      margin: 10px 4px 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .search-status {
+      min-height: 22px;
+      margin: 10px 4px 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .search-results {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: white;
+      padding: 12px;
+    }
+    .search-results.open {
+      display: block;
+    }
+    .search-result-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .search-result-button {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: #fffdf8;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .search-result-button:hover {
+      background: var(--mist);
+      border-color: var(--sage);
+    }
+    .search-result-title {
+      display: block;
+      color: var(--evergreen);
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .search-result-meta,
+    .search-result-summary {
+      display: block;
+      color: var(--muted);
       font-size: 0.94rem;
-      font-weight: 600;
-      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
     }
-
-    .architecture-nav-button:hover,
-    .architecture-nav-button:focus-visible {
-      background: var(--architecture-button-hover);
-      border-color: rgba(205, 228, 214, 0.26);
-      color: #ffffff;
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.45fr);
+      gap: 22px;
+      align-items: start;
     }
-
+    .panel {
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+    .panel h2 {
+      margin: 0 0 8px;
+      color: var(--evergreen);
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+    .panel-note {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .bill-title {
+      margin: 0 0 14px;
+      color: var(--evergreen);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      line-height: 1.12;
+    }
     .analysis-card {
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: var(--radius-lg);
       padding: 18px;
-      background: #fff;
+      background: white;
     }
-
-    .bill-title {
-      margin: 0 0 16px;
-      color: #355a92;
-      font-size: 1.75rem;
-      line-height: 1.15;
-    }
-
     .analysis-row {
-      margin-bottom: 12px;
-      font-size: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.98rem;
     }
-
-    .analysis-row:last-child {
-      margin-bottom: 0;
-    }
-
     .analysis-row strong {
+      display: block;
       color: var(--ink);
+      font-size: 0.8rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
     }
-
     .analysis-row a {
-      color: #355a92;
-      font-weight: 700;
+      color: var(--forest);
+      font-weight: 900;
       text-decoration: none;
     }
-
     .analysis-row a:hover {
       text-decoration: underline;
     }
-
     .signal-list {
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }
-
     .signal-card {
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      background: white;
     }
-
     .signal-card h3 {
-      margin: 0 0 8px;
-      color: #355a92;
-      font-size: 1.05rem;
+      margin: 0 0 10px;
+      color: var(--evergreen);
+      font-size: 1.08rem;
     }
-
     .signal-card p {
-      margin: 6px 0;
-      font-size: 0.97rem;
+      margin: 8px 0;
+      color: var(--ink);
+      font-size: 0.98rem;
+      line-height: 1.55;
     }
-
+    .signal-card strong {
+      color: var(--moss);
+    }
     .resources-list {
       margin: 0;
       padding-left: 20px;
     }
-
     .resources-list li {
       margin-bottom: 8px;
       font-size: 1rem;
     }
-
     .resources-list a {
-      color: #355a92;
-      font-weight: 700;
+      color: var(--forest);
+      font-weight: 900;
       text-decoration: none;
     }
-
     .resources-list a:hover {
       text-decoration: underline;
     }
-
-    .footer-note {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 960px) {
-      .content-frame {
+    @media (max-width: 900px) {
+      .layout {
         grid-template-columns: 1fr;
       }
-
-      .sidebar {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .side-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 860px) {
-      .architecture-flow {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
       .hero {
-        min-height: 260px;
-        padding: 28px 20px 16px;
+        min-height: 245px;
       }
-
+    }
+    @media (max-width: 680px) {
       .topbar {
         padding: 0 16px;
       }
-
       .tabs {
-        gap: 18px;
-        overflow-x: auto;
+        width: 100%;
       }
-
-      .search-row,
-      .main-scroll {
-        padding-left: 16px;
-        padding-right: 16px;
+      .toolbar {
+        width: 100%;
       }
-
-      .side-list {
+      .toolbar select {
+        flex: 1;
+      }
+      .page {
+        width: min(100% - 20px, 1180px);
+        padding-top: 20px;
+      }
+      .search-row {
         grid-template-columns: 1fr;
       }
-
-      .architecture-nav {
-        display: grid;
-        grid-template-columns: 1fr;
+      .search-button {
+        width: 100%;
+      }
+      .panel,
+      .search-panel {
+        border-radius: 18px;
+        padding: 18px;
       }
     }
   </style>
@@ -166,17 +375,17 @@
 <body>
   <div class="app">
     <header class="hero">
-      <h1>Washington Civic Dashboard</h1>
+      <p class="eyebrow">Washington legislation reader</p>
+      <h1>Legislation</h1>
+      <p>Search Washington bill records, open the source path, and review plain-language analysis without losing the official record.</p>
     </header>
-
     <div class="topbar">
       <nav class="tabs" aria-label="Primary navigation">
-        <a class="tab-link" href="index.html">Bills</a>
+        <a class="tab-link" href="index.html">Home</a>
         <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
-        <a class="tab-link" href="#">Votes</a>
-        <a class="tab-link" href="#">Reports</a>
+        <a class="tab-link" href="voting.html">Voting</a>
+        <a class="tab-link" href="#official-tools">Resources</a>
       </nav>
-
       <div class="toolbar" aria-label="Legislation controls">
         <select aria-label="Session">
           <option selected>Session 2024</option>
@@ -188,116 +397,66 @@
         </select>
       </div>
     </div>
-
-    <div class="content-frame">
-      <aside class="sidebar" aria-label="Section navigation">
-        <ul class="side-list">
-          <li><a class="side-link" href="#"><span class="side-icon">⌂</span><span>Overview</span></a></li>
-          <li><a class="side-link active" href="legislation.html" aria-current="page"><span class="side-icon">▤</span><span>Legislation</span></a></li>
-          <li><a class="side-link" href="#"><span class="side-icon">▫</span><span>Your Activity</span></a></li>
-          <li><a class="side-link" href="#"><span class="side-icon">⚙</span><span>Settings</span></a></li>
-        </ul>
-      </aside>
-
-      <main class="main">
+    <main class="page">
+      <section class="search-panel" aria-label="Search legislation">
         <div class="search-row">
-          <input id="bill-search" class="search-field" type="text" placeholder="Search Legislation..." aria-describedby="search-help search-status" aria-controls="search-results" autocomplete="off" />
-          <button id="bill-search-button" class="search-button" type="button" aria-label="Search legislation">⌕</button>
+          <input id="bill-search" class="search-field" type="text" placeholder="Search by bill number or keyword..." aria-describedby="search-help search-status" aria-controls="search-results" autocomplete="off" />
+          <button id="bill-search-button" class="search-button" type="button">Search</button>
         </div>
-
-        <div class="main-scroll">
-          <p id="search-help" class="search-help">Search by bill number, title words, or partial matches. Select a result to load that bill into the analysis view below.</p>
-          <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
-          <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
-            <ul id="search-result-list" class="search-result-list"></ul>
-          </div>
-
-          <section class="panel architecture-panel">
-            <h2>Architecture</h2>
-            <p class="panel-note">A clear system view of the API-backed legislation path, preserving the Input → Parsing → Output flow without adding extra steps.</p>
-
-            <div class="architecture-flow" aria-label="Architecture flow">
-              <article class="architecture-card">
-                <span class="architecture-card-label">Layer 1</span>
-                <h3>Input</h3>
-                <p>Load legislation records, selected bill context, and source references before anything is sent upstream.</p>
-              </article>
-
-              <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
-
-              <article class="architecture-card">
-                <span class="architecture-card-label">Layer 2</span>
-                <h3>Parsing</h3>
-                <p>Send the selected source through <code>/api/analyze</code>, where the proxy forwards it to the analysis service for structured parsing.</p>
-              </article>
-
-              <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
-
-              <article class="architecture-card">
-                <span class="architecture-card-label">Layer 3</span>
-                <h3>Output</h3>
-                <p>Return Meaning, Verification, and Origin results into the dashboard so the live analysis stays readable and low-friction.</p>
-              </article>
-            </div>
-
-            <div class="architecture-nav" aria-label="Legislation section navigation">
-              <a class="architecture-nav-button" href="#live-signal-view">Live Signal View</a>
-              <a class="architecture-nav-button" href="#structured-signals">Structured Signals</a>
-              <a class="architecture-nav-button" href="#official-tools">Official Tools</a>
-            </div>
-          </section>
-
-          <section class="panel" id="live-signal-view">
-            <h2>Live Signal View</h2>
-            <p class="panel-note">This section loads the selected legislation into the live Meaning, Verification, and Origin analysis flow.</p>
-
+        <p id="search-help" class="search-help">
+          Select a bill to load its official source path and analysis view.
+        </p>
+        <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
+        <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
+          <ul id="search-result-list" class="search-result-list"></ul>
+        </div>
+      </section>
+      <div class="layout">
+        <aside>
+          <section class="panel" id="bill-overview">
+            <h2>Bill Overview</h2>
+            <p class="panel-note">Current selected Washington bill record.</p>
             <div class="analysis-card">
               <h3 id="bill-number" class="bill-title">Loading...</h3>
-
               <div class="analysis-row">
-                <strong>Signal type:</strong>
+                <strong>Analysis status</strong>
                 <span id="bill-topic">Loading...</span>
               </div>
-
               <div class="analysis-row">
-                <strong>Source anchor:</strong>
+                <strong>Source anchor</strong>
                 <span id="bill-about">Loading...</span>
               </div>
-
               <div class="analysis-row">
-                <strong>Timing / condition:</strong>
+                <strong>Timing / condition</strong>
                 <span id="bill-affects">Loading...</span>
               </div>
-
               <div class="analysis-row">
-                <strong>Source document:</strong>
+                <strong>Official source path</strong>
                 <a id="bill-link" href="#" target="_blank" rel="noopener noreferrer">Open source</a>
               </div>
             </div>
           </section>
-
-          <section class="panel" id="structured-signals">
-            <h2>Structured Signals</h2>
-            <p class="panel-note">Live node-by-node output from the current bill.</p>
-            <div id="signal-list" class="signal-list"></div>
-          </section>
-
           <section class="panel" id="official-tools">
-            <h2>Official Washington Legislature Tools</h2>
+            <h2>Official Tools</h2>
+            <p class="panel-note">Washington source paths for manual verification.</p>
             <ul class="resources-list">
               <li><a href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
-              <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">LegSearch</a></li>
+              <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">Washington Legislature</a></li>
               <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">Bills by Topic</a></li>
               <li><a href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">How to Track a Bill</a></li>
             </ul>
-
-            <p class="footer-note">These links go directly to the official Washington State Legislature resources.</p>
           </section>
-        </div>
-      </main>
-    </div>
+        </aside>
+        <section class="panel" id="bill-reader">
+          <h2>Bill Reader</h2>
+          <p class="panel-note">
+            Source-grounded output for the selected bill. This view is still connected to the analysis engine, but the public page keeps the display readable.
+          </p>
+          <div id="signal-list" class="signal-list"></div>
+        </section>
+      </div>
+    </main>
   </div>
-
   <script>
     const billNumber = document.getElementById("bill-number");
     const billTopic = document.getElementById("bill-topic");
@@ -310,9 +469,7 @@
     const searchStatus = document.getElementById("search-status");
     const searchResults = document.getElementById("search-results");
     const searchResultList = document.getElementById("search-result-list");
-
     let billIndex = [];
-
     function escapeHtml(value) {
       return String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -321,42 +478,33 @@
         .replaceAll("\"", "&quot;")
         .replaceAll("'", "&#039;");
     }
-
     function uniqueItems(items) {
       return [...new Set((items || []).filter(Boolean))];
     }
-
     function normalizeQuery(text) {
       return (text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
     }
-
     function shortenTitle(title) {
       const value = (title || "").trim();
       if (value.length <= 92) return value;
       return `${value.slice(0, 89).trimEnd()}...`;
     }
-
     function buildMeaningSummary(record) {
       return record?.plain_meaning_summary || record?.summary || record?.title || "No summary available.";
     }
-
     function setSearchStatus(message) {
       searchStatus.textContent = message || "";
     }
-
     function clearSearchResults() {
       searchResultList.innerHTML = "";
       searchResults.classList.remove("open");
     }
-
     function renderSearchResults(results) {
       searchResultList.innerHTML = "";
-
       if (!results.length) {
         clearSearchResults();
         return;
       }
-
       results.forEach((record) => {
         const item = document.createElement("li");
         const button = document.createElement("button");
@@ -370,26 +518,21 @@
           <span class="search-result-meta">${escapeHtml(record.session || "Session unavailable")} ${record.status ? `• ${escapeHtml(record.status)}` : ""}</span>
           <span class="search-result-summary">${escapeHtml(summary)}</span>
         `;
-
         button.addEventListener("click", () => {
           const nextUrl = new URL(window.location.href);
           nextUrl.searchParams.set("bill", record.bill_id_normalized || normalizeQuery(record.bill_id_display || record.bill_number || ""));
           nextUrl.searchParams.set("q", record.bill_id_display || record.title || "");
           window.location.href = `${nextUrl.pathname}${nextUrl.search}`;
         });
-
         item.appendChild(button);
         searchResultList.appendChild(item);
       });
-
       searchResults.classList.add("open");
     }
-
     function searchCatalog(query) {
       const normalized = normalizeQuery(query);
       const lowered = (query || "").trim().toLowerCase();
       const terms = lowered.split(/\s+/).filter(Boolean);
-
       return billIndex
         .map((record) => {
           const fields = [
@@ -400,17 +543,13 @@
             record.session,
             ...(record.aliases || []),
           ].filter(Boolean);
-
           const normalizedFields = fields.map((field) => normalizeQuery(field));
           const loweredFields = fields.map((field) => String(field).toLowerCase());
-
           let score = 0;
-
           if (normalizedFields.some((field) => field === normalized)) score += 100;
           if (normalizedFields.some((field) => field.startsWith(normalized))) score += 40;
           if (normalizedFields.some((field) => field.includes(normalized))) score += 20;
           score += terms.filter((term) => loweredFields.some((field) => field.includes(term))).length * 10;
-
           return { record, score };
         })
         .filter((entry) => entry.score > 0)
@@ -418,27 +557,22 @@
         .slice(0, 8)
         .map((entry) => entry.record);
     }
-
     function runSearch() {
       const query = searchInput.value.trim();
-
       if (!query) {
         setSearchStatus("Enter a bill number or keyword.");
         clearSearchResults();
         return;
       }
-
       const results = searchCatalog(query);
       if (!results.length) {
         setSearchStatus("No matching legislation found in the local catalog.");
         clearSearchResults();
         return;
       }
-
-      setSearchStatus(`${results.length} match${results.length === 1 ? "" : "es"} found. Select a bill to load it into the analysis view.`);
+      setSearchStatus(`${results.length} match${results.length === 1 ? "" : "es"} found. Select a bill to load it into the reader.`);
       renderSearchResults(results);
     }
-
     async function loadBillIndex() {
       try {
         const response = await fetch("./data/wa/bill-index.json", { cache: "no-store" });
@@ -452,20 +586,16 @@
         setSearchStatus("The local bill catalog could not be loaded.");
       }
     }
-
     function getSelectedRecord() {
       const params = new URLSearchParams(window.location.search);
       const requestedBill = normalizeQuery(params.get("bill"));
       const requestedQuery = params.get("q") || "";
-
       if (requestedQuery) {
         searchInput.value = requestedQuery;
       }
-
       if (!requestedBill) {
         return billIndex[0] || null;
       }
-
       return billIndex.find((record) => {
         const candidates = [
           record.bill_id_normalized,
@@ -473,11 +603,9 @@
           record.bill_number,
           ...(record.aliases || []),
         ].map(normalizeQuery);
-
         return candidates.includes(requestedBill);
       }) || null;
     }
-
     async function fetchRecordPayload(record) {
       if (record?.detail_json_path) {
         try {
@@ -489,14 +617,12 @@
           console.warn("Could not load record payload:", error);
         }
       }
-
       const fallbackResponse = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
       if (!fallbackResponse.ok) {
         throw new Error(`HTTP ${fallbackResponse.status}`);
       }
       return fallbackResponse.json();
     }
-
     async function resolveSourceContent(sample, record) {
       if (sample && typeof sample.document === "string" && sample.document.trim()) {
         try {
@@ -514,40 +640,32 @@
           console.warn("Could not load source document directly:", error);
         }
       }
-
       const fallbackText = uniqueItems(
         (sample?.analysis || []).map((item) =>
           item?.tetherAnchor?.sourceDerivedText || item?.tetherAnchor?.anchorText || ""
         )
       ).join("\n\n");
-
       return {
         content: fallbackText,
         sourceUrl: record?.source_url || sample?.document || null,
       };
     }
-
     function getMeaningMap(data) {
       return new Map((data?.meaning?.node_results || []).map((node) => [node.node_id, node]));
     }
-
     function getVerificationMap(data) {
       return new Map((data?.verification?.node_results || []).map((node) => [node.node_id, node]));
     }
-
     function summarizeOrigin(data) {
       const origin = data?.origin;
       if (!origin) return null;
-
       const identity = origin.origin_identity_signals || [];
       const metadata = origin.origin_metadata_signals || [];
       const distribution = origin.distribution_signals || [];
       const evidence = origin.evidence_trace || [];
-
       if (!identity.length && !metadata.length && !distribution.length && !evidence.length) {
         return null;
       }
-
       return {
         identity,
         metadata,
@@ -555,11 +673,9 @@
         evidence,
       };
     }
-
     function renderOriginCard(originSummary) {
       const card = document.createElement("div");
       card.className = "signal-card";
-
       const identityText = originSummary.identity.length
         ? originSummary.identity.map((item) => `${item.signal}: ${item.value}`).join(" | ")
         : "none";
@@ -569,7 +685,6 @@
       const distributionText = originSummary.distribution.length
         ? originSummary.distribution.map((item) => `${item.signal}: ${item.value}`).join(" | ")
         : "none";
-
       card.innerHTML = `
         <h3>Document Origin</h3>
         <p><strong>Identity:</strong> ${escapeHtml(identityText)}</p>
@@ -577,10 +692,8 @@
         <p><strong>Distribution:</strong> ${escapeHtml(distributionText)}</p>
         <p><strong>Evidence trace:</strong> ${escapeHtml(originSummary.evidence.length ? JSON.stringify(originSummary.evidence) : "none")}</p>
       `;
-
       return card;
     }
-
     function renderNodeCard(node, meaning, verification, index) {
       const actors = meaning?.structured?.actors?.length ? meaning.structured.actors.join(", ") : "none";
       const actions = meaning?.structured?.actions?.length ? meaning.structured.actions.join(", ") : "none";
@@ -593,11 +706,10 @@
         : "none";
       const notes = verification?.verification_notes || "none";
       const meaningText = meaning?.plain_meaning || meaning?.reason || "No meaning returned";
-
       const card = document.createElement("div");
       card.className = "signal-card";
       card.innerHTML = `
-        <h3>Node ${index + 1}</h3>
+        <h3>Selected passage ${index + 1}</h3>
         <p><strong>Source text:</strong> ${escapeHtml(node.source_text || "none")}</p>
         <p><strong>Plain meaning:</strong> ${escapeHtml(meaningText)}</p>
         <p><strong>Actors:</strong> ${escapeHtml(actors)}</p>
@@ -612,47 +724,43 @@
       `;
       return card;
     }
-
     function renderAnalysis(data, sampleMeta) {
       const meaningMap = getMeaningMap(data);
       const verificationMap = getVerificationMap(data);
       const selectedNodes = data?.selection?.selected_nodes || [];
       const firstNode = selectedNodes[0] || data?.structure?.nodes?.[0] || null;
       const firstMeaning = firstNode ? meaningMap.get(firstNode.node_id) : null;
-
-      billNumber.textContent = sampleMeta.billLabel || "Tetherpoint Live";
-      billTopic.textContent = `${selectedNodes.length} nodes analyzed | Meaning ${data?.meaning?.status || "unknown"} | Verification ${data?.verification?.status || "unknown"}`;
+      billNumber.textContent = sampleMeta.billLabel || "Washington bill";
+      billTopic.textContent = `${selectedNodes.length} selected passage${selectedNodes.length === 1 ? "" : "es"} analyzed | Meaning ${data?.meaning?.status || "unknown"} | Verification ${data?.verification?.status || "unknown"}`;
       billAbout.textContent = firstNode?.source_anchor || "No source anchor returned";
       billAffects.textContent =
         firstMeaning?.structured?.temporal ||
         firstNode?.condition ||
         firstNode?.temporal ||
         "No timing or condition detected";
-
       billLink.href = sampleMeta.sourceUrl || "#";
       billLink.textContent = sampleMeta.sourceUrl || "No source path available";
-
       signalList.innerHTML = "";
-
       const originSummary = summarizeOrigin(data);
       if (originSummary) {
         signalList.appendChild(renderOriginCard(originSummary));
       }
-
+      if (!selectedNodes.length) {
+        signalList.innerHTML = `<div class="signal-card"><h3>No selected passages returned</h3><p>The analysis completed, but no selected passages were returned for display.</p></div>`;
+        return;
+      }
       selectedNodes.forEach((node, index) => {
         const meaning = meaningMap.get(node.node_id);
         const verification = verificationMap.get(node.node_id);
         signalList.appendChild(renderNodeCard(node, meaning, verification, index));
       });
     }
-
     async function loadTcsOutput() {
       try {
         await loadBillIndex();
         const selectedRecord = getSelectedRecord();
         const sample = await fetchRecordPayload(selectedRecord);
         const source = await resolveSourceContent(sample, selectedRecord);
-
         const analyzeResponse = await fetch("/api/analyze", {
           method: "POST",
           headers: {
@@ -663,37 +771,32 @@
             sourceUrl: source.sourceUrl,
           }),
         });
-
         if (!analyzeResponse.ok) {
           const errorText = await analyzeResponse.text();
           throw new Error(errorText || `HTTP ${analyzeResponse.status}`);
         }
-
         const data = await analyzeResponse.json();
         console.log("TETHERPOINT OUTPUT:", data);
-
         if (selectedRecord?.bill_id_display) {
           searchInput.value = selectedRecord.bill_id_display;
-          setSearchStatus(`Loaded ${selectedRecord.bill_id_display} into the analysis view.`);
+          setSearchStatus(`Loaded ${selectedRecord.bill_id_display} into the bill reader.`);
         }
-
         renderAnalysis(data, {
-          billLabel: selectedRecord?.bill_id_display || sample.bill_id || sample.document || "Tetherpoint Live",
+          billLabel: selectedRecord?.bill_id_display || sample.bill_id || sample.document || "Washington bill",
           sourceUrl: selectedRecord?.source_url || sample.document || sample.source_url || source.sourceUrl || null,
         });
       } catch (error) {
         console.error("Error loading Tetherpoint output:", error);
         billNumber.textContent = "Load error";
-        billTopic.textContent = "Unable to run Tetherpoint analysis";
-        billAbout.textContent = "Check that the legislation proxy and Tetherpoint backend are configured.";
+        billTopic.textContent = "Unable to run analysis";
+        billAbout.textContent = "Check that the legislation proxy and backend are configured.";
         billAffects.textContent = "No timing or condition detected";
         billLink.href = "#";
         billLink.textContent = "No source path available";
         signalList.innerHTML = "";
-        setSearchStatus("The selected bill could not be loaded into the analysis view.");
+        setSearchStatus("The selected bill could not be loaded into the reader.");
       }
     }
-
     searchButton.addEventListener("click", runSearch);
     searchInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -701,8 +804,7 @@
         runSearch();
       }
     });
-
     loadTcsOutput();
   </script>
 </body>
-</html
+</html>
