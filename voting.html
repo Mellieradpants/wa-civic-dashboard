@@ -1,95 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Washington Voting</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington Voting Access</title>
 
-<style>
-body {
-font-family: Arial, sans-serif;
-margin: 0;
-background: #f4f7fb;
-color: #222;
-}
+  <style>
+    :root {
+      --evergreen: #173c2d;
+      --forest: #1f4d3a;
+      --moss: #5f7f62;
+      --sage: #a9b9aa;
+      --mist: #edf2ee;
+      --cream: #f8f6ef;
+      --panel: #fffdf8;
+      --ink: #1f2924;
+      --muted: #66736a;
+      --border: #d9e2d8;
+      --shadow: 0 18px 42px rgba(23, 60, 45, 0.12);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+    }
 
-header {
-background: #1f4d7a;
-color: white;
-padding: 2rem;
-text-align: center;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-main {
-max-width: 900px;
-margin: auto;
-padding: 2rem;
-}
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(169, 185, 170, 0.26), transparent 30%),
+        linear-gradient(180deg, #f7f9f5 0%, var(--mist) 42%, #f4f3ed 100%);
+      line-height: 1.5;
+    }
 
-.section {
-background: white;
-padding: 1.5rem;
-margin-bottom: 1rem;
-border-radius: 10px;
-box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
+    .hero {
+      min-height: 280px;
+      padding: 34px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 14px;
+      color: white;
+      background:
+        linear-gradient(180deg, rgba(10, 28, 21, 0.18) 0%, rgba(10, 28, 21, 0.58) 52%, rgba(8, 22, 16, 0.88) 100%),
+        linear-gradient(135deg, rgba(23, 60, 45, 0.55), rgba(95, 127, 98, 0.18)),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center 55% / cover no-repeat;
+    }
 
-a {
-color: #1f4d7a;
-text-decoration: none;
-}
+    .eyebrow {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
 
-a:hover {
-text-decoration: underline;
-}
-</style>
+    .hero h1 {
+      margin: 0;
+      max-width: 920px;
+      font-size: clamp(2.15rem, 5vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
+    }
+
+    .hero p:last-child {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 1.05rem;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 28px;
+      background: rgba(255, 253, 248, 0.94);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      min-height: 58px;
+      overflow-x: auto;
+    }
+
+    .tab-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 58px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 800;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .tab-link.active {
+      color: var(--evergreen);
+      border-bottom-color: var(--forest);
+    }
+
+    main {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .intro-panel,
+    .section {
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .intro-panel h2,
+    .section h2 {
+      margin: 0 0 8px;
+      color: var(--evergreen);
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+
+    .intro-panel p,
+    .section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .section a {
+      display: inline-flex;
+      margin-top: 14px;
+      color: var(--forest);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .section a:hover {
+      text-decoration: underline;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .footer-note {
+      margin: 22px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .tabs {
+        width: 100%;
+      }
+
+      main {
+        width: min(100% - 20px, 980px);
+        padding-top: 20px;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 245px;
+        padding: 28px 20px 22px;
+      }
+
+      .intro-panel,
+      .section {
+        border-radius: 18px;
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <header class="hero">
+    <p class="eyebrow">Washington voting access</p>
+    <h1>Voting</h1>
+    <p>Find official Washington voter registration, ballot, election calendar, and county election office paths.</p>
+  </header>
 
-<header>
-<h1>Washington Voting Information</h1>
-</header>
+  <div class="topbar">
+    <nav class="tabs" aria-label="Primary navigation">
+      <a class="tab-link" href="index.html">Home</a>
+      <a class="tab-link" href="legislation.html">Legislation</a>
+      <a class="tab-link active" href="voting.html" aria-current="page">Voting</a>
+      <a class="tab-link" href="#official-voting-tools">Resources</a>
+    </nav>
+  </div>
 
-<main>
+  <main>
+    <section class="intro-panel">
+      <h2>Official voting paths</h2>
+      <p>This page keeps voting access links in one place. It points back to official Washington sources and does not replace those records.</p>
+    </section>
 
-<div class="section">
-<h2>Register to Vote</h2>
-<p>
-<a href="https://www.sos.wa.gov/elections/register.aspx">
-Washington voter registration
-</a>
-</p>
-</div>
+    <div class="section-grid" id="official-voting-tools">
+      <section class="section">
+        <h2>Register to Vote</h2>
+        <p>Open the official Washington voter registration page.</p>
+        <a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">Washington voter registration →</a>
+      </section>
 
-<div class="section">
-<h2>Check Your Ballot</h2>
-<p>
-<a href="https://voter.votewa.gov/WhereToVote.aspx">
-Find your ballot and voting status
-</a>
-</p>
-</div>
+      <section class="section">
+        <h2>Check Your Ballot</h2>
+        <p>Find ballot and voter status information through the official VoteWA portal.</p>
+        <a href="https://voter.votewa.gov/WhereToVote.aspx" target="_blank" rel="noopener noreferrer">Find your ballot and voting status →</a>
+      </section>
 
-<div class="section">
-<h2>Election Dates</h2>
-<p>
-<a href="https://www.sos.wa.gov/elections/calendar.aspx">
-Washington election calendar
-</a>
-</p>
-</div>
+      <section class="section">
+        <h2>Election Dates</h2>
+        <p>Open the official Washington election calendar.</p>
+        <a href="https://www.sos.wa.gov/elections/calendar.aspx" target="_blank" rel="noopener noreferrer">Washington election calendar →</a>
+      </section>
 
-<div class="section">
-<h2>County Election Offices</h2>
-<p>
-<a href="https://www.sos.wa.gov/elections/auditors/">
-List of Washington county election offices
-</a>
-</p>
-</div>
+      <section class="section">
+        <h2>County Election Offices</h2>
+        <p>Find county election offices and local election administration contacts.</p>
+        <a href="https://www.sos.wa.gov/elections/auditors/" target="_blank" rel="noopener noreferrer">Washington county election offices →</a>
+      </section>
+    </div>
 
-</main>
-
+    <p class="footer-note">Washington-focused. Source-path first. Built to reduce search burden without hiding the official record.</p>
+  </main>
 </body>
 </html>
