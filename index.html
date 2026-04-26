@@ -7,30 +7,21 @@
 
   <style>
     :root {
-      --bg: #f4f7fb;
-      --bg-soft: #eef4f8;
-      --panel: #ffffff;
-      --panel-soft: #fbfdff;
-      --text: #1f2937;
-      --muted: #5f6b7a;
-      --border: #d9e2ec;
-      --accent: #1f6f43;
-      --accent-dark: #155634;
-      --accent-soft: #eef7f1;
-      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-      --radius-xl: 24px;
+      --evergreen: #173c2d;
+      --forest: #1f4d3a;
+      --moss: #5f7f62;
+      --sage: #a9b9aa;
+      --mist: #edf2ee;
+      --cream: #f8f6ef;
+      --panel: #fffdf8;
+      --ink: #1f2924;
+      --muted: #66736a;
+      --border: #d9e2d8;
+      --gold: #b99a5f;
+      --shadow: 0 18px 42px rgba(23, 60, 45, 0.12);
+      --radius-xl: 26px;
       --radius-lg: 18px;
       --radius-md: 14px;
-      --radius-sm: 12px;
-      --architecture-bg: #102019;
-      --architecture-panel: rgba(14, 33, 24, 0.84);
-      --architecture-panel-soft: rgba(22, 44, 33, 0.78);
-      --architecture-text: #edf4ef;
-      --architecture-muted: #b7c8be;
-      --architecture-border: rgba(147, 179, 158, 0.22);
-      --architecture-accent: #9fc2a8;
-      --architecture-button: rgba(28, 54, 41, 0.82);
-      --architecture-button-hover: rgba(38, 70, 53, 0.9);
     }
 
     * {
@@ -44,1054 +35,306 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
+      color: var(--ink);
       background:
-        radial-gradient(circle at top right, #f8fbff 0%, transparent 28%),
-        linear-gradient(180deg, #f8fbff 0%, var(--bg) 22%, var(--bg) 100%);
+        radial-gradient(circle at top right, rgba(169, 185, 170, 0.28), transparent 30%),
+        linear-gradient(180deg, #f7f9f5 0%, var(--mist) 42%, #f4f3ed 100%);
       line-height: 1.5;
     }
 
     .container {
-      width: min(1140px, calc(100% - 32px));
+      width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 28px 0 48px;
+      padding: 28px 0 52px;
     }
 
     .hero {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      border: 1px solid var(--border);
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 18px;
+      padding: 34px;
+      border: 1px solid rgba(217, 226, 216, 0.62);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
-      padding: 30px;
+      color: white;
+      background:
+        linear-gradient(180deg, rgba(18, 45, 34, 0.1) 0%, rgba(18, 45, 34, 0.46) 52%, rgba(12, 31, 23, 0.82) 100%),
+        linear-gradient(135deg, rgba(31, 77, 58, 0.35), rgba(185, 154, 95, 0.14)),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center 55% / cover no-repeat;
       margin-bottom: 24px;
     }
 
-    .hero-top {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 10px;
+    .eyebrow {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3.15rem);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
+      max-width: 880px;
+      font-size: clamp(2.25rem, 6vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
     }
 
     .subtitle {
       margin: 0;
-      max-width: 760px;
-      color: var(--muted);
-      font-size: 1.05rem;
+      max-width: 720px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 1.1rem;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
     }
 
-    .how-toggle {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 11px 16px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .how-toggle:hover {
-      background: #f8fafc;
-    }
-
-    .how-box {
-      margin-top: 18px;
-      background: var(--accent-soft);
-      border: 1px solid #cfe1d5;
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      display: none;
-    }
-
-    .how-box.open {
-      display: block;
-    }
-
-    .how-box p {
-      margin: 0 0 10px;
-      color: #23412f;
-    }
-
-    .how-box p:last-child {
-      margin-bottom: 0;
-    }
-
-    .grid {
+    main {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 22px;
     }
 
     .panel {
-      background: var(--panel);
+      background: rgba(255, 253, 248, 0.94);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
       padding: 24px;
     }
 
     .panel h2 {
       margin: 0 0 8px;
-      font-size: 1.35rem;
-      letter-spacing: -0.01em;
-    }
-
-    .panel h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
+      color: var(--evergreen);
+      font-size: 1.55rem;
+      letter-spacing: -0.02em;
     }
 
     .section-note {
-      margin: 0 0 16px;
-      color: var(--muted);
-    }
-
-    .architecture-panel {
-      background:
-        linear-gradient(180deg, rgba(5, 14, 10, 0.28) 0%, rgba(5, 14, 10, 0.62) 100%),
-        linear-gradient(135deg, rgba(18, 55, 39, 0.86) 0%, rgba(11, 32, 24, 0.92) 54%, rgba(18, 43, 31, 0.88) 100%),
-        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center 58% / cover no-repeat;
-      border-color: var(--architecture-border);
-      color: var(--architecture-text);
-      overflow: hidden;
-    }
-
-    .architecture-panel h2,
-    .architecture-panel h3 {
-      color: var(--architecture-text);
-    }
-
-    .architecture-panel .section-note {
-      color: var(--architecture-muted);
-      max-width: 720px;
-    }
-
-    .architecture-flow {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
-      gap: 14px;
-      align-items: stretch;
-      margin-bottom: 18px;
-    }
-
-    .architecture-card {
-      min-height: 160px;
-      padding: 18px;
-      border: 1px solid var(--architecture-border);
-      border-radius: var(--radius-md);
-      background: var(--architecture-panel);
-      backdrop-filter: blur(3px);
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
-    }
-
-    .architecture-card-label {
-      display: inline-block;
-      margin-bottom: 12px;
-      color: #c0d8c7;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .architecture-card p {
       margin: 0;
-      color: var(--architecture-muted);
-      font-size: 0.96rem;
-    }
-
-    .architecture-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #cadece;
-      font-size: 1.05rem;
-      font-weight: 700;
-      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .architecture-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding-top: 4px;
-    }
-
-    .architecture-nav-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 0 14px;
-      border: 1px solid var(--architecture-border);
-      border-radius: 12px;
-      background: var(--architecture-button);
-      color: #e4eee8;
-      text-decoration: none;
-      font-size: 0.94rem;
-      font-weight: 600;
-      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
-    }
-
-    .architecture-nav-button:hover,
-    .architecture-nav-button:focus-visible {
-      background: var(--architecture-button-hover);
-      border-color: rgba(178, 210, 190, 0.34);
-      color: #f1f7f3;
-    }
-
-    .status-note {
-      margin-top: 12px;
-      min-height: 20px;
       color: var(--muted);
-      font-size: 0.95rem;
+      max-width: 760px;
     }
 
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
     }
 
-    textarea,
-    input[type="text"] {
-      width: 100%;
+    .route-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 230px;
+      padding: 22px;
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      font-size: 1rem;
-      color: var(--text);
-      background: #fff;
+      border-radius: var(--radius-lg);
+      background: white;
+      color: var(--ink);
+      text-decoration: none;
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .route-card:hover,
+    .route-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--sage);
+      box-shadow: 0 16px 34px rgba(23, 60, 45, 0.13);
       outline: none;
-    }
-
-    textarea:focus,
-    input[type="text"]:focus {
-      border-color: #9ec7ad;
-      box-shadow: 0 0 0 4px rgba(31, 111, 67, 0.08);
-    }
-
-    textarea {
-      min-height: 240px;
-      resize: vertical;
-      margin-bottom: 14px;
-    }
-
-    input[type="text"] {
-      margin-bottom: 12px;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    button.primary,
-    .result-button,
-    button.secondary {
-      min-height: 46px;
-      font-size: 0.98rem;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-    }
-
-    button.primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      padding: 13px 18px;
-      font-weight: 700;
-    }
-
-    button.primary:hover {
-      background: var(--accent-dark);
-    }
-
-    button.secondary {
-      border: 1px solid var(--border);
-      background: #fff;
-      color: var(--text);
-      padding: 13px 18px;
-      font-weight: 600;
-    }
-
-    button.secondary:hover {
-      background: #f8fafc;
-    }
-
-    .output-box {
-      border: 1px solid var(--border);
-      background: var(--panel-soft);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      min-height: 250px;
-      white-space: pre-wrap;
-    }
-
-    .anchor-box {
-      margin-top: 14px;
-      border: 1px dashed #bdd0df;
-      background: #fafcff;
-      border-radius: var(--radius-md);
-      padding: 14px;
-    }
-
-    .anchor-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-    }
-
-    .follow-actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .follow-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      background: var(--panel-soft);
-    }
-
-    .follow-card strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.95rem;
-    }
-
-    .follow-card a,
-    .resource-list a {
-      color: var(--accent);
       text-decoration: none;
-      font-weight: 600;
     }
 
-    .follow-card a:hover,
-    .resource-list a:hover {
-      text-decoration: underline;
+    .route-card.placeholder {
+      cursor: default;
     }
 
-    .search-results {
-      display: none;
-      margin-top: 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: var(--panel-soft);
-      padding: 12px;
+    .route-card.placeholder:hover {
+      transform: none;
+      border-color: var(--border);
+      box-shadow: none;
     }
 
-    .search-results.open {
-      display: block;
+    .card-label {
+      margin: 0 0 14px;
+      color: var(--moss);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .result-list {
-      list-style: none;
+    .route-card h3 {
+      margin: 0 0 10px;
+      color: var(--evergreen);
+      font-size: 1.35rem;
+      line-height: 1.15;
+    }
+
+    .route-card p {
       margin: 0;
-      padding: 0;
-    }
-
-    .result-list li + li {
-      margin-top: 10px;
-    }
-
-    .result-button {
-      width: 100%;
-      text-align: left;
-      border: 1px solid var(--border);
-      background: #fff;
-      padding: 12px;
-      color: var(--text);
-    }
-
-    .result-button:hover {
-      background: #f8fafc;
-      border-color: #c5d3ea;
-    }
-
-    .result-title {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .result-meta {
-      display: block;
       color: var(--muted);
-      font-size: 0.95rem;
     }
 
-    .resource-columns {
+    .card-action {
+      margin-top: auto;
+      padding-top: 18px;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .resource-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
+      margin-top: 18px;
     }
 
     .resource-group {
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      background: var(--panel-soft);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      background: white;
     }
 
     .resource-group h3 {
       margin: 0 0 10px;
-      font-size: 1rem;
+      color: var(--evergreen);
+      font-size: 1.05rem;
     }
 
     .resource-list {
       margin: 0;
-      padding-left: 18px;
+      padding-left: 20px;
     }
 
     .resource-list li + li {
       margin-top: 8px;
     }
 
-    .footer-note {
-      margin-top: 24px;
-      color: var(--muted);
-      font-size: 0.94rem;
-      text-align: center;
+    a {
+      color: var(--forest);
+      font-weight: 800;
     }
 
-    @media (max-width: 900px) {
-      .architecture-flow {
+    .footer-note {
+      margin: 22px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 850px) {
+      .card-grid,
+      .resource-grid {
         grid-template-columns: 1fr;
       }
 
-      .architecture-arrow {
-        min-height: 14px;
+      .hero {
+        min-height: 280px;
+        padding: 24px;
       }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 640px) {
       .container {
-        width: min(100% - 20px, 1140px);
+        width: min(100% - 20px, 1120px);
         padding-top: 18px;
       }
 
-      .hero,
       .panel {
         padding: 18px;
+        border-radius: 18px;
       }
 
-      .how-toggle {
-        width: 100%;
-      }
-
-      .architecture-nav {
-        display: grid;
-        grid-template-columns: 1fr;
+      .route-card {
+        min-height: auto;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-
     <header class="hero">
-      <div class="hero-top">
-        <h1>Washington Civic Dashboard</h1>
-        <button class="how-toggle" id="howToggle" type="button">How to Use This Tool</button>
-      </div>
+      <p class="eyebrow">Washington-only civic map</p>
+      <h1>Washington Civic Dashboard</h1>
       <p class="subtitle">
-        Translate Washington bill records into clean, usable structure, then expose the rule logic in a low-load interface.
+        A calm front door for official Washington civic information: legislation, voting access, representatives, and source paths.
       </p>
-
-      <div class="how-box" id="howBox">
-        <p>1. Search the local bill catalog by bill number, title word, or known variation.</p>
-        <p>2. Load a selected bill record into the translator.</p>
-        <p>3. Review who it applies to, required actions, allowed actions, prohibited actions, timing, and source anchors.</p>
-        <p>4. Use the official links to verify the source record.</p>
-      </div>
     </header>
 
-    <main class="grid">
-
-      <section class="panel architecture-panel" id="architecture">
-        <h2>Architecture</h2>
+    <main>
+      <section class="panel" aria-labelledby="start-heading">
+        <h2 id="start-heading">Start with one civic task</h2>
         <p class="section-note">
-          A simple view of the dashboard flow. Each layer stays focused so people can understand the system without reading a dense diagram.
+          Choose where you want to go. This home page is the map; each section keeps its own job so the dashboard stays clear.
         </p>
 
-        <div class="architecture-flow" aria-label="Architecture flow">
-          <article class="architecture-card">
-            <span class="architecture-card-label">Layer 1</span>
-            <h3>Input</h3>
-            <p>Bring source bill records into the dashboard and keep the source material visible and intact.</p>
-          </article>
+        <div class="card-grid">
+          <a class="route-card" href="legislation.html">
+            <p class="card-label">Legislation</p>
+            <h3>Read Washington bills</h3>
+            <p>
+              Open the bill reader for source text, plain-language meaning, and official verification paths.
+            </p>
+            <span class="card-action">Open legislation reader →</span>
+          </a>
 
-          <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
+          <a class="route-card" href="voting.html">
+            <p class="card-label">Voting</p>
+            <h3>Find voting access</h3>
+            <p>
+              Find voter registration, election information, ballot drop boxes, and Washington election resources.
+            </p>
+            <span class="card-action">Open voting page →</span>
+          </a>
 
-          <article class="architecture-card">
-            <span class="architecture-card-label">Layer 2</span>
-            <h3>Parsing</h3>
-            <p>Extract the rule structure into plain, reviewable parts with source anchors and minimal interpretation overhead.</p>
-          </article>
-
-          <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
-
-          <article class="architecture-card">
-            <span class="architecture-card-label">Layer 3</span>
-            <h3>Output</h3>
-            <p>Present the result in a readable civic interface so people can move from source text to usable understanding.</p>
-          </article>
-        </div>
-
-        <div class="architecture-nav" aria-label="Section navigation">
-          <a class="architecture-nav-button" href="#follow-bill">Search Catalog</a>
-          <a class="architecture-nav-button" href="#translator">Bill Translator</a>
-          <a class="architecture-nav-button" href="#civic-participation">Civic Participation</a>
-          <a class="architecture-nav-button" href="#official-resources">Official Resources</a>
-        </div>
-      </section>
-
-      <section class="panel" id="follow-bill">
-        <h2>Search Catalog</h2>
-        <p class="section-note">
-          Search the local Washington bill catalog. This loads a bill detail record into the translator instead of opening the state site directly.
-        </p>
-
-        <label for="billNumber">Bill number or keyword</label>
-        <input
-          type="text"
-          id="billNumber"
-          placeholder="Example: HB 1234 or housing"
-        />
-
-        <div class="button-row">
-          <button class="primary" id="openBillPageBtn" type="button">Search Catalog</button>
-        </div>
-
-        <div class="status-note" id="searchStatus"></div>
-
-        <div class="search-results" id="searchResults">
-          <ul class="result-list" id="resultList"></ul>
-        </div>
-
-        <div class="follow-actions">
-          <div class="follow-card">
-            <strong>Bill summary</strong>
-            <a id="summaryLink" href="https://app.leg.wa.gov/billsummary/" target="_blank" rel="noopener noreferrer">
-              Open official bill summary
-            </a>
-          </div>
-
-          <div class="follow-card">
-            <strong>Bill search</strong>
-            <a id="searchLink" href="https://leg.wa.gov/bills-meetings-and-session/bills/" target="_blank" rel="noopener noreferrer">
-              Open official bill search
-            </a>
-          </div>
-
-          <div class="follow-card">
-            <strong>Track a bill</strong>
-            <a id="trackLink" href="https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">
-              Open tracking information
-            </a>
-          </div>
-
-          <div class="follow-card">
-            <strong>Legislature home</strong>
-            <a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-              Open Washington Legislature
-            </a>
+          <div class="route-card placeholder" aria-label="Civic map placeholder">
+            <p class="card-label">Civic Map</p>
+            <h3>Find representatives</h3>
+            <p>
+              Planned: browse by Washington county, district, office, and official contact path.
+            </p>
+            <span class="card-action">Coming next</span>
           </div>
         </div>
       </section>
 
-      <section class="panel" id="translator">
-        <h2>Bill Translator</h2>
+      <section class="panel" aria-labelledby="official-heading">
+        <h2 id="official-heading">Official Washington source paths</h2>
         <p class="section-note">
-          Paste bill text or load a selected record to reveal the structure of the rule.
+          The dashboard points back to official records. It does not replace official sources or provide political recommendations.
         </p>
 
-        <label for="billText">Bill text</label>
-        <textarea id="billText" placeholder="Paste bill text here..."></textarea>
-
-        <div class="button-row">
-          <button class="primary" id="translateBtn" type="button">Translate Bill Text</button>
-          <button class="secondary" id="loadSampleBtn" type="button">Load Sample</button>
-          <button class="secondary" id="clearBtn" type="button">Clear</button>
-        </div>
-
-        <h3>Plain-Language Translation</h3>
-        <div class="output-box" id="translationOutput">Plain-Language Summary
-Output will appear here.
-
-Who the rule applies to
-• None detected
-
-Required actions
-• None detected
-
-Allowed actions
-• None detected
-
-Prohibited actions
-• None detected
-
-Timing or deadlines
-• None detected
-
-Source anchor
-• Bill identifier not detected
-• Section reference not detected</div>
-
-        <hr style="margin:24px 0;border:none;border-top:1px solid #d7deea;">
-
-        <div class="anchor-box">
-          <h3>Source Anchors</h3>
-          <ul class="anchor-list" id="anchorList">
-            <li>Bill ID anchor: not detected</li>
-            <li>Section anchor: not detected</li>
-            <li>Clause anchor: not detected</li>
-            <li>Source reference: attach official bill page once bill number is known</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="panel" id="civic-participation">
-        <h2>Civic Participation</h2>
-        <p class="section-note">
-          Official Washington voter and election access links.
-        </p>
-
-        <div class="resource-columns">
+        <div class="resource-grid">
           <div class="resource-group">
-            <h3>Voter access</h3>
+            <h3>Legislature</h3>
             <ul class="resource-list">
-              <li><a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">Register to vote</a></li>
-              <li><a href="https://www.sos.wa.gov/elections" target="_blank" rel="noopener noreferrer">Elections information</a></li>
-              <li><a href="https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information" target="_blank" rel="noopener noreferrer">Current election information</a></li>
-              <li><a href="https://www.sos.wa.gov/elections/voters/voter-registration/print-voter-registration-form" target="_blank" rel="noopener noreferrer">Print voter registration form</a></li>
+              <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">Washington Legislature</a></li>
+              <li><a href="https://app.leg.wa.gov/billsummary/" target="_blank" rel="noopener noreferrer">Bill Summary Search</a></li>
+              <li><a href="https://search.leg.wa.gov/" target="_blank" rel="noopener noreferrer">Legislative Search</a></li>
+              <li><a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank" rel="noopener noreferrer">Bills by Topic</a></li>
             </ul>
           </div>
 
           <div class="resource-group">
-            <h3>Voting locations</h3>
+            <h3>Elections</h3>
             <ul class="resource-list">
-              <li><a href="https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations" target="_blank" rel="noopener noreferrer">Ballot drop box and voting center locations</a></li>
-              <li><a href="https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-voting-mail" target="_blank" rel="noopener noreferrer">Voting by mail information</a></li>
-              <li><a href="https://www.sos.wa.gov/" target="_blank" rel="noopener noreferrer">Secretary of State home</a></li>
+              <li><a href="https://www.sos.wa.gov/elections" target="_blank" rel="noopener noreferrer">Washington Elections</a></li>
+              <li><a href="https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington" target="_blank" rel="noopener noreferrer">Register to Vote</a></li>
+              <li><a href="https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations" target="_blank" rel="noopener noreferrer">Drop Boxes and Voting Centers</a></li>
+              <li><a href="https://www.sos.wa.gov/" target="_blank" rel="noopener noreferrer">Secretary of State</a></li>
             </ul>
           </div>
         </div>
       </section>
-
-      <section class="panel" id="official-resources">
-        <h2>Official Resources</h2>
-        <p class="section-note">
-          Official legislative research and lookup links.
-        </p>
-
-        <div class="resource-columns">
-          <div class="resource-group">
-            <h3>Washington Legislature</h3>
-            <ul class="resource-list">
-              <li><a href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">Legislature home</a></li>
-              <li><a href="https://leg.wa.gov/bills-meetings-and-session/" target="_blank" rel="noopener noreferrer">Bills, meetings, and session</a></li>
-              <li><a href="https://search.leg.wa.gov/" target="_blank" rel="noopener noreferrer">Legislative search</a></li>
-              <li><a href="https://app.leg.wa.gov/bi/topicalindex" target="_blank" rel="noopener noreferrer">Bills by topic</a></li>
-            </ul>
-          </div>
-
-          <div class="resource-group">
-            <h3>Broader government resources</h3>
-            <ul class="resource-list">
-              <li><a href="https://www.congress.gov/" target="_blank" rel="noopener noreferrer">Congress.gov</a></li>
-              <li><a href="voting.html">Local voting page</a></li>
-              <li><a href="legislation.html">Local legislation page</a></li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
     </main>
 
     <p class="footer-note">
-      This dashboard reveals structure and links to official sources. It does not provide political recommendations.
+      Washington-focused. Source-path first. Built to reduce search burden without hiding the official record.
     </p>
   </div>
-
-  <script>
-    const howToggle = document.getElementById("howToggle");
-    const howBox = document.getElementById("howBox");
-    const billNumberInput = document.getElementById("billNumber");
-    const openBillPageBtn = document.getElementById("openBillPageBtn");
-    const searchStatus = document.getElementById("searchStatus");
-    const searchResults = document.getElementById("searchResults");
-    const resultList = document.getElementById("resultList");
-
-    const billText = document.getElementById("billText");
-    const translateBtn = document.getElementById("translateBtn");
-    const loadSampleBtn = document.getElementById("loadSampleBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const translationOutput = document.getElementById("translationOutput");
-    const anchorList = document.getElementById("anchorList");
-
-    const summaryLink = document.getElementById("summaryLink");
-    const searchLink = document.getElementById("searchLink");
-    const trackLink = document.getElementById("trackLink");
-
-    let loadedBill = null;
-    let billIndex = [];
-
-    function safeSetDefaultOutput() {
-      translationOutput.textContent = `Plain-Language Summary
-Output will appear here.
-
-Who the rule applies to
-• None detected
-
-Required actions
-• None detected
-
-Allowed actions
-• None detected
-
-Prohibited actions
-• None detected
-
-Timing or deadlines
-• None detected
-
-Source anchor
-• Bill identifier not detected
-• Section reference not detected`;
-
-      anchorList.innerHTML = `
-        <li>Bill ID anchor: not detected</li>
-        <li>Section anchor: not detected</li>
-        <li>Clause anchor: not detected</li>
-        <li>Source reference: attach official bill page once bill number is known</li>
-      `;
-    }
-
-    function setSearchStatus(message) {
-      searchStatus.textContent = message || "";
-    }
-
-    function clearSearchResults() {
-      resultList.innerHTML = "";
-      searchResults.classList.remove("open");
-    }
-
-    function normalizeQuery(text) {
-      return (text || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-    }
-
-    function joinBillSections(bill) {
-      if (!bill || !bill.versions || !bill.versions.length) return "";
-      const firstVersion = bill.versions[0];
-      if (!firstVersion.sections || !firstVersion.sections.length) return "";
-
-      return firstVersion.sections
-        .map(section => `Section ${section.section_number}\n${section.text}`)
-        .join("\n\n");
-    }
-
-    function detectBillId(text, fallbackBillId) {
-      const match = text.match(/\b(HB|SB|SHB|SSB|EHB|ESB)\s*\d{3,4}\b/i);
-      return match ? match[0].toUpperCase().replace(/\s+/, " ") : (fallbackBillId || "not detected");
-    }
-
-    function detectSections(text) {
-      const matches = [...text.matchAll(/Section\s+(\d+)/gi)].map(m => `Section ${m[1]}`);
-      return matches.length ? [...new Set(matches)] : ["not detected"];
-    }
-
-    function splitLines(text) {
-      return text
-        .split(/[\n.]+/)
-        .map(s => s.trim())
-        .filter(Boolean);
-    }
-
-    function detectRequiredActions(text) {
-      return splitLines(text).filter(line => /\b(must|shall|required to)\b/i.test(line));
-    }
-
-    function detectAllowedActions(text) {
-      return splitLines(text).filter(line => /\b(may|authorized to|permitted to)\b/i.test(line));
-    }
-
-    function detectProhibitedActions(text) {
-      return splitLines(text).filter(line => /\b(may not|must not|shall not|prohibited)\b/i.test(line));
-    }
-
-    function detectTiming(text) {
-      return splitLines(text).filter(line =>
-        /\b(within\s+\d+\s+days?|by\s+[A-Z][a-z]+\s+\d{1,2},?\s+\d{4}|takes effect|effective date|deadline)\b/i.test(line)
-      );
-    }
-
-    function detectAppliesTo(text) {
-      const hit = splitLines(text).find(line =>
-        /\b(a person|department|agency|employer|tenant|landlord|resident|applicant|licensee)\b/i.test(line)
-      );
-      return hit ? [hit] : ["None detected"];
-    }
-
-    function renderTranslation(parsed) {
-      translationOutput.textContent = `Plain-Language Summary
-
-Who the rule applies to
-${parsed.appliesTo.map(item => `• ${item}`).join("\n")}
-
-Required actions
-${parsed.requiredActions.length ? parsed.requiredActions.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Allowed actions
-${parsed.allowedActions.length ? parsed.allowedActions.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Prohibited actions
-${parsed.prohibitedActions.length ? parsed.prohibitedActions.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Timing or deadlines
-${parsed.timing.length ? parsed.timing.map(item => `• ${item}`).join("\n") : "• None detected"}
-
-Source anchor
-• Bill identifier: ${parsed.billId}
-• Section reference: ${parsed.sections.join(", ")}`;
-    }
-
-    function renderAnchors(parsed, sourceUrl) {
-      anchorList.innerHTML = `
-        <li>Bill ID anchor: ${parsed.billId}</li>
-        <li>Section anchor: ${parsed.sections.join(", ")}</li>
-        <li>Clause anchor: rule phrases detected from text-level parsing</li>
-        <li>Source reference: ${sourceUrl || "not detected"}</li>
-      `;
-    }
-
-    function parseBillText(text, fallbackBillId, sourceUrl) {
-      const parsed = {
-        billId: detectBillId(text, fallbackBillId),
-        sections: detectSections(text),
-        appliesTo: detectAppliesTo(text),
-        requiredActions: detectRequiredActions(text),
-        allowedActions: detectAllowedActions(text),
-        prohibitedActions: detectProhibitedActions(text),
-        timing: detectTiming(text)
-      };
-
-      renderTranslation(parsed);
-      renderAnchors(parsed, sourceUrl);
-    }
-
-    function renderSearchResults(results) {
-      resultList.innerHTML = "";
-
-      if (!results.length) {
-        clearSearchResults();
-        return;
-      }
-
-      results.forEach((bill) => {
-        const item = document.createElement("li");
-        const button = document.createElement("button");
-
-        button.type = "button";
-        button.className = "result-button";
-        button.innerHTML = `
-          <span class="result-title">${bill.bill_id_display} — ${bill.title}</span>
-          <span class="result-meta">${bill.chamber} • ${bill.session} • ${bill.status}</span>
-        `;
-
-        button.addEventListener("click", () => {
-          loadBillDetail(bill.detail_json_path, bill);
-        });
-
-        item.appendChild(button);
-        resultList.appendChild(item);
-      });
-
-      searchResults.classList.add("open");
-    }
-
-    async function loadBillIndex() {
-      try {
-        const response = await fetch("./data/wa/bill-index.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        billIndex = await response.json();
-        console.log("Loaded bill index:", billIndex);
-      } catch (error) {
-        console.error("Error loading bill index:", error);
-        setSearchStatus("Could not load local bill catalog.");
-      }
-    }
-
-    async function loadBillDetail(path, catalogRecord = null) {
-      try {
-        const response = await fetch(`./${path}`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        loadedBill = await response.json();
-
-        const text = joinBillSections(loadedBill);
-        billText.value = text;
-
-        if (catalogRecord && catalogRecord.bill_id_display) {
-          billNumberInput.value = catalogRecord.bill_id_display;
-        } else if (loadedBill.bill_id) {
-          billNumberInput.value = loadedBill.bill_id;
-        }
-
-        if (text) {
-          parseBillText(
-            text,
-            loadedBill.bill_id || null,
-            loadedBill.source_url || null
-          );
-        }
-
-        if (loadedBill.bill_id) {
-          const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
-          const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
-
-          summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
-          searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
-        }
-
-        setSearchStatus(`Loaded ${loadedBill.bill_id || "selected bill"} from local catalog.`);
-        clearSearchResults();
-      } catch (error) {
-        console.error("Error loading bill detail:", error);
-        setSearchStatus("Could not load selected bill detail.");
-      }
-    }
-
-    async function loadSampleBill() {
-      try {
-        const response = await fetch("./data/wa/sample-bill.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        loadedBill = await response.json();
-
-        const text = joinBillSections(loadedBill);
-        billText.value = text;
-
-        if (text) {
-          parseBillText(
-            text,
-            loadedBill.bill_id || null,
-            loadedBill.source_url || null
-          );
-        }
-
-        if (loadedBill.bill_id) {
-          billNumberInput.value = loadedBill.bill_id;
-
-          const billNumberMatch = loadedBill.bill_id.match(/\d{3,4}/);
-          const billNumber = billNumberMatch ? billNumberMatch[0] : loadedBill.bill_id;
-
-          summaryLink.href = `https://app.leg.wa.gov/billsummary/?BillNumber=${encodeURIComponent(billNumber)}&Year=2025`;
-          searchLink.href = `https://search.leg.wa.gov/search?query=${encodeURIComponent(loadedBill.bill_id)}`;
-        }
-
-        setSearchStatus("Loaded sample bill.");
-        clearSearchResults();
-      } catch (error) {
-        console.error("Error loading sample bill:", error);
-        translationOutput.textContent = "Could not load sample bill JSON.";
-      }
-    }
-
-    howToggle.addEventListener("click", () => {
-      howBox.classList.toggle("open");
-    });
-
-    openBillPageBtn.addEventListener("click", () => {
-      const query = billNumberInput.value.trim();
-
-      if (!query) {
-        setSearchStatus("Enter a bill number or keyword.");
-        clearSearchResults();
-        return;
-      }
-
-      const normalized = normalizeQuery(query);
-
-      const results = billIndex.filter((bill) => {
-        const aliases = bill.aliases || [];
-        return (
-          normalizeQuery(bill.bill_id_normalized).includes(normalized) ||
-          normalizeQuery(bill.bill_number).includes(normalized) ||
-          normalizeQuery(bill.title).includes(normalized) ||
-          aliases.some(alias => normalizeQuery(alias).includes(normalized))
-        );
-      });
-
-      if (!results.length) {
-        setSearchStatus("No local catalog matches found.");
-        clearSearchResults();
-        return;
-      }
-
-      if (results.length === 1) {
-        setSearchStatus(`1 match found: ${results[0].bill_id_display}`);
-        loadBillDetail(results[0].detail_json_path, results[0]);
-        return;
-      }
-
-      setSearchStatus(`${results.length} matches found. Select a bill below.`);
-      renderSearchResults(results);
-    });
-
-    translateBtn.addEventListener("click", () => {
-      const text = billText.value.trim();
-
-      if (!text) {
-        translationOutput.textContent = "Paste bill text or load a bill first.";
-        return;
-      }
-
-      parseBillText(
-        text,
-        loadedBill ? loadedBill.bill_id : null,
-        loadedBill ? loadedBill.source_url : null
-      );
-    });
-
-    clearBtn.addEventListener("click", () => {
-      billText.value = "";
-      billNumberInput.value = "";
-      loadedBill = null;
-      safeSetDefaultOutput();
-      clearSearchResults();
-      setSearchStatus("");
-      summaryLink.href = "https://app.leg.wa.gov/billsummary/";
-      searchLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/";
-      trackLink.href = "https://leg.wa.gov/bills-meetings-and-session/bills/how-to-track-a-bill/";
-    });
-
-    loadSampleBtn.addEventListener("click", () => {
-      loadSampleBill();
-    });
-
-    safeSetDefaultOutput();
-    loadBillIndex();
-    loadSampleBill();
-  </script>
 </body>
 </html>
