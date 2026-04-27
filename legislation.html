@@ -78,22 +78,13 @@
       top: 0;
       z-index: 5;
       display: flex;
-      flex-wrap: wrap;
+      gap: 22px;
       align-items: center;
-      justify-content: space-between;
-      gap: 14px;
       min-height: 58px;
       padding: 0 28px;
       background: rgba(255, 253, 248, 0.94);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 22px;
-      align-items: center;
-      min-height: 58px;
       overflow-x: auto;
     }
 
@@ -111,25 +102,6 @@
     .tab-link.active {
       color: var(--evergreen);
       border-bottom-color: var(--forest);
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 0;
-    }
-
-    .toolbar select {
-      min-height: 42px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.88);
-      color: var(--ink);
-      padding: 0 16px;
-      font-size: 0.96rem;
-      outline: none;
     }
 
     main {
@@ -354,9 +326,6 @@
 
     @media (max-width: 760px) {
       .topbar { padding: 0 16px; }
-      .tabs { width: 100%; }
-      .toolbar { width: 100%; }
-      .toolbar select { flex: 1; }
       main { width: min(100% - 20px, 1180px); padding-top: 20px; }
       .link-grid { grid-template-columns: 1fr; }
       .search-row { grid-template-columns: 1fr; }
@@ -373,25 +342,12 @@
     <p>Search Washington bill records, open the source path, and prepare selected bills for plain-language review.</p>
   </header>
 
-  <div class="topbar">
-    <nav class="tabs" aria-label="Primary navigation">
-      <a class="tab-link" href="index.html">Home</a>
-      <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
-      <a class="tab-link" href="voting.html">Voting</a>
-      <a class="tab-link" href="#official-tools">Resources</a>
-    </nav>
-
-    <div class="toolbar" aria-label="Legislation controls">
-      <select id="session-select" aria-label="Session">
-        <option selected value="2024">Session 2024</option>
-        <option value="2025">Session 2025</option>
-        <option value="2026">Session 2026</option>
-      </select>
-      <select aria-label="Jurisdiction">
-        <option selected>Washington</option>
-      </select>
-    </div>
-  </div>
+  <nav class="topbar" aria-label="Primary navigation">
+    <a class="tab-link" href="index.html">Home</a>
+    <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
+    <a class="tab-link" href="voting.html">Voting</a>
+    <a class="tab-link" href="#official-tools">Resources</a>
+  </nav>
 
   <main>
     <section class="search-panel" aria-label="Search legislation">
@@ -466,7 +422,6 @@
     const searchStatus = document.getElementById("search-status");
     const searchResults = document.getElementById("search-results");
     const searchResultList = document.getElementById("search-result-list");
-    const sessionSelect = document.getElementById("session-select");
     const billNumber = document.getElementById("bill-number");
     const billSession = document.getElementById("bill-session");
     const billStatus = document.getElementById("bill-status");
@@ -550,8 +505,6 @@
         clearSearchResults();
 
         const params = new URLSearchParams({ q: query });
-        if (sessionSelect.value) params.set("session", sessionSelect.value);
-
         const response = await fetch(`/api/wa-bill-search?${params.toString()}`, { cache: "no-store" });
 
         if (!response.ok) {
