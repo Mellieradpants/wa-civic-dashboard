@@ -84,6 +84,33 @@ function absoluteUrl(href) {
   }
 }
 
+function isBillDocumentUrl(url, billNumber) {
+  const text = String(url || "").toLowerCase();
+  return (
+    text.includes(billNumber) &&
+    (
+      text.includes("lawfilesext.leg.wa.gov") ||
+      text.includes("documents/billdocs") ||
+      text.includes("billdocs")
+    ) &&
+    (
+      text.includes(".pdf") ||
+      text.includes(".htm") ||
+      text.includes(".html") ||
+      text.includes(".doc") ||
+      text.includes(".docx")
+    )
+  );
+}
+
+function inferFileType(url, label) {
+  const text = `${url || ""} ${label || ""}`.toLowerCase();
+  if (text.includes(".pdf") || text.includes("pdf")) return "pdf";
+  if (text.includes(".htm") || text.includes(".html") || text.includes("htm")) return "html";
+  if (text.includes(".docx") || text.includes(".doc") || text.includes("word")) return "word";
+  return "document";
+}
+
 function inferDocumentDescription(text, href) {
   const haystack = `${text || ""} ${href || ""}`.toLowerCase();
   if (haystack.includes("original bill")) return "Original Bill";
@@ -106,19 +133,18 @@ function parseDocumentLinks(html, billNumber) {
     const url = absoluteUrl(href);
 
     if (!url) continue;
-    if (!/documents\/billdocs/i.test(url)) continue;
-    if (!url.includes(billNumber)) continue;
+    if (!isBillDocumentUrl(url, billNumber)) continue;
 
-    const contextStart = Math.max(0, match.index - 600);
-    const contextEnd = Math.min(html.length, anchorRegex.lastIndex + 600);
+    const contextStart = Math.max(0, match.index - 900);
+    const contextEnd = Math.min(html.length, anchorRegex.lastIndex + 900);
     const context = stripTags(html.slice(contextStart, contextEnd));
 
     links.push({
       title: label || `Bill document ${billNumber}`,
       description: inferDocumentDescription(context, href),
       url,
-      file_type: url.toLowerCase().includes(".pdf") ? "pdf" : "document",
-      source_context: context.slice(0, 500),
+      file_type: inferFileType(url, label),
+      source_context: context.slice(0, 700),
     });
   }
 
