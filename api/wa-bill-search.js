@@ -1,10 +1,92 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+const LEGISLATION_SERVICE_BASE = "https://wslwebservices.leg.wa.gov/legislationservice.asmx";
+const BILL_SUMMARY_BASE = "https://app.leg.wa.gov/billsummary";
+
 function normalizeQuery(text) {
   return String(text || "")
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, "");
+}
+
+function extractBillNumber(text) {
+  const match = String(text || "").match(/\b\d{3,4}\b/);
+  return match ? match[0] : "";
+}
+
+function inferBillPrefix(billNumber) {
+  const number = Number(billNumber);
+  if (number >= 1000 && number <= 3999) return "HB";
+  if (number >= 5000 && number <= 7999) return "SB";
+  return "Bill";
+}
+
+function normalizeBiennium(value) {
+  const text = String(value || "").trim();
+
+  if (/^\d{4}-\d{2}$/.test(text)) return text;
+
+  if (/^\d{4}$/.test(text)) {
+    const year = Number(text);
+    const startYear = year % 2 === 0 ? year - 1 : year;
+    return `${startYear}-${String(startYear + 1).slice(-2)}`;
+  }
+
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const startYear = year % 2 === 0 ? year - 1 : year;
+  return `${startYear}-${String(startYear + 1).slice(-2)}`;
+}
+
+function buildBillSummaryUrl(billNumber, biennium) {
+  const startYear = String(biennium || "").slice(0, 4);
+  const params = new URLSearchParams({
+    BillNumber: billNumber,
+    Year: startYear || "2025",
+  });
+  return `${BILL_SUMMARY_BASE}?${params.toString()}`;
+}
+
+function decodeXml(value) {
+  return String(value || "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+function getTag(xml, tagName) {
+  const match = String(xml || "").match(new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, "i"));
+  return match ? decodeXml(match[1].trim()) : null;
+}
+
+function getBlock(xml, tagName) {
+  const match = String(xml || "").match(new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, "i"));
+  return match ? match[1] : "";
+}
+
+function parseLegislation(xml) {
+  const legislationBlock = getBlock(xml, "Legislation");
+  const currentStatusBlock = getBlock(legislationBlock, "CurrentStatus");
+
+  if (!legislationBlock) return null;
+
+  return {
+    shortDescription: getTag(legislationBlock, "ShortDescription"),
+    longDescription: getTag(legislationBlock, "LongDescription"),
+    legalTitle: getTag(legislationBlock, "LegalTitle"),
+    sponsor: getTag(legislationBlock, "Sponsor"),
+    introducedDate: getTag(legislationBlock, "IntroducedDate"),
+    currentStatus: currentStatusBlock
+      ? {
+          historyLine: getTag(currentStatusBlock, "HistoryLine"),
+          actionDate: getTag(currentStatusBlock, "ActionDate"),
+          status: getTag(currentStatusBlock, "Status"),
+        }
+      : null,
+  };
 }
 
 function scoreRecord(record, query) {
@@ -19,6 +101,8 @@ function scoreRecord(record, query) {
     record.title,
     record.session,
     record.status,
+    record.plain_meaning_summary,
+    record.summary,
     ...(record.aliases || []),
   ].filter(Boolean);
 
@@ -44,27 +128,99 @@ async function loadBillIndex() {
   return JSON.parse(raw);
 }
 
+function mapRecord(record) {
+  return {
+    bill_id_display: record.bill_id_display || record.bill_number || null,
+    bill_id_normalized: record.bill_id_normalized || normalizeQuery(record.bill_id_display || record.bill_number || ""),
+    bill_number: record.bill_number || null,
+    title: record.title || "Untitled",
+    session: record.session || null,
+    status: record.status || null,
+    summary: record.plain_meaning_summary || record.summary || null,
+    source_url: record.source_url || null,
+    detail_json_path: record.detail_json_path || null,
+    detail_api_path: record.detail_api_path || null,
+    source: record.source || "local_index",
+  };
+}
+
+async function lookupOfficialBillByNumber(billNumber, biennium) {
+  if (!billNumber) return null;
+
+  const url = `${LEGISLATION_SERVICE_BASE}/GetLegislation?${new URLSearchParams({
+    biennium,
+    billNumber,
+  }).toString()}`;
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "text/xml, application/xml, */*",
+    },
+  });
+
+  if (!response.ok) return null;
+
+  const xml = await response.text();
+  const parsed = parseLegislation(xml);
+  if (!parsed) return null;
+
+  const prefix = inferBillPrefix(billNumber);
+  const display = `${prefix} ${billNumber}`;
+  const title = parsed.shortDescription || parsed.legalTitle || parsed.longDescription || "Untitled bill";
+  const summary = parsed.legalTitle || parsed.longDescription || parsed.shortDescription || null;
+  const status = parsed.currentStatus?.status || parsed.currentStatus?.historyLine || null;
+
+  return {
+    bill_id_display: display,
+    bill_id_normalized: normalizeQuery(display),
+    bill_number: billNumber,
+    title,
+    session: biennium,
+    status,
+    summary,
+    source_url: buildBillSummaryUrl(billNumber, biennium),
+    detail_api_path: `/api/wa-bill-detail?billNumber=${encodeURIComponent(billNumber)}&biennium=${encodeURIComponent(biennium)}`,
+    source: "official_lookup",
+    sponsor: parsed.sponsor || null,
+    introducedDate: parsed.introducedDate || null,
+  };
+}
+
+function dedupeResults(results) {
+  const seen = new Set();
+  return results.filter((record) => {
+    const key = normalizeQuery(`${record.session || ""}${record.bill_id_display || record.bill_number || ""}`);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ message: "Method not allowed" });
   }
 
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+
   try {
     const query = String(req.query.q || "").trim();
-    const session = String(req.query.session || "").trim();
+    const session = String(req.query.session || req.query.biennium || req.query.year || "").trim();
+    const biennium = normalizeBiennium(session);
 
     if (!query) {
       return res.status(200).json({
         query,
         session: session || null,
+        biennium,
         results: [],
       });
     }
 
     const billIndex = await loadBillIndex();
 
-    const results = billIndex
+    const localResults = billIndex
       .map((record) => ({
         record,
         score: scoreRecord(record, query),
@@ -72,7 +228,7 @@ export default async function handler(req, res) {
       .filter((entry) => entry.score > 0)
       .filter((entry) => {
         if (!session) return true;
-        return String(entry.record.session || "").includes(session);
+        return String(entry.record.session || "").includes(session) || String(entry.record.session || "").includes(biennium);
       })
       .sort((left, right) =>
         right.score - left.score ||
@@ -81,22 +237,25 @@ export default async function handler(req, res) {
         )
       )
       .slice(0, 10)
-      .map(({ record }) => ({
-        bill_id_display: record.bill_id_display || record.bill_number || null,
-        bill_id_normalized: record.bill_id_normalized || normalizeQuery(record.bill_id_display || record.bill_number || ""),
-        bill_number: record.bill_number || null,
-        title: record.title || "Untitled",
-        session: record.session || null,
-        status: record.status || null,
-        summary: record.plain_meaning_summary || record.summary || null,
-        source_url: record.source_url || null,
-        detail_json_path: record.detail_json_path || null,
-      }));
+      .map(({ record }) => mapRecord(record));
+
+    const billNumber = extractBillNumber(query);
+    const officialResult = billNumber ? await lookupOfficialBillByNumber(billNumber, biennium) : null;
+
+    const results = dedupeResults([
+      ...(officialResult ? [officialResult] : []),
+      ...localResults,
+    ]).slice(0, 10);
 
     return res.status(200).json({
       query,
       session: session || null,
+      biennium,
+      searchMode: billNumber ? "official_bill_number_plus_local_index" : "local_index_keyword",
       results,
+      note: billNumber
+        ? "Bill-number searches include a live Washington Legislature lookup. Keyword searches currently use the local index until a broader official index adapter is added."
+        : "Keyword searches currently use the local index until a broader official index adapter is added.",
     });
   } catch (error) {
     return res.status(500).json({
