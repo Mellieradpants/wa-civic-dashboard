@@ -11,5 +11,31 @@
     "detail_json_path": "data/wa/sample-bill.json",
     "plain_meaning_summary": "Applicants must submit documentation within 30 days, the agency may extend deadlines in exceptional circumstances, and the department reports annual compliance.",
     "aliases": ["HOUSE BILL 1234", "1234", "EXAMPLE POLICY"]
+  },
+  {
+    "bill_id_display": "SB 6361",
+    "bill_id_normalized": "SB6361",
+    "bill_number": "6361",
+    "chamber": "Senate",
+    "title": "Data access/immigration enforcement",
+    "session": "2025-26",
+    "status": "S Transportation",
+    "source_url": "https://app.leg.wa.gov/billsummary?BillNumber=6361&Year=2025",
+    "detail_api_path": "/api/wa-bill-detail?billNumber=6361&biennium=2025-26",
+    "plain_meaning_summary": "Creates a firewall against federal authorities misusing driver, vehicle, and other personal information for civil immigration enforcement purposes. First read and referred to Senate Transportation.",
+    "aliases": [
+      "SENATE BILL 6361",
+      "6361",
+      "IMMIGRATION",
+      "IMMIGRATION ENFORCEMENT",
+      "FEDERAL IMMIGRATION ENFORCEMENT",
+      "DATA ACCESS",
+      "DRIVER INFORMATION",
+      "VEHICLE INFORMATION",
+      "PERSONAL INFORMATION",
+      "FIREWALL",
+      "HASEGAWA",
+      "TRANSPORTATION"
+    ]
   }
 ]
