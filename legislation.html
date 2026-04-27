@@ -672,7 +672,32 @@
       billLastAction.textContent = lastAction;
       billProcessNote.textContent = buildProcessNote(record, detail);
     }
+function extractStructureSignals(text) {
+  if (!text) return [];
 
+  const patterns = [
+    { type: "prohibition", regex: /\b(may not|must not|shall not)\b[^.]*\./gi },
+    { type: "obligation", regex: /\b(must|shall|required to)\b[^.]*\./gi },
+    { type: "permission", regex: /\bmay\b[^.]*\./gi },
+    { type: "condition", regex: /\b(if|unless)\b[^.]*\./gi },
+    { type: "exception", regex: /\bexcept\b[^.]*\./gi },
+    { type: "definition", regex: /\b(means|is defined as)\b[^.]*\./gi },
+  ];
+
+  const results = [];
+
+  patterns.forEach(({ type, regex }) => {
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      const span = match[0].trim();
+      if (span.length > 10) {
+        results.push({ type, span });
+      }
+    }
+  });
+
+  return results;
+}
     function renderDocumentLinks(documentData) {
       const originalBill = documentData?.originalBill || null;
       const documents = documentData?.documents || [];
