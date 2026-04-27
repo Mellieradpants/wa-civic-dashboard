@@ -339,6 +339,37 @@
       border-color: var(--sage);
     }
 
+    .section-viewer {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .section-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fffdf8;
+      padding: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      color: var(--evergreen);
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .section-text {
+      margin: 0;
+      color: #101915;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      max-height: 360px;
+      overflow: auto;
+    }
+
     .link-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -459,7 +490,7 @@
 
       <section class="panel">
         <h2>Bill Reader</h2>
-        <p>Search results now load official bill detail and official document links. Full bill text and section meaning come next.</p>
+        <p>Search results now load official bill detail, official document links, and raw sections. Structure and meaning come next.</p>
         <article class="reader-card">
           <p class="reader-label">Official title</p>
           <p id="bill-summary" class="reader-text">Select a search result to load bill metadata here.</p>
@@ -476,6 +507,11 @@
           <p class="reader-label">Official bill document</p>
           <p id="bill-document-summary" class="reader-text">Select a bill to load official document links.</p>
           <div id="bill-document-links" class="document-links"></div>
+        </article>
+        <article class="reader-card">
+          <p class="reader-label">Raw bill sections</p>
+          <p id="bill-sections-summary" class="reader-text">Select a bill to load raw sections from the official document.</p>
+          <div id="bill-sections-list" class="section-viewer"></div>
         </article>
       </section>
     </div>
@@ -499,6 +535,8 @@
     const billProcessNote = document.getElementById("bill-process-note");
     const billDocumentSummary = document.getElementById("bill-document-summary");
     const billDocumentLinks = document.getElementById("bill-document-links");
+    const billSectionsSummary = document.getElementById("bill-sections-summary");
+    const billSectionsList = document.getElementById("bill-sections-list");
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -606,6 +644,13 @@
       return `/api/wa-bill-documents?billNumber=${encodeURIComponent(billNum)}&biennium=${encodeURIComponent(biennium)}`;
     }
 
+    function buildTextPath(record, detail = null) {
+      const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
+      const biennium = detail?.biennium || record.session || "2025-26";
+      if (!billNum) return null;
+      return `/api/wa-bill-text?billNumber=${encodeURIComponent(billNum)}&biennium=${encodeURIComponent(biennium)}`;
+    }
+
     function renderBillFromRecord(record, detail = null) {
       const label = record.bill_id_display || detail?.displayNumber || record.bill_number || "Selected bill";
       const title = detail?.title || record.title || "Untitled";
@@ -655,6 +700,35 @@
       });
     }
 
+    function renderSections(textData) {
+      const sections = textData?.sections || [];
+      billSectionsList.innerHTML = "";
+
+      if (!sections.length) {
+        billSectionsSummary.textContent = "No sections were found in the official bill text.";
+        return;
+      }
+
+      billSectionsSummary.textContent = `${sections.length} section${sections.length === 1 ? "" : "s"} loaded from the official bill text. This is raw source text for validation before structure parsing.`;
+
+      sections.forEach((section, index) => {
+        const card = document.createElement("section");
+        const title = document.createElement("h3");
+        const text = document.createElement("p");
+
+        card.className = "section-card";
+        title.className = "section-title";
+        text.className = "section-text";
+
+        title.textContent = section.sectionNumber ? `Section ${section.sectionNumber}` : `Section ${index + 1}`;
+        text.textContent = section.text || "No section text available.";
+
+        card.appendChild(title);
+        card.appendChild(text);
+        billSectionsList.appendChild(card);
+      });
+    }
+
     async function loadBillDocuments(record, detail = null) {
       const documentPath = buildDocumentPath(record, detail);
       billDocumentSummary.textContent = "Loading official document links...";
@@ -677,12 +751,35 @@
       }
     }
 
+    async function loadBillText(record, detail = null) {
+      const textPath = buildTextPath(record, detail);
+      billSectionsSummary.textContent = "Loading raw sections from the official bill text...";
+      billSectionsList.innerHTML = "";
+
+      if (!textPath) {
+        billSectionsSummary.textContent = "No bill number is available for section lookup.";
+        return;
+      }
+
+      try {
+        const response = await fetch(textPath, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const textData = await response.json();
+        renderSections(textData);
+      } catch (error) {
+        console.error("Washington bill text lookup failed:", error);
+        billSectionsSummary.textContent = "Raw bill sections are unavailable right now.";
+        billSectionsList.innerHTML = "";
+      }
+    }
+
     async function loadSelectedBill(record) {
       const label = record.bill_id_display || record.bill_number || "Selected bill";
       searchInput.value = label;
       clearSearchResults();
       renderBillFromRecord(record);
       loadBillDocuments(record);
+      loadBillText(record);
 
       const detailPath = buildDetailPath(record);
       if (!detailPath) {
@@ -697,6 +794,7 @@
         const detail = await response.json();
         renderBillFromRecord(record, detail);
         loadBillDocuments(record, detail);
+        loadBillText(record, detail);
         setSearchStatus(`Loaded official detail for ${label}.`);
       } catch (error) {
         console.error("Washington bill detail failed:", error);
