@@ -4,6 +4,97 @@ import path from "node:path";
 const LEGISLATION_SERVICE_BASE = "https://wslwebservices.leg.wa.gov/legislationservice.asmx";
 const BILL_SUMMARY_BASE = "https://app.leg.wa.gov/billsummary";
 
+const BILL_TYPE_RULES = [
+  {
+    abbreviation: "HB",
+    recordType: "House Bill",
+    chamber: "House",
+    min: 1000,
+    max: 3999,
+    description: "Bills propose to amend, add, or repeal statutes.",
+  },
+  {
+    abbreviation: "SB",
+    recordType: "Senate Bill",
+    chamber: "Senate",
+    min: 5000,
+    max: 7999,
+    description: "Bills propose to amend, add, or repeal statutes.",
+  },
+  {
+    abbreviation: "HJM",
+    recordType: "House Joint Memorial",
+    chamber: "House",
+    min: 4000,
+    max: 4199,
+    description: "Memorials express the Legislature's concern, usually to the President and the U.S. Congress.",
+  },
+  {
+    abbreviation: "SJM",
+    recordType: "Senate Joint Memorial",
+    chamber: "Senate",
+    min: 8000,
+    max: 8199,
+    description: "Memorials express the Legislature's concern, usually to the President and the U.S. Congress.",
+  },
+  {
+    abbreviation: "HJR",
+    recordType: "House Joint Resolution",
+    chamber: "House",
+    min: 4200,
+    max: 4399,
+    description: "Joint resolutions propose to amend the state constitution.",
+  },
+  {
+    abbreviation: "SJR",
+    recordType: "Senate Joint Resolution",
+    chamber: "Senate",
+    min: 8200,
+    max: 8399,
+    description: "Joint resolutions propose to amend the state constitution.",
+  },
+  {
+    abbreviation: "HCR",
+    recordType: "House Concurrent Resolution",
+    chamber: "House",
+    min: 4400,
+    max: 4599,
+    description: "Concurrent resolutions relate to the internal operation of the Legislature.",
+  },
+  {
+    abbreviation: "SCR",
+    recordType: "Senate Concurrent Resolution",
+    chamber: "Senate",
+    min: 8400,
+    max: 8599,
+    description: "Concurrent resolutions relate to the internal operation of the Legislature.",
+  },
+  {
+    abbreviation: "HR",
+    recordType: "House Resolution",
+    chamber: "House",
+    min: 4600,
+    max: 4999,
+    description: "Resolutions are typically used to commemorate, congratulate, or adopt rules for one body only.",
+  },
+  {
+    abbreviation: "SR",
+    recordType: "Senate Resolution",
+    chamber: "Senate",
+    min: 8600,
+    max: 8999,
+    description: "Resolutions are typically used to commemorate, congratulate, or adopt rules for one body only.",
+  },
+  {
+    abbreviation: "SGA",
+    recordType: "Senate Gubernatorial Appointment",
+    chamber: "Senate",
+    min: 9000,
+    max: 9999,
+    description: "An appointment made by the Governor to fill an office or position; only the Senate confirms gubernatorial appointments.",
+  },
+];
+
 function normalizeQuery(text) {
   return String(text || "")
     .toUpperCase()
@@ -15,11 +106,28 @@ function extractBillNumber(text) {
   return match ? match[0] : "";
 }
 
-function inferBillPrefix(billNumber) {
+function routeBillNumber(billNumber) {
   const number = Number(billNumber);
-  if (number >= 1000 && number <= 3999) return "HB";
-  if (number >= 5000 && number <= 7999) return "SB";
-  return "Bill";
+  const matchedRule = BILL_TYPE_RULES.find((rule) => number >= rule.min && number <= rule.max);
+
+  if (matchedRule) {
+    return {
+      ...matchedRule,
+      number,
+      displayNumber: `${matchedRule.abbreviation} ${billNumber}`,
+      routingSource: "Washington bill number assignment rules",
+    };
+  }
+
+  return {
+    abbreviation: "Bill",
+    recordType: "Legislative record",
+    chamber: "Unknown",
+    number,
+    displayNumber: `Bill ${billNumber}`,
+    description: "Record type not identified by the configured Washington bill number assignment ranges.",
+    routingSource: "Washington bill number assignment rules",
+  };
 }
 
 function normalizeBiennium(value) {
@@ -98,6 +206,8 @@ function scoreRecord(record, query) {
     record.bill_id_display,
     record.bill_id_normalized,
     record.bill_number,
+    record.chamber,
+    record.record_type,
     record.title,
     record.session,
     record.status,
@@ -129,10 +239,17 @@ async function loadBillIndex() {
 }
 
 function mapRecord(record) {
+  const billNumber = record.bill_number || extractBillNumber(record.bill_id_display || "");
+  const route = billNumber ? routeBillNumber(billNumber) : null;
+  const display = record.bill_id_display || route?.displayNumber || record.bill_number || null;
+
   return {
-    bill_id_display: record.bill_id_display || record.bill_number || null,
-    bill_id_normalized: record.bill_id_normalized || normalizeQuery(record.bill_id_display || record.bill_number || ""),
-    bill_number: record.bill_number || null,
+    bill_id_display: display,
+    bill_id_normalized: record.bill_id_normalized || normalizeQuery(display || ""),
+    bill_number: record.bill_number || billNumber || null,
+    abbreviation: record.abbreviation || route?.abbreviation || null,
+    record_type: record.record_type || route?.recordType || null,
+    chamber: record.chamber || route?.chamber || null,
     title: record.title || "Untitled",
     session: record.session || null,
     status: record.status || null,
@@ -141,12 +258,14 @@ function mapRecord(record) {
     detail_json_path: record.detail_json_path || null,
     detail_api_path: record.detail_api_path || null,
     source: record.source || "local_index",
+    routing: route,
   };
 }
 
 async function lookupOfficialBillByNumber(billNumber, biennium) {
   if (!billNumber) return null;
 
+  const route = routeBillNumber(billNumber);
   const url = `${LEGISLATION_SERVICE_BASE}/GetLegislation?${new URLSearchParams({
     biennium,
     billNumber,
@@ -164,8 +283,7 @@ async function lookupOfficialBillByNumber(billNumber, biennium) {
   const parsed = parseLegislation(xml);
   if (!parsed) return null;
 
-  const prefix = inferBillPrefix(billNumber);
-  const display = `${prefix} ${billNumber}`;
+  const display = route.displayNumber;
   const title = parsed.shortDescription || parsed.legalTitle || parsed.longDescription || "Untitled bill";
   const summary = parsed.legalTitle || parsed.longDescription || parsed.shortDescription || null;
   const status = parsed.currentStatus?.status || parsed.currentStatus?.historyLine || null;
@@ -174,6 +292,9 @@ async function lookupOfficialBillByNumber(billNumber, biennium) {
     bill_id_display: display,
     bill_id_normalized: normalizeQuery(display),
     bill_number: billNumber,
+    abbreviation: route.abbreviation,
+    record_type: route.recordType,
+    chamber: route.chamber,
     title,
     session: biennium,
     status,
@@ -181,6 +302,7 @@ async function lookupOfficialBillByNumber(billNumber, biennium) {
     source_url: buildBillSummaryUrl(billNumber, biennium),
     detail_api_path: `/api/wa-bill-detail?billNumber=${encodeURIComponent(billNumber)}&biennium=${encodeURIComponent(biennium)}`,
     source: "official_lookup",
+    routing: route,
     sponsor: parsed.sponsor || null,
     introducedDate: parsed.introducedDate || null,
   };
@@ -241,6 +363,7 @@ export default async function handler(req, res) {
 
     const billNumber = extractBillNumber(query);
     const officialResult = billNumber ? await lookupOfficialBillByNumber(billNumber, biennium) : null;
+    const routing = billNumber ? routeBillNumber(billNumber) : null;
 
     const results = dedupeResults([
       ...(officialResult ? [officialResult] : []),
@@ -251,10 +374,11 @@ export default async function handler(req, res) {
       query,
       session: session || null,
       biennium,
+      routing,
       searchMode: billNumber ? "official_bill_number_plus_local_index" : "local_index_keyword",
       results,
       note: billNumber
-        ? "Bill-number searches include a live Washington Legislature lookup. Keyword searches currently use the local index until a broader official index adapter is added."
+        ? "Bill-number searches use Washington bill number assignment rules before live official lookup. Keyword searches currently use the local index until a broader official index adapter is added."
         : "Keyword searches currently use the local index until a broader official index adapter is added.",
     });
   } catch (error) {
