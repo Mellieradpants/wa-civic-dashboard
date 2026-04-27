@@ -1,1 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Washington Legislation Reader</title>
+  <style>
+    :root {
+      --evergreen: #173c2d;
+      --forest: #1f4d3a;
+      --moss: #5f7f62;
+      --sage: #a9b9aa;
+      --mist: #edf2ee;
+      --cream: #f8f6ef;
+      --panel: #fffdf8;
+      --ink: #1f2924;
+      --muted: #66736a;
+      --border: #d9e2d8;
+      --shadow: 0 18px 42px rgba(23, 60, 45, 0.12);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+    }
 
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(169, 185, 170, 0.26), transparent 30%),
+        linear-gradient(180deg, #f7f9f5 0%, var(--mist) 42%, #f4f3ed 100%);
+      line-height: 1.5;
+    }
+
+    .hero {
+      min-height: 280px;
+      padding: 34px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 14px;
+      color: white;
+      background:
+        linear-gradient(180deg, rgba(10, 28, 21, 0.18) 0%, rgba(10, 28, 21, 0.58) 52%, rgba(8, 22, 16, 0.88) 100%),
+        linear-gradient(135deg, rgba(23, 60, 45, 0.55), rgba(95, 127, 98, 0.18)),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80") center 55% / cover no-repeat;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 920px;
+      font-size: clamp(2.15rem, 5vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
+    }
+
+    .hero p:last-child {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 1.05rem;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 22px;
+      min-height: 58px;
+      padding: 0 28px;
+      background: rgba(255, 253, 248, 0.94);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .tab-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 58px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 800;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .tab-link.active {
+      color: var(--evergreen);
+      border-bottom-color: var(--forest);
+    }
+
+    main {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .panel {
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      color: var(--evergreen);
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .link-card {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: white;
+      color: var(--ink);
+      padding: 18px;
+      text-decoration: none;
+    }
+
+    .link-card:hover { border-color: var(--sage); }
+
+    .link-card strong {
+      display: block;
+      color: var(--evergreen);
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    .link-card span {
+      display: block;
+      color: var(--muted);
+    }
+
+    .status-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: white;
+      padding: 18px;
+      color: var(--muted);
+    }
+
+    .status-box strong { color: var(--evergreen); }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 0 16px; overflow-x: auto; }
+      main { width: min(100% - 20px, 980px); padding-top: 20px; }
+      .link-grid { grid-template-columns: 1fr; }
+      .hero { min-height: 245px; padding: 28px 20px 22px; }
+      .panel { border-radius: 18px; padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <p class="eyebrow">Washington legislation reader</p>
+    <h1>Legislation</h1>
+    <p>Official Washington bill search and plain-language reading will be restored here after the live data path is reviewed.</p>
+  </header>
+
+  <nav class="topbar" aria-label="Primary navigation">
+    <a class="tab-link" href="index.html">Home</a>
+    <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
+    <a class="tab-link" href="voting.html">Voting</a>
+    <a class="tab-link" href="#official-tools">Resources</a>
+  </nav>
+
+  <main>
+    <section class="panel">
+      <h2>Legislation reader temporarily paused</h2>
+      <div class="status-box">
+        <p><strong>Status:</strong> The live bill reader is paused while the Washington bill search and analysis path is reviewed.</p>
+        <p>No live API call runs from this page in the current version.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="official-tools">
+      <h2>Official Washington legislation paths</h2>
+      <p>Use these official sources while the local bill reader is being repaired.</p>
+      <div class="link-grid">
+        <a class="link-card" href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">
+          <strong>Bill Summary Search</strong>
+          <span>Search Washington bills by number, year, or summary.</span>
+        </a>
+        <a class="link-card" href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
+          <strong>Washington Legislature</strong>
+          <span>Open the official Washington Legislature site.</span>
+        </a>
+        <a class="link-card" href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">
+          <strong>Bills by Topic</strong>
+          <span>Browse Washington bill and initiative information.</span>
+        </a>
+        <a class="link-card" href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">
+          <strong>How to Track a Bill</strong>
+          <span>Learn how to follow a bill through the official process.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
