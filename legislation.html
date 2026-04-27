@@ -8,13 +8,13 @@
     :root {
       --evergreen: #173c2d;
       --forest: #1f4d3a;
-      --moss: #5f7f62;
-      --sage: #a9b9aa;
+      --moss: #35583f;
+      --sage: #8fa491;
       --mist: #edf2ee;
       --panel: #fffdf8;
-      --ink: #1f2924;
-      --muted: #66736a;
-      --border: #d9e2d8;
+      --ink: #151f1a;
+      --muted: #33443a;
+      --border: #c8d4c8;
       --shadow: 0 18px 42px rgba(23, 60, 45, 0.12);
       --radius-xl: 26px;
       --radius-lg: 18px;
@@ -30,7 +30,7 @@
       background:
         radial-gradient(circle at top right, rgba(169, 185, 170, 0.26), transparent 30%),
         linear-gradient(180deg, #f7f9f5 0%, var(--mist) 42%, #f4f3ed 100%);
-      line-height: 1.5;
+      line-height: 1.58;
     }
 
     .hero {
@@ -49,7 +49,7 @@
 
     .eyebrow {
       margin: 0;
-      color: rgba(255, 255, 255, 0.86);
+      color: rgba(255, 255, 255, 0.94);
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 0.16em;
@@ -68,7 +68,7 @@
     .hero p:last-child {
       margin: 0;
       max-width: 760px;
-      color: rgba(255, 255, 255, 0.92);
+      color: rgba(255, 255, 255, 0.98);
       font-size: 1.05rem;
       text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
     }
@@ -82,7 +82,7 @@
       align-items: center;
       min-height: 58px;
       padding: 0 28px;
-      background: rgba(255, 253, 248, 0.94);
+      background: rgba(255, 253, 248, 0.96);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
       overflow-x: auto;
@@ -112,7 +112,7 @@
 
     .panel,
     .search-panel {
-      background: rgba(255, 253, 248, 0.94);
+      background: rgba(255, 253, 248, 0.98);
       border: 1px solid var(--border);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
@@ -131,7 +131,7 @@
     .panel p,
     .search-panel p {
       margin: 0 0 14px;
-      color: var(--muted);
+      color: var(--ink);
       font-size: 1rem;
     }
 
@@ -153,6 +153,10 @@
       background: white;
       font-size: 1rem;
       outline: none;
+    }
+
+    .search-field::placeholder {
+      color: #516258;
     }
 
     .search-field:focus {
@@ -177,8 +181,9 @@
     .search-status {
       min-height: 22px;
       margin-top: 10px;
-      color: var(--muted);
+      color: var(--ink);
       font-size: 0.96rem;
+      font-weight: 600;
     }
 
     .search-results {
@@ -226,8 +231,9 @@
     .search-result-meta,
     .search-result-summary {
       display: block;
-      color: var(--muted);
-      font-size: 0.94rem;
+      color: var(--ink);
+      font-size: 0.96rem;
+      line-height: 1.5;
     }
 
     .layout {
@@ -250,20 +256,21 @@
       margin: 0 0 14px;
       color: var(--evergreen);
       font-size: clamp(1.45rem, 3vw, 2rem);
-      line-height: 1.12;
+      line-height: 1.16;
     }
 
     .analysis-row {
       border-top: 1px solid var(--border);
       padding-top: 10px;
       margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.98rem;
+      color: var(--ink);
+      font-size: 1rem;
+      line-height: 1.55;
     }
 
     .analysis-row strong {
       display: block;
-      color: var(--ink);
+      color: #10271c;
       font-size: 0.8rem;
       letter-spacing: 0.11em;
       text-transform: uppercase;
@@ -282,7 +289,7 @@
 
     .reader-label {
       margin: 0 0 8px;
-      color: var(--moss);
+      color: #244b31;
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 0.16em;
@@ -291,14 +298,18 @@
 
     .reader-text {
       margin: 0;
-      color: var(--ink);
+      color: #101915;
       white-space: pre-wrap;
+      font-size: 1.03rem;
+      line-height: 1.65;
     }
 
     .process-note {
-      border-left: 4px solid var(--sage);
-      padding-left: 12px;
-      color: var(--ink);
+      border-left: 4px solid var(--forest);
+      background: #f7faf6;
+      padding: 12px 12px 12px 14px;
+      color: #101915;
+      font-weight: 600;
     }
 
     .link-grid {
@@ -322,8 +333,8 @@
 
     .link-card span {
       display: block;
-      color: var(--muted);
-      font-weight: 400;
+      color: var(--ink);
+      font-weight: 500;
     }
 
     @media (max-width: 900px) {
