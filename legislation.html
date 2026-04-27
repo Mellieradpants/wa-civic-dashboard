@@ -11,7 +11,6 @@
       --moss: #5f7f62;
       --sage: #a9b9aa;
       --mist: #edf2ee;
-      --cream: #f8f6ef;
       --panel: #fffdf8;
       --ink: #1f2924;
       --muted: #66736a;
@@ -19,6 +18,7 @@
       --shadow: 0 18px 42px rgba(23, 60, 45, 0.12);
       --radius-xl: 26px;
       --radius-lg: 18px;
+      --radius-md: 14px;
     }
 
     * { box-sizing: border-box; }
@@ -80,12 +80,21 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 22px;
+      justify-content: space-between;
+      gap: 14px;
       min-height: 58px;
       padding: 0 28px;
       background: rgba(255, 253, 248, 0.94);
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      min-height: 58px;
+      overflow-x: auto;
     }
 
     .tab-link {
@@ -104,13 +113,33 @@
       border-bottom-color: var(--forest);
     }
 
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .toolbar select {
+      min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--ink);
+      padding: 0 16px;
+      font-size: 0.96rem;
+      outline: none;
+    }
+
     main {
-      width: min(980px, calc(100% - 32px));
+      width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
       padding: 28px 0 56px;
     }
 
-    .panel {
+    .panel,
+    .search-panel {
       background: rgba(255, 253, 248, 0.94);
       border: 1px solid var(--border);
       border-radius: var(--radius-xl);
@@ -119,17 +148,179 @@
       margin-bottom: 22px;
     }
 
-    .panel h2 {
+    .panel h2,
+    .search-panel h2 {
       margin: 0 0 8px;
       color: var(--evergreen);
       font-size: 1.45rem;
       letter-spacing: -0.02em;
     }
 
-    .panel p {
+    .panel p,
+    .search-panel p {
       margin: 0 0 14px;
       color: var(--muted);
       font-size: 1rem;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .search-field {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 18px;
+      color: var(--ink);
+      background: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-field:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 4px rgba(31, 77, 58, 0.11);
+    }
+
+    .search-button {
+      min-height: 54px;
+      border: none;
+      border-radius: 999px;
+      background: var(--forest);
+      color: white;
+      padding: 0 22px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .search-button:hover { background: var(--evergreen); }
+
+    .search-status {
+      min-height: 22px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .search-results {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: white;
+      padding: 12px;
+    }
+
+    .search-results.open { display: block; }
+
+    .search-result-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .search-result-button {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: #fffdf8;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .search-result-button:hover {
+      background: var(--mist);
+      border-color: var(--sage);
+    }
+
+    .search-result-title {
+      display: block;
+      color: var(--evergreen);
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .search-result-meta,
+    .search-result-summary {
+      display: block;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.35fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .analysis-card,
+    .reader-card,
+    .link-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: white;
+      padding: 18px;
+    }
+
+    .bill-title {
+      margin: 0 0 14px;
+      color: var(--evergreen);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      line-height: 1.12;
+    }
+
+    .analysis-row {
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .analysis-row strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.8rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    a {
+      color: var(--forest);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .reader-card + .reader-card { margin-top: 14px; }
+
+    .reader-label {
+      margin: 0 0 8px;
+      color: var(--moss);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .reader-text {
+      margin: 0;
+      color: var(--ink);
+      white-space: pre-wrap;
     }
 
     .link-grid {
@@ -141,15 +332,8 @@
 
     .link-card {
       display: block;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: white;
       color: var(--ink);
-      padding: 18px;
-      text-decoration: none;
     }
-
-    .link-card:hover { border-color: var(--sage); }
 
     .link-card strong {
       display: block;
@@ -161,24 +345,24 @@
     .link-card span {
       display: block;
       color: var(--muted);
+      font-weight: 400;
     }
 
-    .status-box {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: white;
-      padding: 18px;
-      color: var(--muted);
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
     }
-
-    .status-box strong { color: var(--evergreen); }
 
     @media (max-width: 760px) {
-      .topbar { padding: 0 16px; overflow-x: auto; }
-      main { width: min(100% - 20px, 980px); padding-top: 20px; }
+      .topbar { padding: 0 16px; }
+      .tabs { width: 100%; }
+      .toolbar { width: 100%; }
+      .toolbar select { flex: 1; }
+      main { width: min(100% - 20px, 1180px); padding-top: 20px; }
       .link-grid { grid-template-columns: 1fr; }
+      .search-row { grid-template-columns: 1fr; }
+      .search-button { width: 100%; }
       .hero { min-height: 245px; padding: 28px 20px 22px; }
-      .panel { border-radius: 18px; padding: 18px; }
+      .panel, .search-panel { border-radius: 18px; padding: 18px; }
     }
   </style>
 </head>
@@ -186,47 +370,218 @@
   <header class="hero">
     <p class="eyebrow">Washington legislation reader</p>
     <h1>Legislation</h1>
-    <p>Official Washington bill search and plain-language reading will be restored here after the live data path is reviewed.</p>
+    <p>Search Washington bill records, open the source path, and prepare selected bills for plain-language review.</p>
   </header>
 
-  <nav class="topbar" aria-label="Primary navigation">
-    <a class="tab-link" href="index.html">Home</a>
-    <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
-    <a class="tab-link" href="voting.html">Voting</a>
-    <a class="tab-link" href="#official-tools">Resources</a>
-  </nav>
+  <div class="topbar">
+    <nav class="tabs" aria-label="Primary navigation">
+      <a class="tab-link" href="index.html">Home</a>
+      <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
+      <a class="tab-link" href="voting.html">Voting</a>
+      <a class="tab-link" href="#official-tools">Resources</a>
+    </nav>
+
+    <div class="toolbar" aria-label="Legislation controls">
+      <select id="session-select" aria-label="Session">
+        <option selected value="2024">Session 2024</option>
+        <option value="2025">Session 2025</option>
+        <option value="2026">Session 2026</option>
+      </select>
+      <select aria-label="Jurisdiction">
+        <option selected>Washington</option>
+      </select>
+    </div>
+  </div>
 
   <main>
-    <section class="panel">
-      <h2>Legislation reader temporarily paused</h2>
-      <div class="status-box">
-        <p><strong>Status:</strong> The live bill reader is paused while the Washington bill search and analysis path is reviewed.</p>
-        <p>No live API call runs from this page in the current version.</p>
+    <section class="search-panel" aria-label="Search legislation">
+      <h2>Search Washington bills</h2>
+      <p>Type a bill number or keyword. This search uses the dashboard bill-search API route and returns normalized bill records.</p>
+      <div class="search-row">
+        <input id="bill-search" class="search-field" type="text" placeholder="Search by bill number or keyword..." autocomplete="off" />
+        <button id="bill-search-button" class="search-button" type="button">Search</button>
+      </div>
+      <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
+      <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
+        <ul id="search-result-list" class="search-result-list"></ul>
       </div>
     </section>
 
-    <section class="panel" id="official-tools">
-      <h2>Official Washington legislation paths</h2>
-      <p>Use these official sources while the local bill reader is being repaired.</p>
-      <div class="link-grid">
-        <a class="link-card" href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">
-          <strong>Bill Summary Search</strong>
-          <span>Search Washington bills by number, year, or summary.</span>
-        </a>
-        <a class="link-card" href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-          <strong>Washington Legislature</strong>
-          <span>Open the official Washington Legislature site.</span>
-        </a>
-        <a class="link-card" href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/" target="_blank" rel="noopener noreferrer">
-          <strong>Bills by Topic</strong>
-          <span>Browse Washington bill and initiative information.</span>
-        </a>
-        <a class="link-card" href="https://leg.wa.gov/learn-and-participate/bills-and-initiatives/how-to-track-a-bill/" target="_blank" rel="noopener noreferrer">
-          <strong>How to Track a Bill</strong>
-          <span>Learn how to follow a bill through the official process.</span>
-        </a>
-      </div>
-    </section>
+    <div class="layout">
+      <aside>
+        <section class="panel">
+          <h2>Bill Overview</h2>
+          <p>Selected Washington bill record.</p>
+          <div class="analysis-card">
+            <h3 id="bill-number" class="bill-title">No bill selected</h3>
+            <div class="analysis-row">
+              <strong>Session</strong>
+              <span id="bill-session">Not selected</span>
+            </div>
+            <div class="analysis-row">
+              <strong>Status</strong>
+              <span id="bill-status">Not selected</span>
+            </div>
+            <div class="analysis-row">
+              <strong>Official source path</strong>
+              <a id="bill-link" href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">Open Bill Summary Search</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="official-tools">
+          <h2>Official Tools</h2>
+          <p>Washington source paths for manual verification.</p>
+          <div class="link-grid">
+            <a class="link-card" href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">
+              <strong>Bill Summary Search</strong>
+              <span>Search Washington bills by number, year, or summary.</span>
+            </a>
+            <a class="link-card" href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
+              <strong>Washington Legislature</strong>
+              <span>Open the official Washington Legislature site.</span>
+            </a>
+          </div>
+        </section>
+      </aside>
+
+      <section class="panel">
+        <h2>Bill Reader</h2>
+        <p>Search results can now load a selected bill shell. The deeper detail and analysis path will be connected in the next increment.</p>
+        <article class="reader-card">
+          <p class="reader-label">Selected bill summary</p>
+          <p id="bill-summary" class="reader-text">Select a search result to load bill metadata here.</p>
+        </article>
+        <article class="reader-card">
+          <p class="reader-label">Next connection</p>
+          <p class="reader-text">Next step: add a bill-detail adapter that fetches official bill text and then passes that source text into the analysis route.</p>
+        </article>
+      </section>
+    </div>
   </main>
+
+  <script>
+    const searchInput = document.getElementById("bill-search");
+    const searchButton = document.getElementById("bill-search-button");
+    const searchStatus = document.getElementById("search-status");
+    const searchResults = document.getElementById("search-results");
+    const searchResultList = document.getElementById("search-result-list");
+    const sessionSelect = document.getElementById("session-select");
+    const billNumber = document.getElementById("bill-number");
+    const billSession = document.getElementById("bill-session");
+    const billStatus = document.getElementById("bill-status");
+    const billLink = document.getElementById("bill-link");
+    const billSummary = document.getElementById("bill-summary");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function setSearchStatus(message) {
+      searchStatus.textContent = message || "";
+    }
+
+    function clearSearchResults() {
+      searchResultList.innerHTML = "";
+      searchResults.classList.remove("open");
+    }
+
+    function shortenTitle(title) {
+      const value = String(title || "Untitled").trim();
+      return value.length <= 110 ? value : `${value.slice(0, 107).trimEnd()}...`;
+    }
+
+    function loadSelectedBill(record) {
+      const label = record.bill_id_display || record.bill_number || "Selected bill";
+      const title = record.title || "Untitled";
+      const sourceUrl = record.source_url || "https://app.leg.wa.gov/billsummary";
+
+      billNumber.textContent = `${label} — ${title}`;
+      billSession.textContent = record.session || "Session unavailable";
+      billStatus.textContent = record.status || "Status unavailable";
+      billLink.href = sourceUrl;
+      billLink.textContent = sourceUrl;
+      billSummary.textContent = record.summary || title || "No summary available.";
+      searchInput.value = label;
+      setSearchStatus(`Loaded ${label}. Bill detail and analysis will be connected in the next step.`);
+      clearSearchResults();
+    }
+
+    function renderSearchResults(results) {
+      searchResultList.innerHTML = "";
+
+      results.forEach((record) => {
+        const item = document.createElement("li");
+        const button = document.createElement("button");
+        const label = record.bill_id_display || record.bill_number || "Unknown bill";
+        const summary = record.summary || record.title || "No summary available.";
+
+        button.type = "button";
+        button.className = "search-result-button";
+        button.innerHTML = `
+          <span class="search-result-title">${escapeHtml(label)} — ${escapeHtml(shortenTitle(record.title))}</span>
+          <span class="search-result-meta">${escapeHtml(record.session || "Session unavailable")} ${record.status ? `• ${escapeHtml(record.status)}` : ""}</span>
+          <span class="search-result-summary">${escapeHtml(summary)}</span>
+        `;
+        button.addEventListener("click", () => loadSelectedBill(record));
+        item.appendChild(button);
+        searchResultList.appendChild(item);
+      });
+
+      searchResults.classList.add("open");
+    }
+
+    async function runSearch() {
+      const query = searchInput.value.trim();
+
+      if (!query) {
+        setSearchStatus("Enter a bill number or keyword.");
+        clearSearchResults();
+        return;
+      }
+
+      try {
+        setSearchStatus("Searching Washington bill catalog...");
+        clearSearchResults();
+
+        const params = new URLSearchParams({ q: query });
+        if (sessionSelect.value) params.set("session", sessionSelect.value);
+
+        const response = await fetch(`/api/wa-bill-search?${params.toString()}`, { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const results = data.results || [];
+
+        if (!results.length) {
+          setSearchStatus("No matching legislation found.");
+          return;
+        }
+
+        setSearchStatus(`${results.length} match${results.length === 1 ? "" : "es"} found. Select a bill to load its metadata.`);
+        renderSearchResults(results);
+      } catch (error) {
+        console.error("Washington bill search failed:", error);
+        setSearchStatus("Washington bill search is unavailable right now.");
+        clearSearchResults();
+      }
+    }
+
+    searchButton.addEventListener("click", runSearch);
+    searchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        runSearch();
+      }
+    });
+  </script>
 </body>
 </html>
