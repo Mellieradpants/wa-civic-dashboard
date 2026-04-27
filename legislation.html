@@ -312,6 +312,33 @@
       font-weight: 600;
     }
 
+    .document-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .document-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #f7faf6;
+      color: var(--forest);
+      font-size: 0.95rem;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .document-link:hover {
+      background: var(--mist);
+      border-color: var(--sage);
+    }
+
     .link-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -432,7 +459,7 @@
 
       <section class="panel">
         <h2>Bill Reader</h2>
-        <p>Search results now load official bill detail when the selected record has a bill-detail path. Full bill text and section meaning come next.</p>
+        <p>Search results now load official bill detail and official document links. Full bill text and section meaning come next.</p>
         <article class="reader-card">
           <p class="reader-label">Official title</p>
           <p id="bill-summary" class="reader-text">Select a search result to load bill metadata here.</p>
@@ -444,6 +471,11 @@
         <article class="reader-card">
           <p class="reader-label">Plain-language process status</p>
           <p id="bill-process-note" class="reader-text process-note">Select a bill to see where it is in the Washington legislative process.</p>
+        </article>
+        <article class="reader-card">
+          <p class="reader-label">Official bill document</p>
+          <p id="bill-document-summary" class="reader-text">Select a bill to load official document links.</p>
+          <div id="bill-document-links" class="document-links"></div>
         </article>
       </section>
     </div>
@@ -465,6 +497,8 @@
     const billSummary = document.getElementById("bill-summary");
     const billLastAction = document.getElementById("bill-last-action");
     const billProcessNote = document.getElementById("bill-process-note");
+    const billDocumentSummary = document.getElementById("bill-document-summary");
+    const billDocumentLinks = document.getElementById("bill-document-links");
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -565,6 +599,13 @@
       return `/api/wa-bill-detail?billNumber=${encodeURIComponent(billNumber)}&biennium=${encodeURIComponent(biennium)}`;
     }
 
+    function buildDocumentPath(record, detail = null) {
+      const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
+      const biennium = detail?.biennium || record.session || "2025-26";
+      if (!billNum) return null;
+      return `/api/wa-bill-documents?billNumber=${encodeURIComponent(billNum)}&biennium=${encodeURIComponent(biennium)}`;
+    }
+
     function renderBillFromRecord(record, detail = null) {
       const label = record.bill_id_display || detail?.displayNumber || record.bill_number || "Selected bill";
       const title = detail?.title || record.title || "Untitled";
@@ -587,11 +628,61 @@
       billProcessNote.textContent = buildProcessNote(record, detail);
     }
 
+    function renderDocumentLinks(documentData) {
+      const originalBill = documentData?.originalBill || null;
+      const documents = documentData?.documents || [];
+
+      billDocumentLinks.innerHTML = "";
+
+      if (!documents.length) {
+        billDocumentSummary.textContent = "No official bill document links were found for this record.";
+        return;
+      }
+
+      billDocumentSummary.textContent = originalBill
+        ? `${originalBill.title || "Official bill document"} — ${originalBill.description || "Document"}`
+        : "Official bill document links found.";
+
+      documents.forEach((doc) => {
+        const link = document.createElement("a");
+        const label = doc.file_type ? doc.file_type.toUpperCase() : "DOCUMENT";
+        link.className = "document-link";
+        link.href = doc.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = `Open ${label}`;
+        billDocumentLinks.appendChild(link);
+      });
+    }
+
+    async function loadBillDocuments(record, detail = null) {
+      const documentPath = buildDocumentPath(record, detail);
+      billDocumentSummary.textContent = "Loading official document links...";
+      billDocumentLinks.innerHTML = "";
+
+      if (!documentPath) {
+        billDocumentSummary.textContent = "No bill number is available for document lookup.";
+        return;
+      }
+
+      try {
+        const response = await fetch(documentPath, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const documentData = await response.json();
+        renderDocumentLinks(documentData);
+      } catch (error) {
+        console.error("Washington bill document lookup failed:", error);
+        billDocumentSummary.textContent = "Official document links are unavailable right now.";
+        billDocumentLinks.innerHTML = "";
+      }
+    }
+
     async function loadSelectedBill(record) {
       const label = record.bill_id_display || record.bill_number || "Selected bill";
       searchInput.value = label;
       clearSearchResults();
       renderBillFromRecord(record);
+      loadBillDocuments(record);
 
       const detailPath = buildDetailPath(record);
       if (!detailPath) {
@@ -605,6 +696,7 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const detail = await response.json();
         renderBillFromRecord(record, detail);
+        loadBillDocuments(record, detail);
         setSearchStatus(`Loaded official detail for ${label}.`);
       } catch (error) {
         console.error("Washington bill detail failed:", error);
