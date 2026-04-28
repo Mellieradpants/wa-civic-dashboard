@@ -749,7 +749,19 @@ function extractStructureSignals(text) {
         text.textContent = section.text || "No section text available.";
 
         card.appendChild(title);
-        card.appendChild(text);
+        card.appendChild(text);const signals = extractStructureSignals(section.text);
+
+if (signals.length) {
+  const signalList = document.createElement("ul");
+
+  signals.forEach((sig) => {
+    const li = document.createElement("li");
+    li.textContent = sig.type.toUpperCase() + ": " + sig.span;
+    signalList.appendChild(li);
+  });
+
+  card.appendChild(signalList);
+}
         billSectionsList.appendChild(card);
       });
     }
