@@ -911,5 +911,8 @@ if (signals.length) {
   function renderRuleUnitsSimple(data) {
   console.log("RULE UNITS:", data.ruleUnits);
 }
+  fetch('/api/wa-bill-selection?billNumber=6361&biennium=2025-26')
+  .then(res => res.json())
+  .then(data => renderRuleUnitsSimple(data));
 </body>
 </html>
