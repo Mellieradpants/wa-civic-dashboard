@@ -907,12 +907,13 @@ if (signals.length) {
         runSearch();
       }
     });
-  </script>
-  function renderRuleUnitsSimple(data) {
+    function renderRuleUnitsSimple(data) {
   console.log("RULE UNITS:", data.ruleUnits);
 }
   fetch('/api/wa-bill-selection?billNumber=6361&biennium=2025-26')
   .then(res => res.json())
   .then(data => renderRuleUnitsSimple(data));
+  </script>
+  
 </body>
 </html>
