@@ -493,6 +493,10 @@
           <div id="bill-document-links" class="document-links"></div>
         </article>
         <article class="reader-card">
+          <p class="reader-label">Document summary</p>
+          <p id="bill-doc-plain-summary" class="reader-text process-note"></p>
+        </article>
+        <article class="reader-card">
           <p class="reader-label">Raw bill sections</p>
           <p id="bill-sections-summary" class="reader-text"></p>
           <div id="bill-sections-list" class="section-viewer"></div>
@@ -519,6 +523,7 @@
     const billProcessNote = document.getElementById("bill-process-note");
     const billDocumentSummary = document.getElementById("bill-document-summary");
     const billDocumentLinks = document.getElementById("bill-document-links");
+    const billDocPlainSummary = document.getElementById("bill-doc-plain-summary");
     const billSectionsSummary = document.getElementById("bill-sections-summary");
     const billSectionsList = document.getElementById("bill-sections-list");
 
@@ -735,6 +740,27 @@ if (signals.length) {
       }
     }
 
+    async function loadBillPlainSummary(record, detail = null) {
+      const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
+      const biennium = detail?.biennium || record.session || "2025-26";
+
+      billDocPlainSummary.textContent = "";
+
+      if (!billNum) return;
+
+      billDocPlainSummary.textContent = "Generating summary…";
+
+      try {
+        const url = `/api/wa-bill-plain-summary?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
+        const response = await fetch(url, { cache: "no-store" });
+        const data = await response.json().catch(() => ({}));
+        billDocPlainSummary.textContent = response.ok ? (data.summary || "") : "";
+      } catch (error) {
+        console.error("Bill plain summary failed:", error);
+        billDocPlainSummary.textContent = "";
+      }
+    }
+
     async function loadSelectedBill(record) {
       const label = record.bill_id_display || record.bill_number || "Selected bill";
       searchInput.value = label;
@@ -742,6 +768,7 @@ if (signals.length) {
       renderBillFromRecord(record);
       loadBillDocuments(record);
       loadBillText(record);
+      loadBillPlainSummary(record);
 
       const detailPath = buildDetailPath(record);
       if (!detailPath) {
