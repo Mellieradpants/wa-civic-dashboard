@@ -421,7 +421,6 @@
     <a class="tab-link" href="index.html">Home</a>
     <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
     <a class="tab-link" href="voting.html">Voting</a>
-    <a class="tab-link" href="#official-tools">Resources</a>
   </nav>
 
   <main>
@@ -472,45 +471,34 @@
           </div>
         </section>
 
-        <section class="panel" id="official-tools">
-          <h2>Official Tools</h2>
-          <p>Washington source paths for manual verification.</p>
-          <div class="link-grid">
-            <a class="link-card" href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">
-              <strong>Bill Summary Search</strong>
-              <span>Search Washington bills by number, year, or summary.</span>
-            </a>
-            <a class="link-card" href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-              <strong>Washington Legislature</strong>
-              <span>Open the official Washington Legislature site.</span>
-            </a>
-          </div>
-        </section>
       </aside>
 
       <section class="panel">
         <h2>Bill Reader</h2>
-        <p>Search results now load official bill detail, official document links, and raw sections. Structure and meaning come next.</p>
+        <article class="reader-card">
+          <p class="reader-label">Plain meaning</p>
+          <p id="bill-process-note" class="reader-text process-note"></p>
+        </article>
         <article class="reader-card">
           <p class="reader-label">Official title</p>
-          <p id="bill-summary" class="reader-text">Select a search result to load bill metadata here.</p>
+          <p id="bill-summary" class="reader-text"></p>
         </article>
         <article class="reader-card">
           <p class="reader-label">Last action</p>
-          <p id="bill-last-action" class="reader-text">Not selected.</p>
-        </article>
-        <article class="reader-card">
-          <p class="reader-label">Plain-language process status</p>
-          <p id="bill-process-note" class="reader-text process-note">Select a bill to see where it is in the Washington legislative process.</p>
+          <p id="bill-last-action" class="reader-text"></p>
         </article>
         <article class="reader-card">
           <p class="reader-label">Official bill document</p>
-          <p id="bill-document-summary" class="reader-text">Select a bill to load official document links.</p>
+          <p id="bill-document-summary" class="reader-text"></p>
           <div id="bill-document-links" class="document-links"></div>
         </article>
         <article class="reader-card">
+          <p class="reader-label">Document summary</p>
+          <p id="bill-doc-plain-summary" class="reader-text process-note"></p>
+        </article>
+        <article class="reader-card">
           <p class="reader-label">Raw bill sections</p>
-          <p id="bill-sections-summary" class="reader-text">Select a bill to load raw sections from the official document.</p>
+          <p id="bill-sections-summary" class="reader-text"></p>
           <div id="bill-sections-list" class="section-viewer"></div>
         </article>
       </section>
@@ -535,6 +523,7 @@
     const billProcessNote = document.getElementById("bill-process-note");
     const billDocumentSummary = document.getElementById("bill-document-summary");
     const billDocumentLinks = document.getElementById("bill-document-links");
+    const billDocPlainSummary = document.getElementById("bill-doc-plain-summary");
     const billSectionsSummary = document.getElementById("bill-sections-summary");
     const billSectionsList = document.getElementById("bill-sections-list");
 
@@ -609,36 +598,112 @@
       billLink.href = sourceUrl || "#";
       billLink.textContent = sourceUrl;
 
-      billSummary.textContent = detail?.legalTitle || detail?.summary || record.summary || "";
+      billSummary.textContent = detail?.legalTitle || detail?.summary || "";
       billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || "";
-      billProcessNote.textContent = "";
+      billProcessNote.textContent = record.plain_meaning_summary || detail?.summary || "";
     }
-function extractStructureSignals(text) {
-  if (!text) return [];
+    function renderSections(textData) {
+      const sections = textData?.sections || [];
+      billSectionsList.innerHTML = "";
 
-  const patterns = [
-    { type: "prohibition", regex: /\b(may not|must not|shall not)\b[^.]*\./gi },
-    { type: "obligation", regex: /\b(must|shall|required to)\b[^.]*\./gi },
-    { type: "permission", regex: /\bmay\b[^.]*\./gi },
-    { type: "condition", regex: /\b(if|unless)\b[^.]*\./gi },
-    { type: "exception", regex: /\bexcept\b[^.]*\./gi },
-    { type: "definition", regex: /\b(means|is defined as)\b[^.]*\./gi },
-  ];
-
-  const results = [];
-
-  patterns.forEach(({ type, regex }) => {
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-      const span = match[0].trim();
-      if (span.length > 10) {
-        results.push({ type, span });
+      if (!sections.length) {
+        billSectionsSummary.textContent = "No sections were found in the official bill text.";
+        return;
       }
-    }
-  });
 
-  return results;
-}
+      billSectionsSummary.textContent = `${sections.length} section${sections.length === 1 ? "" : "s"} loaded from the official bill text. This is raw source text for validation before structure parsing.`;
+
+      sections.forEach((section, index) => {
+        const card = document.createElement("section");
+        const title = document.createElement("h3");
+        const text = document.createElement("p");
+
+        card.className = "section-card";
+        card.dataset.sectionId = section.id || `section_${index + 1}`;
+        title.className = "section-title";
+        text.className = "section-text";
+
+        title.textContent = section.sectionNumber ? `Section ${section.sectionNumber}` : `Section ${index + 1}`;
+        text.textContent = section.text || "";
+
+        card.appendChild(title);
+        card.appendChild(text);
+        billSectionsList.appendChild(card);
+      });
+    }
+
+    function buildSelectionPath(record, detail = null) {
+      const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
+      const biennium = detail?.biennium || record.session || "2025-26";
+      if (!billNum) return null;
+      return `/api/wa-bill-selection?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
+    }
+
+    function cleanLegalText(text) {
+      return String(text || "")
+        .replace(/\bshall not\b/g, "may not")
+        .replace(/\bshall\b/g, "must")
+        .replace(/\bpursuant to\b/gi, "under")
+        .replace(/\bprior to\b/gi, "before")
+        .replace(/\bsubsequent to\b/gi, "after")
+        .trim();
+    }
+
+    function interpretSectionNodes(sectionRuleUnits, sectionSelectedUnits) {
+      if (!sectionRuleUnits.length && !sectionSelectedUnits.length) return "";
+
+      const usedUnitIds = new Set(sectionRuleUnits.flatMap(r => r.sourceUnitIds || []));
+      const sentences = [];
+
+      // 1. Situation: definition units that establish what this section is about
+      sectionSelectedUnits
+        .filter(u => u.primaryType === "definition" && !usedUnitIds.has(u.id))
+        .slice(0, 1)
+        .forEach(u => sentences.push(cleanLegalText(u.sourceSpan)));
+
+      // 2+3+4. Who/What/When: each rule unit with its attached conditions
+      sectionRuleUnits.forEach(rule => {
+        sentences.push(cleanLegalText(rule.sourceSpan));
+        // Conditions that are separate sentences from the main span
+        (rule.conditions || [])
+          .filter(c => c !== rule.sourceSpan)
+          .forEach(c => sentences.push(cleanLegalText(c)));
+      });
+
+      // 5. How: reference or exception units not consumed by any rule
+      sectionSelectedUnits
+        .filter(u => (u.primaryType === "reference" || u.primaryType === "exception") && !usedUnitIds.has(u.id))
+        .slice(0, 2)
+        .forEach(u => sentences.push(cleanLegalText(u.sourceSpan)));
+
+      return sentences.filter(Boolean).join(" ");
+    }
+
+    function renderSectionInterpretations(selectionData) {
+      const ruleUnits = selectionData?.ruleUnits || [];
+      const selectedUnits = selectionData?.selectedUnits || [];
+
+      const rulesBySectionId = {};
+      ruleUnits.forEach(rule => { (rulesBySectionId[rule.sectionId] ||= []).push(rule); });
+
+      const unitsBySectionId = {};
+      selectedUnits.forEach(unit => { (unitsBySectionId[unit.sectionId] ||= []).push(unit); });
+
+      billSectionsList.querySelectorAll("[data-section-id]").forEach(card => {
+        const sectionId = card.dataset.sectionId;
+        const prose = interpretSectionNodes(
+          rulesBySectionId[sectionId] || [],
+          unitsBySectionId[sectionId] || []
+        );
+        if (!prose) return;
+
+        const interpretation = document.createElement("p");
+        interpretation.textContent = prose;
+        const rawText = card.querySelector(".section-text");
+        card.insertBefore(interpretation, rawText || null);
+      });
+    }
+
     function renderDocumentLinks(documentData) {
       const originalBill = documentData?.originalBill || null;
       const documents = documentData?.documents || [];
@@ -663,47 +728,6 @@ function extractStructureSignals(text) {
         link.rel = "noopener noreferrer";
         link.textContent = `Open ${label}`;
         billDocumentLinks.appendChild(link);
-      });
-    }
-
-    function renderSections(textData) {
-      const sections = textData?.sections || [];
-      billSectionsList.innerHTML = "";
-
-      if (!sections.length) {
-        billSectionsSummary.textContent = "No sections were found in the official bill text.";
-        return;
-      }
-
-      billSectionsSummary.textContent = `${sections.length} section${sections.length === 1 ? "" : "s"} loaded from the official bill text. This is raw source text for validation before structure parsing.`;
-
-      sections.forEach((section, index) => {
-        const card = document.createElement("section");
-        const title = document.createElement("h3");
-        const text = document.createElement("p");
-
-        card.className = "section-card";
-        title.className = "section-title";
-        text.className = "section-text";
-
-        title.textContent = section.sectionNumber ? `Section ${section.sectionNumber}` : `Section ${index + 1}`;
-        text.textContent = section.text || "No section text available.";
-
-        card.appendChild(title);
-        card.appendChild(text);const signals = extractStructureSignals(section.text);
-
-if (signals.length) {
-  const signalList = document.createElement("ul");
-
-  signals.forEach((sig) => {
-    const li = document.createElement("li");
-    li.textContent = sig.type.toUpperCase() + ": " + sig.span;
-    signalList.appendChild(li);
-  });
-
-  card.appendChild(signalList);
-}
-        billSectionsList.appendChild(card);
       });
     }
 
@@ -744,10 +768,40 @@ if (signals.length) {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const textData = await response.json();
         renderSections(textData);
+
+        const selectionPath = buildSelectionPath(record, detail);
+        if (selectionPath) {
+          const selectionResponse = await fetch(selectionPath, { cache: "no-store" });
+          if (selectionResponse.ok) {
+            const selectionData = await selectionResponse.json();
+            renderSectionInterpretations(selectionData);
+          }
+        }
       } catch (error) {
         console.error("Washington bill text lookup failed:", error);
         billSectionsSummary.textContent = "Raw bill sections are unavailable right now.";
         billSectionsList.innerHTML = "";
+      }
+    }
+
+    async function loadBillPlainSummary(record, detail = null) {
+      const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
+      const biennium = detail?.biennium || record.session || "2025-26";
+
+      billDocPlainSummary.textContent = "";
+
+      if (!billNum) return;
+
+      billDocPlainSummary.textContent = "Generating summary…";
+
+      try {
+        const url = `/api/wa-bill-plain-summary?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
+        const response = await fetch(url, { cache: "no-store" });
+        const data = await response.json().catch(() => ({}));
+        billDocPlainSummary.textContent = response.ok ? (data.summary || "") : "";
+      } catch (error) {
+        console.error("Bill plain summary failed:", error);
+        billDocPlainSummary.textContent = "";
       }
     }
 
@@ -758,6 +812,7 @@ if (signals.length) {
       renderBillFromRecord(record);
       loadBillDocuments(record);
       loadBillText(record);
+      loadBillPlainSummary(record);
 
       const detailPath = buildDetailPath(record);
       if (!detailPath) {
@@ -787,14 +842,16 @@ if (signals.length) {
         const item = document.createElement("li");
         const button = document.createElement("button");
         const label = record.bill_id_display || record.bill_number || "Unknown bill";
-        const summary = record.summary || record.title || "No summary available.";
+
+        const plainMeaning = record.plain_meaning_summary || "";
+        const metaParts = [record.session, record.status].filter(Boolean).map(escapeHtml);
 
         button.type = "button";
         button.className = "search-result-button";
         button.innerHTML = `
           <span class="search-result-title">${escapeHtml(label)} — ${escapeHtml(shortenTitle(record.title))}</span>
-          <span class="search-result-meta">${escapeHtml(record.session || "Session unavailable")} ${record.status ? `• ${escapeHtml(record.status)}` : ""}</span>
-          <span class="search-result-summary">${escapeHtml(summary)}</span>
+          ${plainMeaning ? `<span class="search-result-summary">${escapeHtml(plainMeaning)}</span>` : ""}
+          ${metaParts.length ? `<span class="search-result-meta">${metaParts.join(" · ")}</span>` : ""}
         `;
         button.addEventListener("click", () => loadSelectedBill(record));
         item.appendChild(button);
@@ -848,12 +905,6 @@ if (signals.length) {
         runSearch();
       }
     });
-    function renderRuleUnitsSimple(data) {
-  console.log("RULE UNITS:", data.ruleUnits);
-}
-  fetch('/api/wa-bill-selection?billNumber=6361&biennium=2025-26')
-  .then(res => res.json())
-  .then(data => renderRuleUnitsSimple(data));
   </script>
   
 </body>
