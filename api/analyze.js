@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.gemini_api_key;
   if (!apiKey) {
     return res.status(500).json({ message: "GEMINI_API_KEY is not configured" });
   }
