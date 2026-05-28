@@ -421,7 +421,6 @@
     <a class="tab-link" href="index.html">Home</a>
     <a class="tab-link active" href="legislation.html" aria-current="page">Legislation</a>
     <a class="tab-link" href="voting.html">Voting</a>
-    <a class="tab-link" href="#official-tools">Resources</a>
   </nav>
 
   <main>
@@ -472,45 +471,30 @@
           </div>
         </section>
 
-        <section class="panel" id="official-tools">
-          <h2>Official Tools</h2>
-          <p>Washington source paths for manual verification.</p>
-          <div class="link-grid">
-            <a class="link-card" href="https://app.leg.wa.gov/billsummary" target="_blank" rel="noopener noreferrer">
-              <strong>Bill Summary Search</strong>
-              <span>Search Washington bills by number, year, or summary.</span>
-            </a>
-            <a class="link-card" href="https://leg.wa.gov/" target="_blank" rel="noopener noreferrer">
-              <strong>Washington Legislature</strong>
-              <span>Open the official Washington Legislature site.</span>
-            </a>
-          </div>
-        </section>
       </aside>
 
       <section class="panel">
         <h2>Bill Reader</h2>
-        <p>Search results now load official bill detail, official document links, and raw sections. Structure and meaning come next.</p>
+        <article class="reader-card">
+          <p class="reader-label">Plain meaning</p>
+          <p id="bill-process-note" class="reader-text process-note"></p>
+        </article>
         <article class="reader-card">
           <p class="reader-label">Official title</p>
-          <p id="bill-summary" class="reader-text">Select a search result to load bill metadata here.</p>
+          <p id="bill-summary" class="reader-text"></p>
         </article>
         <article class="reader-card">
           <p class="reader-label">Last action</p>
-          <p id="bill-last-action" class="reader-text">Not selected.</p>
-        </article>
-        <article class="reader-card">
-          <p class="reader-label">Plain-language process status</p>
-          <p id="bill-process-note" class="reader-text process-note">Select a bill to see where it is in the Washington legislative process.</p>
+          <p id="bill-last-action" class="reader-text"></p>
         </article>
         <article class="reader-card">
           <p class="reader-label">Official bill document</p>
-          <p id="bill-document-summary" class="reader-text">Select a bill to load official document links.</p>
+          <p id="bill-document-summary" class="reader-text"></p>
           <div id="bill-document-links" class="document-links"></div>
         </article>
         <article class="reader-card">
           <p class="reader-label">Raw bill sections</p>
-          <p id="bill-sections-summary" class="reader-text">Select a bill to load raw sections from the official document.</p>
+          <p id="bill-sections-summary" class="reader-text"></p>
           <div id="bill-sections-list" class="section-viewer"></div>
         </article>
       </section>
@@ -609,9 +593,9 @@
       billLink.href = sourceUrl || "#";
       billLink.textContent = sourceUrl;
 
-      billSummary.textContent = detail?.legalTitle || detail?.summary || record.summary || "";
+      billSummary.textContent = detail?.legalTitle || detail?.summary || "";
       billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || "";
-      billProcessNote.textContent = "";
+      billProcessNote.textContent = record.plain_meaning_summary || detail?.summary || "";
     }
 function extractStructureSignals(text) {
   if (!text) return [];
@@ -787,14 +771,16 @@ if (signals.length) {
         const item = document.createElement("li");
         const button = document.createElement("button");
         const label = record.bill_id_display || record.bill_number || "Unknown bill";
-        const summary = record.summary || record.title || "No summary available.";
+
+        const plainMeaning = record.plain_meaning_summary || "";
+        const metaParts = [record.session, record.status].filter(Boolean).map(escapeHtml);
 
         button.type = "button";
         button.className = "search-result-button";
         button.innerHTML = `
           <span class="search-result-title">${escapeHtml(label)} — ${escapeHtml(shortenTitle(record.title))}</span>
-          <span class="search-result-meta">${escapeHtml(record.session || "Session unavailable")} ${record.status ? `• ${escapeHtml(record.status)}` : ""}</span>
-          <span class="search-result-summary">${escapeHtml(summary)}</span>
+          ${plainMeaning ? `<span class="search-result-summary">${escapeHtml(plainMeaning)}</span>` : ""}
+          ${metaParts.length ? `<span class="search-result-meta">${metaParts.join(" · ")}</span>` : ""}
         `;
         button.addEventListener("click", () => loadSelectedBill(record));
         item.appendChild(button);
