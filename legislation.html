@@ -562,7 +562,7 @@
     }
 
     function formatDate(value) {
-      if (!value) return "Not available";
+      if (!value) return "";
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return String(value);
       return date.toLocaleDateString("en-US", {
@@ -570,63 +570,6 @@
         month: "long",
         day: "numeric",
       });
-    }
-
-    function getChamberFromRecord(record) {
-      const label = String(record.bill_id_display || record.displayNumber || "").toUpperCase();
-      if (label.includes("SB")) return "Senate";
-      if (label.includes("HB")) return "House";
-      if (String(record.chamber || "").toLowerCase().includes("senate")) return "Senate";
-      if (String(record.chamber || "").toLowerCase().includes("house")) return "House";
-      return "Chamber not detected";
-    }
-
-    function normalizeStatus(record, detail = null) {
-      const rawStatus = detail?.status || record.status || "";
-      const historyLine = detail?.currentStatus?.historyLine || "";
-      const chamber = getChamberFromRecord(record);
-      const sourceText = `${rawStatus} ${historyLine}`.toLowerCase();
-
-      if (sourceText.includes("transportation") || sourceText.includes("committee") || sourceText.includes("referred")) {
-        return `${chamber} — In committee`;
-      }
-
-      if (sourceText.includes("floor")) return `${chamber} — On floor calendar`;
-      if (sourceText.includes("passed")) return `${chamber} — Passed chamber`;
-      if (sourceText.includes("first reading") || sourceText.includes("introduced")) return `${chamber} — Introduced`;
-
-      return rawStatus || "Status unavailable";
-    }
-
-    function getCommittee(record, detail = null) {
-      const rawStatus = detail?.status || record.status || "";
-      const historyLine = detail?.currentStatus?.historyLine || "";
-      const sourceText = `${rawStatus} ${historyLine}`;
-
-      if (/transportation/i.test(sourceText)) return "Transportation";
-      if (/ways\s*&?\s*means/i.test(sourceText)) return "Ways & Means";
-      if (/rules/i.test(sourceText)) return "Rules";
-      if (/law\s*&?\s*justice/i.test(sourceText)) return "Law & Justice";
-      if (/health/i.test(sourceText)) return "Health Care";
-      if (/education/i.test(sourceText)) return "Education";
-
-      return rawStatus || "Not available";
-    }
-
-    function buildProcessNote(record, detail = null) {
-      const status = normalizeStatus(record, detail);
-      const committee = getCommittee(record, detail);
-      const chamber = getChamberFromRecord(record);
-
-      if (status.includes("In committee")) {
-        return `This bill is in the ${chamber} ${committee} Committee. It has not reached the ${chamber} floor calendar or passed either chamber.`;
-      }
-
-      if (status.includes("Introduced")) {
-        return `This bill has been introduced in the ${chamber}. It has not been reported out of committee or passed either chamber.`;
-      }
-
-      return "This status is pulled from the official Washington bill record. More process translation will be added as additional status patterns are mapped.";
     }
 
     function buildDetailPath(record) {
@@ -652,25 +595,23 @@
     }
 
     function renderBillFromRecord(record, detail = null) {
-      const label = record.bill_id_display || detail?.displayNumber || record.bill_number || "Selected bill";
-      const title = detail?.title || record.title || "Untitled";
-      const sourceUrl = detail?.source_url || record.source_url || "https://app.leg.wa.gov/billsummary";
-      const legalTitle = detail?.legalTitle || detail?.summary || record.summary || title;
-      const status = normalizeStatus(record, detail);
-      const committee = getCommittee(record, detail);
-      const lastAction = detail?.currentStatus?.historyLine || record.status || "Not available";
+      const billId = detail?.currentStatus?.billId || record.bill_id_display || record.bill_number || "";
+      const title = detail?.title || record.title || "";
 
-      billNumber.textContent = `${label} — ${title}`;
-      billStatus.textContent = status;
-      billCommittee.textContent = committee;
-      billSession.textContent = detail?.biennium || record.session || "Session unavailable";
-      billSponsor.textContent = detail?.sponsor || "Not available";
+      billNumber.textContent = [billId, title].filter(Boolean).join(" — ");
+      billStatus.textContent = detail?.status || record.status || "";
+      billCommittee.textContent = "";
+      billSession.textContent = detail?.biennium || record.session || "";
+      billSponsor.textContent = detail?.sponsor || "";
       billIntroduced.textContent = formatDate(detail?.introducedDate);
-      billLink.href = sourceUrl;
+
+      const sourceUrl = detail?.source_url || record.source_url || "";
+      billLink.href = sourceUrl || "#";
       billLink.textContent = sourceUrl;
-      billSummary.textContent = legalTitle || "No official title available.";
-      billLastAction.textContent = lastAction;
-      billProcessNote.textContent = buildProcessNote(record, detail);
+
+      billSummary.textContent = detail?.legalTitle || detail?.summary || record.summary || "";
+      billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || "";
+      billProcessNote.textContent = "";
     }
 function extractStructureSignals(text) {
   if (!text) return [];
