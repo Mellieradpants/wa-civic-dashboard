@@ -408,6 +408,34 @@
       .hero { min-height: 245px; padding: 28px 20px 22px; }
       .panel, .search-panel { border-radius: 18px; padding: 18px; }
     }
+
+    .section-detail-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 72vh;
+      overflow-y: auto;
+      z-index: 20;
+      transform: translateY(110%);
+      transition: transform 0.22s ease;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      border-bottom: none;
+    }
+    .section-detail-panel.open { transform: translateY(0); }
+    .section-panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .section-panel-interpretation {
+      margin-top: 14px;
+      color: #101915;
+      font-size: 1.03rem;
+      line-height: 1.65;
+    }
   </style>
 </head>
 <body>
@@ -505,6 +533,15 @@
     </div>
   </main>
 
+  <div id="section-panel" class="panel section-detail-panel" role="dialog" aria-labelledby="section-panel-title">
+    <div class="section-panel-header">
+      <h3 id="section-panel-title" class="section-title"></h3>
+      <button id="section-panel-close" class="search-button" type="button">Close</button>
+    </div>
+    <p id="section-panel-text" class="section-text"></p>
+    <p id="section-panel-interpretation" class="section-panel-interpretation"></p>
+  </div>
+
   <script>
     const searchInput = document.getElementById("bill-search");
     const searchButton = document.getElementById("bill-search-button");
@@ -526,6 +563,12 @@
     const billDocPlainSummary = document.getElementById("bill-doc-plain-summary");
     const billSectionsSummary = document.getElementById("bill-sections-summary");
     const billSectionsList = document.getElementById("bill-sections-list");
+    const sectionPanel = document.getElementById("section-panel");
+    const sectionPanelTitle = document.getElementById("section-panel-title");
+    const sectionPanelText = document.getElementById("section-panel-text");
+    const sectionPanelInterpretation = document.getElementById("section-panel-interpretation");
+    document.getElementById("section-panel-close").addEventListener("click", closeSectionPanel);
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeSectionPanel(); });
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -620,12 +663,15 @@
 
         card.className = "section-card";
         card.dataset.sectionId = section.id || `section_${index + 1}`;
+        card.dataset.sectionText = section.text || "";
+        card.style.cursor = "pointer";
         title.className = "section-title";
         text.className = "section-text";
 
         title.textContent = section.sectionNumber ? `Section ${section.sectionNumber}` : `Section ${index + 1}`;
         text.textContent = section.text || "";
 
+        card.addEventListener("click", () => openSectionPanel(card));
         card.appendChild(title);
         card.appendChild(text);
         billSectionsList.appendChild(card);
@@ -695,25 +741,30 @@
           rulesBySectionId[sectionId] || [],
           unitsBySectionId[sectionId] || []
         );
-        if (!prose) return;
-
-        const interpretation = document.createElement("p");
-        interpretation.textContent = prose;
-        const rawText = card.querySelector(".section-text");
-        card.insertBefore(interpretation, rawText || null);
+        card.dataset.interpretation = prose || "";
       });
     }
 
     function renderDocumentLinks(documentData) {
       const originalBill = documentData?.originalBill || null;
-      const documents = documentData?.documents || [];
+      const allDocuments = documentData?.documents || [];
 
       billDocumentLinks.innerHTML = "";
 
-      if (!documents.length) {
+      if (!allDocuments.length) {
         billDocumentSummary.textContent = "No official bill document links were found for this record.";
         return;
       }
+
+      // One link per file type — the API may return multiple URLs for the same
+      // document type (one per bill section file); keep only the first of each.
+      const seenTypes = new Set();
+      const documents = allDocuments.filter(doc => {
+        const type = String(doc.file_type || "document").toLowerCase();
+        if (seenTypes.has(type)) return false;
+        seenTypes.add(type);
+        return true;
+      });
 
       billDocumentSummary.textContent = originalBill
         ? `${originalBill.title || "Official bill document"} — ${originalBill.description || "Document"}`
@@ -753,9 +804,21 @@
       }
     }
 
+    function openSectionPanel(card) {
+      sectionPanelTitle.textContent = card.querySelector(".section-title")?.textContent || "";
+      sectionPanelText.textContent = card.dataset.sectionText || "";
+      sectionPanelInterpretation.textContent = card.dataset.interpretation || "";
+      sectionPanel.classList.add("open");
+    }
+
+    function closeSectionPanel() {
+      sectionPanel.classList.remove("open");
+    }
+
     async function loadBillText(record, detail = null) {
       const textPath = buildTextPath(record, detail);
       billSectionsSummary.textContent = "Loading raw sections from the official bill text...";
+      closeSectionPanel();
       billSectionsList.innerHTML = "";
 
       if (!textPath) {
