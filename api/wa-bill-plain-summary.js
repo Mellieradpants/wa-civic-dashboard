@@ -1,5 +1,5 @@
 const TEXT_ENDPOINT = "/api/wa-bill-text";
-const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
 function extractBillNumber(text) {
   const match = String(text || "").match(/\b\d{3,4}\b/);
@@ -34,10 +34,10 @@ async function fetchBillText(req, billNumber, biennium) {
 }
 
 async function generatePlainSummary(billText) {
-  const apiKey = process.env.gemini_api_key;
+  const apiKey = process.env.Anthropic_API_Key;
 
   if (!apiKey) {
-    throw new Error("gemini_api_key is not configured");
+    throw new Error("Anthropic_API_Key is not configured");
   }
 
   const prompt = `Here is the text of a Washington State bill. Write one paragraph (3–5 sentences) explaining what this bill does in plain English.
@@ -55,22 +55,27 @@ Respond with only the paragraph. No labels, no introduction.
 Bill text:
 ${billText}`;
 
-  const response = await fetch(`${GEMINI_API_BASE}?key=${apiKey}`, {
+  const response = await fetch(ANTHROPIC_ENDPOINT, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 300 },
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 300,
+      messages: [{ role: "user", content: prompt }],
     }),
   });
 
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(`Gemini API error ${response.status}: ${body.slice(0, 300)}`);
+    throw new Error(`Anthropic API error ${response.status}: ${body.slice(0, 300)}`);
   }
 
   const data = await response.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+  return data.content?.[0]?.text?.trim() || "";
 }
 
 export default async function handler(req, res) {

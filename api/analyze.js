@@ -1,4 +1,4 @@
-const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
 async function resolveContent(body) {
   if (typeof body.content === "string" && body.content.trim()) {
@@ -32,22 +32,27 @@ Respond with only the paragraph.
 Section text:
 ${sectionText}`;
 
-  const response = await fetch(`${GEMINI_API_BASE}?key=${apiKey}`, {
+  const response = await fetch(ANTHROPIC_ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 300 },
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 300,
+      messages: [{ role: "user", content: prompt }],
     }),
   });
 
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(`Gemini API error ${response.status}: ${body.slice(0, 300)}`);
+    throw new Error(`Anthropic API error ${response.status}: ${body.slice(0, 300)}`);
   }
 
   const data = await response.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+  return data.content?.[0]?.text?.trim() || "";
 }
 
 export default async function handler(req, res) {
@@ -56,9 +61,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const apiKey = process.env.gemini_api_key;
+  const apiKey = process.env.Anthropic_API_Key;
   if (!apiKey) {
-    return res.status(500).json({ message: "GEMINI_API_KEY is not configured" });
+    return res.status(500).json({ message: "Anthropic_API_Key is not configured" });
   }
 
   try {
