@@ -542,7 +542,9 @@
     <p id="section-panel-interpretation" class="section-panel-interpretation"></p>
   </div>
 
-  <script>
+  <script type="module">
+    import { getNormalizedBill } from '/lib/wa-adapter/index.js';
+
     const searchInput = document.getElementById("bill-search");
     const searchButton = document.getElementById("bill-search-button");
     const searchStatus = document.getElementById("search-status");
@@ -891,17 +893,18 @@
       loadBillText(record);
       loadBillPlainSummary(record);
 
-      const detailPath = buildDetailPath(record);
-      if (!detailPath) {
-        setSearchStatus(`Loaded ${label}. No live detail path is available for this record yet.`);
+      const billNum = record.bill_number || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
+      const biennium = record.session || "2025-26";
+
+      if (!billNum) {
+        setSearchStatus(`Loaded ${label}. No bill number available for detail lookup.`);
         return;
       }
 
       try {
         setSearchStatus(`Loading official detail for ${label}...`);
-        const response = await fetch(detailPath, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const detail = await response.json();
+        const normalized = await getNormalizedBill(biennium, billNum);
+        const detail = normalized.raw;
         renderBillFromRecord(record, detail);
         loadBillDocuments(record, detail);
         loadBillText(record, detail);
