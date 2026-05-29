@@ -504,10 +504,6 @@
       <section class="panel">
         <h2>Bill Reader</h2>
         <article class="reader-card">
-          <p class="reader-label">Plain meaning</p>
-          <p id="bill-process-note" class="reader-text process-note"></p>
-        </article>
-        <article class="reader-card">
           <p class="reader-label">Official title</p>
           <p id="bill-summary" class="reader-text"></p>
         </article>
@@ -559,7 +555,6 @@
     const billLink = document.getElementById("bill-link");
     const billSummary = document.getElementById("bill-summary");
     const billLastAction = document.getElementById("bill-last-action");
-    const billProcessNote = document.getElementById("bill-process-note");
     const billDocumentSummary = document.getElementById("bill-document-summary");
     const billDocumentLinks = document.getElementById("bill-document-links");
     const billDocPlainSummary = document.getElementById("bill-doc-plain-summary");
@@ -645,7 +640,6 @@
 
       billSummary.textContent = detail?.legalTitle || detail?.summary || "";
       billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || "";
-      billProcessNote.textContent = record.plain_meaning_summary || detail?.summary || "";
     }
     function renderSections(textData) {
       const sections = textData?.sections || [];
