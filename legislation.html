@@ -804,11 +804,25 @@
       }
     }
 
-    function openSectionPanel(card) {
+    async function openSectionPanel(card) {
       sectionPanelTitle.textContent = card.querySelector(".section-title")?.textContent || "";
       sectionPanelText.textContent = card.dataset.sectionText || "";
-      sectionPanelInterpretation.textContent = card.dataset.interpretation || "";
+      sectionPanelInterpretation.textContent = card.dataset.interpretation || "Translating...";
       sectionPanel.classList.add("open");
+
+      try {
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: card.dataset.sectionText || "" }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.translation) sectionPanelInterpretation.textContent = data.translation;
+        }
+      } catch {
+        // keep existing interpretation on error
+      }
     }
 
     function closeSectionPanel() {
