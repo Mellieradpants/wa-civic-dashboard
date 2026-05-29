@@ -1,4 +1,4 @@
-const TEXT_ENDPOINT = "/api/wa-bill-text";
+const DOCUMENT_SEARCH_URL = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
 const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
 function extractBillNumber(text) {
@@ -19,27 +19,50 @@ function normalizeBiennium(value) {
   return `${startYear}-${String(startYear + 1).slice(-2)}`;
 }
 
-function getBaseUrl(req) {
-  const proto = req.headers["x-forwarded-proto"] || "https";
-  const host = req.headers.host;
-  return `${proto}://${host}`;
-}
-
-async function fetchBillText(req, billNumber, biennium) {
-  const baseUrl = getBaseUrl(req);
-  const url = `${baseUrl}${TEXT_ENDPOINT}?${new URLSearchParams({ billNumber, biennium }).toString()}`;
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Bill text fetch failed: HTTP ${response.status}`);
-  return response.json();
-}
-
-async function generatePlainSummary(billText) {
-  const apiKey = process.env.Anthropic_API_Key;
-
-  if (!apiKey) {
-    throw new Error("Anthropic_API_Key is not configured");
+function findHtmlDocumentUrl(html, billNumber) {
+  const matches = [...String(html).matchAll(/<a[^>]+href="([^"]+)"[^>]*>/gi)];
+  for (const [, href] of matches) {
+    const url = href.replace(/&amp;/g, "&");
+    if (/\.html?(\?|$)/i.test(url) && url.includes(billNumber)) {
+      return url.startsWith("http") ? url : `https://app.leg.wa.gov${url}`;
+    }
   }
+  return null;
+}
 
+function htmlToText(html) {
+  return String(html || "")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<\/div>/gi, "\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+async function fetchBillTextDirect(billNumber, biennium) {
+  const searchUrl = `${DOCUMENT_SEARCH_URL}?${new URLSearchParams({ biennium, documentType: "1", name: billNumber })}`;
+  const searchRes = await fetch(searchUrl, { headers: { Accept: "text/html, */*" } });
+  if (!searchRes.ok) throw new Error(`Document search failed: HTTP ${searchRes.status}`);
+
+  const searchHtml = await searchRes.text();
+  const docUrl = findHtmlDocumentUrl(searchHtml, billNumber);
+  if (!docUrl) throw new Error("No HTML bill document found in document search results");
+
+  const docRes = await fetch(docUrl, { headers: { Accept: "text/html, */*" } });
+  if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
+
+  return htmlToText(await docRes.text()).slice(0, 16000);
+}
+
+async function generatePlainSummary(billText, apiKey) {
   const prompt = `Here is the text of a Washington State bill. Write one paragraph (3–5 sentences) explaining what this bill does in plain English.
 
 Guidelines:
@@ -97,27 +120,15 @@ export default async function handler(req, res) {
     });
   }
 
+  const apiKey = process.env.Anthropic_API_Key;
+  if (!apiKey) {
+    return res.status(500).json({ message: "Anthropic_API_Key is not configured" });
+  }
+
   try {
-    const textData = await fetchBillText(req, billNumber, biennium);
-    const sections = textData.sections || [];
-
-    if (!sections.length) {
-      return res.status(404).json({
-        message: "No bill text sections found for this bill.",
-        billNumber,
-        biennium,
-      });
-    }
-
-    const fullText = sections.map((s) => s.text || "").join("\n\n").slice(0, 16000);
-    const summary = await generatePlainSummary(fullText);
-
-    return res.status(200).json({
-      billNumber,
-      biennium,
-      summary,
-      sectionCount: sections.length,
-    });
+    const billText = await fetchBillTextDirect(billNumber, biennium);
+    const summary = await generatePlainSummary(billText, apiKey);
+    return res.status(200).json({ billNumber, biennium, summary });
   } catch (error) {
     return res.status(500).json({
       message: "Plain summary generation failed.",
