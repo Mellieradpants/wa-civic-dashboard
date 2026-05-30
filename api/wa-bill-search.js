@@ -453,6 +453,7 @@ export default async function handler(req, res) {
       routing,
       searchMode: billNumber ? "official_bill_number_plus_local_index" : "local_index_keyword",
       indexSize: billIndex.length,
+      rawSample: billIndex[0] || null,
       expandedTerms,
       results,
       note: billNumber
