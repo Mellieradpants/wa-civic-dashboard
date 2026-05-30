@@ -1,5 +1,14 @@
+import { Redis } from "@upstash/redis";
+
 const DOCUMENT_SEARCH_URL = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
 const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
+
+let redis;
+try {
+  redis = Redis.fromEnv();
+} catch (_) {
+  // UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN not configured — cache disabled
+}
 
 function extractBillNumber(text) {
   const match = String(text || "").match(/\b\d{3,4}\b/);
@@ -125,9 +134,31 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: "Anthropic_API_Key is not configured" });
   }
 
+  const cacheKey = `plain-summary:${billNumber}:${biennium}`;
+
+  if (redis) {
+    try {
+      const cached = await redis.get(cacheKey);
+      if (cached) {
+        return res.status(200).json({ billNumber, biennium, summary: cached, cached: true });
+      }
+    } catch (_) {
+      // Cache read failed — continue to generate
+    }
+  }
+
   try {
     const billText = await fetchBillTextDirect(billNumber, biennium);
     const summary = await generatePlainSummary(billText, apiKey);
+
+    if (redis) {
+      try {
+        await redis.set(cacheKey, summary, { ex: 60 * 60 * 24 * 7 });
+      } catch (_) {
+        // Cache write failed — still return the summary
+      }
+    }
+
     return res.status(200).json({ billNumber, biennium, summary });
   } catch (error) {
     return res.status(500).json({
