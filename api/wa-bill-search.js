@@ -376,6 +376,7 @@ export default async function handler(req, res) {
       biennium,
       routing,
       searchMode: billNumber ? "official_bill_number_plus_local_index" : "local_index_keyword",
+      indexSize: billIndex.length,
       results,
       note: billNumber
         ? "Bill-number searches use Washington bill number assignment rules before live official lookup. Keyword searches currently use the local index until a broader official index adapter is added."
