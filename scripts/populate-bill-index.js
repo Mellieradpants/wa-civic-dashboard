@@ -74,26 +74,51 @@ function parseLegislationInfo(block) {
   };
 }
 
+async function fallbackToExisting(reason) {
+  const exists = await fs.access(OUTPUT_PATH).then(() => true).catch(() => false);
+  if (exists) {
+    console.warn(`Warning: ${reason}`);
+    console.warn(`Keeping existing ${OUTPUT_PATH} — deploy will continue with current index.`);
+  } else {
+    console.error(`Error: ${reason}`);
+    console.error("No existing bill-index.json to fall back to. Exiting.");
+    process.exit(1);
+  }
+}
+
 async function main() {
   console.log(`Fetching 2025-26 session bills from WA Legislature...`);
 
   const url = `${SERVICE_URL}?${new URLSearchParams({ year: YEAR })}`;
-  const response = await fetch(url, {
-    headers: { Accept: "text/xml, application/xml, */*" },
-  });
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status} from WA Legislature API`);
+  let response;
+  try {
+    response = await fetch(url, { headers: { Accept: "text/xml, application/xml, */*" } });
+  } catch (err) {
+    return fallbackToExisting(`Fetch failed: ${err.message}`);
   }
 
-  const xml = await response.text();
+  if (!response.ok) {
+    return fallbackToExisting(`HTTP ${response.status} from WA Legislature API`);
+  }
+
+  let xml;
+  try {
+    xml = await response.text();
+  } catch (err) {
+    return fallbackToExisting(`Failed to read response body: ${err.message}`);
+  }
+
   console.log(`Received ${(xml.length / 1024).toFixed(1)} KB`);
 
   const blocks = getAllBlocks(xml, "LegislationInfo");
   console.log(`Found ${blocks.length} LegislationInfo records`);
 
-  const records = blocks.map(parseLegislationInfo).filter(Boolean);
+  if (blocks.length === 0) {
+    return fallbackToExisting("Response parsed but contained zero LegislationInfo records.");
+  }
 
+  const records = blocks.map(parseLegislationInfo).filter(Boolean);
   records.sort((a, b) => Number(a.bill_number) - Number(b.bill_number));
 
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
@@ -108,6 +133,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("Failed:", err.message);
+  console.error("Unexpected error:", err.message);
   process.exit(1);
 });
