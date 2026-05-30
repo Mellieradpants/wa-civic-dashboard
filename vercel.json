@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/wa-bill-search.js": {
+      "includeFiles": "data/wa/**"
+    }
+  }
+}

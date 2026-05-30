@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/populate-bill-index.js"
+  }
+}
