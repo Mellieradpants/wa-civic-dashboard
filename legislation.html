@@ -473,6 +473,10 @@
           <div class="analysis-card">
             <h3 id="bill-number" class="bill-title">No bill selected</h3>
             <div class="analysis-row">
+              <strong>Where is this bill now</strong>
+              <span id="bill-status-plain"></span>
+            </div>
+            <div class="analysis-row">
               <strong>Status</strong>
               <span id="bill-status">Not selected</span>
             </div>
@@ -549,6 +553,7 @@
     const billNumber = document.getElementById("bill-number");
     const billSession = document.getElementById("bill-session");
     const billStatus = document.getElementById("bill-status");
+    const billStatusPlain = document.getElementById("bill-status-plain");
     const billCommittee = document.getElementById("bill-committee");
     const billSponsor = document.getElementById("bill-sponsor");
     const billIntroduced = document.getElementById("bill-introduced");
@@ -623,12 +628,34 @@
       return `/api/wa-bill-text?billNumber=${encodeURIComponent(billNum)}&biennium=${encodeURIComponent(biennium)}`;
     }
 
+    function getBillType(billId) {
+      const id = String(billId || "").toUpperCase().replace(/\s/g, "");
+      if (/^(2SHB|3SHB|SHB|EHB|HB)/.test(id)) return "House Bill";
+      if (/^(2SSB|3SSB|SSB|ESB|SB)/.test(id)) return "Senate Bill";
+      return "";
+    }
+
+    function translateStatus(rawStatus) {
+      const s = String(rawStatus || "").toLowerCase();
+      if (!s) return "";
+      if (s.includes("signed by governor") || s.includes("governor signed")) return "Signed into law";
+      if (s.includes("takes effect") || s.includes("effective date")) return "Now in effect";
+      if (s.includes("passed")) return "Passed this chamber";
+      if (s.includes("first reading")) return "Just introduced, not yet voted on";
+      if (s.includes("referred to")) return "In committee review";
+      return rawStatus;
+    }
+
     function renderBillFromRecord(record, detail = null) {
       const billId = detail?.currentStatus?.billId || record.bill_id_display || record.bill_number || "";
       const title = detail?.title || record.title || "";
 
       billNumber.textContent = [billId, title].filter(Boolean).join(" — ");
       billStatus.textContent = detail?.status || record.status || "";
+      const rawStatusText = detail?.currentStatus?.historyLine || detail?.status || record.status || "";
+      const billType = getBillType(billId);
+      const translated = translateStatus(rawStatusText);
+      billStatusPlain.textContent = [billType, translated].filter(Boolean).join(" — ");
       billCommittee.textContent = "";
       billSession.textContent = detail?.biennium || record.session || "";
       billSponsor.textContent = detail?.sponsor || "";
