@@ -12,8 +12,9 @@ const OUTPUT_PATH = path.join(__dirname, "..", "data", "wa", "bill-index.json");
 const YEAR = "2025";
 const BIENNIUM = "2025-26";
 const BULK_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByYear";
+const DOCUMENT_SEARCH_URL = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
 const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
-const KEYWORDS_CONCURRENCY = 10;
+const KEYWORDS_CONCURRENCY = 5;
 const BATCH_PAUSE_MS = 300;
 
 function decodeXml(value) {
@@ -42,6 +43,49 @@ function getBlock(xml, tagName) {
 function getAllBlocks(xml, tagName) {
   const pattern = new RegExp(`<${tagName}[^>]*>[\\s\\S]*?<\\/${tagName}>`, "gi");
   return [...String(xml || "").matchAll(pattern)].map((m) => m[0]);
+}
+
+function findHtmlDocumentUrl(html, billNumber) {
+  const matches = [...String(html).matchAll(/<a[^>]+href="([^"]+)"[^>]*>/gi)];
+  for (const [, href] of matches) {
+    const url = href.replace(/&amp;/g, "&");
+    if (/\.html?(\?|$)/i.test(url) && url.includes(billNumber)) {
+      return url.startsWith("http") ? url : `https://app.leg.wa.gov${url}`;
+    }
+  }
+  return null;
+}
+
+function htmlToText(html) {
+  return String(html || "")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<\/div>/gi, "\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+async function fetchBillText(billNumber) {
+  const searchUrl = `${DOCUMENT_SEARCH_URL}?${new URLSearchParams({ biennium: BIENNIUM, documentType: "1", name: billNumber })}`;
+  const searchRes = await fetch(searchUrl, { headers: { Accept: "text/html, */*" } });
+  if (!searchRes.ok) return "";
+
+  const searchHtml = await searchRes.text();
+  const docUrl = findHtmlDocumentUrl(searchHtml, billNumber);
+  if (!docUrl) return "";
+
+  const docRes = await fetch(docUrl, { headers: { Accept: "text/html, */*" } });
+  if (!docRes.ok) return "";
+
+  return htmlToText(await docRes.text());
 }
 
 function parseLegislationInfo(block) {
@@ -76,10 +120,12 @@ function parseLegislationInfo(block) {
   };
 }
 
-async function generateKeywords(shortDescription, apiKey) {
-  if (!shortDescription) return [];
+async function generateKeywords(billText, apiKey) {
+  if (!billText) return [];
 
-  const prompt = `A Washington State bill is titled: "${shortDescription}"
+  const prompt = `Here is the opening text of a Washington State bill:
+
+${billText.slice(0, 500)}
 
 List 10 plain-language keywords or short phrases a regular citizen might type into a search bar to find this bill. Focus on real-world impact and plain English — not legislative jargon.
 
@@ -119,7 +165,8 @@ async function generateAllKeywords(records, apiKey) {
     const batch = records.slice(i, i + KEYWORDS_CONCURRENCY);
     await Promise.all(
       batch.map(async (record) => {
-        record.keywords = await generateKeywords(record.title, apiKey);
+        const billText = await fetchBillText(record.bill_number).catch(() => "");
+        record.keywords = await generateKeywords(billText, apiKey);
       })
     );
     completed += batch.length;
