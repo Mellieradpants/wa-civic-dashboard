@@ -436,6 +436,40 @@
       font-size: 1.03rem;
       line-height: 1.65;
     }
+    .summary-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .summary-btn {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--forest);
+      padding: 5px 14px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .summary-btn:hover { background: var(--mist); border-color: var(--sage); }
+    .lang-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .lang-btn {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: white;
+      color: var(--ink);
+      padding: 4px 12px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .lang-btn:hover { border-color: var(--sage); background: var(--mist); }
+    .lang-btn.active { background: var(--forest); color: white; border-color: var(--forest); }
   </style>
 </head>
 <body>
@@ -523,6 +557,17 @@
         <article class="reader-card">
           <p class="reader-label">Document summary</p>
           <p id="bill-doc-plain-summary" class="reader-text process-note"></p>
+          <div id="summary-actions" class="summary-actions" style="display:none">
+            <button id="summary-copy-btn" class="summary-btn" type="button">Copy</button>
+            <button id="summary-export-btn" class="summary-btn" type="button">Export .txt</button>
+          </div>
+          <div id="summary-lang-selector" class="lang-selector" style="display:none">
+            <button class="lang-btn active" data-lang="en" type="button">English</button>
+            <button class="lang-btn" data-lang="es" type="button">Spanish</button>
+            <button class="lang-btn" data-lang="so" type="button">Somali</button>
+            <button class="lang-btn" data-lang="vi" type="button">Vietnamese</button>
+            <button class="lang-btn" data-lang="tl" type="button">Tagalog</button>
+          </div>
         </article>
         <article class="reader-card">
           <p class="reader-label">Raw bill sections</p>
@@ -563,6 +608,11 @@
     const billDocumentSummary = document.getElementById("bill-document-summary");
     const billDocumentLinks = document.getElementById("bill-document-links");
     const billDocPlainSummary = document.getElementById("bill-doc-plain-summary");
+    const summaryActions = document.getElementById("summary-actions");
+    const summaryCopyBtn = document.getElementById("summary-copy-btn");
+    const summaryExportBtn = document.getElementById("summary-export-btn");
+    const summaryLangSelector = document.getElementById("summary-lang-selector");
+    const summaryLangBtns = summaryLangSelector.querySelectorAll(".lang-btn");
     const billSectionsSummary = document.getElementById("bill-sections-summary");
     const billSectionsList = document.getElementById("bill-sections-list");
     const sectionPanel = document.getElementById("section-panel");
@@ -584,6 +634,94 @@
     function setSearchStatus(message) {
       searchStatus.textContent = message || "";
     }
+
+    let englishSummary = "";
+    let summaryBillNum = "";
+    let summaryBiennium = "";
+    let translationCache = {};
+
+    function resetSummaryControls() {
+      englishSummary = "";
+      summaryBillNum = "";
+      summaryBiennium = "";
+      translationCache = {};
+      summaryActions.style.display = "none";
+      summaryLangSelector.style.display = "none";
+      summaryLangBtns.forEach(btn => btn.classList.toggle("active", btn.dataset.lang === "en"));
+    }
+
+    function showSummaryControls(billNum, biennium, text) {
+      englishSummary = text;
+      summaryBillNum = billNum;
+      summaryBiennium = biennium;
+      translationCache = {};
+      summaryActions.style.display = "flex";
+      summaryLangSelector.style.display = "flex";
+      summaryLangBtns.forEach(btn => btn.classList.toggle("active", btn.dataset.lang === "en"));
+    }
+
+    summaryCopyBtn.addEventListener("click", () => {
+      const text = billDocPlainSummary.textContent;
+      if (!text) return;
+      navigator.clipboard.writeText(text).catch(() => {});
+    });
+
+    summaryExportBtn.addEventListener("click", () => {
+      const text = billDocPlainSummary.textContent;
+      if (!text) return;
+      const filename = summaryBillNum ? `${summaryBillNum}-summary.txt` : "bill-summary.txt";
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    summaryLangBtns.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const lang = btn.dataset.lang;
+        summaryLangBtns.forEach(b => b.classList.toggle("active", b === btn));
+
+        if (lang === "en") {
+          billDocPlainSummary.textContent = englishSummary;
+          return;
+        }
+
+        if (translationCache[lang]) {
+          billDocPlainSummary.textContent = translationCache[lang];
+          return;
+        }
+
+        billDocPlainSummary.textContent = "Translating…";
+        try {
+          const response = await fetch("/api/wa-bill-translate", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              text: englishSummary,
+              language: lang,
+              billNumber: summaryBillNum,
+              biennium: summaryBiennium,
+            }),
+          });
+          const data = await response.json().catch(() => ({}));
+          if (response.ok && data.translatedText) {
+            translationCache[lang] = data.translatedText;
+            billDocPlainSummary.textContent = data.translatedText;
+          } else {
+            billDocPlainSummary.textContent = englishSummary;
+            summaryLangBtns.forEach(b => b.classList.toggle("active", b.dataset.lang === "en"));
+            console.warn("Translation failed:", response.status, data);
+          }
+        } catch (error) {
+          billDocPlainSummary.textContent = englishSummary;
+          summaryLangBtns.forEach(b => b.classList.toggle("active", b.dataset.lang === "en"));
+          console.error("Translation error:", error);
+        }
+      });
+    });
 
     function clearSearchResults() {
       searchResultList.innerHTML = "";
@@ -889,6 +1027,7 @@
       const biennium = detail?.biennium || record.session || "2025-26";
 
       billDocPlainSummary.textContent = "";
+      resetSummaryControls();
 
       if (!billNum) return;
 
@@ -900,6 +1039,7 @@
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.summary) {
           billDocPlainSummary.textContent = data.summary;
+          showSummaryControls(billNum, biennium, data.summary);
         } else {
           billDocPlainSummary.textContent = "Summary unavailable.";
           console.warn("Bill plain summary error:", response.status, data);
