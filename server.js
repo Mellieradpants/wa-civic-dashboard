@@ -30,12 +30,17 @@ async function registerHandlers() {
       for (const method of methods) {
         app[method.toLowerCase()](path, handler);
       }
-      // Always handle OPTIONS for CORS preflight
+      // CORS preflight
       app.options(path, (req, res) => {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", methods.join(", ") + ", OPTIONS");
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.status(204).end();
+      });
+      // Catch-all: any method not registered above returns JSON 405
+      app.all(path, (req, res) => {
+        res.setHeader("Allow", [...methods, "OPTIONS"].join(", "));
+        res.status(405).json({ message: "Method not allowed" });
       });
       console.log(`  ${methods.join("|")} ${path}`);
     } catch (err) {
