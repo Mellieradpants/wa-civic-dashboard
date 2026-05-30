@@ -24,7 +24,11 @@ export default async function handler(req, res) {
 
   res.setHeader("Cache-Control", "no-store, max-age=0");
 
-  const { text, language, billNumber, biennium } = req.body || {};
+  let parsedBody = req.body;
+  if (typeof parsedBody === "string") {
+    try { parsedBody = JSON.parse(parsedBody); } catch (_) { parsedBody = {}; }
+  }
+  const { text, language, billNumber, biennium } = parsedBody || {};
 
   if (!text || !language) {
     return res.status(400).json({ message: "Missing required fields: text, language" });

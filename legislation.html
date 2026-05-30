@@ -688,12 +688,27 @@
     }
 
     summaryCopyBtn.addEventListener("click", () => {
+      if (!englishSummary) return;
       const text = billDocPlainSummary.textContent;
       if (!text) return;
-      navigator.clipboard.writeText(text).catch(() => {});
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      } else {
+        // Fallback for older mobile browsers
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try { document.execCommand("copy"); } catch (_) {}
+        document.body.removeChild(ta);
+      }
     });
 
     summaryExportBtn.addEventListener("click", () => {
+      if (!englishSummary) return;
       const text = billDocPlainSummary.textContent;
       if (!text) return;
       const filename = summaryBillNum ? `${summaryBillNum}-summary.txt` : "bill-summary.txt";
@@ -702,12 +717,16 @@
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
+      a.style.display = "none";
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
 
     summaryLangBtns.forEach(btn => {
       btn.addEventListener("click", async () => {
+        if (!englishSummary) return;
         const lang = btn.dataset.lang;
         summaryLangBtns.forEach(b => b.classList.toggle("active", b === btn));
 
@@ -1070,11 +1089,13 @@
         } else {
           const detail = data.error || data.message || `HTTP ${response.status}`;
           billDocPlainSummary.textContent = `Summary unavailable: ${detail}`;
+          showSummaryControls(billNum, biennium, "");
           console.warn("Bill plain summary error:", response.status, data);
         }
       } catch (error) {
         console.error("Bill plain summary failed:", error);
         billDocPlainSummary.textContent = `Summary unavailable: ${error.message}`;
+        showSummaryControls(billNum, biennium, "");
       }
     }
 

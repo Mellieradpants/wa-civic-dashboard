@@ -10,6 +10,9 @@
     },
     "api/wa-bill-text.js": {
       "maxDuration": 30
+    },
+    "api/wa-bill-translate.js": {
+      "maxDuration": 30
     }
   }
 }
