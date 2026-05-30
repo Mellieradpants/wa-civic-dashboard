@@ -216,12 +216,11 @@ function scoreRecord(record, query) {
     record.chamber,
     record.record_type,
     record.title,
-    record.description,
-    record.synopsis,
     record.session,
     record.status,
     record.plain_meaning_summary,
     record.summary,
+    ...(record.keywords || []),
     ...(record.aliases || []),
   ].filter(Boolean);
 

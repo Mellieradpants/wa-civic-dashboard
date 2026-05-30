@@ -1,6 +1,6 @@
 // Run with: node scripts/populate-bill-index.js
-// Fetches all bills for the 2025-26 WA Legislature session and writes data/wa/bill-index.json.
-// Omits plain_meaning_summary and aliases — only fields available directly from the API.
+// Fetches all bills for the 2025-26 WA Legislature session, generates plain-language
+// keywords for each bill via Anthropic, and writes data/wa/bill-index.json.
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -11,9 +11,10 @@ const OUTPUT_PATH = path.join(__dirname, "..", "data", "wa", "bill-index.json");
 
 const YEAR = "2025";
 const BIENNIUM = "2025-26";
-const SERVICE_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByYear";
-const DETAIL_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByBienniumAndBillNumber";
-const SYNOPSIS_CONCURRENCY = 15;
+const BULK_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByYear";
+const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
+const KEYWORDS_CONCURRENCY = 10;
+const BATCH_PAUSE_MS = 300;
 
 function decodeXml(value) {
   return String(value || "")
@@ -48,14 +49,11 @@ function parseLegislationInfo(block) {
   const billNumber = getTag(block, "BillNumber");
   const originalAgency = getTag(block, "OriginalAgency");
   const shortDescription = getTag(block, "ShortDescription");
-  const longDescription = getTag(block, "LongDescription");
   const active = getTag(block, "Active");
 
   if (!billId || !billNumber) return null;
   if (active === "false") return null;
 
-  // CurrentStatus is present in GetLegislation (single bill) but may be absent
-  // in the bulk GetLegislationByYear response — handle both cases.
   const currentStatusBlock = getBlock(block, "CurrentStatus");
   const status = currentStatusBlock
     ? (getTag(currentStatusBlock, "HistoryLine") || getTag(currentStatusBlock, "Status") || "")
@@ -70,40 +68,67 @@ function parseLegislationInfo(block) {
     bill_number: billNumber,
     chamber: originalAgency || "",
     title: shortDescription || "",
-    description: longDescription || "",
     session: BIENNIUM,
     status,
+    keywords: [],
     source_url: `https://app.leg.wa.gov/billsummary?BillNumber=${billNumber}&Year=${YEAR}`,
     detail_api_path: `/api/wa-bill-detail?billNumber=${billNumber}&biennium=${BIENNIUM}`,
   };
 }
 
-async function fetchSynopsis(billNumber) {
+async function generateKeywords(shortDescription, apiKey) {
+  if (!shortDescription) return [];
+
+  const prompt = `A Washington State bill is titled: "${shortDescription}"
+
+List 10 plain-language keywords or short phrases a regular citizen might type into a search bar to find this bill. Focus on real-world impact and plain English — not legislative jargon.
+
+Return ONLY a JSON array of strings. Example: ["keyword one", "keyword two"]`;
+
   try {
-    const url = `${DETAIL_URL}?${new URLSearchParams({ biennium: BIENNIUM, billNumber })}`;
-    const res = await fetch(url, { headers: { Accept: "text/xml, application/xml, */*" } });
-    if (!res.ok) return "";
-    const xml = await res.text();
-    const legalTitle = getTag(xml, "LegalTitle") || "";
-    const longDesc = getTag(xml, "LongDescription") || "";
-    return [legalTitle, longDesc].filter(Boolean).join(" ").trim();
+    const response = await fetch(ANTHROPIC_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 150,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text?.trim() || "[]";
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) return [];
+    const parsed = JSON.parse(jsonMatch[0]);
+    return Array.isArray(parsed) ? parsed.filter((t) => typeof t === "string").slice(0, 10) : [];
   } catch (_) {
-    return "";
+    return [];
   }
 }
 
-async function fetchAllSynopses(billNumbers) {
-  const map = new Map();
+async function generateAllKeywords(records, apiKey) {
   let completed = 0;
-  for (let i = 0; i < billNumbers.length; i += SYNOPSIS_CONCURRENCY) {
-    const batch = billNumbers.slice(i, i + SYNOPSIS_CONCURRENCY);
-    const results = await Promise.all(batch.map(async (num) => [num, await fetchSynopsis(num)]));
-    for (const [num, synopsis] of results) map.set(num, synopsis);
+  for (let i = 0; i < records.length; i += KEYWORDS_CONCURRENCY) {
+    const batch = records.slice(i, i + KEYWORDS_CONCURRENCY);
+    await Promise.all(
+      batch.map(async (record) => {
+        record.keywords = await generateKeywords(record.title, apiKey);
+      })
+    );
     completed += batch.length;
-    process.stdout.write(`\r  Synopses: ${completed}/${billNumbers.length}`);
+    process.stdout.write(`\r  Keywords: ${completed}/${records.length}`);
+    if (i + KEYWORDS_CONCURRENCY < records.length) {
+      await new Promise((r) => setTimeout(r, BATCH_PAUSE_MS));
+    }
   }
   process.stdout.write("\n");
-  return map;
 }
 
 async function fallbackToExisting(reason) {
@@ -119,9 +144,14 @@ async function fallbackToExisting(reason) {
 }
 
 async function main() {
-  console.log(`Fetching 2025-26 session bills from WA Legislature...`);
+  const apiKey = process.env.Anthropic_API_Key;
+  if (!apiKey) {
+    console.warn("Warning: Anthropic_API_Key not set — keywords will be empty arrays.");
+  }
 
-  const url = `${SERVICE_URL}?${new URLSearchParams({ year: YEAR })}`;
+  console.log("Fetching 2025-26 session bills from WA Legislature...");
+
+  const url = `${BULK_URL}?${new URLSearchParams({ year: YEAR })}`;
 
   let response;
   try {
@@ -153,24 +183,22 @@ async function main() {
   const records = blocks.map(parseLegislationInfo).filter(Boolean);
   records.sort((a, b) => Number(a.bill_number) - Number(b.bill_number));
 
-  console.log(`Fetching synopsis for ${records.length} bills (${SYNOPSIS_CONCURRENCY} concurrent)...`);
-  const synopsisMap = await fetchAllSynopses(records.map((r) => r.bill_number));
-  for (const record of records) {
-    record.synopsis = synopsisMap.get(record.bill_number) || "";
+  if (apiKey) {
+    console.log(`Generating keywords for ${records.length} bills (${KEYWORDS_CONCURRENCY} concurrent)...`);
+    await generateAllKeywords(records, apiKey);
+    const withKeywords = records.filter((r) => r.keywords.length > 0).length;
+    console.log(`Keywords generated for ${withKeywords}/${records.length} bills`);
   }
-
-  const withSynopsis = records.filter((r) => r.synopsis).length;
-  console.log(`Synopsis populated for ${withSynopsis}/${records.length} bills`);
 
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
   await fs.writeFile(OUTPUT_PATH, JSON.stringify(records, null, 2), "utf8");
 
   console.log(`Wrote ${records.length} records → ${OUTPUT_PATH}`);
 
-  if (records.length > 0) {
-    const sample = records.find((r) => r.synopsis) || records[0];
+  const sample = records.find((r) => r.keywords.length > 0) || records[0];
+  if (sample) {
     console.log("\nSample record:");
-    console.log(JSON.stringify({ ...sample, synopsis: sample.synopsis?.slice(0, 120) }, null, 2));
+    console.log(JSON.stringify(sample, null, 2));
   }
 }
 
