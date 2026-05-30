@@ -2,9 +2,11 @@
   "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {
-    "build": "node scripts/populate-bill-index.js"
+    "build": "node scripts/populate-bill-index.js",
+    "start": "node server.js"
   },
   "dependencies": {
-    "@upstash/redis": "^1.34.0"
+    "@upstash/redis": "^1.34.0",
+    "express": "^4.18.2"
   }
 }
