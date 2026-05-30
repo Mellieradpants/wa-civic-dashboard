@@ -1,4 +1,4 @@
-const DOCUMENTS_ENDPOINT = "/api/wa-bill-documents";
+const DOCUMENT_SEARCH_BASE = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
 
 function extractBillNumber(text) {
   const match = String(text || "").match(/\b\d{3,4}\b/);
@@ -52,14 +52,30 @@ function cleanHtmlToText(html) {
   );
 }
 
-function selectBestTextDocument(documents) {
-  const htmlDocument = documents.find((doc) => String(doc.file_type || "").toLowerCase() === "html");
-  if (htmlDocument) return htmlDocument;
-
-  const htmUrlDocument = documents.find((doc) => /\.html?$|\.html?\?/i.test(String(doc.url || "")));
-  if (htmUrlDocument) return htmUrlDocument;
-
+function findHtmlDocumentUrl(html, billNumber) {
+  const matches = [...String(html).matchAll(/<a[^>]+href="([^"]+)"[^>]*>/gi)];
+  for (const [, href] of matches) {
+    const url = href.replace(/&amp;/g, "&");
+    if (/\.html?(\?|$)/i.test(url) && url.includes(billNumber)) {
+      return url.startsWith("http") ? url : `https://app.leg.wa.gov${url}`;
+    }
+  }
   return null;
+}
+
+async function fetchBillHtml(billNumber, biennium) {
+  const searchUrl = `${DOCUMENT_SEARCH_BASE}?${new URLSearchParams({ biennium, documentType: "1", name: billNumber })}`;
+  const searchRes = await fetch(searchUrl, { headers: { Accept: "text/html, */*" } });
+  if (!searchRes.ok) throw new Error(`Document search failed: HTTP ${searchRes.status}`);
+
+  const searchHtml = await searchRes.text();
+  const docUrl = findHtmlDocumentUrl(searchHtml, billNumber);
+  if (!docUrl) throw new Error("No HTML bill document found in document search results");
+
+  const docRes = await fetch(docUrl, { headers: { Accept: "text/html, text/plain, */*" } });
+  if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
+
+  return { html: await docRes.text(), sourceUrl: docUrl };
 }
 
 function splitIntoSections(text) {
@@ -96,24 +112,6 @@ function splitIntoSections(text) {
   return sections;
 }
 
-function getBaseUrl(req) {
-  const proto = req.headers["x-forwarded-proto"] || "https";
-  const host = req.headers.host;
-  return `${proto}://${host}`;
-}
-
-async function loadDocuments(req, billNumber, biennium) {
-  const baseUrl = getBaseUrl(req);
-  const url = `${baseUrl}${DOCUMENTS_ENDPOINT}?${new URLSearchParams({ billNumber, biennium }).toString()}`;
-  const response = await fetch(url, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Document lookup failed with HTTP ${response.status}`);
-  }
-
-  return response.json();
-}
-
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -134,39 +132,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const documentData = await loadDocuments(req, billNumber, biennium);
-    const documents = documentData.documents || [];
-    const textDocument = selectBestTextDocument(documents);
-
-    if (!textDocument) {
-      return res.status(404).json({
-        message: "No HTML bill document was found for text extraction.",
-        billNumber,
-        biennium,
-        documentLookup: documentData.documentSearchUrl,
-        availableDocuments: documents,
-      });
-    }
-
-    const documentResponse = await fetch(textDocument.url, {
-      headers: {
-        Accept: "text/html, text/plain, */*",
-      },
-    });
-
-    const rawDocument = await documentResponse.text();
-
-    if (!documentResponse.ok) {
-      return res.status(documentResponse.status).json({
-        message: "Official bill text document request failed.",
-        billNumber,
-        biennium,
-        sourceDocument: textDocument,
-        serviceStatus: documentResponse.status,
-        serviceBody: rawDocument.slice(0, 800),
-      });
-    }
-
+    const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
     const text = cleanHtmlToText(rawDocument);
     const sections = splitIntoSections(text);
 
@@ -174,7 +140,7 @@ export default async function handler(req, res) {
       sourceSystem: "Washington State Legislature official bill document",
       billNumber,
       biennium,
-      sourceDocument: textDocument,
+      sourceDocument: { url: sourceUrl, file_type: "html" },
       textCharacterCount: text.length,
       sectionCount: sections.length,
       sections,
