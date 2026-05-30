@@ -12,6 +12,8 @@ const OUTPUT_PATH = path.join(__dirname, "..", "data", "wa", "bill-index.json");
 const YEAR = "2025";
 const BIENNIUM = "2025-26";
 const SERVICE_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByYear";
+const DETAIL_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByBienniumAndBillNumber";
+const SYNOPSIS_CONCURRENCY = 15;
 
 function decodeXml(value) {
   return String(value || "")
@@ -76,6 +78,34 @@ function parseLegislationInfo(block) {
   };
 }
 
+async function fetchSynopsis(billNumber) {
+  try {
+    const url = `${DETAIL_URL}?${new URLSearchParams({ biennium: BIENNIUM, billNumber })}`;
+    const res = await fetch(url, { headers: { Accept: "text/xml, application/xml, */*" } });
+    if (!res.ok) return "";
+    const xml = await res.text();
+    const legalTitle = getTag(xml, "LegalTitle") || "";
+    const longDesc = getTag(xml, "LongDescription") || "";
+    return [legalTitle, longDesc].filter(Boolean).join(" ").trim();
+  } catch (_) {
+    return "";
+  }
+}
+
+async function fetchAllSynopses(billNumbers) {
+  const map = new Map();
+  let completed = 0;
+  for (let i = 0; i < billNumbers.length; i += SYNOPSIS_CONCURRENCY) {
+    const batch = billNumbers.slice(i, i + SYNOPSIS_CONCURRENCY);
+    const results = await Promise.all(batch.map(async (num) => [num, await fetchSynopsis(num)]));
+    for (const [num, synopsis] of results) map.set(num, synopsis);
+    completed += batch.length;
+    process.stdout.write(`\r  Synopses: ${completed}/${billNumbers.length}`);
+  }
+  process.stdout.write("\n");
+  return map;
+}
+
 async function fallbackToExisting(reason) {
   const exists = await fs.access(OUTPUT_PATH).then(() => true).catch(() => false);
   if (exists) {
@@ -123,14 +153,24 @@ async function main() {
   const records = blocks.map(parseLegislationInfo).filter(Boolean);
   records.sort((a, b) => Number(a.bill_number) - Number(b.bill_number));
 
+  console.log(`Fetching synopsis for ${records.length} bills (${SYNOPSIS_CONCURRENCY} concurrent)...`);
+  const synopsisMap = await fetchAllSynopses(records.map((r) => r.bill_number));
+  for (const record of records) {
+    record.synopsis = synopsisMap.get(record.bill_number) || "";
+  }
+
+  const withSynopsis = records.filter((r) => r.synopsis).length;
+  console.log(`Synopsis populated for ${withSynopsis}/${records.length} bills`);
+
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
   await fs.writeFile(OUTPUT_PATH, JSON.stringify(records, null, 2), "utf8");
 
   console.log(`Wrote ${records.length} records → ${OUTPUT_PATH}`);
 
   if (records.length > 0) {
-    console.log("\nFirst record:");
-    console.log(JSON.stringify(records[0], null, 2));
+    const sample = records.find((r) => r.synopsis) || records[0];
+    console.log("\nSample record:");
+    console.log(JSON.stringify({ ...sample, synopsis: sample.synopsis?.slice(0, 120) }, null, 2));
   }
 }
 
