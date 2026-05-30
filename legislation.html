@@ -1068,12 +1068,13 @@
           billDocPlainSummary.textContent = data.summary;
           showSummaryControls(billNum, biennium, data.summary);
         } else {
-          billDocPlainSummary.textContent = "Summary unavailable.";
+          const detail = data.error || data.message || `HTTP ${response.status}`;
+          billDocPlainSummary.textContent = `Summary unavailable: ${detail}`;
           console.warn("Bill plain summary error:", response.status, data);
         }
       } catch (error) {
         console.error("Bill plain summary failed:", error);
-        billDocPlainSummary.textContent = "Summary unavailable.";
+        billDocPlainSummary.textContent = `Summary unavailable: ${error.message}`;
       }
     }
 

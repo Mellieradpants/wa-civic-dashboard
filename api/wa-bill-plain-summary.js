@@ -28,6 +28,23 @@ function normalizeBiennium(value) {
   return `${startYear}-${String(startYear + 1).slice(-2)}`;
 }
 
+// Construct the bill HTML URL directly from bill number — skips the
+// document search round-trip for the common HB/SB cases.
+function buildDirectBillUrl(billNumber, biennium) {
+  const num = Number(billNumber);
+  let subfolder;
+  if (num >= 1000 && num <= 3999) subfolder = "House%20Bills";
+  else if (num >= 5000 && num <= 7999) subfolder = "Senate%20Bills";
+  else if (num >= 4000 && num <= 4199) subfolder = "House%20Joint%20Memorials";
+  else if (num >= 8000 && num <= 8199) subfolder = "Senate%20Joint%20Memorials";
+  else if (num >= 4200 && num <= 4399) subfolder = "House%20Joint%20Resolutions";
+  else if (num >= 8200 && num <= 8399) subfolder = "Senate%20Joint%20Resolutions";
+  else if (num >= 4400 && num <= 4999) subfolder = "House%20Resolutions";
+  else if (num >= 8400 && num <= 8999) subfolder = "Senate%20Resolutions";
+  else return null;
+  return `https://lawfilesext.leg.wa.gov/biennium/${biennium}/Htm/Bills/${subfolder}/${billNumber}.htm`;
+}
+
 function findHtmlDocumentUrl(html, billNumber) {
   const matches = [...String(html).matchAll(/<a[^>]+href="([^"]+)"[^>]*>/gi)];
   for (const [, href] of matches) {
@@ -56,19 +73,17 @@ function htmlToText(html) {
     .trim();
 }
 
+// Stream-read only the first maxBytes of the response body so we don't
+// download a full multi-hundred-KB bill document.
 async function readBodyLimited(response, maxBytes) {
   const reader = response.body.getReader();
   const chunks = [];
   let total = 0;
-  try {
-    while (total < maxBytes) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      chunks.push(value);
-      total += value.length;
-    }
-  } finally {
-    reader.cancel().catch(() => {});
+  while (total < maxBytes) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    total += value.length;
   }
   const combined = new Uint8Array(total);
   let offset = 0;
@@ -79,7 +94,18 @@ async function readBodyLimited(response, maxBytes) {
   return new TextDecoder().decode(combined);
 }
 
-async function fetchBillTextDirect(billNumber, biennium) {
+async function fetchBillText(billNumber, biennium) {
+  // Primary: direct URL (one HTTP hop, fast)
+  const directUrl = buildDirectBillUrl(billNumber, biennium);
+  if (directUrl) {
+    const docRes = await fetch(directUrl, { headers: { Accept: "text/html, */*" } });
+    if (docRes.ok) {
+      const html = await readBodyLimited(docRes, 30 * 1024);
+      return htmlToText(html).slice(0, 4000);
+    }
+  }
+
+  // Fallback: document search discovery (two HTTP hops)
   const searchUrl = `${DOCUMENT_SEARCH_URL}?${new URLSearchParams({ biennium, documentType: "1", name: billNumber })}`;
   const searchRes = await fetch(searchUrl, { headers: { Accept: "text/html, */*" } });
   if (!searchRes.ok) throw new Error(`Document search failed: HTTP ${searchRes.status}`);
@@ -91,8 +117,8 @@ async function fetchBillTextDirect(billNumber, biennium) {
   const docRes = await fetch(docUrl, { headers: { Accept: "text/html, */*" } });
   if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
 
-  const html = await readBodyLimited(docRes, 80 * 1024);
-  return htmlToText(html).slice(0, 8000);
+  const html = await readBodyLimited(docRes, 30 * 1024);
+  return htmlToText(html).slice(0, 4000);
 }
 
 async function generatePlainSummary(billText, apiKey) {
@@ -167,21 +193,17 @@ export default async function handler(req, res) {
       if (cached) {
         return res.status(200).json({ billNumber, biennium, summary: cached, cached: true });
       }
-    } catch (_) {
-      // Cache read failed — continue to generate
-    }
+    } catch (_) {}
   }
 
   try {
-    const billText = await fetchBillTextDirect(billNumber, biennium);
+    const billText = await fetchBillText(billNumber, biennium);
     const summary = await generatePlainSummary(billText, apiKey);
 
     if (redis) {
       try {
         await redis.set(cacheKey, summary, { ex: 60 * 60 * 24 * 7 });
-      } catch (_) {
-        // Cache write failed — still return the summary
-      }
+      } catch (_) {}
     }
 
     return res.status(200).json({ billNumber, biennium, summary });
