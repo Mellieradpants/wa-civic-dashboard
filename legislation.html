@@ -323,7 +323,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
+      min-height: 44px;
       padding: 0 14px;
       border: 1px solid var(--border);
       border-radius: 999px;
@@ -409,6 +409,14 @@
       .panel, .search-panel { border-radius: 18px; padding: 18px; }
     }
 
+    @media (max-width: 480px) {
+      .topbar { gap: 14px; padding: 0 14px; }
+      .hero { padding: 22px 16px 18px; }
+      main { width: min(100% - 16px, 1180px); }
+      .panel, .search-panel { padding: 14px; }
+      .analysis-card, .reader-card, .link-card { padding: 14px; }
+    }
+
     .section-detail-panel {
       position: fixed;
       bottom: 0;
@@ -438,15 +446,19 @@
     }
     .summary-actions {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       margin-top: 12px;
     }
     .summary-btn {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
       border: 1px solid var(--border);
       border-radius: 999px;
       background: white;
       color: var(--forest);
-      padding: 5px 14px;
+      padding: 0 16px;
       font-size: 0.86rem;
       font-weight: 700;
       cursor: pointer;
@@ -459,17 +471,32 @@
       margin-top: 10px;
     }
     .lang-btn {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid var(--border);
       border-radius: 999px;
       background: white;
       color: var(--ink);
-      padding: 4px 12px;
+      padding: 0 14px;
       font-size: 0.84rem;
       font-weight: 600;
       cursor: pointer;
     }
     .lang-btn:hover { border-color: var(--sage); background: var(--mist); }
     .lang-btn.active { background: var(--forest); color: white; border-color: var(--forest); }
+
+    /* Prevent long bill text and pre-formatted content from overflowing */
+    .reader-text,
+    .section-text,
+    .section-panel-interpretation {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* URL link text has no natural break points */
+    #bill-link { word-break: break-all; }
   </style>
 </head>
 <body>
