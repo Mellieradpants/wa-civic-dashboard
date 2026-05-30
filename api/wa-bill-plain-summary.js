@@ -56,6 +56,29 @@ function htmlToText(html) {
     .trim();
 }
 
+async function readBodyLimited(response, maxBytes) {
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    while (total < maxBytes) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      total += value.length;
+    }
+  } finally {
+    reader.cancel().catch(() => {});
+  }
+  const combined = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    combined.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return new TextDecoder().decode(combined);
+}
+
 async function fetchBillTextDirect(billNumber, biennium) {
   const searchUrl = `${DOCUMENT_SEARCH_URL}?${new URLSearchParams({ biennium, documentType: "1", name: billNumber })}`;
   const searchRes = await fetch(searchUrl, { headers: { Accept: "text/html, */*" } });
@@ -68,7 +91,8 @@ async function fetchBillTextDirect(billNumber, biennium) {
   const docRes = await fetch(docUrl, { headers: { Accept: "text/html, */*" } });
   if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
 
-  return htmlToText(await docRes.text()).slice(0, 16000);
+  const html = await readBodyLimited(docRes, 80 * 1024);
+  return htmlToText(html).slice(0, 8000);
 }
 
 async function generatePlainSummary(billText, apiKey) {
