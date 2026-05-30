@@ -321,7 +321,7 @@ function mapRecord(record) {
     abbreviation: record.abbreviation || route?.abbreviation || null,
     record_type: record.record_type || route?.recordType || null,
     chamber: record.chamber || route?.chamber || null,
-    title: record.title || "Untitled",
+    title: record.title || record.bill_id_display || "Untitled",
     session: record.session || null,
     status: record.status || null,
     summary: record.plain_meaning_summary || record.summary || null,

@@ -159,23 +159,43 @@ Return ONLY a JSON array of strings. Example: ["keyword one", "keyword two"]`;
   }
 }
 
-async function generateAllKeywords(records, apiKey) {
+async function generateAllKeywords(records, apiKey, existingKeywords) {
   let completed = 0;
+  let skipped = 0;
   for (let i = 0; i < records.length; i += KEYWORDS_CONCURRENCY) {
     const batch = records.slice(i, i + KEYWORDS_CONCURRENCY);
     await Promise.all(
       batch.map(async (record) => {
+        if (existingKeywords.has(record.bill_number)) {
+          record.keywords = existingKeywords.get(record.bill_number);
+          skipped++;
+          return;
+        }
         const billText = await fetchBillText(record.bill_number).catch(() => "");
         record.keywords = await generateKeywords(billText, apiKey);
       })
     );
     completed += batch.length;
-    process.stdout.write(`\r  Keywords: ${completed}/${records.length}`);
+    process.stdout.write(`\r  Keywords: ${completed}/${records.length} (${skipped} reused)`);
     if (i + KEYWORDS_CONCURRENCY < records.length) {
       await new Promise((r) => setTimeout(r, BATCH_PAUSE_MS));
     }
   }
   process.stdout.write("\n");
+}
+
+async function loadExistingKeywords() {
+  try {
+    const raw = await fs.readFile(OUTPUT_PATH, "utf8");
+    const records = JSON.parse(raw);
+    return new Map(
+      records
+        .filter((r) => Array.isArray(r.keywords) && r.keywords.length > 0)
+        .map((r) => [r.bill_number, r.keywords])
+    );
+  } catch (_) {
+    return new Map();
+  }
 }
 
 async function fallbackToExisting(reason) {
@@ -231,10 +251,12 @@ async function main() {
   records.sort((a, b) => Number(a.bill_number) - Number(b.bill_number));
 
   if (apiKey) {
-    console.log(`Generating keywords for ${records.length} bills (${KEYWORDS_CONCURRENCY} concurrent)...`);
-    await generateAllKeywords(records, apiKey);
+    const existingKeywords = await loadExistingKeywords();
+    console.log(`Existing keywords loaded for ${existingKeywords.size} bills — will skip those.`);
+    console.log(`Generating keywords for ${records.length - existingKeywords.size} bills (${KEYWORDS_CONCURRENCY} concurrent)...`);
+    await generateAllKeywords(records, apiKey, existingKeywords);
     const withKeywords = records.filter((r) => r.keywords.length > 0).length;
-    console.log(`Keywords generated for ${withKeywords}/${records.length} bills`);
+    console.log(`Keywords populated for ${withKeywords}/${records.length} bills`);
   }
 
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
