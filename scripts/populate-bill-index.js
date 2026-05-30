@@ -46,6 +46,7 @@ function parseLegislationInfo(block) {
   const billNumber = getTag(block, "BillNumber");
   const originalAgency = getTag(block, "OriginalAgency");
   const shortDescription = getTag(block, "ShortDescription");
+  const longDescription = getTag(block, "LongDescription");
   const active = getTag(block, "Active");
 
   if (!billId || !billNumber) return null;
@@ -67,6 +68,7 @@ function parseLegislationInfo(block) {
     bill_number: billNumber,
     chamber: originalAgency || "",
     title: shortDescription || "",
+    description: longDescription || "",
     session: BIENNIUM,
     status,
     source_url: `https://app.leg.wa.gov/billsummary?BillNumber=${billNumber}&Year=${YEAR}`,

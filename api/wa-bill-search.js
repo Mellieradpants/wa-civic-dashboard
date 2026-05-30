@@ -216,6 +216,7 @@ function scoreRecord(record, query) {
     record.chamber,
     record.record_type,
     record.title,
+    record.description,
     record.session,
     record.status,
     record.plain_meaning_summary,
