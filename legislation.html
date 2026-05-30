@@ -901,7 +901,6 @@
         const detail = normalized.raw;
         renderBillFromRecord(record, detail);
         loadBillDocuments(record, detail);
-        loadBillText(record, detail);
         setSearchStatus(`Loaded official detail for ${label}.`);
       } catch (error) {
         console.error("Washington bill detail failed:", error);
