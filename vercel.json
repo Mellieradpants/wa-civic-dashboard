@@ -4,6 +4,9 @@
   "functions": {
     "api/wa-bill-search.js": {
       "includeFiles": "data/wa/**"
+    },
+    "api/wa-bill-plain-summary.js": {
+      "maxDuration": 30
     }
   }
 }

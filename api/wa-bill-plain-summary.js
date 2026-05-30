@@ -1,13 +1,13 @@
-import { Redis } from "@upstash/redis";
-
 const DOCUMENT_SEARCH_URL = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
 const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
-let redis;
-try {
-  redis = Redis.fromEnv();
-} catch (_) {
-  // UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN not configured — cache disabled
+async function getRedis() {
+  try {
+    const { Redis } = await import("@upstash/redis");
+    return Redis.fromEnv();
+  } catch (_) {
+    return null;
+  }
 }
 
 function extractBillNumber(text) {
@@ -135,6 +135,7 @@ export default async function handler(req, res) {
   }
 
   const cacheKey = `plain-summary:${billNumber}:${biennium}`;
+  const redis = await getRedis();
 
   if (redis) {
     try {

@@ -898,10 +898,15 @@
         const url = `/api/wa-bill-plain-summary?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
         const response = await fetch(url, { cache: "no-store" });
         const data = await response.json().catch(() => ({}));
-        billDocPlainSummary.textContent = response.ok ? (data.summary || "") : "";
+        if (response.ok && data.summary) {
+          billDocPlainSummary.textContent = data.summary;
+        } else {
+          billDocPlainSummary.textContent = "Summary unavailable.";
+          console.warn("Bill plain summary error:", response.status, data);
+        }
       } catch (error) {
         console.error("Bill plain summary failed:", error);
-        billDocPlainSummary.textContent = "";
+        billDocPlainSummary.textContent = "Summary unavailable.";
       }
     }
 
