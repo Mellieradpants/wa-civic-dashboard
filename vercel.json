@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node scripts/populate-bill-index.js",
+  "outputDirectory": ".",
   "functions": {
     "api/wa-bill-search.js": {
       "includeFiles": "data/wa/**"
