@@ -582,7 +582,7 @@
           <div id="bill-document-links" class="document-links"></div>
         </article>
         <article class="reader-card">
-          <p class="reader-label">Document summary</p>
+          <p class="reader-label">Plain meaning</p>
           <p id="bill-doc-plain-summary" class="reader-text process-note"></p>
           <div id="summary-actions" class="summary-actions" style="display:none">
             <button id="summary-copy-btn" class="summary-btn" type="button">Copy</button>
@@ -1077,25 +1077,41 @@
 
       if (!billNum) return;
 
-      billDocPlainSummary.textContent = "Generating summary…";
+      billDocPlainSummary.textContent = "Extracting plain meaning…";
 
       try {
-        const url = `/api/wa-bill-plain-summary?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
-        const response = await fetch(url, { cache: "no-store" });
-        const data = await response.json().catch(() => ({}));
-        if (response.ok && data.summary) {
-          billDocPlainSummary.textContent = data.summary;
-          showSummaryControls(billNum, biennium, data.summary);
+        // Step 1: fetch the raw bill text sections
+        const textUrl = `/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
+        const textResponse = await fetch(textUrl, { cache: "no-store" });
+        if (!textResponse.ok) throw new Error(`Bill text fetch: HTTP ${textResponse.status}`);
+        const textData = await textResponse.json();
+
+        const sections = textData.sections || [];
+        const combinedText = sections.map(s => s.text || "").filter(Boolean).join("\n\n").slice(0, 50000);
+
+        if (!combinedText.trim()) {
+          billDocPlainSummary.textContent = "No bill text available for plain meaning extraction.";
+          return;
+        }
+
+        // Step 2: run the deterministic 10-layer pipeline — no AI call
+        const meaningResponse = await fetch("/api/plain-meaning", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ text: combinedText }),
+        });
+        if (!meaningResponse.ok) throw new Error(`Plain meaning: HTTP ${meaningResponse.status}`);
+        const meaningData = await meaningResponse.json();
+
+        if (meaningData.plainMeaning) {
+          billDocPlainSummary.textContent = meaningData.plainMeaning;
+          showSummaryControls(billNum, biennium, meaningData.plainMeaning);
         } else {
-          const detail = data.error || data.message || `HTTP ${response.status}`;
-          billDocPlainSummary.textContent = `Summary unavailable: ${detail}`;
-          showSummaryControls(billNum, biennium, "");
-          console.warn("Bill plain summary error:", response.status, data);
+          billDocPlainSummary.textContent = "No actionable provisions were identified in this bill text.";
         }
       } catch (error) {
-        console.error("Bill plain summary failed:", error);
-        billDocPlainSummary.textContent = `Summary unavailable: ${error.message}`;
-        showSummaryControls(billNum, biennium, "");
+        console.error("Bill plain meaning failed:", error);
+        billDocPlainSummary.textContent = `Plain meaning unavailable: ${error.message}`;
       }
     }
 

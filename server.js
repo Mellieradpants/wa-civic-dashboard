@@ -1,5 +1,8 @@
 import express from "express";
+import { fileURLToPath } from "url";
+import path from "path";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -47,6 +50,16 @@ async function registerHandlers() {
       console.warn(`  WARN: could not load ${file} — ${err.message}`);
     }
   }
+}
+
+// ─── Static pages and browser-importable lib modules ─────────────────────────
+
+// Serve /lib so browser ES modules (e.g. import from '/lib/wa-adapter/index.js') resolve
+app.use("/lib", express.static(path.join(__dirname, "lib")));
+
+// Serve the three dashboard HTML pages by name; root stays as the JSON API index
+for (const page of ["index.html", "legislation.html", "voting.html"]) {
+  app.get(`/${page}`, (req, res) => res.sendFile(path.join(__dirname, page)));
 }
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
