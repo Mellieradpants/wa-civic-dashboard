@@ -611,8 +611,8 @@ function buildSpec(baseUrl) {
             text: { type: "string", description: "Plain-language summary text to translate." },
             language: {
               type: "string",
-              enum: ["es", "so", "vi", "tl"],
-              description: "Target language code: es=Spanish, so=Somali, vi=Vietnamese, tl=Tagalog.",
+              enum: ["es", "vi", "ru", "uk", "tl", "so", "ko"],
+              description: "Target language code (SHB 2475 priority order): es=Spanish, vi=Vietnamese, ru=Russian, uk=Ukrainian, tl=Tagalog, so=Somali, ko=Korean.",
             },
             billNumber: { type: "string" },
             biennium: { type: "string" },

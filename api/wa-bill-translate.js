@@ -2,9 +2,12 @@ const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
 const LANGUAGE_NAMES = {
   es: "Spanish",
-  so: "Somali",
   vi: "Vietnamese",
+  ru: "Russian",
+  uk: "Ukrainian",
   tl: "Tagalog",
+  so: "Somali",
+  ko: "Korean",
 };
 
 async function getRedis() {

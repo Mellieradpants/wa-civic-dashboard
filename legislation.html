@@ -470,22 +470,22 @@
       gap: 6px;
       margin-top: 10px;
     }
-    .lang-btn {
+    .lang-select {
       min-height: 40px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       border: 1px solid var(--border);
-      border-radius: 999px;
+      border-radius: var(--radius-md);
       background: white;
       color: var(--ink);
-      padding: 0 14px;
-      font-size: 0.84rem;
+      padding: 0 12px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
     }
-    .lang-btn:hover { border-color: var(--sage); background: var(--mist); }
-    .lang-btn.active { background: var(--forest); color: white; border-color: var(--forest); }
+    .lang-select:focus {
+      outline: none;
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(31, 77, 58, 0.11);
+    }
 
     /* Prevent long bill text and pre-formatted content from overflowing */
     .reader-text,
@@ -589,11 +589,16 @@
             <button id="summary-export-btn" class="summary-btn" type="button">Export .txt</button>
           </div>
           <div id="summary-lang-selector" class="lang-selector" style="display:none">
-            <button class="lang-btn active" data-lang="en" type="button">English</button>
-            <button class="lang-btn" data-lang="es" type="button">Spanish</button>
-            <button class="lang-btn" data-lang="so" type="button">Somali</button>
-            <button class="lang-btn" data-lang="vi" type="button">Vietnamese</button>
-            <button class="lang-btn" data-lang="tl" type="button">Tagalog</button>
+            <select id="summary-lang-select" class="lang-select">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="vi">Tiếng Việt</option>
+              <option value="ru">Русский</option>
+              <option value="uk">Українська</option>
+              <option value="tl">Tagalog</option>
+              <option value="so">Soomaali</option>
+              <option value="ko">한국어</option>
+            </select>
           </div>
         </article>
         <article class="reader-card">
@@ -639,7 +644,7 @@
     const summaryCopyBtn = document.getElementById("summary-copy-btn");
     const summaryExportBtn = document.getElementById("summary-export-btn");
     const summaryLangSelector = document.getElementById("summary-lang-selector");
-    const summaryLangBtns = summaryLangSelector.querySelectorAll(".lang-btn");
+    const summaryLangSelect = document.getElementById("summary-lang-select");
     const billSectionsSummary = document.getElementById("bill-sections-summary");
     const billSectionsList = document.getElementById("bill-sections-list");
     const sectionPanel = document.getElementById("section-panel");
@@ -674,7 +679,7 @@
       translationCache = {};
       summaryActions.style.display = "none";
       summaryLangSelector.style.display = "none";
-      summaryLangBtns.forEach(btn => btn.classList.toggle("active", btn.dataset.lang === "en"));
+      summaryLangSelect.value = "en";
     }
 
     function showSummaryControls(billNum, biennium, text) {
@@ -684,7 +689,7 @@
       translationCache = {};
       summaryActions.style.display = "flex";
       summaryLangSelector.style.display = "flex";
-      summaryLangBtns.forEach(btn => btn.classList.toggle("active", btn.dataset.lang === "en"));
+      summaryLangSelect.value = "en";
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -724,49 +729,46 @@
       URL.revokeObjectURL(url);
     });
 
-    summaryLangBtns.forEach(btn => {
-      btn.addEventListener("click", async () => {
-        if (!englishSummary) return;
-        const lang = btn.dataset.lang;
-        summaryLangBtns.forEach(b => b.classList.toggle("active", b === btn));
+    summaryLangSelect.addEventListener("change", async () => {
+      if (!englishSummary) return;
+      const lang = summaryLangSelect.value;
 
-        if (lang === "en") {
+      if (lang === "en") {
+        billDocPlainSummary.textContent = englishSummary;
+        return;
+      }
+
+      if (translationCache[lang]) {
+        billDocPlainSummary.textContent = translationCache[lang];
+        return;
+      }
+
+      billDocPlainSummary.textContent = "Translating…";
+      try {
+        const response = await fetch("/api/wa-bill-translate", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            text: englishSummary,
+            language: lang,
+            billNumber: summaryBillNum,
+            biennium: summaryBiennium,
+          }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.translatedText) {
+          translationCache[lang] = data.translatedText;
+          billDocPlainSummary.textContent = data.translatedText;
+        } else {
           billDocPlainSummary.textContent = englishSummary;
-          return;
+          summaryLangSelect.value = "en";
+          console.warn("Translation failed:", response.status, data);
         }
-
-        if (translationCache[lang]) {
-          billDocPlainSummary.textContent = translationCache[lang];
-          return;
-        }
-
-        billDocPlainSummary.textContent = "Translating…";
-        try {
-          const response = await fetch("/api/wa-bill-translate", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              text: englishSummary,
-              language: lang,
-              billNumber: summaryBillNum,
-              biennium: summaryBiennium,
-            }),
-          });
-          const data = await response.json().catch(() => ({}));
-          if (response.ok && data.translatedText) {
-            translationCache[lang] = data.translatedText;
-            billDocPlainSummary.textContent = data.translatedText;
-          } else {
-            billDocPlainSummary.textContent = englishSummary;
-            summaryLangBtns.forEach(b => b.classList.toggle("active", b.dataset.lang === "en"));
-            console.warn("Translation failed:", response.status, data);
-          }
-        } catch (error) {
-          billDocPlainSummary.textContent = englishSummary;
-          summaryLangBtns.forEach(b => b.classList.toggle("active", b.dataset.lang === "en"));
-          console.error("Translation error:", error);
-        }
-      });
+      } catch (error) {
+        billDocPlainSummary.textContent = englishSummary;
+        summaryLangSelect.value = "en";
+        console.error("Translation error:", error);
+      }
     });
 
     function clearSearchResults() {
