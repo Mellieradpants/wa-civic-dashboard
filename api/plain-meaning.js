@@ -60,8 +60,12 @@ export default async function handler(req, res) {
     let iscOutput;
 
     if (units) {
+      // Primary path: pre-processed ISC units from the TCS Python pipeline.
+      // Caller has already run the 10-layer pipeline; we go straight to the renderer.
       iscOutput = { units };
     } else {
+      // Fallback only: raw text triggers the full JS pipeline internally.
+      // Prefer posting ISC units from TCS for richer, higher-fidelity output.
       iscOutput = runPipeline(text.trim());
     }
 
