@@ -292,6 +292,15 @@
       "tl": "Pondo — ",
       "so": "Maalgelin — ",
       "ko": "예산 — "
+    },
+    "delayed": {
+      "es": "En vigor desde {date} — ",
+      "vi": "Có hiệu lực từ {date} — ",
+      "ru": "Вступает в силу с {date} — ",
+      "uk": "Набирає чинності з {date} — ",
+      "tl": "Epektibo mula sa {date} — ",
+      "so": "Dhaqangelaya {date} — ",
+      "ko": "{date}부터 시행 — "
     }
   }
 }
