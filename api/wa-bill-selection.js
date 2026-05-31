@@ -1,4 +1,4 @@
-const BILL_TEXT_ENDPOINT = "/api/wa-bill-text";
+import { fetchBillTextData } from "./wa-bill-text.js";
 
 function extractBillNumber(text) {
   // Strip RCW/statute citations before matching so "RCW 70A.565.020" doesn't yield "565"
@@ -22,24 +22,6 @@ function normalizeBiennium(value) {
   const year = now.getUTCFullYear();
   const startYear = year % 2 === 0 ? year - 1 : year;
   return `${startYear}-${String(startYear + 1).slice(-2)}`;
-}
-
-function getBaseUrl(req) {
-  const proto = req.headers["x-forwarded-proto"] || "https";
-  const host = req.headers.host;
-  return `${proto}://${host}`;
-}
-
-async function loadBillText(req, billNumber, biennium) {
-  const baseUrl = getBaseUrl(req);
-  const url = `${baseUrl}${BILL_TEXT_ENDPOINT}?${new URLSearchParams({ billNumber, biennium }).toString()}`;
-  const response = await fetch(url, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Bill text lookup failed with HTTP ${response.status}`);
-  }
-
-  return response.json();
 }
 
 function splitSentences(text) {
@@ -216,7 +198,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const textData = await loadBillText(req, billNumber, biennium);
+    const textData = await fetchBillTextData(billNumber, biennium);
     const sections = textData.sections || [];
     const selectedUnits = sections.flatMap(selectMeaningUnitsFromSection);
     const ruleUnits = buildRuleUnits(selectedUnits);

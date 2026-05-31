@@ -1038,7 +1038,16 @@
       sectionPanel.classList.remove("open");
     }
 
-    async function loadBillText(record, detail = null) {
+    function makeBillTextPromise(record, detail = null) {
+      const textPath = buildTextPath(record, detail);
+      if (!textPath) return Promise.resolve(null);
+      return fetch(textPath, { cache: "no-store" }).then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      });
+    }
+
+    async function loadBillText(record, detail = null, textDataPromise = null) {
       const textPath = buildTextPath(record, detail);
       billSectionsSummary.textContent = "Loading raw sections from the official bill text...";
       closeSectionPanel();
@@ -1050,18 +1059,18 @@
       }
 
       try {
-        const response = await fetch(textPath, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const textData = await response.json();
+        const textData = await (textDataPromise || fetch(textPath, { cache: "no-store" }).then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        }));
         renderSections(textData);
 
         const selectionPath = buildSelectionPath(record, detail);
         if (selectionPath) {
-          const selectionResponse = await fetch(selectionPath, { cache: "no-store" });
-          if (selectionResponse.ok) {
-            const selectionData = await selectionResponse.json();
-            renderSectionInterpretations(selectionData);
-          }
+          fetch(selectionPath, { cache: "no-store" })
+            .then(r => r.ok ? r.json() : null)
+            .then(d => { if (d) renderSectionInterpretations(d); })
+            .catch(() => {});
         }
       } catch (error) {
         console.error("Washington bill text lookup failed:", error);
@@ -1070,7 +1079,7 @@
       }
     }
 
-    async function loadBillPlainSummary(record, detail = null) {
+    async function loadBillPlainSummary(record, detail = null, textDataPromise = null) {
       const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
       const biennium = detail?.biennium || record.session || "2025-26";
 
@@ -1082,13 +1091,12 @@
       billDocPlainSummary.textContent = "Extracting plain meaning…";
 
       try {
-        // Step 1: fetch the raw bill text sections
-        const textUrl = `/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
-        const textResponse = await fetch(textUrl, { cache: "no-store" });
-        if (!textResponse.ok) throw new Error(`Bill text fetch: HTTP ${textResponse.status}`);
-        const textData = await textResponse.json();
+        const textData = textDataPromise
+          ? await textDataPromise
+          : await fetch(`/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium })}`, { cache: "no-store" })
+              .then(r => { if (!r.ok) throw new Error(`Bill text fetch: HTTP ${r.status}`); return r.json(); });
 
-        const sections = textData.sections || [];
+        const sections = textData?.sections || [];
         const combinedText = sections.map(s => s.text || "").filter(Boolean).join("\n\n").slice(0, 50000);
 
         if (!combinedText.trim()) {
@@ -1123,8 +1131,9 @@
       clearSearchResults();
       renderBillFromRecord(record);
       loadBillDocuments(record);
-      loadBillText(record);
-      loadBillPlainSummary(record);
+      const textDataPromise = makeBillTextPromise(record);
+      loadBillText(record, null, textDataPromise);
+      loadBillPlainSummary(record, null, textDataPromise);
 
       const billNum = record.bill_number || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
       const biennium = record.session || "2025-26";

@@ -112,6 +112,21 @@ function splitIntoSections(text) {
   return sections;
 }
 
+export async function fetchBillTextData(billNumber, biennium) {
+  const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
+  const text = cleanHtmlToText(rawDocument)
+    .replace(/\(\([\s\S]*?\)\)/g, "")
+    .replace(/ {2,}/g, " ")
+    .trim();
+  return {
+    billNumber,
+    biennium,
+    sourceDocument: { url: sourceUrl, file_type: "html" },
+    sections: splitIntoSections(text),
+    text,
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
