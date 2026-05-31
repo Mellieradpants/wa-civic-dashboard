@@ -133,7 +133,10 @@ export default async function handler(req, res) {
 
   try {
     const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
-    const text = cleanHtmlToText(rawDocument);
+    const text = cleanHtmlToText(rawDocument)
+      .replace(/\(\([\s\S]*?\)\)/g, "")
+      .replace(/ {2,}/g, " ")
+      .trim();
     const sections = splitIntoSections(text);
 
     return res.status(200).json({
