@@ -3,16 +3,13 @@
   "outputDirectory": ".",
   "functions": {
     "api/wa-bill-search.js": {
-      "includeFiles": "data/wa/**"
-    },
-    "api/wa-bill-plain-summary.js": {
-      "maxDuration": 30
+      "includeFiles": "data/wa/**,lib/**"
     },
     "api/wa-bill-text.js": {
       "maxDuration": 30
     },
-    "api/wa-bill-translate.js": {
-      "maxDuration": 30
+    "api/plain-meaning.js": {
+      "includeFiles": "lib/**"
     }
   }
 }

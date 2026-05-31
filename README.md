@@ -69,14 +69,13 @@ All endpoints are documented in the live OpenAPI spec at `/api/openapi`.
 | GET | `/api/health` | Service health check. Returns `serviceUrl` and `plainMeaningEndpoint` so clients can discover the deployed URL. |
 | GET | `/api/openapi` | OpenAPI 3.1 specification for all endpoints. |
 | POST | `/api/plain-meaning` | Deterministic plain-meaning extraction. No AI. Accepts `{ text }` or `{ units }`. |
-| GET | `/api/wa-bill-search` | Keyword or bill-number search against the local bill index, with optional AI query expansion. |
+| GET | `/api/wa-bill-search` | Keyword or bill-number search against the local bill index, with RCW synonym expansion. |
 | GET | `/api/wa-bill-detail` | Official bill metadata from the WA Legislature SOAP API. |
 | GET | `/api/wa-bill-documents` | Official document links (PDF, HTML, Word) scraped from the WA Legislature. |
 | GET | `/api/wa-bill-text` | Raw bill text extracted from the official HTML document, split into sections. |
 | GET | `/api/wa-bill-selection` | Classifies bill sentences into rule candidate units (obligation, prohibition, permission, condition, exception, definition, reference). |
-| GET | `/api/wa-bill-plain-summary` | AI-generated plain-language paragraph via Anthropic Claude. Results cached in Redis for 7 days. |
-| POST | `/api/wa-bill-translate` | Translates a plain-language summary into Spanish, Somali, Vietnamese, or Tagalog via Anthropic Claude. Cached 30 days. |
-| POST | `/api/analyze` | Translates a section of text into a plain-language paragraph via Anthropic Claude. |
+| GET | `/api/wa-bill-plain-summary` | Returns 410 Gone — replaced by `/api/plain-meaning`. |
+| POST | `/api/analyze` | Returns 410 Gone — replaced by `/api/plain-meaning`. |
 
 ---
 
@@ -98,14 +97,15 @@ api/
   wa-bill-documents.js           GET  /api/wa-bill-documents
   wa-bill-text.js                GET  /api/wa-bill-text
   wa-bill-selection.js           GET  /api/wa-bill-selection
-  wa-bill-plain-summary.js       GET  /api/wa-bill-plain-summary
-  wa-bill-translate.js           POST /api/wa-bill-translate
-  analyze.js                     POST /api/analyze
+  wa-bill-plain-summary.js       GET  /api/wa-bill-plain-summary (410 stub)
+  analyze.js                     POST /api/analyze (410 stub)
 
 lib/
   plain-meaning/
     pipeline.js                  10-layer deterministic pipeline (runPipeline)
     renderer.js                  Scope-lens template renderer (renderISC, renderUnit)
+  translations.json              Static multi-language sentence templates (es, vi, ru, uk, tl, so, ko)
+  synonymMap.json                RCW title synonym map for search expansion
   wa-adapter/
     index.js                     WA Legislature API adapter (getNormalizedBill)
 
@@ -139,16 +139,14 @@ The service runs without any environment variables configured — all external A
 
 ## Environment variables
 
-Set these in Render (or a local `.env`). None are required for the server to start.
+No AI API keys are required. All plain-meaning extraction and multi-language output is fully deterministic.
 
 | Variable | Required for |
 |----------|-------------|
-| `Anthropic_API_Key` | Bill plain summary, translation, section interpretation, search query expansion |
-| `gemini_api_key` | Health check ping (Gemini connectivity check only) |
-| `UPSTASH_REDIS_REST_URL` | Redis caching for summaries and translations |
-| `UPSTASH_REDIS_REST_TOKEN` | Redis caching for summaries and translations |
+| `UPSTASH_REDIS_REST_URL` | Redis caching (optional) |
+| `UPSTASH_REDIS_REST_TOKEN` | Redis caching (optional) |
 
-Redis is optional. All cache reads and writes are wrapped in silent `try/catch` — the service functions fully without it, just without caching.
+Redis is optional. All cache reads and writes are wrapped in silent `try/catch` — the service functions fully without it.
 
 ---
 

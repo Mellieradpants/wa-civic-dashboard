@@ -1,4 +1,7 @@
-const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+import fs from "node:fs/promises";
+import path from "node:path";
+
+const WA_LEG_PING = "https://wslwebservices.leg.wa.gov/legislationservice.asmx?WSDL";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -10,57 +13,35 @@ export default async function handler(req, res) {
   const host = req.headers.host || "localhost";
   const serviceUrl = `${proto}://${host}`;
 
-  const apiKey = process.env.gemini_api_key;
+  const checks = {};
 
-  if (!apiKey) {
-    return res.status(200).json({
-      status: "degraded",
-      geminiKey: "missing",
-      serviceUrl,
-      plainMeaningEndpoint: `${serviceUrl}/api/plain-meaning`,
-      message: "gemini_api_key is not configured — section translation will not work. Plain meaning is deterministic and always available.",
-    });
-  }
-
+  // Bill index loaded
   try {
-    const response = await fetch(`${GEMINI_API_BASE}?key=${apiKey}`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: "ping" }] }],
-        generationConfig: { maxOutputTokens: 5 },
-      }),
-    });
-
-    if (response.ok) {
-      return res.status(200).json({
-        status: "ok",
-        geminiKey: "valid",
-        serviceUrl,
-        plainMeaningEndpoint: `${serviceUrl}/api/plain-meaning`,
-        message: "gemini_api_key is configured and working.",
-      });
-    }
-
-    const body = await response.text();
-    return res.status(200).json({
-      status: "degraded",
-      geminiKey: "invalid",
-      httpStatus: response.status,
-      serviceUrl,
-      plainMeaningEndpoint: `${serviceUrl}/api/plain-meaning`,
-      message: "gemini_api_key is set but the API rejected it.",
-      detail: body.slice(0, 200),
-    });
-  } catch (error) {
-    return res.status(200).json({
-      status: "error",
-      geminiKey: "unknown",
-      serviceUrl,
-      plainMeaningEndpoint: `${serviceUrl}/api/plain-meaning`,
-      message: "Could not reach Gemini API.",
-      error: error instanceof Error ? error.message : String(error),
-    });
+    const indexPath = path.join(process.cwd(), "data", "wa", "bill-index.json");
+    const raw = await fs.readFile(indexPath, "utf8");
+    const index = JSON.parse(raw);
+    checks.billIndex = { status: "ok", count: Array.isArray(index) ? index.length : 0 };
+  } catch (err) {
+    checks.billIndex = { status: "error", error: err.message };
   }
-}
 
+  // WA Legislature API reachability
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const resp = await fetch(WA_LEG_PING, { signal: controller.signal });
+    clearTimeout(timeout);
+    checks.waLegApi = { status: resp.ok ? "ok" : "degraded", httpStatus: resp.status };
+  } catch (err) {
+    checks.waLegApi = { status: "unreachable", error: err.message };
+  }
+
+  const allOk = Object.values(checks).every((c) => c.status === "ok");
+
+  return res.status(200).json({
+    status: allOk ? "ok" : "degraded",
+    serviceUrl,
+    plainMeaningEndpoint: `${serviceUrl}/api/plain-meaning`,
+    checks,
+  });
+}

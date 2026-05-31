@@ -7,10 +7,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: Anthropic_API_Key
-        sync: false
-      - key: gemini_api_key
-        sync: false
       - key: UPSTASH_REDIS_REST_URL
         sync: false
       - key: UPSTASH_REDIS_REST_TOKEN

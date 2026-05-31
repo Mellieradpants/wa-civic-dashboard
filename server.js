@@ -19,7 +19,6 @@ const HANDLERS = [
   { path: "/api/wa-bill-text",           file: "./api/wa-bill-text.js",           methods: ["GET"] },
   { path: "/api/wa-bill-selection",      file: "./api/wa-bill-selection.js",      methods: ["GET"] },
   { path: "/api/wa-bill-plain-summary",  file: "./api/wa-bill-plain-summary.js",  methods: ["GET"] },
-  { path: "/api/wa-bill-translate",      file: "./api/wa-bill-translate.js",      methods: ["POST"] },
   { path: "/api/analyze",               file: "./api/analyze.js",               methods: ["POST"] },
   { path: "/api/plain-meaning",          file: "./api/plain-meaning.js",          methods: ["POST"] },
   { path: "/api/openapi",               file: "./api/openapi.js",               methods: ["GET"] },

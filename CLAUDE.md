@@ -4,7 +4,7 @@
 
 A Washington State civic information dashboard. Backend is an Express 4 API deployed on Render (`server.js` + `render.yaml`). Frontend is three HTML pages (`index.html`, `legislation.html`, `voting.html`) served by the same Express server. The API also serves `/lib` as static ES modules for browser imports.
 
-The core product commitment: plain-language bill meaning is produced **deterministically**, without AI calls. The 10-layer pipeline and scope-lens renderer are the mechanism. AI is only used for translation (`/api/wa-bill-translate`), section-level interpretation (`/api/analyze`), and search query expansion (`/api/wa-bill-search`).
+The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The 10-layer pipeline and scope-lens renderer produce plain meaning. Multi-language output uses static templates in `lib/translations.json`. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
 
 ---
 
@@ -116,8 +116,6 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 These were identified in a full end-to-end audit and are not yet addressed:
 
-- **Item 3**: `sectionType` field missing from `PlainMeaningSentence` schema in `api/openapi.js`. The pipeline now sets it on every ISC unit but the OpenAPI spec doesn't document it.
-- **Item 4**: `/api/wa-bill-translate` description in OpenAPI spec still references a stale workflow. Needs a copy pass.
 - **Item 15**: `sectionType` from ISC units is not rendered anywhere in `legislation.html` — the section list shows text but not the type badge (addition/amendment/repeal/etc.).
 
 ---
@@ -137,12 +135,10 @@ These were identified in a full end-to-end audit and are not yet addressed:
 
 | Key | Used by |
 |-----|---------|
-| `Anthropic_API_Key` | `/api/analyze`, `/api/wa-bill-translate`, `/api/wa-bill-plain-summary`, `/api/wa-bill-search` (query expansion) |
-| `gemini_api_key` | `/api/health` (ping check only) |
 | `UPSTASH_REDIS_REST_URL` | Redis cache — optional, degrades gracefully if missing |
 | `UPSTASH_REDIS_REST_TOKEN` | Redis cache — optional, degrades gracefully if missing |
 
-Redis failures are always silent (`try/catch` around every Redis call). The server starts and functions correctly without any of these keys.
+No AI API keys are required or used. Redis failures are always silent (`try/catch` around every Redis call). The server starts and functions correctly without any environment variables set.
 
 ---
 
@@ -177,15 +173,20 @@ api/
                                    ALSO exports fetchBillTextData(billNumber, biennium) for direct use
   wa-bill-selection.js           — GET  /api/wa-bill-selection
                                    imports fetchBillTextData directly — no HTTP self-call
-  wa-bill-plain-summary.js       — GET  /api/wa-bill-plain-summary (AI, legacy — not used by dashboard)
-  wa-bill-translate.js           — POST /api/wa-bill-translate (AI)
-  analyze.js                     — POST /api/analyze (AI, per-section)
+  wa-bill-plain-summary.js       — GET  /api/wa-bill-plain-summary (410 stub — replaced by /api/plain-meaning)
+  analyze.js                     — POST /api/analyze (410 stub — replaced by /api/plain-meaning)
 
 lib/
   plain-meaning/
     pipeline.js                  — 10-layer deterministic pipeline (runPipeline)
                                    includes pre-pipeline section type classification
     renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
+                                   renderISC(iscOutput, { lang }) accepts optional language code
+                                   renderUnit(unit, lang) uses TRANSLATIONS for non-English output
+  translations.json              — static multi-language templates; keys: lens names + modals + prefixes
+                                   languages: es, vi, ru, uk, tl, so, ko
+                                   placeholders: {actor}, {action}, {modal}, {condition}, {deadline}, {amount}
+  synonymMap.json                — termMap (word → RCW titles) + parentTerms (phrase → plain word)
   wa-adapter/
     index.js                     — WA Legislature API adapter (getNormalizedBill)
                                    calls fetchFromLiveApi directly — no local file candidates

@@ -668,12 +668,14 @@
     }
 
     let englishSummary = "";
+    let lastCombinedText = "";
     let summaryBillNum = "";
     let summaryBiennium = "";
     let translationCache = {};
 
     function resetSummaryControls() {
       englishSummary = "";
+      lastCombinedText = "";
       summaryBillNum = "";
       summaryBiennium = "";
       translationCache = {};
@@ -682,8 +684,9 @@
       summaryLangSelect.value = "en";
     }
 
-    function showSummaryControls(billNum, biennium, text) {
+    function showSummaryControls(billNum, biennium, text, combinedText) {
       englishSummary = text;
+      lastCombinedText = combinedText || "";
       summaryBillNum = billNum;
       summaryBiennium = biennium;
       translationCache = {};
@@ -745,24 +748,18 @@
 
       billDocPlainSummary.textContent = "Translating…";
       try {
-        const response = await fetch("/api/wa-bill-translate", {
+        const response = await fetch("/api/plain-meaning", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            text: englishSummary,
-            language: lang,
-            billNumber: summaryBillNum,
-            biennium: summaryBiennium,
-          }),
+          body: JSON.stringify({ text: lastCombinedText, language: lang }),
         });
         const data = await response.json().catch(() => ({}));
-        if (response.ok && data.translatedText) {
-          translationCache[lang] = data.translatedText;
-          billDocPlainSummary.textContent = data.translatedText;
+        if (response.ok && data.plainMeaning) {
+          translationCache[lang] = data.plainMeaning;
+          billDocPlainSummary.textContent = data.plainMeaning;
         } else {
           billDocPlainSummary.textContent = englishSummary;
           summaryLangSelect.value = "en";
-          console.warn("Translation failed:", response.status, data);
         }
       } catch (error) {
         billDocPlainSummary.textContent = englishSummary;
@@ -1115,7 +1112,7 @@
 
         if (meaningData.plainMeaning) {
           billDocPlainSummary.textContent = meaningData.plainMeaning;
-          showSummaryControls(billNum, biennium, meaningData.plainMeaning);
+          showSummaryControls(billNum, biennium, meaningData.plainMeaning, combinedText);
         } else {
           billDocPlainSummary.textContent = "No actionable provisions were identified in this bill text.";
         }
