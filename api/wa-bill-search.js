@@ -109,7 +109,9 @@ function normalizeQuery(text) {
 }
 
 function extractBillNumber(text) {
-  const match = String(text || "").match(/\b\d{3,4}\b/);
+  // Strip RCW/statute citations before matching so "RCW 70A.565.020" doesn't yield "565"
+  const noStatute = String(text || "").replace(/\bRCW\s+[\d.A-Za-z]+/gi, "");
+  const match = noStatute.match(/\b\d{3,4}\b/);
   return match ? match[0] : "";
 }
 
