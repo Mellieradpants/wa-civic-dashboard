@@ -16,8 +16,8 @@ The core product commitment: the entire service is **fully deterministic with ze
 ### The `units` input path is the primary TCS integration point
 `POST /api/plain-meaning` accepts either `{ text }` (raw string, runs the full JS pipeline — fallback only) or `{ units }` (pre-processed ISC array from the TCS Python pipeline — primary path). The `units` path skips directly to the renderer. Do not remove or change the `units` input schema — it is the integration contract with the TCS pipeline.
 
-### ISC unit schema is a contract
-The `IscUnit` shape (`tetherAnchor`, `parse.who/what/when/where/how`, `missingSignals`, `status`) is shared with the TCS Python pipeline. Do not rename fields or change nesting without coordinating with TCS.
+### ISC unit schema — current shape
+`parse.who` contains `responsibleParty` (string | null) and `modal` (string | null). The `actors` array and `decisionAuthority` field were removed — both were always equal to `responsibleParty` and neither was read by the renderer. TCS integration was confirmed inactive; there is no external pipeline consuming this schema.
 
 ### The 6 scope lenses are fixed
 `modality_shift`, `actor_power_shift`, `scope_change`, `threshold_shift`, `action_domain_shift`, `obligation_removal`. These mirror the meaning-buddy taxonomy. New lenses require updating both `LENS_PATTERNS` in `renderer.js` and the `PlainMeaningSentence` schema in `openapi.js`.
@@ -53,6 +53,10 @@ All layers are in `lib/plain-meaning/pipeline.js`. The renderer (`lib/plain-mean
 - Amendment header strip runs in `runPipeline` **after** section type detection but **before** SSE — the "is amended to read as follows:" phrase is needed for type detection and must be removed before sentence extraction so it never becomes an actor.
 - Subsection navigation markers `(1)`, `(2)(a)`, `(a)`, `(b)` etc. are stripped in `runPipeline` after the amendment header strip. They are structural navigation artifacts that pollute actor/action extraction; they carry no semantic content.
 - `renderISC` joins multiple obligation sentences with `"\n\n"` not `" "` — multiple obligations within one section must render as distinct paragraphs, not a run-on block.
+- `modalVerb` gives SSE signal priority over the positional MODAL_RE string match — `signal === "obligation"` returns "must" before `m === "may"` is checked. This prevents sentences where "may" appears before "shall" in the text from rendering as permission.
+- `parseActorActionCondition` (L5 AAC) strips leading condition clauses from the actor string. If the pre-modal text starts with `if/when/unless/until/except/provided that/in the event`, the actor is taken from the text after the last comma, with prepositional-fragment tails rejected. No clean tail → actor is null.
+- `cleanAction` strips a leading comma+space from the action string — prevents `"must , at intervals..."` artifacts when a mid-clause modal is followed by a comma-delimited adverbial phrase.
+- `scope_change` lens trigger is intentionally narrow: only `throughout`, `across all`, `all covered`, `applies? to`, `regardless of`. Generic words like `all/each/any` were removed to prevent false-positive scope_change classification on nearly every section.
 
 ### Section type detection (pre-pipeline step — do not remove)
 Before L1, each section is classified by type. The 6 types are: `addition`, `amendment`, `repeal`, `delayed`, `appropriation`, `standard`. The type is stored on the ISC unit as `sectionType`. This classification runs in `pipeline.js` (look for `classifySectionType`). Do not move this into a lens or post-render step — it must tag the unit before extraction so the renderer can use it.
@@ -115,11 +119,16 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 ---
 
-## Open audit items (not yet fixed)
+## Localized rendering design (do not revert)
 
-These were identified in a full end-to-end audit and are not yet addressed:
+`renderLocalized` in `renderer.js` is the non-English render path. Key design decisions:
 
-- **Item 15**: `sectionType` from ISC units is not rendered anywhere in `legislation.html` — the section list shows text but not the type badge (addition/amendment/repeal/etc.).
+- **No English fallback** — when called from `renderISCLocalized` (via `/api/translate-selection`), `noEnglishFallback: true` is set. Sentences with no matching localized template are omitted rather than shown in English.
+- **Section-level templates** — all modal-bearing lenses use `requires`/`allows`/`prohibits` (or `no_actor`) template keys, not the per-actor `must`/`may`/`cannot` keys. This prevents `"{actor} debe {action}"` hybrid sentences.
+- **English action as reference** — for `modality_shift`, `action_domain_shift`, `threshold_shift` (non-cash), and `scope_change`, the cleaned English action phrase is appended after the actor parenthetical with a colon: `"Qaybtan waxay u baahdaa (The office of financial management): review and adjust the compensation."` The localized word carries the legal framing; the English action delivers the content.
+- **Actor parenthetical cap** — actor strings longer than 60 characters are silently dropped from the parenthetical to prevent action-phrase contamination from reaching the output.
+- **`obligation_removal` and `actor_power_shift`** already pass the action directly into their templates via `{action}` placeholder — no separate append needed.
+- **`translations.json` `section_type_prefixes.delayed`** has a `{date}` placeholder. Both `renderISC` and `renderISCLocalized` use `fillTemplate` to substitute the effective date.
 
 ---
 
