@@ -668,14 +668,14 @@
     }
 
     let englishSummary = "";
-    let lastCombinedText = "";
+    let lastSections = [];
     let summaryBillNum = "";
     let summaryBiennium = "";
     let translationCache = {};
 
     function resetSummaryControls() {
       englishSummary = "";
-      lastCombinedText = "";
+      lastSections = [];
       summaryBillNum = "";
       summaryBiennium = "";
       translationCache = {};
@@ -684,15 +684,36 @@
       summaryLangSelect.value = "en";
     }
 
-    function showSummaryControls(billNum, biennium, text, combinedText) {
+    function showSummaryControls(billNum, biennium, text, sections) {
       englishSummary = text;
-      lastCombinedText = combinedText || "";
+      lastSections = sections || [];
       summaryBillNum = billNum;
       summaryBiennium = biennium;
       translationCache = {};
       summaryActions.style.display = "flex";
       summaryLangSelector.style.display = "flex";
       summaryLangSelect.value = "en";
+    }
+
+    // Run each bill section through the pipeline independently, then join non-empty results.
+    // Per-section processing prevents 10-section bills from becoming one joined text blob.
+    async function fetchPlainMeaning(sections, lang) {
+      const results = await Promise.allSettled(
+        sections.map(section =>
+          fetch("/api/plain-meaning", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ text: section.text, ...(lang ? { language: lang } : {}) }),
+          })
+            .then(r => r.ok ? r.json() : null)
+            .catch(() => null)
+        )
+      );
+      const meanings = results
+        .filter(r => r.status === "fulfilled" && r.value?.plainMeaning)
+        .map(r => r.value.plainMeaning)
+        .filter(m => !m.startsWith("No obligation"));
+      return meanings.join(" ");
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -748,15 +769,10 @@
 
       billDocPlainSummary.textContent = "Translating…";
       try {
-        const response = await fetch("/api/plain-meaning", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ text: lastCombinedText, language: lang }),
-        });
-        const data = await response.json().catch(() => ({}));
-        if (response.ok && data.plainMeaning) {
-          translationCache[lang] = data.plainMeaning;
-          billDocPlainSummary.textContent = data.plainMeaning;
+        const translated = await fetchPlainMeaning(lastSections, lang);
+        if (translated) {
+          translationCache[lang] = translated;
+          billDocPlainSummary.textContent = translated;
         } else {
           billDocPlainSummary.textContent = englishSummary;
           summaryLangSelect.value = "en";
@@ -1093,26 +1109,18 @@
           : await fetch(`/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium })}`, { cache: "no-store" })
               .then(r => { if (!r.ok) throw new Error(`Bill text fetch: HTTP ${r.status}`); return r.json(); });
 
-        const sections = textData?.sections || [];
-        const combinedText = sections.map(s => s.text || "").filter(Boolean).join("\n\n").slice(0, 50000);
+        const sections = (textData?.sections || []).filter(s => s.text?.trim());
 
-        if (!combinedText.trim()) {
+        if (!sections.length) {
           billDocPlainSummary.textContent = "No bill text available for plain meaning extraction.";
           return;
         }
 
-        // Step 2: run the deterministic 10-layer pipeline — no AI call
-        const meaningResponse = await fetch("/api/plain-meaning", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ text: combinedText }),
-        });
-        if (!meaningResponse.ok) throw new Error(`Plain meaning: HTTP ${meaningResponse.status}`);
-        const meaningData = await meaningResponse.json();
+        const plainMeaning = await fetchPlainMeaning(sections, null);
 
-        if (meaningData.plainMeaning) {
-          billDocPlainSummary.textContent = meaningData.plainMeaning;
-          showSummaryControls(billNum, biennium, meaningData.plainMeaning, combinedText);
+        if (plainMeaning) {
+          billDocPlainSummary.textContent = plainMeaning;
+          showSummaryControls(billNum, biennium, plainMeaning, sections);
         } else {
           billDocPlainSummary.textContent = "No actionable provisions were identified in this bill text.";
         }
