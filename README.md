@@ -17,7 +17,7 @@ When a user selects a bill in the dashboard:
 
 The pipeline (described below) parses the bill text for signal sentences (obligations, permissions, prohibitions), extracts structured fields (actor, action, conditions, deadlines, jurisdiction), classifies each sentence into one of six scope lenses, and renders a plain-language sentence from a fixed template. The result is deterministic and reproducible.
 
-AI is used only for three secondary features: search query expansion, per-section interpretation (when a user opens a section panel), and translation into Spanish, Somali, Vietnamese, or Tagalog.
+AI is not used anywhere in this service. Search query expansion uses a static RCW synonym map (`lib/synonymMap.json`). Multi-language output uses static sentence templates (`lib/translations.json`) covering Spanish, Vietnamese, Russian, Ukrainian, Tagalog, Somali, and Korean. No model calls are made at any point.
 
 ---
 
@@ -48,7 +48,7 @@ The renderer (`lib/plain-meaning/renderer.js`) takes ISC units and applies one o
 | `threshold_shift` | numeric standards, deadlines, percentages, "no less than", "minimum" |
 | `actor_power_shift` | "responsible for", "authorized to", "delegated", "reports to" |
 | `action_domain_shift` | inspect, audit, certify, train, document, implement, maintain |
-| `scope_change` | all, every, each, none, throughout, across all |
+| `scope_change` | throughout, across all, all covered, applies to, regardless of |
 | `modality_shift` | default — any obligation, permission, or prohibition not matched above |
 
 ### Two input paths
