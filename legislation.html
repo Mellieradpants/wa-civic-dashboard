@@ -360,6 +360,36 @@
       font-weight: 900;
     }
 
+    .section-card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .section-card-header .section-title { margin-bottom: 0; }
+
+    .section-type-badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background: var(--mist);
+      color: var(--moss);
+      border: 1px solid var(--border);
+    }
+
+    .section-type-badge[data-type="addition"]     { background: #e6f4ea; color: #1b5e20; border-color: #a5d6a7; }
+    .section-type-badge[data-type="amendment"]    { background: #fff3e0; color: #e65100; border-color: #ffcc80; }
+    .section-type-badge[data-type="repeal"]       { background: #fce4ec; color: #880e4f; border-color: #f48fb1; }
+    .section-type-badge[data-type="delayed"]      { background: #f3e5f5; color: #4a148c; border-color: #ce93d8; }
+    .section-type-badge[data-type="appropriation"]{ background: #e0f2f1; color: #004d40; border-color: #80cbc4; }
+
     .section-text {
       margin: 0;
       color: #101915;
@@ -615,6 +645,7 @@
   <div id="section-panel" class="panel section-detail-panel" role="dialog" aria-labelledby="section-panel-title">
     <div class="section-panel-header">
       <h3 id="section-panel-title" class="section-title"></h3>
+      <span id="section-panel-type-badge" class="section-type-badge" hidden></span>
       <button id="section-panel-close" class="search-button" type="button">Close</button>
     </div>
     <p id="section-panel-text" class="section-text"></p>
@@ -651,6 +682,7 @@
     const billSectionsList = document.getElementById("bill-sections-list");
     const sectionPanel = document.getElementById("section-panel");
     const sectionPanelTitle = document.getElementById("section-panel-title");
+    const sectionPanelTypeBadge = document.getElementById("section-panel-type-badge");
     const sectionPanelText = document.getElementById("section-panel-text");
     const sectionPanelInterpretation = document.getElementById("section-panel-interpretation");
     document.getElementById("section-panel-close").addEventListener("click", closeSectionPanel);
@@ -711,11 +743,17 @@
             .catch(() => null)
         )
       );
-      const meanings = results
-        .filter(r => r.status === "fulfilled" && r.value?.plainMeaning)
-        .map(r => r.value.plainMeaning)
-        .filter(m => !m.startsWith("No obligation"));
-      return meanings.join("\n\n");
+      const meanings = [];
+      const sectionTypes = [];
+      results.forEach((r, i) => {
+        if (r.status !== "fulfilled" || !r.value?.plainMeaning) return;
+        const { plainMeaning, sectionType } = r.value;
+        if (!plainMeaning.startsWith("No obligation")) meanings.push(plainMeaning);
+        if (sectionType && sectionType !== "standard") {
+          sectionTypes.push({ sectionId: sections[i].id || `section_${i + 1}`, type: sectionType });
+        }
+      });
+      return { text: meanings.join("\n\n"), sectionTypes };
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -771,7 +809,7 @@
 
       billDocPlainSummary.textContent = "Translating…";
       try {
-        const translated = await fetchPlainMeaning(lastSections, lang);
+        const { text: translated } = await fetchPlainMeaning(lastSections, lang);
         if (translated) {
           translationCache[lang] = translated;
           billDocPlainSummary.textContent = translated;
@@ -869,6 +907,19 @@
       billSummary.textContent = detail?.legalTitle || detail?.summary || "";
       billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || "";
     }
+    function applySectionTypeBadges(sectionTypes) {
+      sectionTypes.forEach(({ sectionId, type }) => {
+        const card = billSectionsList.querySelector(`[data-section-id="${CSS.escape(sectionId)}"]`);
+        if (!card) return;
+        card.dataset.sectionType = type;
+        const badge = card.querySelector(".section-type-badge");
+        if (!badge) return;
+        badge.textContent = type;
+        badge.dataset.type = type;
+        badge.hidden = false;
+      });
+    }
+
     function renderSections(textData) {
       const sections = textData?.sections || [];
       billSectionsList.innerHTML = "";
@@ -882,21 +933,28 @@
 
       sections.forEach((section, index) => {
         const card = document.createElement("section");
+        const header = document.createElement("div");
         const title = document.createElement("h3");
+        const badge = document.createElement("span");
         const text = document.createElement("p");
 
         card.className = "section-card";
         card.dataset.sectionId = section.id || `section_${index + 1}`;
         card.dataset.sectionText = section.text || "";
         card.style.cursor = "pointer";
+        header.className = "section-card-header";
         title.className = "section-title";
+        badge.className = "section-type-badge";
+        badge.hidden = true;
         text.className = "section-text";
 
         title.textContent = section.sectionNumber ? `Section ${section.sectionNumber}` : `Section ${index + 1}`;
         text.textContent = section.text || "";
 
         card.addEventListener("click", () => openSectionPanel(card));
-        card.appendChild(title);
+        header.appendChild(title);
+        header.appendChild(badge);
+        card.appendChild(header);
         card.appendChild(text);
         billSectionsList.appendChild(card);
       });
@@ -1028,25 +1086,21 @@
       }
     }
 
-    async function openSectionPanel(card) {
+    function openSectionPanel(card) {
       sectionPanelTitle.textContent = card.querySelector(".section-title")?.textContent || "";
       sectionPanelText.textContent = card.dataset.sectionText || "";
-      sectionPanelInterpretation.textContent = card.dataset.interpretation || "Translating...";
-      sectionPanel.classList.add("open");
+      sectionPanelInterpretation.textContent = card.dataset.interpretation || "";
 
-      try {
-        const response = await fetch("/api/analyze", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: card.dataset.sectionText || "" }),
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.translation) sectionPanelInterpretation.textContent = data.translation;
-        }
-      } catch {
-        // keep existing interpretation on error
+      const type = card.dataset.sectionType || "";
+      if (type) {
+        sectionPanelTypeBadge.textContent = type;
+        sectionPanelTypeBadge.dataset.type = type;
+        sectionPanelTypeBadge.hidden = false;
+      } else {
+        sectionPanelTypeBadge.hidden = true;
       }
+
+      sectionPanel.classList.add("open");
     }
 
     function closeSectionPanel() {
@@ -1118,7 +1172,8 @@
           return;
         }
 
-        const plainMeaning = await fetchPlainMeaning(sections, null);
+        const { text: plainMeaning, sectionTypes } = await fetchPlainMeaning(sections, null);
+        if (sectionTypes.length) applySectionTypeBadges(sectionTypes);
 
         if (plainMeaning) {
           billDocPlainSummary.textContent = plainMeaning;
