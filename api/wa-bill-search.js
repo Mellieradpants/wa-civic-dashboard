@@ -1,7 +1,6 @@
 import fs from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { Redis } from "@upstash/redis";
 
 const synonymMap = JSON.parse(
   readFileSync(path.join(process.cwd(), "lib", "synonymMap.json"), "utf8")
@@ -9,12 +8,6 @@ const synonymMap = JSON.parse(
 
 const LEGISLATION_SERVICE_BASE = "https://wslwebservices.leg.wa.gov/legislationservice.asmx";
 const BILL_SUMMARY_BASE = "https://app.leg.wa.gov/billsummary";
-const ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages";
-
-let redis;
-try {
-  redis = Redis.fromEnv();
-} catch (_) {}
 
 const BILL_TYPE_RULES = [
   {
@@ -247,65 +240,6 @@ function scoreRecord(record, query) {
   return score;
 }
 
-async function expandQuery(query, apiKey) {
-  const prompt = `Given the search query: "${query}"
-
-Generate 8-10 alternative search terms for finding related Washington State legislation. Include synonyms, related legal concepts, common legislative phrasings, and subject area terms. Keep each term short (1-3 words).
-
-Return ONLY a JSON array of strings, nothing else. Example: ["term one", "term two"]`;
-
-  const response = await fetch(ANTHROPIC_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 200,
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
-
-  if (!response.ok) throw new Error(`Anthropic API error ${response.status}`);
-
-  const data = await response.json();
-  const text = data.content?.[0]?.text?.trim() || "[]";
-  const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) return [];
-  const parsed = JSON.parse(jsonMatch[0]);
-  return Array.isArray(parsed) ? parsed.filter((t) => typeof t === "string") : [];
-}
-
-async function getExpandedTerms(query, apiKey) {
-  if (!query || !apiKey) return [];
-
-  const cacheKey = `query-expansion:${query.toLowerCase().trim()}`;
-
-  if (redis) {
-    try {
-      const cached = await redis.get(cacheKey);
-      if (cached) return cached;
-    } catch (_) {}
-  }
-
-  let terms = [];
-  try {
-    terms = await expandQuery(query, apiKey);
-  } catch (_) {
-    return [];
-  }
-
-  if (redis && terms.length > 0) {
-    try {
-      await redis.set(cacheKey, terms, { ex: 60 * 60 * 24 * 30 });
-    } catch (_) {}
-  }
-
-  return terms;
-}
-
 function scoreRecordMulti(record, terms) {
   return Math.max(...terms.map((t) => scoreRecord(record, t)));
 }
@@ -442,10 +376,8 @@ export default async function handler(req, res) {
 
     const billIndex = await loadBillIndex();
 
-    const apiKey = process.env.Anthropic_API_Key;
-    const expandedTerms = await getExpandedTerms(query, apiKey);
     const parentWords = applyParentTerms(query);
-    const allTerms = [query, ...parentWords, ...expandedTerms].filter(Boolean);
+    const allTerms = [query, ...parentWords].filter(Boolean);
     const queryWords = query.toLowerCase().split(/\s+/).filter(Boolean);
     const rcwTitleFilter = getRcwTitleFilter([...queryWords, ...parentWords]);
 
@@ -488,7 +420,6 @@ export default async function handler(req, res) {
       searchMode: billNumber ? "official_bill_number_plus_local_index" : "local_index_keyword",
       indexSize: billIndex.length,
       rawSample: billIndex[0] || null,
-      expandedTerms,
       rcwExpansion: rcwTitleFilter.size > 0 ? [...rcwTitleFilter].map((t) => `Title ${t}`) : [],
       results,
       note: billNumber

@@ -5,7 +5,7 @@ function buildSpec(baseUrl) {
       title: "WA Civic Dashboard API",
       version: "1.0.0",
       description:
-        "Plain-language access to Washington State legislation. Endpoints retrieve bill metadata, extract structured rule units via a 10-layer deterministic pipeline, generate plain-meaning sentences without AI, and translate summaries into multiple languages.",
+        "Plain-language access to Washington State legislation. All endpoints are fully deterministic — no external AI API calls. Bill metadata, plain-meaning extraction, and multi-language rendering all run on the server without any LLM dependency.",
     },
     servers: [{ url: baseUrl }],
     paths: {
@@ -13,7 +13,7 @@ function buildSpec(baseUrl) {
         get: {
           operationId: "getHealth",
           summary: "Service health check",
-          description: "Pings the Gemini API key to confirm the service is configured.",
+          description: "Checks WA Legislature API reachability and bill index load status. No external AI dependency.",
           responses: {
             200: {
               description: "Health status",
@@ -198,9 +198,9 @@ function buildSpec(baseUrl) {
       "/api/wa-bill-plain-summary": {
         get: {
           operationId: "getBillPlainSummary",
-          summary: "Generate plain-language bill summary (AI)",
+          summary: "Plain-language bill summary (deprecated)",
           description:
-            "Fetches bill text and calls Anthropic Claude Haiku to produce a 3–5 sentence plain-language summary. Results are cached in Redis for 7 days.",
+            "Removed. Returns 410 Gone. Use /api/plain-meaning instead.",
           parameters: [
             {
               name: "billNumber",
@@ -288,40 +288,12 @@ function buildSpec(baseUrl) {
           },
         },
       },
-      "/api/wa-bill-translate": {
-        post: {
-          operationId: "translateBillSummary",
-          summary: "Translate a plain-language summary",
-          description:
-            "Translates a plain-language summary into Spanish, Somali, Vietnamese, or Tagalog using Anthropic Claude Haiku. Results are cached in Redis for 30 days.",
-          requestBody: {
-            required: true,
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/TranslateRequest" },
-              },
-            },
-          },
-          responses: {
-            200: {
-              description: "Translated text",
-              content: {
-                "application/json": {
-                  schema: { $ref: "#/components/schemas/TranslateResponse" },
-                },
-              },
-            },
-            400: { $ref: "#/components/responses/BadRequest" },
-            500: { $ref: "#/components/responses/ServerError" },
-          },
-        },
-      },
       "/api/analyze": {
         post: {
           operationId: "analyzeSection",
-          summary: "Translate a section to plain language (AI)",
+          summary: "Section analysis (deprecated)",
           description:
-            "Accepts a section of text or a source URL and calls Anthropic Claude Haiku to produce a plain-language paragraph.",
+            "Removed. Returns 410 Gone. Use /api/plain-meaning instead.",
           requestBody: {
             required: true,
             content: {
@@ -364,8 +336,9 @@ function buildSpec(baseUrl) {
           type: "object",
           properties: {
             status: { type: "string", enum: ["ok", "degraded", "error"] },
-            geminiKey: { type: "string", enum: ["valid", "invalid", "missing", "unknown"] },
-            message: { type: "string" },
+            serviceUrl: { type: "string" },
+            plainMeaningEndpoint: { type: "string" },
+            checks: { type: "object" },
           },
         },
         BillRecord: {
@@ -390,7 +363,7 @@ function buildSpec(baseUrl) {
             query: { type: "string" },
             biennium: { type: "string" },
             searchMode: { type: "string" },
-            expandedTerms: { type: "array", items: { type: "string" } },
+            rcwExpansion: { type: "array", items: { type: "string" } },
             results: { type: "array", items: { $ref: "#/components/schemas/BillRecord" } },
           },
         },
@@ -470,6 +443,13 @@ function buildSpec(baseUrl) {
         },
         PlainMeaningRequest: {
           type: "object",
+          properties: {
+            language: {
+              type: "string",
+              enum: ["en", "es", "vi", "ru", "uk", "tl", "so", "ko"],
+              description: "Output language for rendered sentences. Defaults to en. Uses static templates — no AI.",
+            },
+          },
           oneOf: [
             {
               required: ["text"],
@@ -573,6 +553,11 @@ function buildSpec(baseUrl) {
             signal: {
               type: "string",
               enum: ["obligation", "permission", "prohibition"],
+            },
+            sectionType: {
+              type: "string",
+              enum: ["addition", "amendment", "repeal", "delayed", "appropriation", "standard"],
+              description: "Section type classified before the pipeline runs.",
             },
             sentence: { type: "string" },
             missingSignals: { type: "array", items: { type: "string" } },
