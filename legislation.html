@@ -748,10 +748,13 @@
       const meanings = [];
       const sectionTypes = [];
       const allSectionUnits = [];
+      const seenMeanings = new Set();
       results.forEach((r, i) => {
         if (r.status !== "fulfilled" || !r.value) return;
         const { plainMeaning, sectionType, units, hasContent } = r.value;
         if (!hasContent) return;
+        if (seenMeanings.has(plainMeaning)) return;
+        seenMeanings.add(plainMeaning);
         meanings.push(plainMeaning);
         allSectionUnits.push(units || []);
         if (sectionType && sectionType !== "standard") {
@@ -776,8 +779,14 @@
             .catch(() => null)
         )
       );
+      const seenTr = new Set();
       const meanings = results
-        .filter(r => r.status === "fulfilled" && r.value?.hasContent)
+        .filter(r => {
+          if (r.status !== "fulfilled" || !r.value?.hasContent) return false;
+          if (seenTr.has(r.value.plainMeaning)) return false;
+          seenTr.add(r.value.plainMeaning);
+          return true;
+        })
         .map(r => r.value.plainMeaning);
       return meanings.join("\n\n");
     }
