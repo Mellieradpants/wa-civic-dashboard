@@ -69,11 +69,13 @@ export default async function handler(req, res) {
       iscOutput = runPipeline(text.trim());
     }
 
-    const { plainMeaning, sentences } = renderISC(iscOutput, { lang: language || null });
+    const { plainMeaning, sentences, sectionType } = renderISC(iscOutput, { lang: language || null });
 
     return res.status(200).json({
       plainMeaning,
       sentences,
+      sectionType,
+      units: iscOutput.units || [],
       pipeline: {
         inputSource: units ? "isc_units" : "raw_text",
         unitCount: (iscOutput.units || units || []).length,

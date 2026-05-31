@@ -702,14 +702,14 @@
     }
 
     let englishSummary = "";
-    let lastSections = [];
+    let lastSectionUnits = [];
     let summaryBillNum = "";
     let summaryBiennium = "";
     let translationCache = {};
 
     function resetSummaryControls() {
       englishSummary = "";
-      lastSections = [];
+      lastSectionUnits = [];
       summaryBillNum = "";
       summaryBiennium = "";
       translationCache = {};
@@ -718,9 +718,9 @@
       summaryLangSelect.value = "en";
     }
 
-    function showSummaryControls(billNum, biennium, text, sections) {
+    function showSummaryControls(billNum, biennium, text, sectionUnits) {
       englishSummary = text;
-      lastSections = sections || [];
+      lastSectionUnits = sectionUnits || [];
       summaryBillNum = billNum;
       summaryBiennium = biennium;
       translationCache = {};
@@ -731,13 +731,15 @@
 
     // Run each bill section through the pipeline independently, then join non-empty results.
     // Per-section processing prevents 10-section bills from becoming one joined text blob.
-    async function fetchPlainMeaning(sections, lang) {
+    // Returns { text, sectionTypes, allSectionUnits } where allSectionUnits is a list of
+    // non-empty ISC unit arrays — one per section that had detectable obligations.
+    async function fetchPlainMeaning(sections) {
       const results = await Promise.allSettled(
         sections.map(section =>
           fetch("/api/plain-meaning", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ text: section.text, ...(lang ? { language: lang } : {}) }),
+            body: JSON.stringify({ text: section.text }),
           })
             .then(r => r.ok ? r.json() : null)
             .catch(() => null)
@@ -745,15 +747,38 @@
       );
       const meanings = [];
       const sectionTypes = [];
+      const allSectionUnits = [];
       results.forEach((r, i) => {
-        if (r.status !== "fulfilled" || !r.value?.plainMeaning) return;
-        const { plainMeaning, sectionType } = r.value;
-        if (!plainMeaning.startsWith("No obligation")) meanings.push(plainMeaning);
+        if (r.status !== "fulfilled" || !r.value) return;
+        const { plainMeaning, sentences, sectionType, units } = r.value;
+        if (!plainMeaning || !sentences?.length) return;
+        meanings.push(plainMeaning);
+        allSectionUnits.push(units || []);
         if (sectionType && sectionType !== "standard") {
           sectionTypes.push({ sectionId: sections[i].id || `section_${i + 1}`, type: sectionType });
         }
       });
-      return { text: meanings.join("\n\n"), sectionTypes };
+      return { text: meanings.join("\n\n"), sectionTypes, allSectionUnits };
+    }
+
+    // Re-render cached ISC units in the target language — skips the pipeline entirely.
+    // Each entry in sectionUnitGroups is the units array returned by an earlier pipeline run.
+    async function fetchTranslation(sectionUnitGroups, lang) {
+      const results = await Promise.allSettled(
+        sectionUnitGroups.map(units =>
+          fetch("/api/plain-meaning", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ units, language: lang }),
+          })
+            .then(r => r.ok ? r.json() : null)
+            .catch(() => null)
+        )
+      );
+      const meanings = results
+        .filter(r => r.status === "fulfilled" && r.value?.sentences?.length > 0)
+        .map(r => r.value.plainMeaning);
+      return meanings.join("\n\n");
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -809,7 +834,7 @@
 
       billDocPlainSummary.textContent = "Translating…";
       try {
-        const { text: translated } = await fetchPlainMeaning(lastSections, lang);
+        const translated = await fetchTranslation(lastSectionUnits, lang);
         if (translated) {
           translationCache[lang] = translated;
           billDocPlainSummary.textContent = translated;
@@ -1172,12 +1197,12 @@
           return;
         }
 
-        const { text: plainMeaning, sectionTypes } = await fetchPlainMeaning(sections, null);
+        const { text: plainMeaning, sectionTypes, allSectionUnits } = await fetchPlainMeaning(sections);
         if (sectionTypes.length) applySectionTypeBadges(sectionTypes);
 
         if (plainMeaning) {
           billDocPlainSummary.textContent = plainMeaning;
-          showSummaryControls(billNum, biennium, plainMeaning, sections);
+          showSummaryControls(billNum, biennium, plainMeaning, allSectionUnits);
         } else {
           billDocPlainSummary.textContent = "No actionable provisions were identified in this bill text.";
         }
