@@ -1,18 +1,31 @@
 {
-  "modals": {
-    "must":   { "es": "debe",       "vi": "phải",       "ru": "обязан",    "uk": "повинен",    "tl": "dapat",        "so": "waa in",    "ko": "반드시 해야 합니다"  },
-    "may":    { "es": "puede",      "vi": "có thể",     "ru": "вправе",    "uk": "може",       "tl": "maaari",       "so": "karaa",     "ko": "할 수 있습니다"     },
-    "cannot": { "es": "no puede",   "vi": "không thể",  "ru": "не вправе", "uk": "не може",    "tl": "hindi maaari", "so": "ma karaan", "ko": "할 수 없습니다"     }
-  },
   "modality_shift": {
-    "with_actor": {
-      "es": "{actor} {modal} {action}",
-      "vi": "{actor} {modal} {action}",
-      "ru": "{actor} {modal} {action}",
-      "uk": "{actor} {modal} {action}",
-      "tl": "{actor} {modal} {action}",
-      "so": "{actor} {modal} {action}",
-      "ko": "{actor}은(는) {action}을(를) {modal}"
+    "must": {
+      "es": "{actor} debe {action}",
+      "vi": "{actor} phải {action}",
+      "ru": "{actor} обязан {action}",
+      "uk": "{actor} повинен {action}",
+      "tl": "{actor} dapat {action}",
+      "so": "{actor} waa in {action}",
+      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+    },
+    "may": {
+      "es": "{actor} puede {action}",
+      "vi": "{actor} có thể {action}",
+      "ru": "{actor} вправе {action}",
+      "uk": "{actor} може {action}",
+      "tl": "{actor} maaaring {action}",
+      "so": "{actor} karaa {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+    },
+    "cannot": {
+      "es": "{actor} no puede {action}",
+      "vi": "{actor} không thể {action}",
+      "ru": "{actor} не вправе {action}",
+      "uk": "{actor} не може {action}",
+      "tl": "{actor} hindi maaaring {action}",
+      "so": "{actor} ma karaan {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
     },
     "requires": {
       "es": "Esta sección requiere: {action}",
@@ -63,14 +76,32 @@
     }
   },
   "scope_change": {
-    "with_actor": {
-      "es": "{actor} {modal} {action}",
-      "vi": "{actor} {modal} {action}",
-      "ru": "{actor} {modal} {action}",
-      "uk": "{actor} {modal} {action}",
-      "tl": "{actor} {modal} {action}",
-      "so": "{actor} {modal} {action}",
-      "ko": "{actor}은(는) {action}을(를) {modal}"
+    "must": {
+      "es": "{actor} debe {action}",
+      "vi": "{actor} phải {action}",
+      "ru": "{actor} обязан {action}",
+      "uk": "{actor} повинен {action}",
+      "tl": "{actor} dapat {action}",
+      "so": "{actor} waa in {action}",
+      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+    },
+    "may": {
+      "es": "{actor} puede {action}",
+      "vi": "{actor} có thể {action}",
+      "ru": "{actor} вправе {action}",
+      "uk": "{actor} може {action}",
+      "tl": "{actor} maaaring {action}",
+      "so": "{actor} karaa {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+    },
+    "cannot": {
+      "es": "{actor} no puede {action}",
+      "vi": "{actor} không thể {action}",
+      "ru": "{actor} не вправе {action}",
+      "uk": "{actor} не може {action}",
+      "tl": "{actor} hindi maaaring {action}",
+      "so": "{actor} ma karaan {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
     },
     "no_actor": {
       "es": "Este requisito se aplica a todos los involucrados",
@@ -83,14 +114,32 @@
     }
   },
   "threshold_shift": {
-    "with_actor": {
-      "es": "{actor} {modal} {action}",
-      "vi": "{actor} {modal} {action}",
-      "ru": "{actor} {modal} {action}",
-      "uk": "{actor} {modal} {action}",
-      "tl": "{actor} {modal} {action}",
-      "so": "{actor} {modal} {action}",
-      "ko": "{actor}은(는) {action}을(를) {modal}"
+    "must": {
+      "es": "{actor} debe {action}",
+      "vi": "{actor} phải {action}",
+      "ru": "{actor} обязан {action}",
+      "uk": "{actor} повинен {action}",
+      "tl": "{actor} dapat {action}",
+      "so": "{actor} waa in {action}",
+      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+    },
+    "may": {
+      "es": "{actor} puede {action}",
+      "vi": "{actor} có thể {action}",
+      "ru": "{actor} вправе {action}",
+      "uk": "{actor} може {action}",
+      "tl": "{actor} maaaring {action}",
+      "so": "{actor} karaa {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+    },
+    "cannot": {
+      "es": "{actor} no puede {action}",
+      "vi": "{actor} không thể {action}",
+      "ru": "{actor} не вправе {action}",
+      "uk": "{actor} не може {action}",
+      "tl": "{actor} hindi maaaring {action}",
+      "so": "{actor} ma karaan {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
     },
     "no_actor": {
       "es": "Esta sección requiere: {action}",
@@ -112,14 +161,32 @@
     "ko": "{condition}, 귀하의 합계는 {action}이(가) 됩니다"
   },
   "action_domain_shift": {
-    "with_actor": {
-      "es": "{actor} {modal} {action}",
-      "vi": "{actor} {modal} {action}",
-      "ru": "{actor} {modal} {action}",
-      "uk": "{actor} {modal} {action}",
-      "tl": "{actor} {modal} {action}",
-      "so": "{actor} {modal} {action}",
-      "ko": "{actor}은(는) {action}을(를) {modal}"
+    "must": {
+      "es": "{actor} debe {action}",
+      "vi": "{actor} phải {action}",
+      "ru": "{actor} обязан {action}",
+      "uk": "{actor} повинен {action}",
+      "tl": "{actor} dapat {action}",
+      "so": "{actor} waa in {action}",
+      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+    },
+    "may": {
+      "es": "{actor} puede {action}",
+      "vi": "{actor} có thể {action}",
+      "ru": "{actor} вправе {action}",
+      "uk": "{actor} може {action}",
+      "tl": "{actor} maaaring {action}",
+      "so": "{actor} karaa {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+    },
+    "cannot": {
+      "es": "{actor} no puede {action}",
+      "vi": "{actor} không thể {action}",
+      "ru": "{actor} не вправе {action}",
+      "uk": "{actor} не може {action}",
+      "tl": "{actor} hindi maaaring {action}",
+      "so": "{actor} ma karaan {action}",
+      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
     },
     "no_actor": {
       "es": "Esta sección requiere: {action}",
@@ -179,15 +246,6 @@
       "so": "Maalgelinta ayaa loo qoondeeyay ujeeddadan",
       "ko": "이 목적을 위해 자금이 배정됩니다"
     }
-  },
-  "plainify_fallback": {
-    "es": "{actor} {modal} {action}",
-    "vi": "{actor} {modal} {action}",
-    "ru": "{actor} {modal} {action}",
-    "uk": "{actor} {modal} {action}",
-    "tl": "{actor} {modal} {action}",
-    "so": "{actor} {modal} {action}",
-    "ko": "{actor}은(는) {action}을(를) {modal}"
   },
   "no_obligation": {
     "es": "No se identificaron obligaciones ni cambios en esta sección.",

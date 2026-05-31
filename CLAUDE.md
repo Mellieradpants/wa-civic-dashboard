@@ -183,9 +183,10 @@ lib/
     renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
                                    renderISC(iscOutput, { lang }) accepts optional language code
                                    renderUnit(unit, lang) uses TRANSLATIONS for non-English output
-  translations.json              — static multi-language templates; keys: lens names + modals + prefixes
+  translations.json              — static multi-language templates; keys: lens names + per-modal variants + prefixes
                                    languages: es, vi, ru, uk, tl, so, ko
-                                   placeholders: {actor}, {action}, {modal}, {condition}, {deadline}, {amount}
+                                   placeholders: {actor}, {action}, {condition}, {deadline}, {amount}
+                                   actor-based lenses use per-modal keys (must/may/cannot) — verb baked in, no {modal} placeholder
   synonymMap.json                — termMap (word → RCW titles) + parentTerms (phrase → plain word)
   wa-adapter/
     index.js                     — WA Legislature API adapter (getNormalizedBill)
