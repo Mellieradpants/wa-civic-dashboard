@@ -121,13 +121,14 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 ## Localized rendering design (do not revert)
 
-`renderLocalized` in `renderer.js` is the non-English render path. Key design decisions:
+`getLocalizedFrame` in `renderer.js` is the non-English render path. Key design decisions:
 
-- **No English fallback** — when called from `renderISCLocalized` (via `/api/translate-selection`), `noEnglishFallback: true` is set. Sentences with no matching localized template are omitted rather than shown in English.
-- **English action leads as the obligation** — for `modality_shift`, `action_domain_shift`, `threshold_shift` (non-cash), and `scope_change`, the English action is the authoritative parent: it states the obligation. The localized posture label is the child: it classifies the obligation for the reader in their language. Format: `"Review and adjust the compensation schedule — Qaybtan waxay u baahdaa (The office of financial management)."` The obligation speaks first; the localized frame and actor follow as interpretation and attribution. A frame sentence with no action is structurally complete but informationally empty and not useful to the reader.
-- **Section-level templates** — all modal-bearing lenses use `requires`/`allows`/`prohibits` (or `no_actor`) template keys, not the per-actor `must`/`may`/`cannot` keys. This prevents `"{actor} debe {action}"` hybrid sentences.
-- **Actor parenthetical** — the short actor label in parentheses (e.g. `Qaybtan waxay u baahdaa (The office of financial management).`) is kept. The actor is a proper noun / entity name — omitting it loses traceability. This is the one exception to the no-English rule and is by design. Actor strings longer than 60 characters are silently dropped to prevent action-phrase contamination.
-- **`obligation_removal` and `actor_power_shift`** already pass the action directly into their templates via `{action}` placeholder — no separate append needed.
+- **English sentence is the primary output** — the full English plain meaning sentence is generated first by the standard English path (TEMPLATES[lens]). It carries legal weight and is traceable to source.
+- **Localized frame appended after em dash** — `getLocalizedFrame(modal, lang, actor)` looks up `modality_shift[requires|allows|prohibits][lang]` from `translations.json`, strips the action slot, and appends it after the English sentence. Format: `"The office of financial management must review and adjust compensation. — Qaybtan waxay u baahdaa (The office of financial management)."` The obligation speaks first; the localized posture label follows as classification in the reader's language.
+- **Frame is modal-driven, not lens-driven** — `requires`/`allows`/`prohibits` is selected from `modal` signal regardless of which lens classified the sentence. All 7 non-English languages use the same lookup path.
+- **Actor parenthetical** — actor strings ≤ 60 characters are appended to the frame in parentheses. The actor is a proper noun / entity name — omitting it loses traceability. Strings longer than 60 characters are silently dropped to prevent action-phrase contamination.
+- **`noEnglishFallback` is retired** — every sentence now produces output (English + frame). There is no omission path for untranslatable content.
+- **Repeal and appropriation are fully localized** — these section types have complete target-language templates in `translations.json` and do not use the frame-append model. They are rendered inline in `renderUnit` without `getLocalizedFrame`.
 - **`translations.json` `section_type_prefixes.delayed`** has a `{date}` placeholder. Both `renderISC` and `renderISCLocalized` use `fillTemplate` to substitute the effective date.
 
 ---
