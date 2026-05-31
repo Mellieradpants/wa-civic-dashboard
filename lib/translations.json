@@ -151,15 +151,6 @@
       "ko": "이 조항은 다음을 요구합니다: {action}"
     }
   },
-  "threshold_shift_cash": {
-    "es": "{condition}, su total será {action}",
-    "vi": "{condition}, tổng của bạn sẽ {action}",
-    "ru": "{condition}, ваш итог будет {action}",
-    "uk": "{condition}, ваш підсумок буде {action}",
-    "tl": "{condition}, ang iyong kabuuan ay {action}",
-    "so": "{condition}, wadarta aad bixinayso waxay noqon doontaa {action}",
-    "ko": "{condition}, 귀하의 합계는 {action}이(가) 됩니다"
-  },
   "action_domain_shift": {
     "must": {
       "es": "{actor} debe {action}",
