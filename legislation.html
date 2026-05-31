@@ -750,8 +750,8 @@
       const allSectionUnits = [];
       results.forEach((r, i) => {
         if (r.status !== "fulfilled" || !r.value) return;
-        const { plainMeaning, sentences, sectionType, units } = r.value;
-        if (!plainMeaning || !sentences?.length) return;
+        const { plainMeaning, sectionType, units, hasContent } = r.value;
+        if (!hasContent) return;
         meanings.push(plainMeaning);
         allSectionUnits.push(units || []);
         if (sectionType && sectionType !== "standard") {
@@ -776,7 +776,7 @@
         )
       );
       const meanings = results
-        .filter(r => r.status === "fulfilled" && r.value?.sentences?.length > 0)
+        .filter(r => r.status === "fulfilled" && r.value?.hasContent)
         .map(r => r.value.plainMeaning);
       return meanings.join("\n\n");
     }
