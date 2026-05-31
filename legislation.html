@@ -762,14 +762,15 @@
     }
 
     // Re-render cached ISC units in the target language — skips the pipeline entirely.
-    // Each entry in sectionUnitGroups is the units array returned by an earlier pipeline run.
+    // Uses /api/translate-selection which calls renderLocalized without any English
+    // template fallback, ensuring structural words are in the target language.
     async function fetchTranslation(sectionUnitGroups, lang) {
       const results = await Promise.allSettled(
         sectionUnitGroups.map(units =>
-          fetch("/api/plain-meaning", {
+          fetch("/api/translate-selection", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ units, language: lang }),
+            body: JSON.stringify({ units, lang }),
           })
             .then(r => r.ok ? r.json() : null)
             .catch(() => null)

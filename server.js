@@ -21,6 +21,7 @@ const HANDLERS = [
   { path: "/api/wa-bill-plain-summary",  file: "./api/wa-bill-plain-summary.js",  methods: ["GET"] },
   { path: "/api/analyze",               file: "./api/analyze.js",               methods: ["POST"] },
   { path: "/api/plain-meaning",          file: "./api/plain-meaning.js",          methods: ["POST"] },
+  { path: "/api/translate-selection",   file: "./api/translate-selection.js",   methods: ["POST"] },
   { path: "/api/openapi",               file: "./api/openapi.js",               methods: ["GET"] },
 ];
 
