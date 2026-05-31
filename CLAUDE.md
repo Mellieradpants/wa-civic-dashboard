@@ -43,10 +43,16 @@ All layers are in `lib/plain-meaning/pipeline.js`. The renderer (`lib/plain-mean
 
 ### Known design decisions in the pipeline (do not revert)
 - `MODAL_RE` includes `is responsible for|are responsible for` before `is required to` — needed so SSE detects actor-authority sentences without a modal verb.
+- `MODAL_RE` also includes `must be adjusted|must be rounded` — obligation signals for rounding/adjustment clauses that have no traditional modal verb.
 - `cleanAction` does NOT strip `of each X` — that was removed because it lost meaningful target context.
 - `obligation_removal` template checks for co-present threshold data and appends it — a conditional removal is not rendered as a blanket removal.
 - `TEMPORAL_SUFFIX_RE` uses `[^;.]` not `[^,;.]` — allows commas inside dates like "no later than January 1, 2026".
 - Lens classifier order is intentional: `obligation_removal` → `threshold_shift` → `actor_power_shift` → `action_domain_shift` → `scope_change` → default `modality_shift`. First match wins.
+- `threshold_shift` cash-rounding template only fires when text contains **both** rounding language AND a cent-amount pattern — prevents false positives on non-monetary rounding.
+- `(( ))` WA legislative markup (struck/substituted text) is stripped in two places: (1) in `pipeline.js` before SSE runs, (2) in `wa-bill-text.js` before the text is returned from the API. Both strips are required; removing either causes raw markup to appear in output.
+
+### Section type detection (pre-pipeline step — do not remove)
+Before L1, each section is classified by type. The 6 types are: `addition`, `amendment`, `repeal`, `delayed`, `appropriation`, `standard`. The type is stored on the ISC unit as `sectionType`. This classification runs in `pipeline.js` (look for `classifySectionType`). Do not move this into a lens or post-render step — it must tag the unit before extraction so the renderer can use it.
 
 ---
 
@@ -56,6 +62,63 @@ All layers are in `lib/plain-meaning/pipeline.js`. The renderer (`lib/plain-mean
 - **Ask before merging to main.** Confirm PR vs. direct push. Default to PR unless told otherwise.
 - **Before pushing to main**, check whether remote main has commits the local branch doesn't (`git log --oneline origin/main..HEAD` and `git log --oneline HEAD..origin/main`). Fetch and rebase cleanly before pushing.
 - Commit messages: describe the *why*, not the what. No model identifiers in commit messages.
+
+---
+
+## Bill number routing
+
+`wa-bill-detail.js` contains `BILL_TYPE_RULES` — an array that maps bill number ranges to bill type metadata. Do not remove or collapse this — `displayNumber`, `abbreviation`, `recordType`, and `chamber` in the API response all come from it.
+
+| Range | Abbreviation | Type |
+|-------|-------------|------|
+| 1000–3999 | HB | House Bill |
+| 5000–7999 | SB | Senate Bill |
+| 4000–4199 | HJM | House Joint Memorial |
+| 4200–4399 | HJR | House Joint Resolution |
+| 4400–4599 | HCR | House Concurrent Resolution |
+| 4600–4999 | HR | House Resolution |
+| 8000–8199 | SJM | Senate Joint Memorial |
+| 8200–8399 | SJR | Senate Joint Resolution |
+| 8400–8599 | SCR | Senate Concurrent Resolution |
+| 8600–8999 | SR | Senate Resolution |
+| 9000–9999 | SGA | Senate Gubernatorial Appointment |
+
+### RCW citation stripping in `extractBillNumber`
+Every handler that accepts user-supplied bill input uses a local `extractBillNumber` helper that **first strips RCW citations** (`replace(/\bRCW\s+[\d.A-Za-z]+/gi, "")`) before matching the numeric bill number. This prevents "RCW 70A.565.020" from yielding "565" as a bill number. `wa-bill-selection.js` has the canonical implementation with an explanatory comment; all others should match it.
+
+---
+
+## Internal module coupling rules
+
+### wa-bill-text exports fetchBillTextData for direct use
+`api/wa-bill-text.js` exports a named function `fetchBillTextData(billNumber, biennium)` in addition to its default HTTP handler. This is the same logic the handler runs — HTML fetch, `(( ))` strip, section split — but callable without HTTP. Use it when another module needs bill text data during a single request.
+
+### wa-bill-selection uses fetchBillTextData directly — no HTTP self-call
+`api/wa-bill-selection.js` imports `fetchBillTextData` from `./wa-bill-text.js` and calls it directly. There is no `getBaseUrl` / self-referential HTTP fetch. Do not reintroduce an HTTP self-call here.
+
+### legislation.html: bill text fetched once per load, shared via Promise
+`legislation.html` uses `makeBillTextPromise(record)` to create a single `fetch` Promise for the bill text endpoint. Both `loadBillText` and `loadBillPlainSummary` receive this Promise as `textDataPromise` and `await` it. The underlying HTTP request fires once; both consumers share the resolved value. The selection fetch inside `loadBillText` is fire-and-forget (not awaited).
+
+---
+
+## Bill index
+
+`data/wa/bill-index.json` — the search index consumed by `/api/wa-bill-search`. Generated by `scripts/populate-bill-index.js`.
+
+- **Tagging is deterministic** — no AI. Each bill is tagged by which RCW title numbers appear in its `ShortDescription`, `LongDescription`, and `LegalTitle`.
+- **RCW taxonomy** is hardcoded in `populate-bill-index.js` as `TAXONOMY` — 10 categories, 31 subcategories, ~35 title mappings. Edit `TAXONOMY` there to change how bills are classified.
+- **Run from a network-permitted environment** — `wslwebservices.leg.wa.gov` returns 403 from Render's container. Run the script locally or from CI with outbound access: `node scripts/populate-bill-index.js`.
+- Bills with no RCW title match are included in the index with `categories: []` — they show up in unfiltered searches but are excluded from category filters.
+
+---
+
+## Open audit items (not yet fixed)
+
+These were identified in a full end-to-end audit and are not yet addressed:
+
+- **Item 3**: `sectionType` field missing from `PlainMeaningSentence` schema in `api/openapi.js`. The pipeline now sets it on every ISC unit but the OpenAPI spec doesn't document it.
+- **Item 4**: `/api/wa-bill-translate` description in OpenAPI spec still references a stale workflow. Needs a copy pass.
+- **Item 15**: `sectionType` from ISC units is not rendered anywhere in `legislation.html` — the section list shows text but not the type badge (addition/amendment/repeal/etc.).
 
 ---
 
@@ -98,6 +161,8 @@ Redis failures are always silent (`try/catch` around every Redis call). The serv
 
 ```
 server.js                        — Express server, route registration, static file serving
+                                   NOTE: 404 handler registered inside registerHandlers().then()
+                                   — must stay there to register after all API routes
 render.yaml                      — Render deployment config
 package.json                     — dependencies: express, @upstash/redis
 
@@ -106,10 +171,12 @@ api/
   openapi.js                     — GET  /api/openapi (full OpenAPI 3.1 spec)
   plain-meaning.js               — POST /api/plain-meaning (deterministic, no AI)
   wa-bill-search.js              — GET  /api/wa-bill-search
-  wa-bill-detail.js              — GET  /api/wa-bill-detail
+  wa-bill-detail.js              — GET  /api/wa-bill-detail (has BILL_TYPE_RULES for routing)
   wa-bill-documents.js           — GET  /api/wa-bill-documents
   wa-bill-text.js                — GET  /api/wa-bill-text
+                                   ALSO exports fetchBillTextData(billNumber, biennium) for direct use
   wa-bill-selection.js           — GET  /api/wa-bill-selection
+                                   imports fetchBillTextData directly — no HTTP self-call
   wa-bill-plain-summary.js       — GET  /api/wa-bill-plain-summary (AI, legacy — not used by dashboard)
   wa-bill-translate.js           — POST /api/wa-bill-translate (AI)
   analyze.js                     — POST /api/analyze (AI, per-section)
@@ -117,12 +184,20 @@ api/
 lib/
   plain-meaning/
     pipeline.js                  — 10-layer deterministic pipeline (runPipeline)
+                                   includes pre-pipeline section type classification
     renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
   wa-adapter/
     index.js                     — WA Legislature API adapter (getNormalizedBill)
+                                   calls fetchFromLiveApi directly — no local file candidates
+
+data/
+  wa/
+    bill-index.json              — bill search index; run populate-bill-index.js to regenerate
 
 index.html                       — dashboard home
 legislation.html                 — bill reader (search, plain meaning, sections)
+                                   uses makeBillTextPromise() to share one fetch across consumers
 voting.html                      — voting resources
-scripts/populate-bill-index.js   — build-time script to populate data/wa/bill-index.json
+scripts/populate-bill-index.js   — build-time script; deterministic RCW taxonomy tagging, no AI
+                                   must be run from a network-permitted environment (not Render)
 ```

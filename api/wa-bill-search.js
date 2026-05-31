@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { Redis } from "@upstash/redis";
+
+const synonymMap = JSON.parse(
+  readFileSync(path.join(process.cwd(), "lib", "synonymMap.json"), "utf8")
+);
 
 const LEGISLATION_SERVICE_BASE = "https://wslwebservices.leg.wa.gov/legislationservice.asmx";
 const BILL_SUMMARY_BASE = "https://app.leg.wa.gov/billsummary";
@@ -381,6 +386,28 @@ async function lookupOfficialBillByNumber(billNumber, biennium) {
   };
 }
 
+function applyParentTerms(query) {
+  const s = String(query || "").toLowerCase();
+  // Sort by phrase length descending so "motor vehicle" matches before "vehicle"
+  const phrases = Object.keys(synonymMap.parentTerms).sort((a, b) => b.length - a.length);
+  const plain = [];
+  for (const phrase of phrases) {
+    if (s.includes(phrase)) plain.push(synonymMap.parentTerms[phrase]);
+  }
+  return plain;
+}
+
+function getRcwTitleFilter(words) {
+  const titles = new Set();
+  for (const word of words) {
+    const matches = synonymMap.termMap[String(word).toLowerCase()];
+    if (matches) {
+      for (const t of matches) titles.add(t.replace(/^Title\s+/i, ""));
+    }
+  }
+  return titles;
+}
+
 function dedupeResults(results) {
   const seen = new Set();
   return results.filter((record) => {
@@ -417,13 +444,19 @@ export default async function handler(req, res) {
 
     const apiKey = process.env.Anthropic_API_Key;
     const expandedTerms = await getExpandedTerms(query, apiKey);
-    const allTerms = [query, ...expandedTerms].filter(Boolean);
+    const parentWords = applyParentTerms(query);
+    const allTerms = [query, ...parentWords, ...expandedTerms].filter(Boolean);
+    const queryWords = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const rcwTitleFilter = getRcwTitleFilter([...queryWords, ...parentWords]);
 
     const localResults = billIndex
-      .map((record) => ({
-        record,
-        score: scoreRecordMulti(record, allTerms),
-      }))
+      .map((record) => {
+        const score = scoreRecordMulti(record, allTerms);
+        const titleMatch =
+          rcwTitleFilter.size > 0 &&
+          (record.rcw_titles || []).some((t) => rcwTitleFilter.has(t));
+        return { record, score: titleMatch && score === 0 ? 1 : score, titleMatch };
+      })
       .filter((entry) => entry.score > 0)
       .filter((entry) => {
         if (!session) return true;
@@ -456,6 +489,7 @@ export default async function handler(req, res) {
       indexSize: billIndex.length,
       rawSample: billIndex[0] || null,
       expandedTerms,
+      rcwExpansion: rcwTitleFilter.size > 0 ? [...rcwTitleFilter].map((t) => `Title ${t}`) : [],
       results,
       note: billNumber
         ? "Bill-number searches use Washington bill number assignment rules before live official lookup. Keyword searches currently use the local index until a broader official index adapter is added."
