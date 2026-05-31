@@ -310,6 +310,7 @@
       padding: 12px 12px 12px 14px;
       color: #101915;
       font-weight: 600;
+      white-space: pre-wrap;
     }
 
     .document-links {
@@ -443,6 +444,7 @@
       color: #101915;
       font-size: 1.03rem;
       line-height: 1.65;
+      white-space: pre-wrap;
     }
     .summary-actions {
       display: flex;
@@ -713,7 +715,7 @@
         .filter(r => r.status === "fulfilled" && r.value?.plainMeaning)
         .map(r => r.value.plainMeaning)
         .filter(m => !m.startsWith("No obligation"));
-      return meanings.join(" ");
+      return meanings.join("\n\n");
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -944,7 +946,7 @@
         .slice(0, 2)
         .forEach(u => sentences.push(cleanLegalText(u.sourceSpan)));
 
-      return sentences.filter(Boolean).join(" ");
+      return sentences.filter(Boolean).join(". ");
     }
 
     function renderSectionInterpretations(selectionData) {
