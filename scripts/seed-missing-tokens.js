@@ -1,7 +1,14 @@
-// Loops through data/wa/bill-index.json, extracts candidate verb+object pairs
-// from bill titles and legal titles using the same first-space tokenization as
-// the pipeline (tokenizeAction), and pushes them to the Redis missing-tokens
-// list so translate-dictionary.js can cover the full legislative vocabulary.
+// Loops through data/wa/bill-index.json and pushes verb+object pairs to the
+// Redis missing-tokens list so translate-dictionary.js fills the dictionary.
+//
+// Two sources of verbs:
+//  1. LEGISLATIVE_VERBS — hardcoded base-form verbs that appear after
+//     "shall/must/may" in WA bill text. These are the forms the pipeline's
+//     tokenizeAction actually extracts, so they must be in the dictionary.
+//  2. Legal title gerunds — extracted from each bill's legal_title
+//     ("AN ACT Relating to providing X; creating Y") plus a de-gerunded
+//     base-form attempt for each, since titles use gerunds but bill text uses
+//     base forms.
 //
 // Run once before translate-dictionary.js. Already-translated verbs are skipped.
 //
@@ -18,8 +25,34 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BILL_INDEX_PATH = path.join(__dirname, "..", "data", "wa", "bill-index.json");
 const DICT_PATH = path.join(__dirname, "..", "lib", "action-dictionary.json");
 
-// Same temporal stripping used by pipeline.js stripTemporalFromObj and
-// translate-dictionary.js stripTemporal so object keys are consistent.
+// Base-form verbs the pipeline extracts from "shall/must/may" obligation clauses
+// in actual WA bill text. These are the keys the renderer looks up in the dictionary.
+const LEGISLATIVE_VERBS = [
+  "provide", "create", "establish", "require", "allow", "authorize", "modify",
+  "review", "report", "certify", "approve", "adopt", "notify", "implement",
+  "designate", "develop", "maintain", "conduct", "impose", "exempt", "fund",
+  "define", "amend", "repeal", "transfer", "collect", "regulate", "determine",
+  "ensure", "identify", "publish", "prepare", "distribute", "verify", "evaluate",
+  "coordinate", "facilitate", "monitor", "assess", "inspect", "audit",
+  "investigate", "recommend", "allocate", "calculate", "comply", "consult",
+  "disclose", "enforce", "file", "grant", "issue", "operate", "perform",
+  "protect", "replace", "request", "restore", "retain", "revoke", "support",
+  "update", "expand", "reduce", "increase", "decrease", "administer", "apply",
+  "assign", "manage", "respond", "test", "train", "award", "obtain", "process",
+  "select", "permit", "prohibit", "restrict", "limit", "inform", "document",
+  "record", "track", "appeal", "address", "include", "exclude", "extend",
+  "terminate", "suspend", "renew", "complete", "produce", "promote", "protect",
+  "purchase", "register", "remove", "report", "require", "review", "seek",
+  "set", "show", "use", "withdraw", "accept", "access", "account", "act",
+  "add", "adjust", "approve", "base", "begin", "bring", "build", "charge",
+  "choose", "close", "consult", "continue", "control", "cover", "demonstrate",
+  "describe", "design", "enter", "establish", "estimate", "follow", "give",
+  "handle", "help", "hold", "include", "keep", "make", "meet", "notify",
+  "offer", "open", "pay", "place", "plan", "post", "provide", "reach",
+  "return", "serve", "sign", "start", "stop", "take", "treat", "work",
+];
+
+// Same temporal stripping as pipeline.js stripTemporalFromObj.
 function stripTemporal(s) {
   return s
     ? s.replace(/\s+within\s+[\w\s]+(?:days?|months?|years?|hours?|weeks?)[^,;.]*/gi, "")
@@ -39,8 +72,23 @@ function tokenize(phrase) {
   return { verb, obj, raw: s };
 }
 
-// Articles, prepositions, and other words that can never be a verb starter
-// in a legislative action phrase. These come from noun-phrase bill titles.
+// Given a gerund form, return candidate base forms the pipeline might produce.
+// "providing" → ["provid", "provide"]  (both tried; "provide" is the useful one)
+// "allowing"  → ["allow", "allowe"]    ("allow" is the useful one)
+// "certifying"→ ["certif", "certife", "certify"]  (via -ify rule)
+function baseFormsOf(gerund) {
+  if (!gerund.endsWith("ing")) return [gerund];
+  const stem = gerund.slice(0, -3);
+  const forms = new Set();
+  forms.add(stem);             // "allow" from "allowing"
+  forms.add(stem + "e");       // "provide" from "providing"
+  if (stem.endsWith("if")) forms.add(stem + "y"); // "certify" from "certifying"
+  if (stem.length >= 4 && stem.at(-1) === stem.at(-2)) {
+    forms.add(stem.slice(0, -1)); // "submit" from "submitting"
+  }
+  return [...forms].filter(f => f.length >= 3);
+}
+
 const NON_VERB = new Set([
   "a", "an", "the", "of", "for", "in", "on", "at", "to", "by", "or", "and",
   "with", "from", "about", "into", "through", "during", "including", "until",
@@ -49,12 +97,9 @@ const NON_VERB = new Set([
   "her", "their", "our", "all", "any", "each", "every", "other", "such", "no",
   "not", "only", "state", "new", "old", "long", "short", "public", "private",
   "local", "national", "certain", "various", "additional", "general", "special",
-  "further", "certain", "eligible", "applicable",
+  "further", "eligible", "applicable",
 ]);
 
-// Split a legal_title into clause-level phrases.
-// "AN ACT Relating to expanding X; providing for Y; amending Z"
-// → ["expanding X", "providing for Y", "amending Z"]
 function legalTitlePhrases(legalTitle) {
   if (!legalTitle) return [];
   return legalTitle
@@ -65,8 +110,6 @@ function legalTitlePhrases(legalTitle) {
     .filter(Boolean);
 }
 
-// Split a ShortDescription title into phrases.
-// "Submit reports; adjust compensation" → ["Submit reports", "adjust compensation"]
 function titlePhrases(title) {
   if (!title) return [];
   return title.split(/[;/]/).map(p => p.trim()).filter(Boolean);
@@ -85,7 +128,21 @@ async function main() {
 
   const seen = new Set();
   const entries = [];
+  const ts = new Date().toISOString();
 
+  // Source 1: hardcoded legislative base-form verbs.
+  // Uses "this requirement" as a generic object so the entry parses correctly.
+  for (const verb of new Set(LEGISLATIVE_VERBS)) {
+    if (dict.verbs?.[verb]) continue;
+    const key = `${verb}|`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    entries.push(`${ts} | ${verb} this requirement | ${verb} | this requirement | legislative_vocab`);
+  }
+  console.log(`Hardcoded legislative verbs not yet in dictionary: ${entries.length}`);
+
+  // Source 2: gerunds from bill legal titles + de-gerunded base forms.
+  let fromTitles = 0;
   for (const bill of billIndex) {
     const phrases = [
       ...legalTitlePhrases(bill.legal_title),
@@ -99,20 +156,27 @@ async function main() {
 
       if (NON_VERB.has(verb)) continue;
 
-      // Skip verbs already covered by the dictionary — translate-dictionary
-      // would skip them anyway, but this keeps the entry count honest.
-      if (dict.verbs?.[verb]) continue;
+      // Push the gerund form itself
+      const candidates = [verb];
 
-      const key = `${verb}|${obj ?? ""}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
+      // Also push de-gerunded base form candidates so the pipeline's base-form
+      // lookups have a match even when the legal title only has the gerund.
+      if (verb.endsWith("ing")) {
+        candidates.push(...baseFormsOf(verb));
+      }
 
-      const entry = `${new Date().toISOString()} | ${raw} | ${verb} | ${obj ?? ""} | ${bill.bill_id_display}`;
-      entries.push(entry);
+      for (const candidate of candidates) {
+        if (dict.verbs?.[candidate]) continue;
+        const key = `${candidate}|${obj ?? ""}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        entries.push(`${ts} | ${raw} | ${candidate} | ${obj ?? ""} | ${bill.bill_id_display}`);
+        fromTitles++;
+      }
     }
   }
-
-  console.log(`Extracted ${entries.length} unique pairs (verbs not yet in dictionary)`);
+  console.log(`From bill titles (gerunds + base forms): ${fromTitles}`);
+  console.log(`Total entries to push: ${entries.length}`);
 
   const BATCH = 50;
   let pushed = 0;
@@ -126,10 +190,6 @@ async function main() {
   }
 
   console.log(`\nDone. ${pushed} entries in Redis missing-tokens list.`);
-
-  console.log("\nSample verbs to be translated:");
-  const verbSample = [...new Set(entries.map(e => e.split(" | ")[2]))].slice(0, 20);
-  console.log(" ", verbSample.join(", "));
 }
 
 main().catch(err => {
