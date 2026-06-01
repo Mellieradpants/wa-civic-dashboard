@@ -28,7 +28,7 @@ Input text runs through a 10-layer pipeline that extracts who, what, when, where
 
 For non-English output, sentence structure comes from static translation templates. Action phrases come from a token dictionary — if a phrase isn't in the dictionary yet, the output flags it with `[!]` and logs it to `lib/missing-tokens.txt` for a human translator to add.
 
-The bill index is populated from the WA Legislature bulk API by running `scripts/populate-bill-index.js`. That script needs outbound network access to `wslwebservices.leg.wa.gov` — run it locally or via CI, not from Render.
+The bill index is populated from the WA Legislature bulk API by a GitHub Actions workflow (`.github/workflows/populate-bill-index.yml`). It runs automatically every day at 6am UTC and can also be triggered manually. The WA Legislature API blocks Render's IPs, so the workflow runs on GitHub's infrastructure instead. `lib/missing-tokens.txt` is committed to the repo and tracked in git — it persists across Render restarts, though it resets on redeploy unless manually re-committed before deploying.
 
 ---
 
