@@ -767,7 +767,7 @@
     // Re-render cached ISC units in the target language — skips the pipeline entirely.
     // Uses /api/translate-selection which calls renderLocalized without any English
     // template fallback, ensuring structural words are in the target language.
-    // Returns { text, anyUntranslatedTokens, missingTokens[] }.
+    // Returns { text, isLocalized }.
     async function fetchTranslation(sectionUnitGroups, lang) {
       const results = await Promise.allSettled(
         sectionUnitGroups.map(units =>
@@ -782,21 +782,17 @@
       );
       const seenTr = new Set();
       const meanings = [];
-      let anyUntranslatedTokens = false;
-      const missingTokens = [];
+      let isLocalized = true;
 
       results.forEach(r => {
         if (r.status !== "fulfilled" || !r.value?.hasContent) return;
         if (seenTr.has(r.value.plainMeaning)) return;
         seenTr.add(r.value.plainMeaning);
         meanings.push(r.value.plainMeaning);
-        if (r.value.anyUntranslatedTokens) anyUntranslatedTokens = true;
-        (r.value.sentences || []).forEach(s => {
-          if (s.missingTokens) missingTokens.push(s.missingTokens);
-        });
+        if (r.value.isLocalized === false) isLocalized = false;
       });
 
-      return { text: meanings.join("\n\n"), anyUntranslatedTokens, missingTokens };
+      return { text: meanings.join("\n\n"), isLocalized };
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -855,20 +851,11 @@
         const result = await fetchTranslation(lastSectionUnits, lang);
         if (result.text) {
           let displayText = result.text;
-          if (result.anyUntranslatedTokens) {
+          if (!result.isLocalized) {
             displayText += "\n\n[!] Some action phrases remain in English. Dictionary entries are being added.";
           }
           translationCache[lang] = displayText;
           billDocPlainSummary.textContent = displayText;
-
-          // Fire-and-forget: log missing tokens for dictionary growth
-          result.missingTokens.forEach(mt => {
-            fetch("/api/missing-token", {
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify({ ...mt, bill_id: summaryBillNum, lang }),
-            }).catch(() => {});
-          });
         } else {
           billDocPlainSummary.textContent = englishSummary;
           summaryLangSelect.value = "en";

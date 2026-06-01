@@ -22,7 +22,7 @@ const HANDLERS = [
   { path: "/api/analyze",               file: "./api/analyze.js",               methods: ["POST"] },
   { path: "/api/plain-meaning",          file: "./api/plain-meaning.js",          methods: ["POST"] },
   { path: "/api/translate-selection",   file: "./api/translate-selection.js",   methods: ["POST"] },
-  { path: "/api/missing-token",         file: "./api/missing-token.js",         methods: ["POST", "GET"] },
+  { path: "/api/missing-token",         file: "./api/missing-token.js",         methods: ["GET"] },
   { path: "/api/openapi",               file: "./api/openapi.js",               methods: ["GET"] },
 ];
 

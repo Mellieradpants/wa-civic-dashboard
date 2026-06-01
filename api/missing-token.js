@@ -1,41 +1,30 @@
-const log = [];
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const MISSING_TOKENS_FILE = path.join(__dirname, "..", "lib", "missing-tokens.txt");
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") return res.status(204).end();
 
-  if (req.method === "GET") {
-    return res.status(200).json({ count: log.length, entries: log });
-  }
-
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST, GET");
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET");
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  res.setHeader("Cache-Control", "no-store, max-age=0");
-
-  let body = req.body;
-  if (typeof body === "string") {
-    try { body = JSON.parse(body); } catch (_) { body = {}; }
+  try {
+    const content = await readFile(MISSING_TOKENS_FILE, "utf8");
+    const lines = content.split("\n").filter(Boolean);
+    return res.status(200).json({ count: lines.length, entries: lines });
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      return res.status(200).json({ count: 0, entries: [] });
+    }
+    return res.status(500).json({ message: "Could not read missing tokens log." });
   }
-
-  const { verb, object: obj, raw, bill_id, lang } = body || {};
-
-  const entry = {
-    timestamp: new Date().toISOString(),
-    verb: verb || null,
-    object: obj || null,
-    raw: raw || null,
-    bill_id: bill_id || null,
-    lang: lang || null,
-  };
-
-  log.push(entry);
-  console.log("[missing-token]", JSON.stringify(entry));
-
-  return res.status(200).json({ recorded: true });
 }
