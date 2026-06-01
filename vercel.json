@@ -10,6 +10,9 @@
     },
     "api/plain-meaning.js": {
       "includeFiles": "lib/**"
+    },
+    "api/translate-selection.js": {
+      "includeFiles": "lib/**"
     }
   }
 }
