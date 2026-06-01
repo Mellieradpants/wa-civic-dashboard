@@ -1,125 +1,99 @@
 # Washington Civic Dashboard
 
-A plain-language access layer for Washington State legislation. The dashboard retrieves official bill records, extracts structured rule units through a deterministic 10-layer parsing pipeline, and renders plain-meaning sentences — without AI calls for bill analysis.
-
-Deployed as a single service on Render. The API and the three-page frontend are served from the same Express server.
+A civic dashboard that makes Washington State legislation readable for everyone — including people who don't speak English. Look up any bill, read what it actually requires in plain language, switch between 8 languages.
 
 ---
 
-## How it works
+## Languages
 
-When a user selects a bill in the dashboard:
-
-1. **Bill metadata** is fetched from the WA Legislature SOAP API
-2. **Official document links** are scraped from the WA Legislature document search
-3. **Raw bill text** is fetched from the official HTML bill document and split into sections
-4. **Plain meaning** is extracted by running the bill text through the 10-layer deterministic pipeline — no AI involved
-
-The pipeline (described below) parses the bill text for signal sentences (obligations, permissions, prohibitions), extracts structured fields (actor, action, conditions, deadlines, jurisdiction), classifies each sentence into one of six scope lenses, and renders a plain-language sentence from a fixed template. The result is deterministic and reproducible.
-
-AI is not used anywhere in this service. Search query expansion uses a static RCW synonym map (`lib/synonymMap.json`). Multi-language output uses static sentence templates (`lib/translations.json`) covering Spanish, Vietnamese, Russian, Ukrainian, Tagalog, Somali, and Korean. No model calls are made at any point.
+English, Spanish, Somali, Russian, Ukrainian, Korean, Vietnamese, Tagalog.
 
 ---
 
-## The 10-layer pipeline
+## What it does
 
-All layers are deterministic. No model calls. Lives in `lib/plain-meaning/pipeline.js`.
+- Search 2,808 active 2025–26 WA bills by keyword or number
+- Read official bill sections
+- See plain meaning output — what each section actually requires, permits, or prohibits
+- Switch languages and get native-language output
+- See section type labels — addition, amendment, repeal, appropriation
 
-| Layer | Name | What it does |
-|-------|------|--------------|
-| L1 | 5WIH | Who / What / When / Where / Why / How assembly |
-| L2 | SSE | Source statement extraction — detects obligation, permission, and prohibition signal sentences |
-| L3 | CFS | Constraint filter — blocks intent, narrative, and purpose language |
-| L4 | LNS | Language normalization — strips section headers and whitespace noise |
-| L5 | AAC | Actor-action-condition parsing — extracts responsible party, modal verb, action, and conditional clauses |
-| L6 | TPS | Temporal parsing — extracts deadlines, triggers, and sequence signals |
-| L7 | SJM | System/jurisdiction mapping — identifies Washington State vs. federal references and controlling entities |
-| L8 | MPS | Mechanism parsing — extracts how a requirement is fulfilled and enforcement language |
-| L9 | RDS | Risk decomposition — separates likelihood signals from consequence signals |
-| L10 | ISC | Information set construction — assembles the structured unit from all prior layers |
+---
 
-The renderer (`lib/plain-meaning/renderer.js`) takes ISC units and applies one of six scope-lens sentence templates to produce plain-language output.
+## How the pipeline works
 
-### Scope lenses
+No AI anywhere in the data path. Everything is deterministic and traceable to source text. Missing information is flagged, not filled.
 
-| Lens | Triggered by |
-|------|-------------|
-| `obligation_removal` | "no longer required", "waived", "exempted" |
-| `threshold_shift` | numeric standards, deadlines, percentages, "no less than", "minimum" |
-| `actor_power_shift` | "responsible for", "authorized to", "delegated", "reports to" |
-| `action_domain_shift` | inspect, audit, certify, train, document, implement, maintain |
-| `scope_change` | throughout, across all, all covered, applies to, regardless of |
-| `modality_shift` | default — any obligation, permission, or prohibition not matched above |
+Input text runs through a 10-layer pipeline that extracts who, what, when, where, why, and how. A renderer turns that into plain sentences using one of six scope-lens templates.
 
-### Two input paths
+For non-English output, sentence structure comes from static translation templates. Action phrases come from a token dictionary — if a phrase isn't in the dictionary yet, the output flags it with `[!]` and logs it to `lib/missing-tokens.txt` for a human translator to add.
 
-The `/api/plain-meaning` endpoint accepts either:
+The bill index is populated from the WA Legislature bulk API by a GitHub Actions workflow (`.github/workflows/populate-bill-index.yml`). It runs automatically every day at 6am UTC and can also be triggered manually. The WA Legislature API blocks Render's IPs, so the workflow runs on GitHub's infrastructure instead. `lib/missing-tokens.txt` is committed to the repo and tracked in git — it persists across Render restarts, though it resets on redeploy unless manually re-committed before deploying.
 
-- **`{ text }`** — raw bill or policy text. The full JS pipeline runs internally. Use this when calling from the dashboard or sending raw text.
-- **`{ units }`** — pre-processed ISC units from the TCS Python pipeline. Skips directly to the renderer. This is the primary integration path when the TCS pipeline is running upstream.
+---
+
+## Translation state
+
+Sentence structure templates are complete for all 7 non-English languages. The action phrase dictionary is a seed — one verb, one object. Most action phrases in real bills will show a `[!]` flag until human translators fill them in. That's by design. The translator work queue is at `GET /api/missing-token`.
+
+---
+
+## Tech stack
+
+- Node.js, Express 4
+- Vercel frontend, Render backend
+- No AI dependencies
+- No database — bill index is `data/wa/bill-index.json`, a static file
+- Translation dictionary is `lib/action-dictionary.json`, a static file
+- Missing tokens write to `lib/missing-tokens.txt`, a flat file
 
 ---
 
 ## API endpoints
 
-All endpoints are documented in the live OpenAPI spec at `/api/openapi`.
+Full spec at `/api/openapi`.
 
-| Method | Path | Description |
+| Method | Path | What it does |
 |--------|------|-------------|
-| GET | `/api/health` | Service health check. Returns `serviceUrl` and `plainMeaningEndpoint` so clients can discover the deployed URL. |
-| GET | `/api/openapi` | OpenAPI 3.1 specification for all endpoints. |
-| POST | `/api/plain-meaning` | Deterministic plain-meaning extraction. No AI. Accepts `{ text }` or `{ units }`. |
-| GET | `/api/wa-bill-search` | Keyword or bill-number search against the local bill index, with RCW synonym expansion. |
-| GET | `/api/wa-bill-detail` | Official bill metadata from the WA Legislature SOAP API. |
-| GET | `/api/wa-bill-documents` | Official document links (PDF, HTML, Word) scraped from the WA Legislature. |
-| GET | `/api/wa-bill-text` | Raw bill text extracted from the official HTML document, split into sections. |
-| GET | `/api/wa-bill-selection` | Classifies bill sentences into rule candidate units (obligation, prohibition, permission, condition, exception, definition, reference). |
-| GET | `/api/wa-bill-plain-summary` | Returns 410 Gone — replaced by `/api/plain-meaning`. |
-| POST | `/api/analyze` | Returns 410 Gone — replaced by `/api/plain-meaning`. |
+| GET | `/api/health` | Health check — confirms service URL and WA Legislature API reachability |
+| GET | `/api/wa-bill-search` | Keyword or bill-number search against the local index |
+| GET | `/api/wa-bill-detail` | Official bill metadata from the WA Legislature SOAP API |
+| GET | `/api/wa-bill-documents` | Official document links (PDF, HTML, Word) |
+| GET | `/api/wa-bill-text` | Raw bill text split into sections |
+| GET | `/api/wa-bill-selection` | Sentence classification into rule candidate units |
+| POST | `/api/plain-meaning` | Plain-meaning extraction — accepts `{ text }` or `{ units }` |
+| POST | `/api/translate-selection` | Re-renders ISC units in a target language |
+| GET | `/api/missing-token` | Translator work queue — phrases not yet in the dictionary |
+| GET | `/api/openapi` | OpenAPI 3.1 spec |
 
 ---
 
 ## Repository structure
 
 ```
-server.js                        Express 4 server — registers all API handlers,
-                                 serves HTML pages and /lib static modules
+server.js                   Express server — routes, static files, /lib modules
+render.yaml                 Render deployment config
+vercel.json                 Vercel deployment config
 
-render.yaml                      Render deployment config (single web service)
-package.json                     Dependencies: express, @upstash/redis
-
-api/
-  health.js                      GET  /api/health
-  openapi.js                     GET  /api/openapi
-  plain-meaning.js               POST /api/plain-meaning
-  wa-bill-search.js              GET  /api/wa-bill-search
-  wa-bill-detail.js              GET  /api/wa-bill-detail
-  wa-bill-documents.js           GET  /api/wa-bill-documents
-  wa-bill-text.js                GET  /api/wa-bill-text
-  wa-bill-selection.js           GET  /api/wa-bill-selection
-  wa-bill-plain-summary.js       GET  /api/wa-bill-plain-summary (410 stub)
-  analyze.js                     POST /api/analyze (410 stub)
-
+api/                        One file per endpoint
 lib/
   plain-meaning/
-    pipeline.js                  10-layer deterministic pipeline (runPipeline)
-    renderer.js                  Scope-lens template renderer (renderISC, renderUnit)
-  translations.json              Static multi-language sentence templates (es, vi, ru, uk, tl, so, ko)
-  synonymMap.json                RCW title synonym map for search expansion
-  wa-adapter/
-    index.js                     WA Legislature API adapter (getNormalizedBill)
+    pipeline.js             10-layer deterministic pipeline
+    renderer.js             Scope-lens template renderer
+  translations.json         Sentence structure templates (7 languages)
+  action-dictionary.json    Action phrase token dictionary
+  missing-tokens.txt        Flat log of phrases not yet translated
+  synonymMap.json           RCW title synonym map for search
 
-index.html                       Dashboard home page
-legislation.html                 Bill reader — search, plain meaning, sections, translation
-voting.html                      Voting resources
+index.html                  Dashboard home
+legislation.html            Bill reader
+voting.html                 Voting resources
 
 scripts/
-  populate-bill-index.js         Build-time script — populates data/wa/bill-index.json
-                                 from the WA Legislature bulk API
+  populate-bill-index.js    Populates data/wa/bill-index.json from WA Legislature API
 
-data/
-  wa/
-    bill-index.json              Local bill index used by /api/wa-bill-search
+data/wa/
+  bill-index.json           2,808 active 2025-26 bills
 ```
 
 ---
@@ -131,48 +105,9 @@ npm install
 node server.js
 ```
 
-The server starts on port 3000. Open `http://localhost:3000/legislation.html` for the bill reader or `http://localhost:3000/api/openapi` for the full API spec.
+Server starts on port 3000. No environment variables required — everything degrades gracefully without them.
 
-The service runs without any environment variables configured — all external API features degrade gracefully.
-
----
-
-## Environment variables
-
-No AI API keys are required. All plain-meaning extraction and multi-language output is fully deterministic.
-
-| Variable | Required for |
-|----------|-------------|
+| Variable | Used for |
+|----------|---------|
 | `UPSTASH_REDIS_REST_URL` | Redis caching (optional) |
 | `UPSTASH_REDIS_REST_TOKEN` | Redis caching (optional) |
-
-Redis is optional. All cache reads and writes are wrapped in silent `try/catch` — the service functions fully without it.
-
----
-
-## Deployment
-
-The project deploys as a single Render web service defined in `render.yaml`.
-
-```
-Build:  npm install
-Start:  node server.js
-```
-
-On first deploy, run the bill index build to populate the search index:
-
-```bash
-node scripts/populate-bill-index.js
-```
-
-Once deployed, call `/api/health` to confirm the service URL and verify connectivity. The response includes `serviceUrl` and `plainMeaningEndpoint` for client configuration.
-
----
-
-## Design principles
-
-**Plain meaning is never AI-generated.** The 10-layer pipeline and scope-lens renderer produce all plain-meaning output deterministically. The same input always produces the same output. This is intentional — bill analysis should be auditable and reproducible, not variable by model version or prompt drift.
-
-**Official sources first.** The dashboard links back to official WA Legislature records at every step. It does not replace official sources or provide political recommendations.
-
-**Graceful degradation.** Missing API keys and Redis failures never crash the server. Features that depend on external services return clear error states; everything else continues to work.

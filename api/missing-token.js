@@ -1,9 +1,8 @@
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import { Redis } from "@upstash/redis";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const MISSING_TOKENS_FILE = path.join(__dirname, "..", "lib", "missing-tokens.txt");
+const redis = (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN)
+  ? new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN })
+  : null;
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -17,14 +16,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
+  if (!redis) {
+    return res.status(200).json({ count: 0, entries: [] });
+  }
+
   try {
-    const content = await readFile(MISSING_TOKENS_FILE, "utf8");
-    const lines = content.split("\n").filter(Boolean);
-    return res.status(200).json({ count: lines.length, entries: lines });
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      return res.status(200).json({ count: 0, entries: [] });
-    }
+    const entries = await redis.lrange("missing-tokens", 0, -1);
+    return res.status(200).json({ count: entries.length, entries });
+  } catch {
     return res.status(500).json({ message: "Could not read missing tokens log." });
   }
 }
