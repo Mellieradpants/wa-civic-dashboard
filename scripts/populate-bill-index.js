@@ -11,7 +11,16 @@ const OUTPUT_PATH = path.join(__dirname, "..", "data", "wa", "bill-index.json");
 
 const YEAR = "2025";
 const BIENNIUM = "2025-26";
-const BULK_URL = "https://wslwebservices.leg.wa.gov/legislationservice.asmx/GetLegislationByYear";
+const LEGISLATION_SERVICE_BASE = "https://wslwebservices.leg.wa.gov/legislationservice.asmx";
+const BULK_URL = `${LEGISLATION_SERVICE_BASE}/GetLegislationByYear`;
+const DETAIL_URL = `${LEGISLATION_SERVICE_BASE}/GetLegislation`;
+
+const BATCH_SIZE = 10;
+const BATCH_DELAY_MS = 500;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function decodeXml(value) {
   return String(value || "")
@@ -45,7 +54,6 @@ function parseLegislationInfo(block) {
   const billId = getTag(block, "BillId");
   const billNumber = getTag(block, "BillNumber");
   const originalAgency = getTag(block, "OriginalAgency");
-  const shortDescription = getTag(block, "ShortDescription");
   const active = getTag(block, "Active");
 
   if (!billId || !billNumber) return null;
@@ -64,13 +72,68 @@ function parseLegislationInfo(block) {
     bill_id_normalized: billIdNormalized,
     bill_number: billNumber,
     chamber: originalAgency || "",
-    title: shortDescription || "",
+    title: "",
+    legal_title: "",
     session: BIENNIUM,
     status,
     keywords: [],
     source_url: `https://app.leg.wa.gov/billsummary?BillNumber=${billNumber}&Year=${YEAR}`,
     detail_api_path: `/api/wa-bill-detail?billNumber=${billNumber}&biennium=${BIENNIUM}`,
   };
+}
+
+async function fetchBillDetail(billNumber) {
+  const url = `${DETAIL_URL}?${new URLSearchParams({ biennium: BIENNIUM, billNumber })}`;
+  const response = await fetch(url, {
+    headers: { Accept: "text/xml, application/xml, */*" },
+  });
+  if (!response.ok) return null;
+  const xml = await response.text();
+  const legislationBlock = getBlock(xml, "Legislation");
+  if (!legislationBlock) return null;
+  return {
+    shortDescription: getTag(legislationBlock, "ShortDescription") || "",
+    legalTitle: getTag(legislationBlock, "LegalTitle") || "",
+  };
+}
+
+async function enrichWithDetails(records) {
+  const total = records.length;
+  let fetched = 0;
+  let failed = 0;
+
+  for (let i = 0; i < records.length; i += BATCH_SIZE) {
+    const batch = records.slice(i, i + BATCH_SIZE);
+
+    await Promise.all(
+      batch.map(async (record) => {
+        try {
+          const detail = await fetchBillDetail(record.bill_number);
+          if (detail) {
+            record.title = detail.shortDescription || detail.legalTitle || record.bill_id_display;
+            record.legal_title = detail.legalTitle;
+          } else {
+            record.title = record.bill_id_display;
+            failed++;
+          }
+        } catch {
+          record.title = record.bill_id_display;
+          failed++;
+        }
+        fetched++;
+      })
+    );
+
+    if ((i + BATCH_SIZE) % 100 === 0 || i + BATCH_SIZE >= total) {
+      console.log(`  ${Math.min(fetched, total)}/${total} bills enriched (${failed} failed)`);
+    }
+
+    if (i + BATCH_SIZE < records.length) {
+      await sleep(BATCH_DELAY_MS);
+    }
+  }
+
+  return failed;
 }
 
 async function fallbackToExisting(reason) {
@@ -120,12 +183,18 @@ async function main() {
   const records = blocks.map(parseLegislationInfo).filter(Boolean);
   records.sort((a, b) => Number(a.bill_number) - Number(b.bill_number));
 
+  console.log(`\nFetching per-bill details (${records.length} bills, batches of ${BATCH_SIZE})...`);
+  const failCount = await enrichWithDetails(records);
+  if (failCount > 0) {
+    console.warn(`${failCount} bills could not be enriched — using bill ID as fallback title.`);
+  }
+
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
   await fs.writeFile(OUTPUT_PATH, JSON.stringify(records, null, 2), "utf8");
 
-  console.log(`Wrote ${records.length} records → ${OUTPUT_PATH}`);
+  console.log(`\nWrote ${records.length} records → ${OUTPUT_PATH}`);
 
-  const sample = records[0];
+  const sample = records.find((r) => r.title && r.title !== r.bill_id_display) || records[0];
   if (sample) {
     console.log("\nSample record:");
     console.log(JSON.stringify(sample, null, 2));
