@@ -14104,6 +14104,4163 @@
       "tl": "ptsd",
       "so": "ptsd",
       "ko": "외상 후 스트레스 장애"
+    },
+    "create": {
+      "es": "crear",
+      "vi": "tạo nên",
+      "ru": "создавать",
+      "uk": "створити",
+      "tl": "lumikha",
+      "so": "abuur",
+      "ko": "만들다"
+    },
+    "creat": {
+      "es": "creador",
+      "vi": "người sáng tạo",
+      "ru": "создатель",
+      "uk": "творець",
+      "tl": "tagalikha",
+      "so": "abuure",
+      "ko": "창조자"
+    },
+    "establishe": {
+      "es": "establecer",
+      "vi": "thiết lập",
+      "ru": "установить",
+      "uk": "встановити",
+      "tl": "magtatag",
+      "so": "aasaas",
+      "ko": "설립하다"
+    },
+    "establish": {
+      "es": "establecer",
+      "vi": "thành lập",
+      "ru": "учреждать",
+      "uk": "встановити",
+      "tl": "magtatag",
+      "so": "aasaas",
+      "ko": "설립하다"
+    },
+    "standardize": {
+      "es": "estandarizar",
+      "vi": "tiêu chuẩn hóa",
+      "ru": "стандартизировать",
+      "uk": "стандартизувати",
+      "tl": "gawing pamantayan",
+      "so": "midaysan",
+      "ko": "표준화하다"
+    },
+    "standardiz": {
+      "es": "estandarizar",
+      "vi": "tiêu chuẩn hóa",
+      "ru": "стандартизировать",
+      "uk": "стандартизувати",
+      "tl": "gawing pamantayan",
+      "so": "midaysan",
+      "ko": "표준화하다"
+    },
+    "expande": {
+      "es": "se expande",
+      "vi": "mở rộng",
+      "ru": "расширяется",
+      "uk": "розширюється",
+      "tl": "lumalawak",
+      "so": "way fidaysaa",
+      "ko": "확장됩니다"
+    },
+    "expand": {
+      "es": "expandir",
+      "vi": "mở rộng",
+      "ru": "расширять",
+      "uk": "розширити",
+      "tl": "palawakin",
+      "so": "ballaari",
+      "ko": "확장하다"
+    },
+    "celebrate": {
+      "es": "celebrar",
+      "vi": "kỉ niệm",
+      "ru": "праздновать",
+      "uk": "святкувати",
+      "tl": "magdiwang",
+      "so": "u dabaaldeg",
+      "ko": "축하하다"
+    },
+    "celebrat": {
+      "es": "celebrado",
+      "vi": "được kỷ niệm",
+      "ru": "прославленный",
+      "uk": "відзначався",
+      "tl": "ipinagdiwang",
+      "so": "loo dabaaldegay",
+      "ko": "유명한"
+    },
+    "modifye": {
+      "es": "modificar",
+      "vi": "biến đổi",
+      "ru": "изменить",
+      "uk": "змінювати",
+      "tl": "baguhin",
+      "so": "wax ka beddel",
+      "ko": "수정하다"
+    },
+    "modify": {
+      "es": "modificar",
+      "vi": "biến đổi",
+      "ru": "изменить",
+      "uk": "змінювати",
+      "tl": "baguhin",
+      "so": "wax ka beddel",
+      "ko": "수정하다"
+    },
+    "update": {
+      "es": "actualizar",
+      "vi": "cập nhật",
+      "ru": "обновлять",
+      "uk": "оновлення",
+      "tl": "pag-update",
+      "so": "cusbooneysiin",
+      "ko": "업데이트"
+    },
+    "updat": {
+      "es": "actualizado",
+      "vi": "đã cập nhật",
+      "ru": "обновлено",
+      "uk": "оновлено",
+      "tl": "na-update",
+      "so": "la cusbooneysiiyay",
+      "ko": "업데이트됨"
+    },
+    "provide": {
+      "es": "proporcionar",
+      "vi": "cung cấp",
+      "ru": "предоставлять",
+      "uk": "забезпечити",
+      "tl": "magbigay",
+      "so": "bixi",
+      "ko": "제공하다"
+    },
+    "provid": {
+      "es": "proporcionar",
+      "vi": "cung cấp",
+      "ru": "обеспечить",
+      "uk": "забезпечити",
+      "tl": "magbigay",
+      "so": "bixi",
+      "ko": "제공하다"
+    },
+    "exempte": {
+      "es": "eximir",
+      "vi": "miễn trừ",
+      "ru": "освобождать",
+      "uk": "звільнений",
+      "tl": "libre",
+      "so": "ka reeban",
+      "ko": "면제"
+    },
+    "exempt": {
+      "es": "eximir",
+      "vi": "miễn trừ",
+      "ru": "освобождать",
+      "uk": "звільнений",
+      "tl": "libre",
+      "so": "ka reeban",
+      "ko": "면제"
+    },
+    "cap": {
+      "es": "tapa",
+      "vi": "mũ",
+      "ru": "кепка",
+      "uk": "кепка",
+      "tl": "takip",
+      "so": "daboolka",
+      "ko": "캡"
+    },
+    "cappe": {
+      "es": "capuchas",
+      "vi": "mũ trùm đầu",
+      "ru": "капюшоны",
+      "uk": "капюшони",
+      "tl": "mga hood",
+      "so": "koofiyadaha",
+      "ko": "후드"
+    },
+    "capp": {
+      "es": "gorra",
+      "vi": "mũ",
+      "ru": "капп",
+      "uk": "кап",
+      "tl": "kap",
+      "so": "koofiyad",
+      "ko": "캡"
+    },
+    "permit": {
+      "es": "permiso",
+      "vi": "cho phép làm gì",
+      "ru": "разрешать",
+      "uk": "дозвіл",
+      "tl": "permiso",
+      "so": "ogolaansho",
+      "ko": "허용하다"
+    },
+    "permitte": {
+      "es": "permisos",
+      "vi": "giấy phép",
+      "ru": "разрешения",
+      "uk": "дозволи",
+      "tl": "mga permit",
+      "so": "ogolaanshaha",
+      "ko": "허가"
+    },
+    "permitt": {
+      "es": "permiso de ausencia",
+      "vi": "nghỉ phép",
+      "ru": "отпуск",
+      "uk": "відпустка",
+      "tl": "bakasyon",
+      "so": "fasax maqnaansho",
+      "ko": "휴가"
+    },
+    "protecte": {
+      "es": "protección",
+      "vi": "sự bảo vệ",
+      "ru": "защита",
+      "uk": "захист",
+      "tl": "proteksyon",
+      "so": "ilaalinta",
+      "ko": "보호"
+    },
+    "protect": {
+      "es": "proteger",
+      "vi": "bảo vệ",
+      "ru": "защищать",
+      "uk": "захищати",
+      "tl": "protektahan",
+      "so": "ilaali",
+      "ko": "보호하다"
+    },
+    "preserve": {
+      "es": "preservar",
+      "vi": "bảo tồn",
+      "ru": "сохранять",
+      "uk": "зберегти",
+      "tl": "pangalagaan",
+      "so": "ilaali",
+      "ko": "보존하다"
+    },
+    "preserv": {
+      "es": "conservar",
+      "vi": "bảo quản",
+      "ru": "консервировать",
+      "uk": "консервувати",
+      "tl": "pangalagaan",
+      "so": "ilaali",
+      "ko": "보존하다"
+    },
+    "limite": {
+      "es": "límite",
+      "vi": "giới hạn",
+      "ru": "лимит",
+      "uk": "ліміт",
+      "tl": "limitasyon",
+      "so": "xadka",
+      "ko": "한계"
+    },
+    "limit": {
+      "es": "límite",
+      "vi": "giới hạn",
+      "ru": "лимит",
+      "uk": "ліміт",
+      "tl": "limitasyon",
+      "so": "xadka",
+      "ko": "한계"
+    },
+    "remove": {
+      "es": "eliminar",
+      "vi": "di dời",
+      "ru": "удалять",
+      "uk": "видалити",
+      "tl": "tanggalin",
+      "so": "ka saar",
+      "ko": "제거하다"
+    },
+    "remov": {
+      "es": "eliminar",
+      "vi": "xóa",
+      "ru": "удалить",
+      "uk": "видалити",
+      "tl": "tanggalin",
+      "so": "ka saar",
+      "ko": "제거"
+    },
+    "hous": {
+      "es": "casa",
+      "vi": "nhà",
+      "ru": "дом",
+      "uk": "будинок",
+      "tl": "bahay",
+      "so": "guri",
+      "ko": "집"
+    },
+    "utilize": {
+      "es": "utilizar",
+      "vi": "sử dụng",
+      "ru": "использовать",
+      "uk": "використовувати",
+      "tl": "gamitin",
+      "so": "isticmaal",
+      "ko": "활용하다"
+    },
+    "utiliz": {
+      "es": "USAR",
+      "vi": "SỬ DỤNG",
+      "ru": "ИСПОЛЬЗОВАТЬ",
+      "uk": "ВИКОРИСТАННЯ",
+      "tl": "GAMITIN",
+      "so": "ISTICMAAL",
+      "ko": "사용"
+    },
+    "make": {
+      "es": "hacer",
+      "vi": "làm",
+      "ru": "делать",
+      "uk": "зробити",
+      "tl": "gumawa",
+      "so": "samee",
+      "ko": "만들다"
+    },
+    "mak": {
+      "es": "mamá",
+      "vi": "mẹ",
+      "ru": "мама",
+      "uk": "мама",
+      "tl": "nanay",
+      "so": "hooyo",
+      "ko": "엄마"
+    },
+    "adde": {
+      "es": "agregar",
+      "vi": "thêm vào",
+      "ru": "добавлять",
+      "uk": "додати",
+      "tl": "idagdag",
+      "so": "ku dar",
+      "ko": "추가하다"
+    },
+    "add": {
+      "es": "agregar",
+      "vi": "thêm vào",
+      "ru": "добавлять",
+      "uk": "додати",
+      "tl": "idagdag",
+      "so": "ku dar",
+      "ko": "추가하다"
+    },
+    "partnere": {
+      "es": "fogonadura",
+      "vi": "đối tác",
+      "ru": "партнеры",
+      "uk": "партнери",
+      "tl": "mga kasosyo",
+      "so": "la-hawlgalayaasha",
+      "ko": "파트너"
+    },
+    "increas": {
+      "es": "aumenta",
+      "vi": "tăng lên",
+      "ru": "увеличение",
+      "uk": "збільшення",
+      "tl": "pagtaas",
+      "so": "koror",
+      "ko": "증가"
+    },
+    "encourage": {
+      "es": "alentar",
+      "vi": "khuyến khích",
+      "ru": "поощрять",
+      "uk": "заохочувати",
+      "tl": "hikayatin",
+      "so": "dhiirigelin",
+      "ko": "장려하다"
+    },
+    "encourag": {
+      "es": "alentar",
+      "vi": "khuyến khích",
+      "ru": "поощрять",
+      "uk": "заохочувати",
+      "tl": "hikayatin",
+      "so": "dhiiri geli",
+      "ko": "격려하다"
+    },
+    "engineere": {
+      "es": "ingeniero",
+      "vi": "kỹ sư",
+      "ru": "инженер",
+      "uk": "інженер",
+      "tl": "inhinyero",
+      "so": "injineer",
+      "ko": "엔지니어"
+    },
+    "engineer": {
+      "es": "ingeniero",
+      "vi": "kỹ sư",
+      "ru": "инженер",
+      "uk": "інженер",
+      "tl": "inhinyero",
+      "so": "injineer",
+      "ko": "엔지니어"
+    },
+    "augmente": {
+      "es": "aumentar",
+      "vi": "tăng",
+      "ru": "увеличивать",
+      "uk": "збільшення",
+      "tl": "pagtaas",
+      "so": "kordhin",
+      "ko": "증가하다"
+    },
+    "augment": {
+      "es": "aumentar",
+      "vi": "tăng",
+      "ru": "увеличить",
+      "uk": "збільшити",
+      "tl": "dagdagan",
+      "so": "kordhin",
+      "ko": "증강"
+    },
+    "clarifye": {
+      "es": "aclarar",
+      "vi": "làm rõ",
+      "ru": "уточнить",
+      "uk": "уточнення",
+      "tl": "linawin",
+      "so": "caddayn",
+      "ko": "명확히 하세요"
+    },
+    "clarify": {
+      "es": "aclarar",
+      "vi": "làm rõ",
+      "ru": "объяснить",
+      "uk": "уточнити",
+      "tl": "linawin",
+      "so": "caddayn",
+      "ko": "밝히다"
+    },
+    "mis": {
+      "es": "qué",
+      "vi": "Gì",
+      "ru": "что",
+      "uk": "що",
+      "tl": "ano",
+      "so": "maxay",
+      "ko": "무엇"
+    },
+    "misse": {
+      "es": "debe",
+      "vi": "phải",
+      "ru": "должен",
+      "uk": "повинен",
+      "tl": "dapat",
+      "so": "waa in",
+      "ko": "~ 해야 하다"
+    },
+    "miss": {
+      "es": "extrañar",
+      "vi": "cô",
+      "ru": "скучать",
+      "uk": "промах",
+      "tl": "binibini",
+      "so": "seeg",
+      "ko": "놓치다"
+    },
+    "ensure": {
+      "es": "asegurar",
+      "vi": "đảm bảo",
+      "ru": "гарантировать",
+      "uk": "забезпечити",
+      "tl": "siguraduhin",
+      "so": "hubi",
+      "ko": "보장하다"
+    },
+    "ensur": {
+      "es": "en",
+      "vi": "TRÊN",
+      "ru": "на",
+      "uk": "на",
+      "tl": "sa",
+      "so": "ku shaqeeya",
+      "ko": "~에"
+    },
+    "facilitate": {
+      "es": "facilitar",
+      "vi": "tạo điều kiện",
+      "ru": "способствовать",
+      "uk": "сприяти",
+      "tl": "mapadali",
+      "so": "fududee",
+      "ko": "가능하게 하다"
+    },
+    "facilitat": {
+      "es": "facilidad",
+      "vi": "xoa dịu",
+      "ru": "простота",
+      "uk": "легкість",
+      "tl": "kadalian",
+      "so": "fudeyd",
+      "ko": "쉬움"
+    },
+    "generate": {
+      "es": "generar",
+      "vi": "phát ra",
+      "ru": "генерировать",
+      "uk": "генерувати",
+      "tl": "makabuo",
+      "so": "dhalin",
+      "ko": "생성하다"
+    },
+    "generat": {
+      "es": "generoso",
+      "vi": "hào phóng",
+      "ru": "щедрый",
+      "uk": "щедрий",
+      "tl": "mapagbigay",
+      "so": "deeqsinimo leh",
+      "ko": "관대한"
+    },
+    "improve": {
+      "es": "mejorar",
+      "vi": "cải thiện ",
+      "ru": "улучшать",
+      "uk": "покращити",
+      "tl": "pagbutihin",
+      "so": "horumar",
+      "ko": "개선하다"
+    },
+    "improv": {
+      "es": "improvisación",
+      "vi": "ứng biến",
+      "ru": "improv",
+      "uk": "improv",
+      "tl": "improv",
+      "so": "hagaajinta",
+      "ko": "즉흥 연기"
+    },
+    "rebalance": {
+      "es": "reequilibrio",
+      "vi": "cân bằng lại",
+      "ru": "перебалансировка",
+      "uk": "ребаланс",
+      "tl": "muling pagbabalanse",
+      "so": "dib-u-dheellitirka",
+      "ko": "리밸런싱"
+    },
+    "rebalanc": {
+      "es": "reequilibrio",
+      "vi": "cân bằng lại",
+      "ru": "перебалансировка",
+      "uk": "ребаланс",
+      "tl": "muling pagbabalanse",
+      "so": "dib-u-dheellitirka",
+      "ko": "리밸런싱"
+    },
+    "authorize": {
+      "es": "autorizar",
+      "vi": "ủy quyền",
+      "ru": "авторизовать",
+      "uk": "уповноважити",
+      "tl": "pahintulutan",
+      "so": "oggolaansho",
+      "ko": "승인하다"
+    },
+    "authoriz": {
+      "es": "autorización",
+      "vi": "ủy quyền",
+      "ru": "авториз",
+      "uk": "авторизувати",
+      "tl": "awtorisado",
+      "so": "oggolaansho",
+      "ko": "승인됨"
+    },
+    "enacte": {
+      "es": "promulgar",
+      "vi": "ban hành",
+      "ru": "воплотить",
+      "uk": "приймати",
+      "tl": "magpatupad",
+      "so": "sharci dejin",
+      "ko": "제정하다"
+    },
+    "enact": {
+      "es": "promulgar",
+      "vi": "ban hành",
+      "ru": "ввести",
+      "uk": "приймати",
+      "tl": "magpatupad",
+      "so": "sharci dejin",
+      "ko": "제정하다"
+    },
+    "reduce": {
+      "es": "reducir",
+      "vi": "giảm bớt",
+      "ru": "уменьшать",
+      "uk": "зменшити",
+      "tl": "bawasan",
+      "so": "yaree",
+      "ko": "줄이다"
+    },
+    "reduc": {
+      "es": "reducir",
+      "vi": "giảm",
+      "ru": "уменьшить",
+      "uk": "зменшити",
+      "tl": "bawasan",
+      "so": "yaree",
+      "ko": "줄이다"
+    },
+    "cost-of-live": {
+      "es": "costo de vida",
+      "vi": "chi phí sinh hoạt",
+      "ru": "стоимость жизни",
+      "uk": "вартість життя",
+      "tl": "gastos sa pamumuhay",
+      "so": "qiimaha nolosha",
+      "ko": "생활비"
+    },
+    "cost-of-liv": {
+      "es": "costo de vida",
+      "vi": "chi phí sinh hoạt",
+      "ru": "стоимость жизни",
+      "uk": "вартість життя",
+      "tl": "gastos sa pamumuhay",
+      "so": "kharashka nolosha",
+      "ko": "생활비"
+    },
+    "restore": {
+      "es": "restaurar",
+      "vi": "khôi phục",
+      "ru": "восстановить",
+      "uk": "відновити",
+      "tl": "ibalik",
+      "so": "soo celin",
+      "ko": "복원하다"
+    },
+    "restor": {
+      "es": "restaurante",
+      "vi": "nhà hàng",
+      "ru": "ресторан",
+      "uk": "ресторан",
+      "tl": "restawran",
+      "so": "makhaayad",
+      "ko": "식당"
+    },
+    "achieve": {
+      "es": "lograr",
+      "vi": "đạt được",
+      "ru": "достигать",
+      "uk": "досягти",
+      "tl": "makamit",
+      "so": "gaari",
+      "ko": "성취하다"
+    },
+    "achiev": {
+      "es": "logro",
+      "vi": "thành tích",
+      "ru": "достижение",
+      "uk": "досягнення",
+      "tl": "tagumpay",
+      "so": "guul",
+      "ko": "성취"
+    },
+    "prohibite": {
+      "es": "prohibir",
+      "vi": "cấm",
+      "ru": "запретить",
+      "uk": "заборонити",
+      "tl": "ipinagbabawal",
+      "so": "mamnuuc",
+      "ko": "금지하다"
+    },
+    "prohibit": {
+      "es": "prohibir",
+      "vi": "cấm",
+      "ru": "запретить",
+      "uk": "заборонити",
+      "tl": "ipagbawal",
+      "so": "mamnuuc",
+      "ko": "금지하다"
+    },
+    "calculate": {
+      "es": "calcular",
+      "vi": "tính toán",
+      "ru": "рассчитать",
+      "uk": "обчислити",
+      "tl": "kalkulahin",
+      "so": "xisaabi",
+      "ko": "믿다"
+    },
+    "calculat": {
+      "es": "calculador",
+      "vi": "tính toán",
+      "ru": "вычисление",
+      "uk": "обчислення",
+      "tl": "pagkalkula",
+      "so": "xisaabinta",
+      "ko": "계산 중"
+    },
+    "repeale": {
+      "es": "derogar",
+      "vi": "bãi bỏ",
+      "ru": "отмена",
+      "uk": "скасувати",
+      "tl": "pagpapawalang-bisa",
+      "so": "tirtir",
+      "ko": "폐지하다"
+    },
+    "supporte": {
+      "es": "apoya",
+      "vi": "hỗ trợ",
+      "ru": "поддерживает",
+      "uk": "опори",
+      "tl": "sumusuporta",
+      "so": "taageerooyin",
+      "ko": "지원"
+    },
+    "support": {
+      "es": "apoyo",
+      "vi": "ủng hộ",
+      "ru": "поддерживать",
+      "uk": "підтримка",
+      "tl": "suporta",
+      "so": "taageero",
+      "ko": "지원하다"
+    },
+    "incentivize": {
+      "es": "incentivar",
+      "vi": "khuyến khích",
+      "ru": "стимулировать",
+      "uk": "стимулювати",
+      "tl": "magbigay ng insentibo",
+      "so": "dhiirigelin",
+      "ko": "인센티브를 제공하다"
+    },
+    "incentiviz": {
+      "es": "incentivos",
+      "vi": "khuyến khích",
+      "ru": "стимулирование",
+      "uk": "стимулювання",
+      "tl": "insentibo",
+      "so": "dhiirigelin",
+      "ko": "인센티브"
+    },
+    "require": {
+      "es": "requerir",
+      "vi": "yêu cầu",
+      "ru": "требовать",
+      "uk": "вимагати",
+      "tl": "nangangailangan",
+      "so": "u baahan",
+      "ko": "필요하다"
+    },
+    "requir": {
+      "es": "requerir",
+      "vi": "yêu cầu",
+      "ru": "требуется",
+      "uk": "вимагає",
+      "tl": "nangangailangan",
+      "so": "u baahan",
+      "ko": "요구하다"
+    },
+    "declare": {
+      "es": "declarar",
+      "vi": "tuyên bố",
+      "ru": "объявить",
+      "uk": "заявити",
+      "tl": "ideklara",
+      "so": "ku dhawaaqid",
+      "ko": "선언하다"
+    },
+    "declar": {
+      "es": "declarar",
+      "vi": "tuyên bố",
+      "ru": "объявить",
+      "uk": "заявити",
+      "tl": "ideklara",
+      "so": "ku dhawaaqid",
+      "ko": "선언하다"
+    },
+    "addres": {
+      "es": "DIRECCIÓN",
+      "vi": "Địa chỉ",
+      "ru": "адрес",
+      "uk": "адреса",
+      "tl": "tirahan",
+      "so": "cinwaanka",
+      "ko": "주소"
+    },
+    "addresse": {
+      "es": "DIRECCIÓN",
+      "vi": "Địa chỉ",
+      "ru": "адрес",
+      "uk": "адреса",
+      "tl": "tirahan",
+      "so": "cinwaanka",
+      "ko": "주소"
+    },
+    "address": {
+      "es": "DIRECCIÓN",
+      "vi": "Địa chỉ",
+      "ru": "адрес",
+      "uk": "адреса",
+      "tl": "tirahan",
+      "so": "cinwaanka",
+      "ko": "주소"
+    },
+    "determine": {
+      "es": "determinar",
+      "vi": "quyết tâm",
+      "ru": "определять",
+      "uk": "визначити",
+      "tl": "matukoy",
+      "so": "go'aamin",
+      "ko": "결정하다"
+    },
+    "determin": {
+      "es": "determinar",
+      "vi": "xác định",
+      "ru": "определить",
+      "uk": "визначати",
+      "tl": "matukoy",
+      "so": "go'aami",
+      "ko": "결정하다"
+    },
+    "streamline": {
+      "es": "línea de corriente",
+      "vi": "hợp lý hóa",
+      "ru": "обтекаемый",
+      "uk": "впорядкувати",
+      "tl": "pasimplehin",
+      "so": "fududee",
+      "ko": "유선"
+    },
+    "streamlin": {
+      "es": "simplificar",
+      "vi": "hợp lý hóa",
+      "ru": "стримлинг",
+      "uk": "обтічний",
+      "tl": "streamline",
+      "so": "si toos ah",
+      "ko": "간소화"
+    },
+    "acknowledge": {
+      "es": "reconocer",
+      "vi": "thừa nhận",
+      "ru": "сознавать",
+      "uk": "визнати",
+      "tl": "kilalanin",
+      "so": "qirasho",
+      "ko": "인정하다"
+    },
+    "acknowledg": {
+      "es": "reconociendo",
+      "vi": "thừa nhận",
+      "ru": "подтвердить",
+      "uk": "підтвердження",
+      "tl": "kilalanin",
+      "so": "qirasho",
+      "ko": "인정하다"
+    },
+    "electioneere": {
+      "es": "electorado",
+      "vi": "người tranh cử",
+      "ru": "выборы",
+      "uk": "передвиборчий агітатор",
+      "tl": "mga botante sa eleksyon",
+      "so": "doorashada",
+      "ko": "선거인"
+    },
+    "electioneer": {
+      "es": "hacer la campaña electoral",
+      "vi": "người tranh cử",
+      "ru": "избиратель",
+      "uk": "передвиборчий агітатор",
+      "tl": "kandidato sa eleksyon",
+      "so": "doorasho-qaade",
+      "ko": "선거인"
+    },
+    "manufacture": {
+      "es": "fabricar",
+      "vi": "sản xuất",
+      "ru": "производство",
+      "uk": "виробництво",
+      "tl": "paggawa",
+      "so": "soo saarid",
+      "ko": "제조"
+    },
+    "manufactur": {
+      "es": "fabricación",
+      "vi": "sản xuất",
+      "ru": "производитель",
+      "uk": "виробник",
+      "tl": "paggawa",
+      "so": "soo saaraha",
+      "ko": "제조"
+    },
+    "delaye": {
+      "es": "retrasar",
+      "vi": "sự trì hoãn",
+      "ru": "задержка",
+      "uk": "затримка",
+      "tl": "pagkaantala",
+      "so": "dib u dhac",
+      "ko": "지연하다"
+    },
+    "delay": {
+      "es": "demora",
+      "vi": "trì hoãn",
+      "ru": "задерживать",
+      "uk": "затримка",
+      "tl": "pagkaantala",
+      "so": "dib u dhac",
+      "ko": "지연"
+    },
+    "reporte": {
+      "es": "reporte",
+      "vi": "báo cáo",
+      "ru": "отчет",
+      "uk": "звіт",
+      "tl": "ulat",
+      "so": "warbixin",
+      "ko": "보고서"
+    },
+    "eliminate": {
+      "es": "eliminar",
+      "vi": "loại bỏ",
+      "ru": "устранять",
+      "uk": "усунути",
+      "tl": "alisin",
+      "so": "tirtir",
+      "ko": "제거하다"
+    },
+    "eliminat": {
+      "es": "REMOTO",
+      "vi": "LOẠI BỎ",
+      "ru": "УДАЛЕННЫЙ",
+      "uk": "ВИДАЛЕНО",
+      "tl": "TINANGGAL",
+      "so": "LA SAARAY",
+      "ko": "제거됨"
+    },
+    "assaulte": {
+      "es": "asalto",
+      "vi": "tấn công",
+      "ru": "нападение",
+      "uk": "напад",
+      "tl": "pagsalakay",
+      "so": "weerar",
+      "ko": "폭행"
+    },
+    "transferre": {
+      "es": "transferir",
+      "vi": "chuyển",
+      "ru": "для передачи",
+      "uk": "перевести",
+      "tl": "ilipat",
+      "so": "si loo wareejiyo",
+      "ko": "전송하다"
+    },
+    "transferr": {
+      "es": "transferencia",
+      "vi": "người chuyển nhượng",
+      "ru": "переносчик",
+      "uk": "переказ",
+      "tl": "paglilipat",
+      "so": "wareejiye",
+      "ko": "이체자"
+    },
+    "continue": {
+      "es": "continuar",
+      "vi": "Tiếp tục",
+      "ru": "продолжать",
+      "uk": "продовжувати",
+      "tl": "magpatuloy",
+      "so": "sii wad",
+      "ko": "계속하다"
+    },
+    "continu": {
+      "es": "continuo",
+      "vi": "liên tục",
+      "ru": "непрерывный",
+      "uk": "безперервний",
+      "tl": "tuluy-tuloy",
+      "so": "joogto ah",
+      "ko": "마디 없는"
+    },
+    "designate": {
+      "es": "designado",
+      "vi": "chỉ định",
+      "ru": "указать",
+      "uk": "позначити",
+      "tl": "magtalaga",
+      "so": "magacaw",
+      "ko": "가리키다"
+    },
+    "designat": {
+      "es": "diseñado",
+      "vi": "được thiết kế",
+      "ru": "разработан",
+      "uk": "розроблений",
+      "tl": "dinisenyo",
+      "so": "loogu talagalay",
+      "ko": "설계된"
+    },
+    "develope": {
+      "es": "desarrollar",
+      "vi": "phát triển",
+      "ru": "развивать",
+      "uk": "розвивати",
+      "tl": "paunlarin",
+      "so": "horumari",
+      "ko": "개발하다"
+    },
+    "sporte": {
+      "es": "en los deportes",
+      "vi": "trong thể thao",
+      "ru": "в спорте",
+      "uk": "у спорті",
+      "tl": "sa palakasan",
+      "so": "ciyaaraha",
+      "ko": "스포츠에서"
+    },
+    "sport": {
+      "es": "deporte",
+      "vi": "thể thao",
+      "ru": "спорт",
+      "uk": "спорт",
+      "tl": "isport",
+      "so": "isboorti",
+      "ko": "스포츠"
+    },
+    "codifye": {
+      "es": "codificar",
+      "vi": "mã hóa",
+      "ru": "кодифицировать",
+      "uk": "кодифікувати",
+      "tl": "kodigo",
+      "so": "codeeye",
+      "ko": "코드화하다"
+    },
+    "codify": {
+      "es": "codificar",
+      "vi": "mã hóa",
+      "ru": "кодифицировать",
+      "uk": "кодифікувати",
+      "tl": "gawing kodigo",
+      "so": "codeyso",
+      "ko": "코드화하다"
+    },
+    "adopte": {
+      "es": "adoptar",
+      "vi": "nhận nuôi",
+      "ru": "усыновить",
+      "uk": "усиновити",
+      "tl": "mag-ampon",
+      "so": "korsasho",
+      "ko": "입양하다"
+    },
+    "promote": {
+      "es": "promover",
+      "vi": "khuyến khích",
+      "ru": "продвигать",
+      "uk": "просувати",
+      "tl": "itaguyod",
+      "so": "dallacsiin",
+      "ko": "홍보하다"
+    },
+    "promot": {
+      "es": "promover",
+      "vi": "khuyến khích",
+      "ru": "продвигать",
+      "uk": "просувати",
+      "tl": "itaguyod",
+      "so": "dallacsiin",
+      "ko": "홍보하다"
+    },
+    "regulate": {
+      "es": "regular",
+      "vi": "điều chỉnh",
+      "ru": "регулировать",
+      "uk": "регулювати",
+      "tl": "umayos",
+      "so": "nidaami",
+      "ko": "규제하다"
+    },
+    "regulat": {
+      "es": "regular",
+      "vi": "thường xuyên",
+      "ru": "обычный",
+      "uk": "звичайний",
+      "tl": "regular",
+      "so": "joogto ah",
+      "ko": "정기적인"
+    },
+    "recognize": {
+      "es": "reconocer",
+      "vi": "nhận ra",
+      "ru": "распознавать",
+      "uk": "розпізнати",
+      "tl": "kilalanin",
+      "so": "aqoonso",
+      "ko": "인정하다"
+    },
+    "recogniz": {
+      "es": "reconocer",
+      "vi": "nhận ra",
+      "ru": "распознать",
+      "uk": "розпізнати",
+      "tl": "kilalanin",
+      "so": "aqoonso",
+      "ko": "인식하다"
+    },
+    "modernize": {
+      "es": "modernizar",
+      "vi": "hiện đại hóa",
+      "ru": "модернизировать",
+      "uk": "модернізувати",
+      "tl": "gawing moderno",
+      "so": "casriyeyso",
+      "ko": "현대화하다"
+    },
+    "moderniz": {
+      "es": "modernizar",
+      "vi": "hiện đại hóa",
+      "ru": "модернизировать",
+      "uk": "модернізувати",
+      "tl": "gawing moderno",
+      "so": "casriyeyso",
+      "ko": "현대화하다"
+    },
+    "zone": {
+      "es": "zona",
+      "vi": "vùng",
+      "ru": "зона",
+      "uk": "зона",
+      "tl": "sona",
+      "so": "aag",
+      "ko": "존"
+    },
+    "zon": {
+      "es": "Sol",
+      "vi": "Mặt trời",
+      "ru": "Солнце",
+      "uk": "Сонце",
+      "tl": "Araw",
+      "so": "Axad",
+      "ko": "해"
+    },
+    "amende": {
+      "es": "bien",
+      "vi": "khỏe",
+      "ru": "отлично",
+      "uk": "штраф",
+      "tl": "multa",
+      "so": "fiican",
+      "ko": "괜찮은"
+    },
+    "amend": {
+      "es": "enmendar",
+      "vi": "sửa đổi",
+      "ru": "исправлять",
+      "uk": "виправити",
+      "tl": "baguhin",
+      "so": "wax ka beddel",
+      "ko": "개정하다"
+    },
+    "allowe": {
+      "es": "permitir",
+      "vi": "cho phép",
+      "ru": "разрешить",
+      "uk": "дозволити",
+      "tl": "payagan",
+      "so": "allow",
+      "ko": "허용하다"
+    },
+    "allow": {
+      "es": "permitir",
+      "vi": "cho phép",
+      "ru": "позволять",
+      "uk": "дозволити",
+      "tl": "payagan",
+      "so": "u oggolow",
+      "ko": "허용하다"
+    },
+    "extende": {
+      "es": "extiende",
+      "vi": "mở rộng",
+      "ru": "расширяет",
+      "uk": "розширюється",
+      "tl": "umaabot",
+      "so": "wuu fidiyaa",
+      "ko": "확장합니다"
+    },
+    "extend": {
+      "es": "extender",
+      "vi": "mở rộng",
+      "ru": "продлевать",
+      "uk": "розширити",
+      "tl": "pahabain",
+      "so": "fidi",
+      "ko": "연장하다"
+    },
+    "fund-raise": {
+      "es": "recaudación de fondos",
+      "vi": "gây quỹ",
+      "ru": "сбор средств",
+      "uk": "збір коштів",
+      "tl": "pangangalap ng pondo",
+      "so": "lacag ururin",
+      "ko": "모금하다"
+    },
+    "fund-rais": {
+      "es": "recaudación de fondos",
+      "vi": "gây quỹ",
+      "ru": "сбор средств",
+      "uk": "збір коштів",
+      "tl": "pangangalap ng pondo",
+      "so": "lacag ururin",
+      "ko": "모금 활동"
+    },
+    "interfere": {
+      "es": "interferir",
+      "vi": "can thiệp",
+      "ru": "вмешиваться",
+      "uk": "втручатися",
+      "tl": "makialam",
+      "so": "faragelin",
+      "ko": "간섭하다"
+    },
+    "interfer": {
+      "es": "interferir",
+      "vi": "can thiệp",
+      "ru": "помехи",
+      "uk": "втручатися",
+      "tl": "makialam",
+      "so": "faragelin",
+      "ko": "방해하다"
+    },
+    "reorganize": {
+      "es": "reorganizar",
+      "vi": "tổ chức lại",
+      "ru": "реорганизовать",
+      "uk": "реорганізувати",
+      "tl": "muling ayusin",
+      "so": "dib u habeyn",
+      "ko": "재편성하다"
+    },
+    "reorganiz": {
+      "es": "reorganizar",
+      "vi": "tổ chức lại",
+      "ru": "реорганизовать",
+      "uk": "реорганізувати",
+      "tl": "muling ayusin",
+      "so": "dib u habeyn",
+      "ko": "재편성하다"
+    },
+    "conducte": {
+      "es": "TUBERÍA",
+      "vi": "ỐNG",
+      "ru": "ТРУБЫ",
+      "uk": "ТРУБИ",
+      "tl": "MGA TUBO",
+      "so": "BUUBOOYINKA",
+      "ko": "파이프"
+    },
+    "conduct": {
+      "es": "conducta",
+      "vi": "chỉ đạo",
+      "ru": "руководить",
+      "uk": "поведінка",
+      "tl": "pag-uugali",
+      "so": "dhaqanka",
+      "ko": "지휘하다"
+    },
+    "lengthene": {
+      "es": "alargamiento",
+      "vi": "kéo dài",
+      "ru": "удлинить",
+      "uk": "подовжити",
+      "tl": "pahabain",
+      "so": "dheeree",
+      "ko": "길게 늘린"
+    },
+    "lengthen": {
+      "es": "alargar",
+      "vi": "kéo dài",
+      "ru": "удлинить",
+      "uk": "подовжити",
+      "tl": "pahabain",
+      "so": "dheeree",
+      "ko": "길게 하다"
+    },
+    "traine": {
+      "es": "tren",
+      "vi": "xe lửa",
+      "ru": "тренироваться",
+      "uk": "поїзд",
+      "tl": "tren",
+      "so": "tareen",
+      "ko": "기차"
+    },
+    "stabilize": {
+      "es": "estabilizar",
+      "vi": "ổn định",
+      "ru": "стабилизировать",
+      "uk": "стабілізувати",
+      "tl": "patatagin",
+      "so": "xasilin",
+      "ko": "안정화"
+    },
+    "stabiliz": {
+      "es": "estabilizar",
+      "vi": "ổn định",
+      "ru": "стабилизировать",
+      "uk": "стабілізувати",
+      "tl": "patatagin",
+      "so": "xasilin",
+      "ko": "안정화"
+    },
+    "learne": {
+      "es": "aprender",
+      "vi": "học hỏi",
+      "ru": "учиться",
+      "uk": "навчатися",
+      "tl": "matuto",
+      "so": "baro",
+      "ko": "배우다"
+    },
+    "learn": {
+      "es": "aprender",
+      "vi": "học hỏi",
+      "ru": "учиться",
+      "uk": "навчитися",
+      "tl": "matuto",
+      "so": "baro",
+      "ko": "배우다"
+    },
+    "acces": {
+      "es": "adhesión",
+      "vi": "sự gia nhập",
+      "ru": "присоединение",
+      "uk": "приєднання",
+      "tl": "pag-akyat",
+      "so": "ku biirista",
+      "ko": "가입"
+    },
+    "accesse": {
+      "es": "acceso",
+      "vi": "truy cập",
+      "ru": "доступ",
+      "uk": "доступ",
+      "tl": "accesse",
+      "so": "marin u helid",
+      "ko": "접근"
+    },
+    "polic": {
+      "es": "estantes",
+      "vi": "kệ",
+      "ru": "полки",
+      "uk": "полиці",
+      "tl": "mga istante",
+      "so": "khaanadaha",
+      "ko": "선반"
+    },
+    "reestablishe": {
+      "es": "restablecer",
+      "vi": "thiết lập lại",
+      "ru": "восстановить",
+      "uk": "відновити",
+      "tl": "muling itatag",
+      "so": "dib u dhis",
+      "ko": "재확립하다"
+    },
+    "reestablish": {
+      "es": "restablecer",
+      "vi": "thiết lập lại",
+      "ru": "восстановить",
+      "uk": "відновити",
+      "tl": "muling itatag",
+      "so": "dib u dhis",
+      "ko": "재확립"
+    },
+    "classifye": {
+      "es": "clasificar",
+      "vi": "phân loại",
+      "ru": "классифицировать",
+      "uk": "класифікувати",
+      "tl": "uriin",
+      "so": "kala sooc",
+      "ko": "분류하다"
+    },
+    "classify": {
+      "es": "clasificar",
+      "vi": "phân loại",
+      "ru": "классифицировать",
+      "uk": "класифікувати",
+      "tl": "uriin",
+      "so": "kala sooc",
+      "ko": "나누다"
+    },
+    "issue": {
+      "es": "asunto",
+      "vi": "vấn đề",
+      "ru": "проблема",
+      "uk": "випуск",
+      "tl": "isyu",
+      "so": "arrin",
+      "ko": "문제"
+    },
+    "issu": {
+      "es": "asunto",
+      "vi": "vấn đề",
+      "ru": "проблема",
+      "uk": "випуск",
+      "tl": "isyu",
+      "so": "arrin",
+      "ko": "문제"
+    },
+    "implemente": {
+      "es": "implementos",
+      "vi": "thực hiện",
+      "ru": "инструменты",
+      "uk": "знаряддя праці",
+      "tl": "mga kagamitan",
+      "so": "qalab",
+      "ko": "구현하다"
+    },
+    "implement": {
+      "es": "implementar",
+      "vi": "thực hiện",
+      "ru": "осуществлять",
+      "uk": "впровадити",
+      "tl": "ipatupad",
+      "so": "hirgelin",
+      "ko": "구현하다"
+    },
+    "lodge": {
+      "es": "presentar",
+      "vi": "nhà nghỉ",
+      "ru": "лодж",
+      "uk": "ложа",
+      "tl": "tuluyan",
+      "so": "hoy",
+      "ko": "별장"
+    },
+    "lodg": {
+      "es": "alojamiento",
+      "vi": "nhà nghỉ",
+      "ru": "лодж",
+      "uk": "лодж",
+      "tl": "tuluyan",
+      "so": "lodg",
+      "ko": "숙소"
+    },
+    "site": {
+      "es": "sitio",
+      "vi": "địa điểm",
+      "ru": "сайт",
+      "uk": "сайт",
+      "tl": "lugar",
+      "so": "goobta",
+      "ko": "대지"
+    },
+    "sit": {
+      "es": "sentarse",
+      "vi": "ngồi",
+      "ru": "сидеть",
+      "uk": "сидіти",
+      "tl": "umupo",
+      "so": "fadhiiso",
+      "ko": "앉다"
+    },
+    "lobbye": {
+      "es": "vestíbulo",
+      "vi": "sảnh",
+      "ru": "лобби",
+      "uk": "лобі",
+      "tl": "lobby",
+      "so": "hoolka laga galo",
+      "ko": "로비"
+    },
+    "lobby": {
+      "es": "vestíbulo",
+      "vi": "sảnh",
+      "ru": "лобби",
+      "uk": "лобі",
+      "tl": "lobby",
+      "so": "hoolka laga galo",
+      "ko": "로비"
+    },
+    "restricte": {
+      "es": "restringir",
+      "vi": "hạn chế",
+      "ru": "ограничить",
+      "uk": "обмежений",
+      "tl": "paghihigpit",
+      "so": "xaddid",
+      "ko": "제한하다"
+    },
+    "restrict": {
+      "es": "restringir",
+      "vi": "hạn chế",
+      "ru": "ограничивать",
+      "uk": "обмежувати",
+      "tl": "paghigpitan",
+      "so": "xaddid",
+      "ko": "얽매다"
+    },
+    "leave": {
+      "es": "dejar",
+      "vi": "rời khỏi",
+      "ru": "оставлять",
+      "uk": "залишити",
+      "tl": "umalis",
+      "so": "bax",
+      "ko": "떠나다"
+    },
+    "leav": {
+      "es": "dejar",
+      "vi": "rời đi",
+      "ru": "лист",
+      "uk": "відпустка",
+      "tl": "umalis",
+      "so": "fasax",
+      "ko": "떠나다"
+    },
+    "simplifye": {
+      "es": "simplificar",
+      "vi": "đơn giản hóa",
+      "ru": "упростить",
+      "uk": "спрощено",
+      "tl": "pasimplehin",
+      "so": "fududee",
+      "ko": "단순화하다"
+    },
+    "simplify": {
+      "es": "simplificar",
+      "vi": "đơn giản hóa",
+      "ru": "упрощать",
+      "uk": "спростити",
+      "tl": "pasimplehin",
+      "so": "fududee",
+      "ko": "단순화"
+    },
+    "file": {
+      "es": "archivo",
+      "vi": "tài liệu",
+      "ru": "файл",
+      "uk": "файл",
+      "tl": "file",
+      "so": "fayl",
+      "ko": "파일"
+    },
+    "fil": {
+      "es": "en",
+      "vi": "TRONG",
+      "ru": "в",
+      "uk": "в",
+      "tl": "sa",
+      "so": "gudaha",
+      "ko": "~에"
+    },
+    "studye": {
+      "es": "estudiar",
+      "vi": "học",
+      "ru": "studye",
+      "uk": "studye",
+      "tl": "pag-aaral",
+      "so": "waxbarasho",
+      "ko": "공부하다"
+    },
+    "study": {
+      "es": "estudiar",
+      "vi": "học",
+      "ru": "изучать",
+      "uk": "вивчення",
+      "tl": "pag-aaral",
+      "so": "waxbarasho",
+      "ko": "공부하다"
+    },
+    "secure": {
+      "es": "seguro",
+      "vi": "chắc chắn",
+      "ru": "безопасный",
+      "uk": "безпечний",
+      "tl": "ligtas",
+      "so": "ammaan ah",
+      "ko": "안전한"
+    },
+    "secur": {
+      "es": "seguro",
+      "vi": "bảo mật",
+      "ru": "безопасный",
+      "uk": "безпечний",
+      "tl": "ligtas",
+      "so": "ammaan ah",
+      "ko": "보안"
+    },
+    "considere": {
+      "es": "considerar",
+      "vi": "coi như",
+      "ru": "учитывать",
+      "uk": "розглянути",
+      "tl": "isaalang-alang",
+      "so": "ka fiirso",
+      "ko": "고려하다"
+    },
+    "sentenc": {
+      "es": "sentencia",
+      "vi": "câu",
+      "ru": "предложение",
+      "uk": "речення",
+      "tl": "pangungusap",
+      "so": "jumlad",
+      "ko": "문장"
+    },
+    "accommodate": {
+      "es": "acomodar",
+      "vi": "chứa",
+      "ru": "разместить",
+      "uk": "розмістити",
+      "tl": "tumanggap",
+      "so": "dejin",
+      "ko": "수용하다"
+    },
+    "accommodat": {
+      "es": "se adapta",
+      "vi": "có thể chứa",
+      "ru": "вмещает",
+      "uk": "вміщує",
+      "tl": "tumatanggap",
+      "so": "waxay qaabilaysaa",
+      "ko": "수용하다"
+    },
+    "safeguarde": {
+      "es": "salvaguarda",
+      "vi": "bảo vệ",
+      "ru": "защита",
+      "uk": "захист",
+      "tl": "pananggalang",
+      "so": "ilaaliye",
+      "ko": "보호하다"
+    },
+    "safeguard": {
+      "es": "salvaguardia",
+      "vi": "sự bảo vệ",
+      "ru": "защита",
+      "uk": "захист",
+      "tl": "pananggalang",
+      "so": "ilaalinta",
+      "ko": "보호"
+    },
+    "funde": {
+      "es": "financiar",
+      "vi": "quỹ",
+      "ru": "фонд",
+      "uk": "фонд",
+      "tl": "pondo",
+      "so": "sanduuq",
+      "ko": "축적"
+    },
+    "fund": {
+      "es": "financiar",
+      "vi": "quỹ",
+      "ru": "фонд",
+      "uk": "фонд",
+      "tl": "pondo",
+      "so": "sanduuq",
+      "ko": "축적"
+    },
+    "revise": {
+      "es": "revisar",
+      "vi": "ôn lại",
+      "ru": "исправлять",
+      "uk": "переглянути",
+      "tl": "baguhin",
+      "so": "dib-u-eegis",
+      "ko": "개정하다"
+    },
+    "revis": {
+      "es": "revisiones",
+      "vi": "sửa đổi",
+      "ru": "пересмотр",
+      "uk": "перегляд",
+      "tl": "rebisyo",
+      "so": "dib-u-eegis",
+      "ko": "수정"
+    },
+    "dedicate": {
+      "es": "dedicar",
+      "vi": "cống hiến",
+      "ru": "посвятить",
+      "uk": "присвятити",
+      "tl": "ialay",
+      "so": "u hurid",
+      "ko": "전념하다"
+    },
+    "dedicat": {
+      "es": "dedicado",
+      "vi": "tận tụy",
+      "ru": "преданный",
+      "uk": "присвячений",
+      "tl": "dedikado",
+      "so": "u heellan",
+      "ko": "헌신적인"
+    },
+    "travele": {
+      "es": "viajero",
+      "vi": "du lịch",
+      "ru": "путешествие",
+      "uk": "подорожі",
+      "tl": "manlalakbay",
+      "so": "safar",
+      "ko": "여행"
+    },
+    "maintaine": {
+      "es": "mantener",
+      "vi": "duy trì",
+      "ru": "поддерживать",
+      "uk": "підтримувати",
+      "tl": "panatilihin",
+      "so": "ilaalin",
+      "ko": "유지하다"
+    },
+    "maintain": {
+      "es": "mantener",
+      "vi": "duy trì",
+      "ru": "поддерживать",
+      "uk": "підтримувати",
+      "tl": "panatilihin",
+      "so": "ilaalin",
+      "ko": "유지하다"
+    },
+    "notifye": {
+      "es": "notificar",
+      "vi": "thông báo",
+      "ru": "уведомить",
+      "uk": "повідомити",
+      "tl": "ipaalam",
+      "so": "ogeysii",
+      "ko": "알리다"
+    },
+    "notify": {
+      "es": "notificar",
+      "vi": "thông báo",
+      "ru": "уведомить",
+      "uk": "повідомити",
+      "tl": "ipaalam",
+      "so": "ogeysii",
+      "ko": "알리다"
+    },
+    "strengthene": {
+      "es": "fortalecer",
+      "vi": "củng cố",
+      "ru": "укрепить",
+      "uk": "зміцнення",
+      "tl": "palakasin",
+      "so": "xoojin",
+      "ko": "강화하다"
+    },
+    "strengthen": {
+      "es": "fortalecer",
+      "vi": "tăng cường",
+      "ru": "укрепить",
+      "uk": "зміцнювати",
+      "tl": "palakasin",
+      "so": "xoojin",
+      "ko": "강하게 하다"
+    },
+    "sample": {
+      "es": "muestra",
+      "vi": "vật mẫu",
+      "ru": "образец",
+      "uk": "зразок",
+      "tl": "halimbawa",
+      "so": "muunad",
+      "ko": "견본"
+    },
+    "sampl": {
+      "es": "una muestra",
+      "vi": "một ví dụ",
+      "ru": "образец",
+      "uk": "зразок",
+      "tl": "isang halimbawa",
+      "so": "muunad",
+      "ko": "샘플"
+    },
+    "labele": {
+      "es": "PIES",
+      "vi": "BÀN CHÂN",
+      "ru": "НОГИ",
+      "uk": "НОГИ",
+      "tl": "MGA PAA",
+      "so": "CAG",
+      "ko": "피트"
+    },
+    "label": {
+      "es": "etiqueta",
+      "vi": "nhãn",
+      "ru": "этикетка",
+      "uk": "етикетка",
+      "tl": "etiketa",
+      "so": "calaamad",
+      "ko": "상표"
+    },
+    "scoute": {
+      "es": "explorar",
+      "vi": "trinh sát",
+      "ru": "разведчик",
+      "uk": "розвідник",
+      "tl": "tagamanman",
+      "so": "sahamin",
+      "ko": "스카우트"
+    },
+    "scout": {
+      "es": "explorar",
+      "vi": "trinh sát",
+      "ru": "разведчик",
+      "uk": "розвідник",
+      "tl": "tagamanman",
+      "so": "sahamin",
+      "ko": "스카우트"
+    },
+    "adjourne": {
+      "es": "aplazamiento",
+      "vi": "hoãn lại",
+      "ru": "отложить",
+      "uk": "відкладати",
+      "tl": "pagpapaliban",
+      "so": "dib loo dhigay",
+      "ko": "휴회하다"
+    },
+    "adjourn": {
+      "es": "aplazar",
+      "vi": "hoãn lại",
+      "ru": "отложить",
+      "uk": "відкласти",
+      "tl": "mag-adjourn",
+      "so": "dib u dhigista",
+      "ko": "회의를 연기하다"
+    },
+    "banke": {
+      "es": "bancos",
+      "vi": "ngân hàng",
+      "ru": "банки",
+      "uk": "банки",
+      "tl": "mga bangko",
+      "so": "bangiyada",
+      "ko": "은행"
+    },
+    "bank": {
+      "es": "banco",
+      "vi": "ngân hàng",
+      "ru": "банк",
+      "uk": "банк",
+      "tl": "bangko",
+      "so": "bangi",
+      "ko": "은행"
+    },
+    "washe": {
+      "es": "botín",
+      "vi": "chiến lợi phẩm",
+      "ru": "добыча",
+      "uk": "здобич",
+      "tl": "pagnakawan",
+      "so": "bililiqo",
+      "ko": "전리품"
+    },
+    "wash": {
+      "es": "lavar",
+      "vi": "rửa",
+      "ru": "стирать",
+      "uk": "мити",
+      "tl": "maghugas",
+      "so": "dhaq",
+      "ko": "씻다"
+    },
+    "bolstere": {
+      "es": "reforzar",
+      "vi": "củng cố",
+      "ru": "подпорка",
+      "uk": "підкріпити",
+      "tl": "bolster",
+      "so": "xoojin",
+      "ko": "받침"
+    },
+    "bolster": {
+      "es": "reforzar",
+      "vi": "củng cố",
+      "ru": "подпорка",
+      "uk": "підкріпити",
+      "tl": "bolster",
+      "so": "xoojin",
+      "ko": "받침"
+    },
+    "paye": {
+      "es": "pago",
+      "vi": "trả tiền",
+      "ru": "плате",
+      "uk": "платіж",
+      "tl": "bayad",
+      "so": "lacag bixin",
+      "ko": "지불"
+    },
+    "keepe": {
+      "es": "banda",
+      "vi": "băng đảng",
+      "ru": "банда",
+      "uk": "банда",
+      "tl": "grupo",
+      "so": "koox burcad ah",
+      "ko": "가다"
+    },
+    "keep": {
+      "es": "mantener",
+      "vi": "giữ",
+      "ru": "держать",
+      "uk": "тримати",
+      "tl": "panatilihin",
+      "so": "hayso",
+      "ko": "유지하다"
+    },
+    "combate": {
+      "es": "luchar",
+      "vi": "trận đánh",
+      "ru": "драться",
+      "uk": "боротьба",
+      "tl": "away",
+      "so": "dagaal",
+      "ko": "싸움"
+    },
+    "combat": {
+      "es": "combatir",
+      "vi": "chiến đấu",
+      "ru": "боевые действия",
+      "uk": "бойовий",
+      "tl": "labanan",
+      "so": "dagaal",
+      "ko": "전투"
+    },
+    "replace": {
+      "es": "reemplazar",
+      "vi": "thay thế",
+      "ru": "заменять",
+      "uk": "замінити",
+      "tl": "palitan",
+      "so": "beddel",
+      "ko": "바꾸다"
+    },
+    "replac": {
+      "es": "reemplazar",
+      "vi": "thay thế",
+      "ru": "заменять",
+      "uk": "замінити",
+      "tl": "palitan",
+      "so": "beddel",
+      "ko": "바꾸다"
+    },
+    "fortifye": {
+      "es": "fortalecer",
+      "vi": "củng cố",
+      "ru": "укрепить",
+      "uk": "зміцнювати",
+      "tl": "patibayin",
+      "so": "xoojin",
+      "ko": "확고히 하다"
+    },
+    "fortify": {
+      "es": "fortalecer",
+      "vi": "củng cố",
+      "ru": "укрепить",
+      "uk": "зміцнювати",
+      "tl": "patibayin",
+      "so": "xoojin",
+      "ko": "확고히 하다"
+    },
+    "change": {
+      "es": "cambiar",
+      "vi": "thay đổi",
+      "ru": "изменять",
+      "uk": "зміна",
+      "tl": "pagbabago",
+      "so": "isbeddel",
+      "ko": "변화"
+    },
+    "chang": {
+      "es": "cambio",
+      "vi": "thay đổi",
+      "ru": "чан",
+      "uk": "Чанг",
+      "tl": "pagbabago",
+      "so": "isbeddel",
+      "ko": "창"
+    },
+    "move": {
+      "es": "mover",
+      "vi": "di chuyển",
+      "ru": "двигаться",
+      "uk": "рухатися",
+      "tl": "ilipat",
+      "so": "guuritaan",
+      "ko": "이동하다"
+    },
+    "mov": {
+      "es": "arroz",
+      "vi": "cơm",
+      "ru": "рис",
+      "uk": "рис",
+      "tl": "bigas",
+      "so": "bariis",
+      "ko": "쌀"
+    },
+    "prevente": {
+      "es": "prevenir",
+      "vi": "ngăn chặn",
+      "ru": "предотвращать",
+      "uk": "запобігти",
+      "tl": "pigilan",
+      "so": "ka hortag",
+      "ko": "예방하다"
+    },
+    "prevent": {
+      "es": "prevenir",
+      "vi": "ngăn chặn",
+      "ru": "предотвращать",
+      "uk": "запобігти",
+      "tl": "pigilan",
+      "so": "ka hortag",
+      "ko": "예방하다"
+    },
+    "save": {
+      "es": "ahorrar",
+      "vi": "cứu",
+      "ru": "сохранять",
+      "uk": "зберегти",
+      "tl": "i-save",
+      "so": "keydi",
+      "ko": "구하다"
+    },
+    "sav": {
+      "es": "salvar",
+      "vi": "lưu",
+      "ru": "сав",
+      "uk": "збереження",
+      "tl": "kaligtasan",
+      "so": "badbaadi",
+      "ko": "저장"
+    },
+    "reinstate": {
+      "es": "reintegrar",
+      "vi": "khôi phục",
+      "ru": "восстановить",
+      "uk": "відновити",
+      "tl": "ibalik",
+      "so": "dib u soo celin",
+      "ko": "복원하다"
+    },
+    "reinstat": {
+      "es": "restablecer",
+      "vi": "khôi phục",
+      "ru": "восстановить",
+      "uk": "відновити",
+      "tl": "ibalik",
+      "so": "dib u soo celin",
+      "ko": "복원"
+    },
+    "bargaine": {
+      "es": "negociar",
+      "vi": "mặc cả",
+      "ru": "сделка",
+      "uk": "вигідна покупка",
+      "tl": "pakikipagtawaran",
+      "so": "gorgortan",
+      "ko": "흥정하다"
+    },
+    "bargain": {
+      "es": "negociar",
+      "vi": "mặc cả",
+      "ru": "торговаться",
+      "uk": "угода",
+      "tl": "baratilyo",
+      "so": "gorgortan",
+      "ko": "매매"
+    },
+    "integrate": {
+      "es": "integrar",
+      "vi": "tích hợp",
+      "ru": "интегрировать",
+      "uk": "інтегрувати",
+      "tl": "isama",
+      "so": "isku-darka",
+      "ko": "통합"
+    },
+    "integrat": {
+      "es": "integridad",
+      "vi": "chính trực",
+      "ru": "честность",
+      "uk": "цілісність",
+      "tl": "integridad",
+      "so": "daacadnimo",
+      "ko": "진실성"
+    },
+    "influence": {
+      "es": "influencia",
+      "vi": "ảnh hưởng",
+      "ru": "влияние",
+      "uk": "вплив",
+      "tl": "impluwensya",
+      "so": "saameyn",
+      "ko": "영향"
+    },
+    "influenc": {
+      "es": "influencia",
+      "vi": "ảnh hưởng",
+      "ru": "влияние",
+      "uk": "вплив",
+      "tl": "impluwensya",
+      "so": "saameyn",
+      "ko": "영향"
+    },
+    "sustaine": {
+      "es": "sostener",
+      "vi": "duy trì",
+      "ru": "поддерживать",
+      "uk": "підтримувати",
+      "tl": "sustento",
+      "so": "joogteyn",
+      "ko": "지속하다"
+    },
+    "sustain": {
+      "es": "sostener",
+      "vi": "duy trì",
+      "ru": "поддерживать",
+      "uk": "підтримувати",
+      "tl": "magpapanatili",
+      "so": "joogteyn",
+      "ko": "지속시키다"
+    },
+    "enhanc": {
+      "es": "mejorar",
+      "vi": "tăng cường",
+      "ru": "улучшить",
+      "uk": "покращити",
+      "tl": "pahusayin",
+      "so": "kor u qaad",
+      "ko": "향상시키다"
+    },
+    "investe": {
+      "es": "invierte",
+      "vi": "đầu tư",
+      "ru": "инвестирует",
+      "uk": "інвестує",
+      "tl": "namumuhunan",
+      "so": "maalgashada",
+      "ko": "투자하다"
+    },
+    "invest": {
+      "es": "invertir",
+      "vi": "đầu tư",
+      "ru": "инвестировать",
+      "uk": "інвестувати",
+      "tl": "mamuhunan",
+      "so": "maalgashi",
+      "ko": "투자하다"
+    },
+    "fishe": {
+      "es": "pez",
+      "vi": "cá",
+      "ru": "рыба",
+      "uk": "риба",
+      "tl": "isda",
+      "so": "kalluun",
+      "ko": "물고기"
+    },
+    "control": {
+      "es": "control",
+      "vi": "điều khiển",
+      "ru": "контроль",
+      "uk": "КОНТРОЛЬ",
+      "tl": "kontrol",
+      "so": "xakamaynta",
+      "ko": "제어"
+    },
+    "controlle": {
+      "es": "control",
+      "vi": "điều khiển",
+      "ru": "контроль",
+      "uk": "КОНТРОЛЬ",
+      "tl": "kontrol",
+      "so": "xakamaynta",
+      "ko": "제어"
+    },
+    "controll": {
+      "es": "control",
+      "vi": "kiểm soát",
+      "ru": "контроль",
+      "uk": "контроль",
+      "tl": "kontrol",
+      "so": "xakamaynta",
+      "ko": "제어"
+    },
+    "sunset": {
+      "es": "atardecer",
+      "vi": "hoàng hôn",
+      "ru": "закат",
+      "uk": "захід сонця",
+      "tl": "paglubog ng araw",
+      "so": "qorrax dhaca",
+      "ko": "일몰"
+    },
+    "sunsette": {
+      "es": "puesta de sol",
+      "vi": "hoàng hôn",
+      "ru": "закат",
+      "uk": "захід сонця",
+      "tl": "paglubog ng araw",
+      "so": "qorrax dhac",
+      "ko": "일몰"
+    },
+    "sunsett": {
+      "es": "puesta de sol",
+      "vi": "hoàng hôn",
+      "ru": "закат",
+      "uk": "захід сонця",
+      "tl": "paglubog ng araw",
+      "so": "qorrax dhaca",
+      "ko": "일몰"
+    },
+    "lowere": {
+      "es": "bajar",
+      "vi": "hạ thấp",
+      "ru": "ниже",
+      "uk": "нижній",
+      "tl": "lowere",
+      "so": "hoos u dhig",
+      "ko": "낮추다"
+    },
+    "lower": {
+      "es": "más bajo",
+      "vi": "thấp hơn",
+      "ru": "ниже",
+      "uk": "нижчий",
+      "tl": "mas mababa",
+      "so": "hoose",
+      "ko": "낮추다"
+    },
+    "cut": {
+      "es": "cortar",
+      "vi": "cắt",
+      "ru": "резать",
+      "uk": "вирізати",
+      "tl": "putulin",
+      "so": "jarid",
+      "ko": "자르다"
+    },
+    "cutte": {
+      "es": "cortar",
+      "vi": "cắt",
+      "ru": "резать",
+      "uk": "вирізати",
+      "tl": "putulin",
+      "so": "jarid",
+      "ko": "자르다"
+    },
+    "cutt": {
+      "es": "cortar",
+      "vi": "cắt",
+      "ru": "резать",
+      "uk": "вирізати",
+      "tl": "putulin",
+      "so": "jarid",
+      "ko": "자르다"
+    },
+    "vacate": {
+      "es": "desocupar",
+      "vi": "bỏ trống",
+      "ru": "освободить",
+      "uk": "звільнити",
+      "tl": "umalis",
+      "so": "ka bixid",
+      "ko": "비우다"
+    },
+    "vacat": {
+      "es": "es gratis",
+      "vi": "miễn phí",
+      "ru": "бесплатно",
+      "uk": "безкоштовно",
+      "tl": "ay libre",
+      "so": "waa bilaash",
+      "ko": "무료입니다"
+    },
+    "impose": {
+      "es": "imponer",
+      "vi": "áp đặt",
+      "ru": "навязывать",
+      "uk": "нав'язати",
+      "tl": "magpataw",
+      "so": "ku soo rog",
+      "ko": "부과하다"
+    },
+    "impos": {
+      "es": "impuestos",
+      "vi": "không thể",
+      "ru": "импоз",
+      "uk": "імпо",
+      "tl": "mga impo",
+      "so": "impos",
+      "ko": "임포"
+    },
+    "spre": {
+      "es": "a",
+      "vi": "ĐẾN",
+      "ru": "к",
+      "uk": "до",
+      "tl": "sa",
+      "so": "ku socota",
+      "ko": "에게"
+    },
+    "spr": {
+      "es": "primavera",
+      "vi": "spr",
+      "ru": "весна",
+      "uk": "весна",
+      "tl": "tagsibol",
+      "so": "spr",
+      "ko": "봄"
+    },
+    "directe": {
+      "es": "directe",
+      "vi": "sống",
+      "ru": "жить",
+      "uk": "жити",
+      "tl": "mabuhay",
+      "so": "toos ah",
+      "ko": "살다"
+    },
+    "reforme": {
+      "es": "reformas",
+      "vi": "cải cách",
+      "ru": "реформы",
+      "uk": "реформи",
+      "tl": "mga reporma",
+      "so": "dib-u-habayn",
+      "ko": "개혁"
+    },
+    "reform": {
+      "es": "reforma",
+      "vi": "cải cách",
+      "ru": "реформа",
+      "uk": "реформа",
+      "tl": "reporma",
+      "so": "dib-u-habayn",
+      "ko": "개정"
+    },
+    "define": {
+      "es": "definir",
+      "vi": "định nghĩa",
+      "ru": "определять",
+      "uk": "визначити",
+      "tl": "tukuyin",
+      "so": "qeex",
+      "ko": "정의하다"
+    },
+    "defin": {
+      "es": "entierro",
+      "vi": "chôn cất",
+      "ru": "похороны",
+      "uk": "поховання",
+      "tl": "libing",
+      "so": "aas",
+      "ko": "매장"
+    },
+    "declawe": {
+      "es": "desgarrar",
+      "vi": "cắt móng vuốt",
+      "ru": "деклоу",
+      "uk": "видалення кігтів",
+      "tl": "declawe",
+      "so": "ku dhawaaqid",
+      "ko": "디클로"
+    },
+    "declaw": {
+      "es": "desgarrar",
+      "vi": "cắt móng vuốt",
+      "ru": "удалить коготь",
+      "uk": "видаляти кігті",
+      "tl": "declaw",
+      "so": "baajinta sharciga",
+      "ko": "발톱을 뽑다"
+    },
+    "convene": {
+      "es": "convocar",
+      "vi": "triệu tập",
+      "ru": "созывать",
+      "uk": "скликати",
+      "tl": "magpulong",
+      "so": "isu imaatin",
+      "ko": "소집하다"
+    },
+    "conven": {
+      "es": "conven",
+      "vi": "hội nghị",
+      "ru": "созыв",
+      "uk": "збір",
+      "tl": "kumben",
+      "so": "shirweyne",
+      "ko": "소집하다"
+    },
+    "worke": {
+      "es": "trabajo",
+      "vi": "công việc",
+      "ru": "работа",
+      "uk": "працівник",
+      "tl": "manggagawa",
+      "so": "work",
+      "ko": "일하다"
+    },
+    "asbestos-containe": {
+      "es": "que contienen amianto",
+      "vi": "chứa amiăng",
+      "ru": "содержит асбест",
+      "uk": "азбестомісткий",
+      "tl": "naglalaman ng asbestos",
+      "so": "asbestos-container",
+      "ko": "석면 함유"
+    },
+    "asbestos-contain": {
+      "es": "contiene amianto",
+      "vi": "chứa amiăng",
+      "ru": "содержит асбест",
+      "uk": "містять азбест",
+      "tl": "naglalaman ng asbestos",
+      "so": "asbestos-ka ku jira",
+      "ko": "석면 함유"
+    },
+    "prioritize": {
+      "es": "priorizar",
+      "vi": "ưu tiên",
+      "ru": "расставьте приоритеты",
+      "uk": "пріоритезувати",
+      "tl": "unahin",
+      "so": "mudnaanta siiya",
+      "ko": "우선순위를 정하다"
+    },
+    "prioritiz": {
+      "es": "priorizar",
+      "vi": "ưu tiên",
+      "ru": "расставьте приоритеты",
+      "uk": "пріоритезувати",
+      "tl": "unahin",
+      "so": "mudnaanta siiya",
+      "ko": "우선순위를 정하다"
+    },
+    "advance": {
+      "es": "avance",
+      "vi": "nâng cao",
+      "ru": "продвигать",
+      "uk": "просування",
+      "tl": "pasulong",
+      "so": "horumarsan",
+      "ko": "전진"
+    },
+    "advanc": {
+      "es": "avance",
+      "vi": "nâng cao",
+      "ru": "продвигать",
+      "uk": "просування",
+      "tl": "pasulong",
+      "so": "horumarsan",
+      "ko": "전진"
+    },
+    "aligne": {
+      "es": "alinear",
+      "vi": "căn chỉnh",
+      "ru": "выровнять",
+      "uk": "вирівняти",
+      "tl": "ihanay",
+      "so": "isku toosi",
+      "ko": "맞추다"
+    },
+    "align": {
+      "es": "alinear",
+      "vi": "căn chỉnh",
+      "ru": "выровнять",
+      "uk": "вирівняти",
+      "tl": "ihanay",
+      "so": "isku toosi",
+      "ko": "맞추다"
+    },
+    "professionalize": {
+      "es": "profesionalizar",
+      "vi": "chuyên nghiệp hóa",
+      "ru": "профессионализировать",
+      "uk": "професіоналізувати",
+      "tl": "gawing propesyonal",
+      "so": "xirfadeysan",
+      "ko": "전문화하다"
+    },
+    "professionaliz": {
+      "es": "profesionalismo",
+      "vi": "chuyên nghiệp hóa",
+      "ru": "профессионализация",
+      "uk": "професіоналізувати",
+      "tl": "propesyonalismo",
+      "so": "xirfadle",
+      "ko": "전문화"
+    },
+    "obstructe": {
+      "es": "obstrucciones",
+      "vi": "vật cản",
+      "ru": "препятствия",
+      "uk": "перешкоди",
+      "tl": "mga sagabal",
+      "so": "caqabadaha",
+      "ko": "장애"
+    },
+    "obstruct": {
+      "es": "obstruir",
+      "vi": "cản trở",
+      "ru": "препятствовать",
+      "uk": "перешкоджати",
+      "tl": "harangan",
+      "so": "carqaladeyn",
+      "ko": "막다"
+    },
+    "enable": {
+      "es": "permitir",
+      "vi": "cho phép",
+      "ru": "давать возможность",
+      "uk": "увімкнути",
+      "tl": "paganahin",
+      "so": "awood u yeelo",
+      "ko": "~할 수 있게 하다"
+    },
+    "enabl": {
+      "es": "habilitar",
+      "vi": "cho phép",
+      "ru": "включить",
+      "uk": "увімкнути",
+      "tl": "paganahin",
+      "so": "awood u yeelo",
+      "ko": "활성화"
+    },
+    "nurse": {
+      "es": "enfermero",
+      "vi": "y tá",
+      "ru": "медсестра",
+      "uk": "медсестра",
+      "tl": "nars",
+      "so": "kalkaaliso caafimaad",
+      "ko": "간호사"
+    },
+    "nurs": {
+      "es": "enfermera",
+      "vi": "y tá",
+      "ru": "медсестры",
+      "uk": "медсестри",
+      "tl": "mga nars",
+      "so": "kalkaaliyayaal caafimaad",
+      "ko": "간호사"
+    },
+    "consolidate": {
+      "es": "consolidar",
+      "vi": "hợp nhất",
+      "ru": "консолидировать",
+      "uk": "консолідувати",
+      "tl": "pagsama-samahin",
+      "so": "midayn",
+      "ko": "통합하다"
+    },
+    "consolidat": {
+      "es": "consolidado",
+      "vi": "hợp nhất",
+      "ru": "консолидированный",
+      "uk": "консолідований",
+      "tl": "pinagsama-sama",
+      "so": "isku dhafan",
+      "ko": "통합된"
+    },
+    "share": {
+      "es": "compartir",
+      "vi": "chia sẻ",
+      "ru": "делиться",
+      "uk": "поділитися",
+      "tl": "ibahagi",
+      "so": "la wadaag",
+      "ko": "공유하다"
+    },
+    "shar": {
+      "es": "compartir",
+      "vi": "chia sẻ",
+      "ru": "шар",
+      "uk": "шар",
+      "tl": "ibahagi",
+      "so": "shar",
+      "ko": "샤르"
+    },
+    "time": {
+      "es": "tiempo",
+      "vi": "thời gian",
+      "ru": "время",
+      "uk": "час",
+      "tl": "oras",
+      "so": "waqtiga",
+      "ko": "시간"
+    },
+    "tim": {
+      "es": "Tim",
+      "vi": "tim",
+      "ru": "Тим",
+      "uk": "Тім",
+      "tl": "tim",
+      "so": "tim",
+      "ko": "팀"
+    },
+    "existe": {
+      "es": "hay",
+      "vi": "có",
+      "ru": "есть",
+      "uk": "є",
+      "tl": "mayroon",
+      "so": "waxaa jira",
+      "ko": "있다"
+    },
+    "exist": {
+      "es": "existir",
+      "vi": "hiện hữu",
+      "ru": "существовать",
+      "uk": "існувати",
+      "tl": "umiiral",
+      "so": "jira",
+      "ko": "존재하다"
+    },
+    "deter": {
+      "es": "desalentar",
+      "vi": "ngăn chặn",
+      "ru": "сдерживание",
+      "uk": "стримувати",
+      "tl": "pigilan",
+      "so": "ka hortag",
+      "ko": "그만 두게 하다"
+    },
+    "deterre": {
+      "es": "disuadir",
+      "vi": "ngăn chặn",
+      "ru": "сдерживание",
+      "uk": "стримування",
+      "tl": "hadlangan",
+      "so": "jooji",
+      "ko": "억제하다"
+    },
+    "deterr": {
+      "es": "disuadir",
+      "vi": "ngăn chặn",
+      "ru": "сдерживание",
+      "uk": "стримування",
+      "tl": "humadlang",
+      "so": "jooji",
+      "ko": "억제하다"
+    },
+    "afforde": {
+      "es": "asequible",
+      "vi": "đủ khả năng chi trả",
+      "ru": "предоставить",
+      "uk": "дозволити собі",
+      "tl": "kayang bayaran",
+      "so": "awoodid",
+      "ko": "아포디"
+    },
+    "afford": {
+      "es": "poder pagar",
+      "vi": "đủ khả năng",
+      "ru": "предоставлять",
+      "uk": "дозволити собі",
+      "tl": "kayang bayaran",
+      "so": "awoodi kara",
+      "ko": "여유가 되다"
+    },
+    "force-feede": {
+      "es": "alimentación forzada",
+      "vi": "ép ăn",
+      "ru": "принудительная подача",
+      "uk": "примусове годування",
+      "tl": "puwersahang pagpapakain",
+      "so": "xoog-quudin",
+      "ko": "강제로 먹이다"
+    },
+    "force-feed": {
+      "es": "alimentación forzada",
+      "vi": "ép ăn",
+      "ru": "принудительная подача",
+      "uk": "примусове годування",
+      "tl": "puwersahang pagpapakain",
+      "so": "quudin xoog leh",
+      "ko": "강제로 먹이다"
+    },
+    "well-bee": {
+      "es": "abeja sana",
+      "vi": "ong tốt",
+      "ru": "благополучие",
+      "uk": "бджола",
+      "tl": "bubuyog",
+      "so": "well-shine",
+      "ko": "웰비"
+    },
+    "well-be": {
+      "es": "bienestar",
+      "vi": "khỏe mạnh",
+      "ru": "благополучие",
+      "uk": "благополуччя",
+      "tl": "kapakanan",
+      "so": "fayoobaan",
+      "ko": "웰빙"
+    },
+    "helpe": {
+      "es": "ayudar",
+      "vi": "giúp đỡ",
+      "ru": "помочь",
+      "uk": "допомогти",
+      "tl": "tumulong",
+      "so": "caawi",
+      "ko": "도와주세요"
+    },
+    "help": {
+      "es": "ayuda",
+      "vi": "giúp đỡ",
+      "ru": "помощь",
+      "uk": "допомога",
+      "tl": "tulong",
+      "so": "caawimo",
+      "ko": "돕다"
+    },
+    "defende": {
+      "es": "defiende",
+      "vi": "bảo vệ",
+      "ru": "защищает",
+      "uk": "захищає",
+      "tl": "nagtatanggol",
+      "so": "difaacaysaa",
+      "ko": "방어하다"
+    },
+    "defend": {
+      "es": "defender",
+      "vi": "phòng vệ",
+      "ru": "защищать",
+      "uk": "захищати",
+      "tl": "ipagtanggol",
+      "so": "difaac",
+      "ko": "지키다"
+    },
+    "asses": {
+      "es": "culos",
+      "vi": "mông",
+      "ru": "ослов",
+      "uk": "осли",
+      "tl": "mga puwit",
+      "so": "dameero",
+      "ko": "평가하다"
+    },
+    "assesse": {
+      "es": "evaluar",
+      "vi": "đánh giá",
+      "ru": "оценить",
+      "uk": "оцінити",
+      "tl": "pagtatasa",
+      "so": "qiimayn",
+      "ko": "평가하다"
+    },
+    "assess": {
+      "es": "evaluar",
+      "vi": "đánh giá",
+      "ru": "оценивать",
+      "uk": "оцінювати",
+      "tl": "suriin",
+      "so": "qiimayn",
+      "ko": "평가하다"
+    },
+    "restructure": {
+      "es": "reestructurar",
+      "vi": "tái cấu trúc",
+      "ru": "реструктуризация",
+      "uk": "реструктуризувати",
+      "tl": "muling pagbubuo",
+      "so": "dib-u-habayn",
+      "ko": "구조조정"
+    },
+    "restructur": {
+      "es": "reestructurar",
+      "vi": "tái cấu trúc",
+      "ru": "реструктуризация",
+      "uk": "реструктуризувати",
+      "tl": "muling pagbubuo",
+      "so": "dib-u-habayn",
+      "ko": "구조조정"
+    },
+    "reassigne": {
+      "es": "reasignar",
+      "vi": "phân công lại",
+      "ru": "переназначить",
+      "uk": "перепризначити",
+      "tl": "muling pagtatalaga",
+      "so": "dib u magacaw",
+      "ko": "재할당"
+    },
+    "reassign": {
+      "es": "reasignar",
+      "vi": "phân công lại",
+      "ru": "переназначить",
+      "uk": "перепризначити",
+      "tl": "muling italaga",
+      "so": "dib u magacaabid",
+      "ko": "재할당"
+    },
+    "sewage-containe": {
+      "es": "aguas residuales-contener",
+      "vi": "thùng chứa nước thải",
+      "ru": "контейнер для сточных вод",
+      "uk": "контейнер для стічних вод",
+      "tl": "lalagyan ng dumi sa alkantarilya",
+      "so": "wasakhda ku jirta",
+      "ko": "하수 저장 용기"
+    },
+    "sewage-contain": {
+      "es": "aguas residuales contienen",
+      "vi": "chứa nước thải",
+      "ru": "содержать сточные воды",
+      "uk": "утримувати стічні води",
+      "tl": "naglalaman ng dumi sa alkantarilya",
+      "so": "wasakhda ku jirta",
+      "ko": "하수-포함"
+    },
+    "securitize": {
+      "es": "asegurar",
+      "vi": "chứng khoán hóa",
+      "ru": "секьюритизировать",
+      "uk": "сек'юритизувати",
+      "tl": "gawing ligtas",
+      "so": "ammaan geli",
+      "ko": "증권화하다"
+    },
+    "securitiz": {
+      "es": "titulización",
+      "vi": "chứng khoán",
+      "ru": "секьюритиз",
+      "uk": "сек'юритизація",
+      "tl": "seguridad",
+      "so": "amniga",
+      "ko": "보안"
+    },
+    "place": {
+      "es": "lugar",
+      "vi": "địa điểm",
+      "ru": "место",
+      "uk": "місце",
+      "tl": "lugar",
+      "so": "meel",
+      "ko": "장소"
+    },
+    "plac": {
+      "es": "POR FAVOR",
+      "vi": "VUI LÒNG",
+      "ru": "ПОЖАЛУЙСТА",
+      "uk": "БУДЬ ЛАСКА",
+      "tl": "PAKIUSAP",
+      "so": "FADLAN",
+      "ko": "제발"
+    },
+    "bid": {
+      "es": "licitación",
+      "vi": "đấu thầu",
+      "ru": "делать ставку",
+      "uk": "ставка",
+      "tl": "alok",
+      "so": "dalab",
+      "ko": "매기다"
+    },
+    "bidde": {
+      "es": "orar",
+      "vi": "cầu nguyện",
+      "ru": "молиться",
+      "uk": "молитися",
+      "tl": "manalangin",
+      "so": "tukado",
+      "ko": "기도하다"
+    },
+    "bidd": {
+      "es": "orar",
+      "vi": "cầu nguyện",
+      "ru": "молиться",
+      "uk": "молитися",
+      "tl": "manalangin",
+      "so": "tukado",
+      "ko": "기도하다"
+    },
+    "parente": {
+      "es": "relativo",
+      "vi": "liên quan đến",
+      "ru": "родственник",
+      "uk": "родич",
+      "tl": "kamag-anak",
+      "so": "qaraabo",
+      "ko": "상대적인"
+    },
+    "recycle": {
+      "es": "reciclar",
+      "vi": "tái chế",
+      "ru": "переработка",
+      "uk": "переробляти",
+      "tl": "i-recycle",
+      "so": "dib u warshadayn",
+      "ko": "재활용"
+    },
+    "recycl": {
+      "es": "reciclar",
+      "vi": "tái chế",
+      "ru": "переработка",
+      "uk": "переробляти",
+      "tl": "i-recycle",
+      "so": "dib u warshadayn",
+      "ko": "재활용"
+    },
+    "speede": {
+      "es": "acelerar",
+      "vi": "tăng tốc",
+      "ru": "ускорить",
+      "uk": "прискоритися",
+      "tl": "bilisan",
+      "so": "dedeji",
+      "ko": "속도를 높이세요"
+    },
+    "speed": {
+      "es": "velocidad",
+      "vi": "tốc độ",
+      "ru": "скорость",
+      "uk": "швидкість",
+      "tl": "bilis",
+      "so": "xawaare",
+      "ko": "속도"
+    },
+    "ende": {
+      "es": "fin",
+      "vi": "kết thúc",
+      "ru": "конец",
+      "uk": "кінець",
+      "tl": "katapusan",
+      "so": "dhammaad",
+      "ko": "끝"
+    },
+    "end": {
+      "es": "fin",
+      "vi": "kết thúc",
+      "ru": "конец",
+      "uk": "кінець",
+      "tl": "katapusan",
+      "so": "dhammaad",
+      "ko": "끝"
+    },
+    "tol": {
+      "es": "peaje",
+      "vi": "phí cầu đường",
+      "ru": "потери",
+      "uk": "платний проїзд",
+      "tl": "bayad",
+      "so": "canshuur",
+      "ko": "희생"
+    },
+    "tolle": {
+      "es": "excelente",
+      "vi": "Tuyệt",
+      "ru": "большой",
+      "uk": "чудовий",
+      "tl": "mahusay",
+      "so": "weyn",
+      "ko": "엄청난"
+    },
+    "correcte": {
+      "es": "correcte",
+      "vi": "Chính xác",
+      "ru": "правильный",
+      "uk": "правильний",
+      "tl": "tama",
+      "so": "sax ah",
+      "ko": "옳은"
+    },
+    "correct": {
+      "es": "correcto",
+      "vi": "Chính xác",
+      "ru": "правильный",
+      "uk": "правильний",
+      "tl": "tama",
+      "so": "sax ah",
+      "ko": "옳은"
+    },
+    "furthere": {
+      "es": "además",
+      "vi": "hơn nữa",
+      "ru": "далее",
+      "uk": "далі",
+      "tl": "karagdagang",
+      "ko": "더 나아가"
+    },
+    "further": {
+      "es": "más",
+      "vi": "hơn nữa",
+      "ru": "дальше",
+      "uk": "далі",
+      "tl": "karagdagang",
+      "so": "dheeraad ah",
+      "ko": "더 나아가"
+    },
+    "assure": {
+      "es": "asegurar",
+      "vi": "đảm bảo",
+      "ru": "гарантировать",
+      "uk": "запевняти",
+      "tl": "tiyakin",
+      "so": "hubi",
+      "ko": "확신하다"
+    },
+    "assur": {
+      "es": "asegurar",
+      "vi": "đảm bảo",
+      "ru": "ассур",
+      "uk": "впевнений",
+      "tl": "tiyakin",
+      "so": "assur",
+      "ko": "아슈르"
+    },
+    "suspende": {
+      "es": "suspender",
+      "vi": "đình chỉ",
+      "ru": "приостановить",
+      "uk": "призупинити",
+      "tl": "suspindihin",
+      "so": "hakin",
+      "ko": "유예하다"
+    },
+    "suspend": {
+      "es": "suspender",
+      "vi": "đình chỉ",
+      "ru": "приостановить",
+      "uk": "призупинити",
+      "tl": "suspindihin",
+      "so": "hakin",
+      "ko": "유예하다"
+    },
+    "close": {
+      "es": "cerca",
+      "vi": "đóng",
+      "ru": "закрывать",
+      "uk": "близько",
+      "tl": "isara",
+      "so": "xidh",
+      "ko": "닫다"
+    },
+    "clos": {
+      "es": "cerrar",
+      "vi": "đóng",
+      "ru": "клоз",
+      "uk": "близько",
+      "tl": "malapit",
+      "so": "xiritaan",
+      "ko": "닫기"
+    },
+    "legalize": {
+      "es": "legalizar",
+      "vi": "hợp pháp hóa",
+      "ru": "легализовать",
+      "uk": "легалізувати",
+      "tl": "gawing legal",
+      "so": "sharciyeeyo",
+      "ko": "합법화하다"
+    },
+    "legaliz": {
+      "es": "legal",
+      "vi": "hợp pháp",
+      "ru": "юридический",
+      "uk": "юридичний",
+      "tl": "legal",
+      "so": "sharci ah",
+      "ko": "합법적인"
+    },
+    "tracke": {
+      "es": "pista",
+      "vi": "theo dõi",
+      "ru": "отслеживать",
+      "uk": "доріжка",
+      "tl": "track",
+      "so": "waddo",
+      "ko": "길"
+    },
+    "track": {
+      "es": "pista",
+      "vi": "theo dõi",
+      "ru": "отслеживать",
+      "uk": "доріжка",
+      "tl": "track",
+      "so": "waddo",
+      "ko": "길"
+    },
+    "prevaile": {
+      "es": "prevalecer",
+      "vi": "chiếm ưu thế",
+      "ru": "преобладать",
+      "uk": "переважати",
+      "tl": "manaig",
+      "so": "ka adkaan",
+      "ko": "우세하다"
+    },
+    "prevail": {
+      "es": "prevalecer",
+      "vi": "chiếm ưu thế",
+      "ru": "преобладать",
+      "uk": "переважати",
+      "tl": "manaig",
+      "so": "ka adkaado",
+      "ko": "만연하다"
+    },
+    "elude": {
+      "es": "eludir",
+      "vi": "né tránh",
+      "ru": "ускользнуть",
+      "uk": "вислизати",
+      "tl": "makatakas",
+      "so": "baxsasho",
+      "ko": "피하다"
+    },
+    "elud": {
+      "es": "vidas",
+      "vi": "cuộc sống",
+      "ru": "жизни",
+      "uk": "життя",
+      "tl": "mga buhay",
+      "so": "nolosha",
+      "ko": "삶"
+    },
+    "adjuste": {
+      "es": "ajustar",
+      "vi": "điều chỉnh",
+      "ru": "регулировать",
+      "uk": "налаштувати",
+      "tl": "pagsasaayos",
+      "so": "hagaaji",
+      "ko": "조정하다"
+    },
+    "adjust": {
+      "es": "ajustar",
+      "vi": "điều chỉnh",
+      "ru": "регулировать",
+      "uk": "налаштувати",
+      "tl": "ayusin",
+      "so": "hagaaji",
+      "ko": "조정하다"
+    },
+    "parke": {
+      "es": "parque",
+      "vi": "công viên",
+      "ru": "парк",
+      "uk": "парк",
+      "tl": "parke",
+      "so": "beerta",
+      "ko": "파크"
+    },
+    "park": {
+      "es": "parque",
+      "vi": "công viên",
+      "ru": "парк",
+      "uk": "парк",
+      "tl": "parke",
+      "so": "beerta",
+      "ko": "공원"
+    },
+    "gamble": {
+      "es": "jugar",
+      "vi": "đánh bạc",
+      "ru": "азартная игра",
+      "uk": "азартна гра",
+      "tl": "magsugal",
+      "so": "khamaar",
+      "ko": "도박"
+    },
+    "gambl": {
+      "es": "jugar",
+      "vi": "đánh bạc",
+      "ru": "азартная игра",
+      "uk": "азартна гра",
+      "tl": "magsugal",
+      "so": "khamaar",
+      "ko": "도박"
+    },
+    "reviewe": {
+      "es": "revisión",
+      "vi": "đánh giá",
+      "ru": "рецензирование",
+      "uk": "рецензія",
+      "tl": "pagsusuri",
+      "so": "dib u eegis",
+      "ko": "리뷰"
+    },
+    "review": {
+      "es": "revisar",
+      "vi": "ôn tập",
+      "ru": "обзор",
+      "uk": "огляд",
+      "tl": "pagsusuri",
+      "so": "dib u eegis",
+      "ko": "검토"
+    },
+    "shifte": {
+      "es": "TURNO",
+      "vi": "SHIFTA",
+      "ru": "ШИФТА",
+      "uk": "ШІФТА",
+      "tl": "SHIFTA",
+      "so": "SHIFTA",
+      "ko": "시프타"
+    },
+    "shift": {
+      "es": "cambio",
+      "vi": "sự thay đổi",
+      "ru": "сдвиг",
+      "uk": "зсув",
+      "tl": "paglipat",
+      "so": "beddelka",
+      "ko": "옮기다"
+    },
+    "accelerate": {
+      "es": "acelerar",
+      "vi": "tăng tốc",
+      "ru": "ускорять",
+      "uk": "прискорити",
+      "tl": "bumilis",
+      "so": "dardargelin",
+      "ko": "가속"
+    },
+    "accelerat": {
+      "es": "acelerado",
+      "vi": "tăng tốc",
+      "ru": "ускоренный",
+      "uk": "прискорений",
+      "tl": "pinabilis",
+      "so": "la dedejiyey",
+      "ko": "가속"
+    },
+    "burrowe": {
+      "es": "madriguera",
+      "vi": "hang",
+      "ru": "нора",
+      "uk": "нора",
+      "tl": "lungga",
+      "so": "god",
+      "ko": "굴"
+    },
+    "burrow": {
+      "es": "madriguera",
+      "vi": "hang",
+      "ru": "нора",
+      "uk": "нора",
+      "tl": "lungga",
+      "so": "god",
+      "ko": "굴"
+    },
+    "ease": {
+      "es": "facilidad",
+      "vi": "xoa dịu",
+      "ru": "простота",
+      "uk": "легкість",
+      "tl": "kadalian",
+      "so": "fudeyd",
+      "ko": "쉬움"
+    },
+    "eas": {
+      "es": "eas",
+      "vi": "dễ dàng",
+      "ru": "легко",
+      "uk": "легкість",
+      "tl": "eas",
+      "so": "eas",
+      "ko": "쉬운"
+    },
+    "prepare": {
+      "es": "preparar",
+      "vi": "chuẩn bị",
+      "ru": "подготовить",
+      "uk": "підготувати",
+      "tl": "maghanda",
+      "so": "diyaari",
+      "ko": "준비하다"
+    },
+    "prepar": {
+      "es": "preparar",
+      "vi": "chuẩn bị",
+      "ru": "подготовить",
+      "uk": "підготувати",
+      "tl": "maghanda",
+      "so": "diyaari",
+      "ko": "준비하다"
+    },
+    "resentence": {
+      "es": "nueva sentencia",
+      "vi": "tái tuyên án",
+      "ru": "пересмотр приговора",
+      "uk": "образа",
+      "tl": "hinanakit",
+      "so": "xanaaq",
+      "ko": "재선고"
+    },
+    "resentenc": {
+      "es": "resentencia",
+      "vi": "tái phát hành",
+      "ru": "ресентенк",
+      "uk": "ресентенція",
+      "tl": "resentenc",
+      "so": "resencenc",
+      "ko": "레센텐크"
+    },
+    "budgete": {
+      "es": "presupuesto",
+      "vi": "ngân sách",
+      "ru": "бюджет",
+      "uk": "бюджет",
+      "tl": "badyet",
+      "so": "miisaaniyad",
+      "ko": "예산"
+    },
+    "identifye": {
+      "es": "identificar",
+      "vi": "nhận dạng",
+      "ru": "идентифицировать",
+      "uk": "ідентифікувати",
+      "tl": "kilalanin",
+      "so": "aqoonsi",
+      "ko": "식별하다"
+    },
+    "identify": {
+      "es": "identificar",
+      "vi": "nhận dạng",
+      "ru": "идентифицировать",
+      "uk": "ідентифікувати",
+      "tl": "kilalanin",
+      "so": "aqoonsi",
+      "ko": "식별하다"
+    },
+    "operate": {
+      "es": "funcionar",
+      "vi": "vận hành",
+      "ru": "работать",
+      "uk": "діяти",
+      "tl": "patakbuhin",
+      "so": "hawlgal",
+      "ko": "작동하다"
+    },
+    "operat": {
+      "es": "operar",
+      "vi": "nhà hát opera",
+      "ru": "операт",
+      "uk": "операт",
+      "tl": "operahan",
+      "so": "hawlgal",
+      "ko": "작동하다"
+    },
+    "vote": {
+      "es": "votar",
+      "vi": "bỏ phiếu",
+      "ru": "голосование",
+      "uk": "голосувати",
+      "tl": "boto",
+      "so": "codayn",
+      "ko": "투표"
+    },
+    "vot": {
+      "es": "votar",
+      "vi": "bỏ phiếu",
+      "ru": "голосование",
+      "uk": "голосувати",
+      "tl": "boto",
+      "so": "codayn",
+      "ko": "투표"
+    },
+    "revoke": {
+      "es": "revocar",
+      "vi": "thu hồi",
+      "ru": "отозвать",
+      "uk": "скасувати",
+      "tl": "bawiin",
+      "so": "ka noqo",
+      "ko": "취소"
+    },
+    "revok": {
+      "es": "escapar",
+      "vi": "bỏ trốn",
+      "ru": "побег",
+      "uk": "втеча",
+      "tl": "pagtakas",
+      "so": "baxsasho",
+      "ko": "탈출하다"
+    },
+    "builde": {
+      "es": "construido",
+      "vi": "xây dựng",
+      "ru": "построить",
+      "uk": "будувати",
+      "tl": "pagtatayo",
+      "so": "dhis",
+      "ko": "건축하다"
+    },
+    "build": {
+      "es": "construir",
+      "vi": "xây dựng",
+      "ru": "строить",
+      "uk": "будувати",
+      "tl": "magtayo",
+      "so": "dhis",
+      "ko": "짓다"
+    },
+    "grante": {
+      "es": "SUBVENCIONES",
+      "vi": "TÀI TRỢ",
+      "ru": "ГРАНТЫ",
+      "uk": "ГРАНТИ",
+      "tl": "MGA GRANTS",
+      "so": "DEEQAHA",
+      "ko": "보조금"
+    },
+    "prescribe": {
+      "es": "prescribir",
+      "vi": "kê đơn",
+      "ru": "выписать рецепт",
+      "uk": "виписати",
+      "tl": "magreseta",
+      "so": "warqad dhakhtar",
+      "ko": "처방하다"
+    },
+    "prescrib": {
+      "es": "prescribir",
+      "vi": "kê đơn",
+      "ru": "назначать",
+      "uk": "виписати рецепт",
+      "tl": "reseta",
+      "so": "qorid",
+      "ko": "처방하다"
+    },
+    "recorde": {
+      "es": "registro",
+      "vi": "ghi ",
+      "ru": "записывать",
+      "uk": "запис",
+      "tl": "talaan",
+      "so": "rikoodh",
+      "ko": "기록"
+    },
+    "raise": {
+      "es": "aumentar",
+      "vi": "nâng lên",
+      "ru": "поднимать",
+      "uk": "підвищити",
+      "tl": "itaas",
+      "so": "kor u qaad",
+      "ko": "들어올리다"
+    },
+    "rais": {
+      "es": "presidente",
+      "vi": "chủ tịch",
+      "ru": "президент",
+      "uk": "президент",
+      "tl": "pangulo",
+      "so": "madaxweyne",
+      "ko": "대통령"
+    },
+    "exclude": {
+      "es": "excluir",
+      "vi": "loại trừ",
+      "ru": "исключать",
+      "uk": "виключити",
+      "tl": "ibukod",
+      "so": "ka saar",
+      "ko": "들어오지 못하게 하다"
+    },
+    "exclud": {
+      "es": "EXCLUIR",
+      "vi": "LOẠI TRỪ",
+      "ru": "ИСКЛЮЧАТЬ",
+      "uk": "ВИКЛЮЧИТИ",
+      "tl": "IBUKOD",
+      "so": "KA SAAR",
+      "ko": "들어오지 못하게 하다"
+    },
+    "mitigate": {
+      "es": "mitigar",
+      "vi": "giảm thiểu",
+      "ru": "смягчать",
+      "uk": "пом'якшити",
+      "tl": "pagaanin",
+      "so": "yarayn",
+      "ko": "완화시키다"
+    },
+    "mitigat": {
+      "es": "mitiga",
+      "vi": "giảm nhẹ",
+      "ru": "смягчает",
+      "uk": "пом'якшує",
+      "tl": "nagpapagaan",
+      "so": "waxay yareysaa",
+      "ko": "완화하다"
+    },
+    "reopene": {
+      "es": "reabrir",
+      "vi": "mở cửa lại",
+      "ru": "возобновить",
+      "uk": "знову відкрити",
+      "tl": "muling pagbubukas",
+      "so": "dib u fur",
+      "ko": "재개장"
+    },
+    "reopen": {
+      "es": "reabrir",
+      "vi": "mở cửa lại",
+      "ru": "вновь открыть",
+      "uk": "знову відкрити",
+      "tl": "muling buksan",
+      "so": "dib u fur",
+      "ko": "다시 열다"
+    },
+    "leas": {
+      "es": "interés",
+      "vi": "quan tâm",
+      "ru": "интерес",
+      "uk": "інтерес",
+      "tl": "interes",
+      "so": "xiiso",
+      "ko": "관심"
+    },
+    "treat": {
+      "es": "tratar",
+      "vi": "đối xử",
+      "ru": "обращаться",
+      "uk": "частувати",
+      "tl": "gamutin",
+      "so": "daweyn",
+      "ko": "대하다"
+    },
+    "take": {
+      "es": "llevar",
+      "vi": "lấy",
+      "ru": "брать",
+      "uk": "взяти",
+      "tl": "kumuha",
+      "so": "qaado",
+      "ko": "가져가다"
+    },
+    "stop": {
+      "es": "detener",
+      "vi": "dừng lại",
+      "ru": "останавливаться",
+      "uk": "СТІЙ",
+      "tl": "huminto",
+      "so": "jooji",
+      "ko": "멈추다"
+    },
+    "start": {
+      "es": "comenzar",
+      "vi": "bắt đầu",
+      "ru": "начинать",
+      "uk": "початок",
+      "tl": "simulan",
+      "so": "bilow",
+      "ko": "시작"
+    },
+    "sign": {
+      "es": "firmar",
+      "vi": "dấu hiệu",
+      "ru": "знак",
+      "uk": "знак",
+      "tl": "tanda",
+      "so": "calaamad",
+      "ko": "징후"
+    },
+    "serve": {
+      "es": "atender",
+      "vi": "phục vụ",
+      "ru": "служить",
+      "uk": "служити",
+      "tl": "maglingkod",
+      "so": "u adeeg",
+      "ko": "제공하다"
+    },
+    "return": {
+      "es": "devolver",
+      "vi": "trở lại",
+      "ru": "возвращаться",
+      "uk": "повернення",
+      "tl": "pagbabalik",
+      "so": "soo celin",
+      "ko": "반품"
+    },
+    "reach": {
+      "es": "alcanzar",
+      "vi": "với tới",
+      "ru": "достигать",
+      "uk": "охопити",
+      "tl": "abot",
+      "so": "gaaritaan",
+      "ko": "도달하다"
+    },
+    "post": {
+      "es": "correo",
+      "vi": "bưu kiện",
+      "ru": "почта",
+      "uk": "пост",
+      "tl": "poste",
+      "so": "boostada",
+      "ko": "우편"
+    },
+    "offer": {
+      "es": "oferta",
+      "vi": "lời đề nghị",
+      "ru": "предложение",
+      "uk": "пропозиція",
+      "tl": "alok",
+      "so": "dalab",
+      "ko": "권하다"
+    },
+    "meet": {
+      "es": "encontrarse",
+      "vi": "gặp",
+      "ru": "встретиться",
+      "uk": "зустрітися",
+      "tl": "magkita",
+      "so": "kulan",
+      "ko": "만나다"
+    },
+    "handle": {
+      "es": "manejar",
+      "vi": "xử lý",
+      "ru": "ручка",
+      "uk": "ручка",
+      "tl": "hawakan",
+      "so": "gacan",
+      "ko": "핸들"
+    },
+    "give": {
+      "es": "dar",
+      "vi": "đưa cho",
+      "ru": "давать",
+      "uk": "дати",
+      "tl": "magbigay",
+      "so": "bixin",
+      "ko": "주다"
+    },
+    "follow": {
+      "es": "seguir",
+      "vi": "theo",
+      "ru": "следовать",
+      "uk": "слідувати",
+      "tl": "sumunod",
+      "so": "raac",
+      "ko": "따르다"
+    },
+    "estimate": {
+      "es": "estimar",
+      "vi": "ước lượng",
+      "ru": "оценивать",
+      "uk": "оцінка",
+      "tl": "tantiya",
+      "so": "qiyaas",
+      "ko": "추정"
+    },
+    "enter": {
+      "es": "ingresar",
+      "vi": "đi vào",
+      "ru": "входить",
+      "uk": "ввести",
+      "tl": "pumasok",
+      "so": "geli",
+      "ko": "입력하다"
+    },
+    "design": {
+      "es": "diseño",
+      "vi": "thiết kế",
+      "ru": "дизайн",
+      "uk": "дизайн",
+      "tl": "disenyo",
+      "so": "naqshadeynta",
+      "ko": "설계"
+    },
+    "describe": {
+      "es": "describir",
+      "vi": "mô tả",
+      "ru": "описывать",
+      "uk": "описувати",
+      "tl": "ilarawan",
+      "so": "sharax",
+      "ko": "설명하다"
+    },
+    "demonstrate": {
+      "es": "demostrar",
+      "vi": "chứng minh",
+      "ru": "продемонстрировать",
+      "uk": "демонструвати",
+      "tl": "magpakita",
+      "so": "bandhig",
+      "ko": "입증하다"
+    },
+    "cover": {
+      "es": "cubrir",
+      "vi": "che phủ",
+      "ru": "крышка",
+      "uk": "обкладинка",
+      "tl": "takip",
+      "so": "daboolka",
+      "ko": "씌우다"
+    },
+    "choose": {
+      "es": "elegir",
+      "vi": "chọn",
+      "ru": "выбирать",
+      "uk": "вибрати",
+      "tl": "pumili",
+      "so": "dooro",
+      "ko": "선택하다"
+    },
+    "charge": {
+      "es": "cargar",
+      "vi": "thù lao",
+      "ru": "заряжать",
+      "uk": "заряд",
+      "tl": "singil",
+      "so": "kharash",
+      "ko": "요금"
+    },
+    "bring": {
+      "es": "traer",
+      "vi": "mang đến ",
+      "ru": "приносить",
+      "uk": "принести",
+      "tl": "magdala",
+      "so": "keen",
+      "ko": "가져오다"
+    },
+    "begin": {
+      "es": "comenzar",
+      "vi": "bắt đầu",
+      "ru": "начинать",
+      "uk": "починати",
+      "tl": "magsimula",
+      "so": "bilow",
+      "ko": "시작하다"
+    },
+    "base": {
+      "es": "base",
+      "vi": "căn cứ",
+      "ru": "база",
+      "uk": "база",
+      "tl": "base",
+      "so": "saldhig",
+      "ko": "베이스"
+    },
+    "act": {
+      "es": "acto",
+      "vi": "hành động",
+      "ru": "действовать",
+      "uk": "акт",
+      "tl": "kumilos",
+      "so": "fal",
+      "ko": "행동"
+    },
+    "account": {
+      "es": "cuenta",
+      "vi": "tài khoản",
+      "ru": "счет",
+      "uk": "обліковий запис",
+      "tl": "kuwenta",
+      "so": "akoon",
+      "ko": "계정"
+    },
+    "accept": {
+      "es": "aceptar",
+      "vi": "chấp nhận",
+      "ru": "принимать",
+      "uk": "прийняти",
+      "tl": "tanggapin",
+      "so": "aqbal",
+      "ko": "수용하다"
+    },
+    "withdraw": {
+      "es": "retirar",
+      "vi": "rút",
+      "ru": "отзывать",
+      "uk": "відкликати",
+      "tl": "umatras",
+      "so": "ka bixitaan",
+      "ko": "철회하다"
+    },
+    "show": {
+      "es": "espectáculo",
+      "vi": "trình diễn",
+      "ru": "показывать",
+      "uk": "шоу",
+      "tl": "palabas",
+      "so": "bandhig",
+      "ko": "보여주다"
+    },
+    "set": {
+      "es": "colocar",
+      "vi": "bộ",
+      "ru": "набор",
+      "uk": "набір",
+      "tl": "itakda",
+      "so": "dejisan",
+      "ko": "세트"
+    },
+    "seek": {
+      "es": "buscar",
+      "vi": "tìm kiếm",
+      "ru": "искать",
+      "uk": "шукати",
+      "tl": "maghanap",
+      "so": "raadi",
+      "ko": "구하다"
+    },
+    "register": {
+      "es": "registro",
+      "vi": "đăng ký",
+      "ru": "регистрация",
+      "uk": "реєстр",
+      "tl": "magparehistro",
+      "so": "diiwaan geli",
+      "ko": "등록하다"
+    },
+    "purchase": {
+      "es": "compra",
+      "vi": "mua",
+      "ru": "покупка",
+      "uk": "покупка",
+      "tl": "pagbili",
+      "so": "iibsi",
+      "ko": "구입"
+    },
+    "produce": {
+      "es": "producir",
+      "vi": "sản xuất",
+      "ru": "производить",
+      "uk": "виробляти",
+      "tl": "gumawa",
+      "so": "soo saar",
+      "ko": "생산하다"
+    },
+    "renew": {
+      "es": "renovar",
+      "vi": "gia hạn",
+      "ru": "обновить",
+      "uk": "поновлювати",
+      "tl": "mag-renew",
+      "so": "cusboonaysiin",
+      "ko": "고쳐 쓰다"
+    },
+    "terminate": {
+      "es": "terminar",
+      "vi": "chấm dứt",
+      "ru": "завершить",
+      "uk": "припинити",
+      "tl": "wakasan",
+      "so": "joojin",
+      "ko": "끝내다"
+    },
+    "include": {
+      "es": "incluir",
+      "vi": "bao gồm",
+      "ru": "включать",
+      "uk": "включають",
+      "tl": "isama",
+      "so": "ku dar",
+      "ko": "포함하다"
+    },
+    "inform": {
+      "es": "informar",
+      "vi": "thông báo",
+      "ru": "информировать",
+      "uk": "інформувати",
+      "tl": "ipaalam",
+      "so": "wargelin",
+      "ko": "알리다"
+    },
+    "select": {
+      "es": "seleccionar",
+      "vi": "lựa chọn",
+      "ru": "выбирать",
+      "uk": "вибрати",
+      "tl": "pumili",
+      "so": "dooro",
+      "ko": "선택하다"
+    },
+    "obtain": {
+      "es": "obtener",
+      "vi": "đạt được",
+      "ru": "получать",
+      "uk": "отримати",
+      "tl": "kumuha",
+      "so": "helid",
+      "ko": "얻다"
+    },
+    "award": {
+      "es": "otorgar",
+      "vi": "phần thưởng",
+      "ru": "награда",
+      "uk": "нагорода",
+      "tl": "parangal",
+      "so": "abaalmarin",
+      "ko": "상"
+    },
+    "test": {
+      "es": "prueba",
+      "vi": "Bài kiểm tra",
+      "ru": "тест",
+      "uk": "тест",
+      "tl": "pagsubok",
+      "so": "tijaabo",
+      "ko": "시험"
+    },
+    "respond": {
+      "es": "responder",
+      "vi": "trả lời",
+      "ru": "отвечать",
+      "uk": "відповісти",
+      "tl": "tumugon",
+      "so": "ka jawaab",
+      "ko": "대답하다"
+    },
+    "manage": {
+      "es": "administrar",
+      "vi": "quản lý",
+      "ru": "управлять",
+      "uk": "керувати",
+      "tl": "pamahalaan",
+      "so": "maamul",
+      "ko": "관리하다"
+    },
+    "assign": {
+      "es": "asignar",
+      "vi": "giao phó",
+      "ru": "назначать",
+      "uk": "призначити",
+      "tl": "magtalaga",
+      "so": "u qoondee",
+      "ko": "양수인"
+    },
+    "apply": {
+      "es": "aplicar",
+      "vi": "áp dụng",
+      "ru": "применять",
+      "uk": "застосовувати",
+      "tl": "mag-aplay",
+      "so": "codsan",
+      "ko": "적용하다"
+    },
+    "administer": {
+      "es": "administrar",
+      "vi": "quản lý",
+      "ru": "администрировать",
+      "uk": "управляти",
+      "tl": "pangasiwaan",
+      "so": "maamul",
+      "ko": "투여하다"
+    },
+    "decrease": {
+      "es": "disminuir",
+      "vi": "giảm bớt",
+      "ru": "снижаться",
+      "uk": "зменшення",
+      "tl": "pagbaba",
+      "so": "hoos u dhac",
+      "ko": "감소하다"
+    },
+    "retain": {
+      "es": "retener",
+      "vi": "giữ lại",
+      "ru": "удерживать",
+      "uk": "утримувати",
+      "tl": "panatilihin",
+      "so": "hayn",
+      "ko": "유지하다"
+    },
+    "request": {
+      "es": "pedido",
+      "vi": "lời yêu cầu",
+      "ru": "запрос",
+      "uk": "запит",
+      "tl": "kahilingan",
+      "so": "codsi",
+      "ko": "요구"
+    },
+    "perform": {
+      "es": "llevar a cabo",
+      "vi": "trình diễn",
+      "ru": "выполнять",
+      "uk": "виконувати",
+      "tl": "gumanap",
+      "so": "samee",
+      "ko": "공연하다"
+    },
+    "enforce": {
+      "es": "hacer cumplir",
+      "vi": "thực thi",
+      "ru": "обеспечить",
+      "uk": "примусити",
+      "tl": "ipatupad",
+      "so": "dhaqan gelin",
+      "ko": "억지로 시키다"
+    },
+    "disclose": {
+      "es": "revelar",
+      "vi": "tiết lộ",
+      "ru": "раскрыть",
+      "uk": "розкривати",
+      "tl": "ibunyag",
+      "so": "shaacin",
+      "ko": "드러내다"
+    },
+    "consult": {
+      "es": "consultar",
+      "vi": "tư vấn",
+      "ru": "консультация",
+      "uk": "консультуватися",
+      "tl": "kumonsulta",
+      "so": "la tasho",
+      "ko": "찾다"
+    },
+    "allocate": {
+      "es": "asignar",
+      "vi": "phân bổ",
+      "ru": "выделить",
+      "uk": "розподілити",
+      "tl": "maglaan",
+      "so": "qoondayn",
+      "ko": "할당하다"
+    },
+    "recommend": {
+      "es": "recomendar",
+      "vi": "gợi ý",
+      "ru": "рекомендую",
+      "uk": "рекомендувати",
+      "tl": "magrekomenda",
+      "so": "ku talin",
+      "ko": "추천하다"
+    },
+    "investigate": {
+      "es": "investigar",
+      "vi": "khảo sát",
+      "ru": "расследовать",
+      "uk": "розслідувати",
+      "tl": "mag-imbestiga",
+      "so": "baarid",
+      "ko": "조사하다"
+    },
+    "audit": {
+      "es": "auditoría",
+      "vi": "kiểm toán",
+      "ru": "аудит",
+      "uk": "аудит",
+      "tl": "pag-awdit",
+      "so": "baaritaan",
+      "ko": "심사"
+    },
+    "inspect": {
+      "es": "inspeccionar",
+      "vi": "thanh tra",
+      "ru": "проверить",
+      "uk": "оглянути",
+      "tl": "siyasatin",
+      "so": "kormeer",
+      "ko": "검사하다"
+    },
+    "monitor": {
+      "es": "monitor",
+      "vi": "màn hình",
+      "ru": "монитор",
+      "uk": "монітор",
+      "tl": "monitor",
+      "so": "kormeere",
+      "ko": "감시 장치"
+    },
+    "coordinate": {
+      "es": "coordinar",
+      "vi": "điều phối",
+      "ru": "координата",
+      "uk": "координата",
+      "tl": "koordinasyon",
+      "so": "isku duwo",
+      "ko": "동등 어구"
+    },
+    "evaluate": {
+      "es": "evaluar",
+      "vi": "đánh giá",
+      "ru": "оценивать",
+      "uk": "оцінювати",
+      "tl": "suriin",
+      "so": "qiimayn",
+      "ko": "평가하다"
+    },
+    "verify": {
+      "es": "verificar",
+      "vi": "xác minh",
+      "ru": "проверять",
+      "uk": "перевірити",
+      "tl": "beripikahin",
+      "so": "xaqiijin",
+      "ko": "확인하다"
+    },
+    "distribute": {
+      "es": "distribuir",
+      "vi": "phân phát",
+      "ru": "распространять",
+      "uk": "розповсюджувати",
+      "tl": "ipamahagi",
+      "so": "qaybi",
+      "ko": "분배하다"
+    },
+    "publish": {
+      "es": "publicar",
+      "vi": "xuất bản",
+      "ru": "публиковать",
+      "uk": "опублікувати",
+      "tl": "ilathala",
+      "so": "daabac",
+      "ko": "출판하다"
+    },
+    "collect": {
+      "es": "recolectar",
+      "vi": "sưu tầm",
+      "ru": "собирать",
+      "uk": "збирати",
+      "tl": "mangolekta",
+      "so": "ururin",
+      "ko": "모으다"
+    },
+    "approve": {
+      "es": "aprobar",
+      "vi": "chấp thuận",
+      "ru": "утвердить",
+      "uk": "схвалити",
+      "tl": "aprubahan",
+      "so": "ansixi",
+      "ko": "승인하다"
+    },
+    "certify": {
+      "es": "certificar",
+      "vi": "chứng nhận",
+      "ru": "сертифицировать",
+      "uk": "засвідчити",
+      "tl": "patunayan",
+      "so": "xaqiijin",
+      "ko": "인증하다"
     }
   },
   "objects": {
@@ -42959,6 +47116,15 @@
       "tl": "ang mga pangyayaring maaaring magdulot ng malaking paglabag sa batas ng mga uniform controlled substances",
       "so": "xaaladaha noqon kara xadgudub weyn oo ka dhan ah sharciga walxaha la xakameeyey ee isku midka ah",
       "ko": "통일 마약류 관리법의 중대한 위반을 구성할 수 있는 상황"
+    },
+    "this requirement": {
+      "es": "este requisito",
+      "vi": "yêu cầu này",
+      "ru": "это требование",
+      "uk": "ця вимога",
+      "tl": "ang kinakailangang ito",
+      "so": "shuruudan",
+      "ko": "이 요구 사항"
     }
   }
 }
