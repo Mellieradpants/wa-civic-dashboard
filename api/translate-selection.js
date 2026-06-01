@@ -1,4 +1,4 @@
-import { renderISCLocalized } from "../lib/plain-meaning/renderer.js";
+import { renderISC } from "../lib/plain-meaning/renderer.js";
 
 const SUPPORTED_LANGS = new Set(["es", "vi", "ru", "uk", "tl", "so", "ko"]);
 
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { plainMeaning, sentences, sectionType, hasContent } = renderISCLocalized({ units }, lang);
+    const { plainMeaning, sentences, sectionType, hasContent } = renderISC({ units }, { lang });
     return res.status(200).json({ plainMeaning, sentences, sectionType, hasContent });
   } catch (error) {
     return res.status(500).json({

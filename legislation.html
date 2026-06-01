@@ -767,6 +767,7 @@
     // Re-render cached ISC units in the target language — skips the pipeline entirely.
     // Uses /api/translate-selection which calls renderLocalized without any English
     // template fallback, ensuring structural words are in the target language.
+    // Returns { text, isLocalized }.
     async function fetchTranslation(sectionUnitGroups, lang) {
       const results = await Promise.allSettled(
         sectionUnitGroups.map(units =>
@@ -780,15 +781,18 @@
         )
       );
       const seenTr = new Set();
-      const meanings = results
-        .filter(r => {
-          if (r.status !== "fulfilled" || !r.value?.hasContent) return false;
-          if (seenTr.has(r.value.plainMeaning)) return false;
-          seenTr.add(r.value.plainMeaning);
-          return true;
-        })
-        .map(r => r.value.plainMeaning);
-      return meanings.join("\n\n");
+      const meanings = [];
+      let isLocalized = true;
+
+      results.forEach(r => {
+        if (r.status !== "fulfilled" || !r.value?.hasContent) return;
+        if (seenTr.has(r.value.plainMeaning)) return;
+        seenTr.add(r.value.plainMeaning);
+        meanings.push(r.value.plainMeaning);
+        if (r.value.isLocalized === false) isLocalized = false;
+      });
+
+      return { text: meanings.join("\n\n"), isLocalized };
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -844,10 +848,14 @@
 
       billDocPlainSummary.textContent = "Translating…";
       try {
-        const translated = await fetchTranslation(lastSectionUnits, lang);
-        if (translated) {
-          translationCache[lang] = translated;
-          billDocPlainSummary.textContent = translated;
+        const result = await fetchTranslation(lastSectionUnits, lang);
+        if (result.text) {
+          let displayText = result.text;
+          if (!result.isLocalized) {
+            displayText += "\n\n[!] Some action phrases remain in English. Dictionary entries are being added.";
+          }
+          translationCache[lang] = displayText;
+          billDocPlainSummary.textContent = displayText;
         } else {
           billDocPlainSummary.textContent = englishSummary;
           summaryLangSelect.value = "en";

@@ -1,0 +1,31 @@
+{
+  "syntax_frames": {
+    "es": ["verb", "object"],
+    "vi": ["verb", "object"],
+    "ru": ["verb", "object"],
+    "uk": ["verb", "object"],
+    "tl": ["verb", "object"],
+    "so": ["object", "verb"],
+    "ko": ["object", "verb"]
+  },
+  "verbs": {
+    "submit": {
+      "es": "presentar",
+      "vi": "nộp",
+      "ru": "представить",
+      "tl": "magpasa",
+      "so": "gudbi",
+      "ko": "제출하다"
+    }
+  },
+  "objects": {
+    "a report": {
+      "es": "un informe",
+      "vi": "báo cáo",
+      "ru": "отчёт",
+      "tl": "ng ulat",
+      "so": "warbixin",
+      "ko": "보고서를"
+    }
+  }
+}
