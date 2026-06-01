@@ -1,12 +1,33 @@
 {
   "syntax_frames": {
-    "es": ["verb", "object"],
-    "vi": ["verb", "object"],
-    "ru": ["verb", "object"],
-    "uk": ["verb", "object"],
-    "tl": ["verb", "object"],
-    "so": ["object", "verb"],
-    "ko": ["object", "verb"]
+    "es": [
+      "verb",
+      "object"
+    ],
+    "vi": [
+      "verb",
+      "object"
+    ],
+    "ru": [
+      "verb",
+      "object"
+    ],
+    "uk": [
+      "verb",
+      "object"
+    ],
+    "tl": [
+      "verb",
+      "object"
+    ],
+    "so": [
+      "object",
+      "verb"
+    ],
+    "ko": [
+      "object",
+      "verb"
+    ]
   },
   "verbs": {
     "submit": {
@@ -16,6 +37,159 @@
       "tl": "magpasa",
       "so": "gudbi",
       "ko": "제출하다"
+    },
+    "be": {
+      "es": "ser",
+      "vi": "là",
+      "ru": "быть",
+      "uk": "бути",
+      "tl": "maging",
+      "so": "noqon",
+      "ko": "BE"
+    },
+    "hold": {
+      "es": "sostener",
+      "vi": "giữ",
+      "ru": "держать",
+      "uk": "утримувати",
+      "tl": "hawakan",
+      "so": "hay",
+      "ko": "잡고 있다"
+    },
+    "consider": {
+      "es": "considerar",
+      "vi": "coi như",
+      "ru": "учитывать",
+      "uk": "розглянути",
+      "tl": "isaalang-alang",
+      "so": "ka fiirso",
+      "ko": "고려하다"
+    },
+    "include:": {
+      "es": "incluir:",
+      "vi": "bao gồm:",
+      "ru": "включать:",
+      "uk": "включають:",
+      "tl": "isama ang:",
+      "so": "waxaa ka mid ah:",
+      "ko": "포함하다:"
+    },
+    "broaden": {
+      "es": "ampliar",
+      "vi": "mở rộng",
+      "ru": "расширить",
+      "uk": "розширити",
+      "tl": "palawakin",
+      "so": "ballaadhi",
+      "ko": "넓히다"
+    },
+    "specify": {
+      "es": "especificar",
+      "vi": "chỉ định",
+      "ru": "указать",
+      "uk": "уточнити",
+      "tl": "tukuyin",
+      "so": "cayim",
+      "ko": "명시하다"
+    },
+    "specify,": {
+      "es": "especificar,",
+      "vi": "chỉ định,",
+      "ru": "указать,",
+      "uk": "уточнити,",
+      "tl": "tukuyin,",
+      "so": "sheeg,",
+      "ko": "구체적으로 명시하세요,"
+    },
+    "complete": {
+      "es": "completo",
+      "vi": "hoàn thành",
+      "ru": "полный",
+      "uk": "повний",
+      "tl": "kumpleto",
+      "so": "dhammaystiran",
+      "ko": "완벽한"
+    },
+    "enhance": {
+      "es": "mejorar",
+      "vi": "nâng cao",
+      "ru": "усиливать",
+      "uk": "покращити",
+      "tl": "pahusayin",
+      "so": "kor u qaad",
+      "ko": "향상시키다"
+    },
+    "develop": {
+      "es": "desarrollar",
+      "vi": "phát triển",
+      "ru": "развивать",
+      "uk": "розвивати",
+      "tl": "bumuo",
+      "so": "horumar",
+      "ko": "개발하다"
+    },
+    "from": {
+      "es": "de",
+      "vi": "từ",
+      "ru": "от",
+      "uk": "з",
+      "tl": "mula sa",
+      "so": "laga bilaabo",
+      "ko": "~에서"
+    },
+    "exceed": {
+      "es": "superar",
+      "vi": "quá",
+      "ru": "превосходить",
+      "uk": "перевищувати",
+      "tl": "lumampas",
+      "so": "dhaaf",
+      "ko": "초과하다"
+    },
+    "adopt": {
+      "es": "adoptar",
+      "vi": "nhận nuôi",
+      "ru": "усыновить",
+      "uk": "усиновити",
+      "tl": "mag-ampon",
+      "so": "korsasho",
+      "ko": "입양하다"
+    },
+    "reflect": {
+      "es": "reflejar",
+      "vi": "phản ánh",
+      "ru": "отражать",
+      "uk": "відображати",
+      "tl": "sumasalamin",
+      "so": "milicsiga",
+      "ko": "반영하다"
+    },
+    ",": {
+      "es": ",",
+      "vi": ",",
+      "ru": ",",
+      "uk": ",",
+      "tl": ",",
+      "so": ",",
+      "ko": ","
+    },
+    "waive": {
+      "es": "renunciar",
+      "vi": "miễn trừ",
+      "ru": "отказать",
+      "uk": "відмовитися",
+      "tl": "talikuran",
+      "so": "ka dhaafid",
+      "ko": "포기하다"
+    },
+    "receive": {
+      "es": "recibir",
+      "vi": "nhận được",
+      "ru": "получать",
+      "uk": "отримувати",
+      "tl": "tumanggap",
+      "so": "helid",
+      "ko": "받다"
     }
   },
   "objects": {
@@ -26,6 +200,231 @@
       "tl": "ng ulat",
       "so": "warbixin",
       "ko": "보고서를"
+    },
+    "filed electronically with the state's fiscal website managed by the legislative evaluation and accountability program committee": {
+      "es": "presentado electrónicamente en el sitio web fiscal del estado administrado por el comité del programa de evaluación y rendición de cuentas legislativas.",
+      "vi": "Hồ sơ được nộp điện tử lên trang web tài chính của tiểu bang do ủy ban chương trình đánh giá và trách nhiệm giải trình lập pháp quản lý.",
+      "ru": "отчетность подается в электронном виде на финансовый веб-сайт штата, управляемый комитетом по оценке и подотчетности законодательной деятельности.",
+      "uk": "подано в електронному вигляді на веб-сайт державних фінансових установ, яким керує комітет програми законодавчої оцінки та підзвітності",
+      "tl": "isinampa nang elektroniko sa website ng pananalapi ng estado na pinamamahalaan ng komite ng programa sa pagsusuri at pananagutan ng lehislatura",
+      "so": "si elektaroonig ah loogu xareeyay bogga internetka ee maaliyadda ee gobolka oo ay maamusho guddiga barnaamijka qiimaynta iyo isla xisaabtanka sharci-dejinta",
+      "ko": "주의회 평가 및 책임 프로그램 위원회가 관리하는 주 재정 웹사이트에 전자적으로 제출되었습니다."
+    },
+    "at least one public hearing on the information and analysis submitted by agencies under the zero-based budget review": {
+      "es": "al menos una audiencia pública sobre la información y el análisis presentados por los organismos en el marco de la revisión presupuestaria de base cero.",
+      "vi": "Ít nhất một phiên điều trần công khai về thông tin và phân tích do các cơ quan đệ trình trong khuôn khổ xem xét ngân sách từ con số không.",
+      "ru": "как минимум одно публичное слушание по информации и анализу, представленным ведомствами в рамках проверки бюджета с нуля.",
+      "uk": "принаймні одні публічні слухання щодо інформації та аналізу, поданих установами в рамках перегляду бюджету на нульовій основі",
+      "tl": "kahit isang pampublikong pagdinig sa impormasyon at pagsusuring isinumite ng mga ahensya sa ilalim ng zero-based budget review",
+      "so": "ugu yaraan hal dhageysi dadweyne oo ku saabsan macluumaadka iyo falanqaynta ay soo gudbiyeen hay'adaha iyadoo la raacayo dib-u-eegista miisaaniyadda ku salaysan eber",
+      "ko": "제로 기반 예산 검토에 따라 기관들이 제출한 정보 및 분석에 대한 최소 한 번의 공개 청문회"
+    },
+    "the information and analysis provided by agencies under this section in the budget development process": {
+      "es": "la información y el análisis proporcionados por los organismos en virtud de esta sección en el proceso de elaboración del presupuesto",
+      "vi": "Thông tin và phân tích do các cơ quan cung cấp theo phần này trong quá trình xây dựng ngân sách.",
+      "ru": "Информация и анализ, предоставляемые ведомствами в рамках данного раздела в процессе разработки бюджета.",
+      "uk": "інформація та аналіз, надані установами відповідно до цього розділу в процесі розробки бюджету",
+      "tl": "ang impormasyon at pagsusuring ibinigay ng mga ahensya sa ilalim ng seksyong ito sa proseso ng pagbuo ng badyet",
+      "so": "macluumaadka iyo falanqaynta ay bixiyaan hay'adaha hoos yimaada qaybtan ee habka horumarinta miisaaniyadda",
+      "ko": "예산 편성 과정에서 이 조항에 따라 기관들이 제공하는 정보 및 분석"
+    },
+    "a statement of the statutory basis or other basis for the creation of each program and the history of each program that is being reviewed; a description of how each program fits within the strategic plan and goals of the agency and an analysis of the quantified objectives of each program within the agency; any available performance measures indicating the effectiveness and efficiency of each program; a description with supporting cost and staffing data of each program and the populations served by each program, and the level of funding and staff required to accomplish the goals of the program if different than the actual maintenance level; an analysis of the major costs and benefits of operating each program and the rationale for specific expenditure and staffing levels; an analysis estimating each program's administrative and other overhead costs; an analysis of the levels of services provided; where applicable, an analysis estimating the amount of funds or benefits that actually reach the intended recipients; and other information and analysis requested by the legislature in the legislation identifying the agency programs for review under subsection of this section": {
+      "es": "una declaración de la base legal u otra base para la creación de cada programa y el historial de cada programa que se está revisando; una descripción de cómo cada programa se ajusta al plan estratégico y los objetivos de la agencia y un análisis de los objetivos cuantificados de cada programa dentro de la agencia; cualquier medida de desempeño disponible que indique la eficacia y eficiencia de cada programa; una descripción con datos de respaldo sobre costos y personal de cada programa y las poblaciones atendidas por cada programa, y el nivel de financiamiento y personal requerido para lograr los objetivos del programa si es diferente del nivel de mantenimiento real; un análisis de los principales costos y beneficios de operar cada programa y la justificación de los niveles específicos de gasto y personal; un análisis que estime los costos administrativos y otros costos generales de cada programa; un análisis de los niveles de servicios prestados; cuando corresponda, un análisis que estime la cantidad de fondos o beneficios que realmente llegan a los destinatarios previstos; y otra información y análisis solicitados por la legislatura en la legislación que identifica los programas de la agencia para su revisión bajo el inciso de esta sección.",
+      "vi": "Bản trình bày cơ sở pháp lý hoặc cơ sở khác cho việc thành lập từng chương trình và lịch sử của từng chương trình đang được xem xét; mô tả cách mỗi chương trình phù hợp với kế hoạch chiến lược và mục tiêu của cơ quan và phân tích các mục tiêu định lượng của từng chương trình trong cơ quan; bất kỳ thước đo hiệu quả nào hiện có cho thấy tính hiệu quả và năng suất của từng chương trình; mô tả kèm theo dữ liệu chi phí và nhân sự hỗ trợ của từng chương trình và đối tượng phục vụ của mỗi chương trình, và mức độ kinh phí và nhân sự cần thiết để đạt được mục tiêu của chương trình nếu khác với mức duy trì thực tế; phân tích các chi phí và lợi ích chính của việc vận hành từng chương trình và lý do cho các mức chi tiêu và nhân sự cụ thể; phân tích ước tính chi phí hành chính và các chi phí gián tiếp khác của mỗi chương trình; phân tích mức độ dịch vụ được cung cấp; nếu có, phân tích ước tính số tiền hoặc lợi ích thực sự đến được người nhận dự định; và các thông tin và phân tích khác do cơ quan lập pháp yêu cầu trong luật xác định các chương trình của cơ quan để xem xét theo tiểu mục của phần này.",
+      "ru": "Заявление об обосновании законодательной или иной основы создания каждой программы и истории каждой программы, подлежащей проверке; описание того, как каждая программа вписывается в стратегический план и цели агентства, и анализ количественно измеримых целей каждой программы в рамках агентства; любые доступные показатели эффективности, указывающие на результативность каждой программы; описание каждой программы с подтверждающими данными о затратах и численности персонала, а также о группах населения, обслуживаемых каждой программой, и об уровне финансирования и персонала, необходимых для достижения целей программы, если он отличается от фактического уровня поддержания; анализ основных затрат и выгод от функционирования каждой программы и обоснование конкретных уровней расходов и численности персонала; анализ оценки административных и других накладных расходов каждой программы; анализ уровня предоставляемых услуг; где это применимо, анализ оценки объема средств или выгод, фактически достигающих предполагаемых получателей; и другая информация и анализ, запрошенные законодательным органом в законодательстве, определяющем программы агентства для проверки в соответствии с подразделом настоящего раздела.",
+      "uk": "виклад законодавчої або іншої основи для створення кожної програми та історії кожної програми, що переглядається; опис того, як кожна програма вписується у стратегічний план та цілі агентства, та аналіз кількісно визначених цілей кожної програми в межах агентства; будь-які доступні показники ефективності, що вказують на ефективність та результативність кожної програми; опис з даними про допоміжні витрати та персонал кожної програми та населення, яке обслуговується кожною програмою, а також рівень фінансування та персоналу, необхідного для досягнення цілей програми, якщо він відрізняється від фактичного рівня обслуговування; аналіз основних витрат та вигод від функціонування кожної програми та обґрунтування конкретних витрат та рівня персоналу; аналіз, що оцінює адміністративні та інші накладні витрати кожної програми; аналіз рівнів наданих послуг; де це можливо, аналіз, що оцінює обсяг коштів або вигод, які фактично досягають цільових одержувачів; та інша інформація та аналіз, що запитуються законодавчим органом у законодавстві, що визначає програми агентства для перегляду відповідно до підрозділу цього розділу.",
+      "tl": "isang pahayag ng batayang itinadhana o iba pang batayan para sa paglikha ng bawat programa at ang kasaysayan ng bawat programang sinusuri; isang paglalarawan kung paano umaangkop ang bawat programa sa loob ng estratehikong plano at mga layunin ng ahensya at isang pagsusuri ng mga natukoy na layunin ng bawat programa sa loob ng ahensya; anumang magagamit na mga sukat ng pagganap na nagpapahiwatig ng pagiging epektibo at kahusayan ng bawat programa; isang paglalarawan na may sumusuportang datos ng gastos at tauhan ng bawat programa at ang mga populasyon na pinaglilingkuran ng bawat programa, at ang antas ng pondo at tauhan na kinakailangan upang makamit ang mga layunin ng programa kung naiiba sa aktwal na antas ng pagpapanatili; isang pagsusuri ng mga pangunahing gastos at benepisyo ng pagpapatakbo ng bawat programa at ang katwiran para sa mga partikular na antas ng paggasta at tauhan; isang pagsusuri na tinatantya ang mga gastos sa administratibo at iba pang mga overhead ng bawat programa; isang pagsusuri ng mga antas ng mga serbisyong ibinigay; kung naaangkop, isang pagsusuri na tinatantya ang halaga ng mga pondo o benepisyo na aktwal na nakakarating sa mga nilalayong tatanggap; at iba pang impormasyon at pagsusuri na hiniling ng lehislatura sa batas na tumutukoy sa mga programa ng ahensya para sa pagsusuri sa ilalim ng subseksyon ng seksyong ito.",
+      "so": "bayaan ku saabsan aasaaska sharciga ah ama saldhig kale oo loogu talagalay abuurista barnaamij kasta iyo taariikhda barnaamij kasta oo dib loo eegayo; sharraxaad ku saabsan sida barnaamij kastaa ugu habboon yahay qorshaha istaraatiijiyadeed iyo yoolalka hay'adda iyo falanqaynta ujeedooyinka la tiriyey ee barnaamij kasta oo ku jira hay'adda; cabbiraad kasta oo waxqabad oo la heli karo oo tilmaamaya waxtarka iyo hufnaanta barnaamij kasta; sharraxaad leh xogta kharashka iyo shaqaalaha ee barnaamij kasta iyo dadka uu barnaamij kasta u adeego, iyo heerka maalgelinta iyo shaqaalaha looga baahan yahay si loo gaaro yoolalka barnaamijka haddii ay ka duwan tahay heerka dayactirka dhabta ah; falanqaynta kharashyada iyo faa'iidooyinka ugu waaweyn ee ka shaqeeya barnaamij kasta iyo sababta loogu talagalay heerarka kharashka gaarka ah iyo shaqaalaha; falanqayn qiyaaseysa kharashyada maamulka iyo kuwa kale ee kharashaadka guud ee barnaamij kasta; falanqayn ku saabsan heerarka adeegyada la bixiyo; meesha ay khuseyso, falanqayn qiyaaseysa cadadka lacagaha ama faa'iidooyinka dhab ahaan gaara dadka loogu talagalay; iyo macluumaad iyo falanqayn kale oo ay codsadeen sharci-dejiye sharci-dejinta ee ku jira sharciga aqoonsanaya barnaamijyada hay'adda ee dib-u-eegista hoos yimaada qaybtan",
+      "ko": "검토 대상 프로그램의 법적 근거 또는 기타 설립 근거에 대한 설명과 해당 프로그램의 연혁; 각 프로그램이 기관의 전략 계획 및 목표에 어떻게 부합하는지에 대한 설명과 기관 내 각 프로그램의 정량화된 목표 분석; 각 프로그램의 효과성과 효율성을 나타내는 모든 성과 측정 지표; 각 프로그램의 비용 및 인력 데이터와 해당 프로그램이 제공하는 서비스 대상 인구에 대한 설명, 그리고 실제 유지 수준과 다른 경우 프로그램 목표 달성에 필요한 자금 및 인력 수준에 대한 설명; 각 프로그램 운영의 주요 비용 및 편익 분석과 특정 지출 및 인력 수준에 대한 근거; 각 프로그램의 관리 및 기타 간접비 추정 분석; 제공되는 서비스 수준 분석; 해당되는 경우, 의도된 수혜자에게 실제로 도달하는 자금 또는 혜택 금액 추정 분석; 그리고 이 조항의 하위 조항에 따라 검토 대상 기관 프로그램을 지정하는 법률에서 입법부가 요청한 기타 정보 및 분석"
+    },
+    "zero-based budget reviews for the programs identified by the legislature for review that biennium under subsection of this section": {
+      "es": "revisiones presupuestarias de base cero para los programas identificados por la legislatura para su revisión durante ese bienio de conformidad con el inciso de esta sección.",
+      "vi": "rà soát ngân sách từ con số không đối với các chương trình được cơ quan lập pháp xác định để xem xét trong hai năm đó theo tiểu mục của phần này.",
+      "ru": "бюджетные проверки с нуля для программ, определенных законодательным органом для проверки в течение двухлетнего периода в соответствии с подразделом настоящего раздела.",
+      "uk": "огляди бюджету на нульовій основі для програм, визначених законодавчим органом для перегляду протягом цього дворічного періоду відповідно до підрозділу цього розділу",
+      "tl": "mga pagsusuri sa badyet na batay sa zero para sa mga programang tinukoy ng lehislatura para sa pagsusuri sa biennium na iyon sa ilalim ng subseksyon ng seksyong ito",
+      "so": "Dib-u-eegis miisaaniyadeed oo eber ku salaysan oo loogu talagalay barnaamijyada ay aqoonsatay sharci-dejintu si loogu eego labada sano ee hoos yimaada qaybtan",
+      "ko": "본 조항의 하위 조항에 따라 입법부가 검토 대상으로 지정한 프로그램에 대한 제로 기반 예산 검토를 해당 2년 동안 실시합니다."
+    },
+    "or narrow the definition of program for specific agencies": {
+      "es": "o bien restringir la definición de programa para agencias específicas.",
+      "vi": "hoặc thu hẹp định nghĩa chương trình cho các cơ quan cụ thể.",
+      "ru": "или сузить определение программы для конкретных ведомств",
+      "uk": "або звузити визначення програми для конкретних установ",
+      "tl": "o paliitin ang kahulugan ng programa para sa mga partikular na ahensya",
+      "so": "ama soo koob qeexitaanka barnaamijka ee hay'adaha gaarka ah",
+      "ko": "또는 특정 기관에 대한 프로그램 정의를 좁히다"
+    },
+    "programs by functional area, such as education, health care, other human services, natural resources, and general government, or may specify programs as prioritized by the legislature": {
+      "es": "programas por área funcional, como educación, atención médica, otros servicios humanos, recursos naturales y gobierno general, o pueden especificar programas según lo priorizado por la legislatura.",
+      "vi": "các chương trình theo lĩnh vực chức năng, chẳng hạn như giáo dục, chăm sóc sức khỏe, các dịch vụ nhân sinh khác, tài nguyên thiên nhiên và chính phủ nói chung, hoặc có thể chỉ định các chương trình được ưu tiên bởi cơ quan lập pháp.",
+      "ru": "Программы могут быть сгруппированы по функциональным областям, таким как образование, здравоохранение, другие социальные услуги, природные ресурсы и государственное управление, или же могут определять программы в соответствии с приоритетами, установленными законодательным органом.",
+      "uk": "програми за функціональними сферами, такими як освіта, охорона здоров'я, інші соціальні послуги, природні ресурси та державне управління, або можуть визначати програми, пріоритет яких визначено законодавчим органом",
+      "tl": "mga programa ayon sa functional area, tulad ng edukasyon, pangangalagang pangkalusugan, iba pang serbisyong pantao, likas na yaman, at pangkalahatang pamahalaan, o maaaring tukuyin ang mga programang inuuna ng lehislatura",
+      "so": "barnaamijyada ku saleysan qaybaha shaqada, sida waxbarashada, daryeelka caafimaadka, adeegyada kale ee aadanaha, kheyraadka dabiiciga ah, iyo dowladda guud, ama waxay qeexi karaan barnaamijyada sida ay mudnaanta siiyaan sharci-dejintu",
+      "ko": "교육, 의료, 기타 사회복지, 천연자원, 일반 행정 등 기능 영역별 프로그램으로 분류하거나, 입법부가 우선순위를 정한 프로그램을 명시할 수 있습니다."
+    },
+    "in the omnibus operating appropriations act or in other legislation, programs for which agencies must perform a zero-based budget review under subsection of this section": {
+      "es": "en la ley general de asignaciones operativas o en otra legislación, programas para los cuales las agencias deben realizar una revisión presupuestaria de base cero según el inciso de esta sección.",
+      "vi": "trong đạo luật phân bổ ngân sách hoạt động tổng hợp hoặc trong các văn bản pháp luật khác, các chương trình mà các cơ quan phải thực hiện đánh giá ngân sách từ cơ sở bằng không theo tiểu mục của phần này.",
+      "ru": "в сводном законе о бюджетных ассигнованиях или в другом законодательстве программы, для которых ведомства должны проводить бюджетный анализ с нуля в соответствии с подразделом настоящего раздела.",
+      "uk": "у законі про загальні операційні асигнування або в іншому законодавстві, програми, для яких установи повинні проводити перегляд бюджету на нульовій основі відповідно до підрозділу цього розділу",
+      "tl": "sa omnibus operating appropriations act o sa iba pang batas, mga programa kung saan ang mga ahensya ay dapat magsagawa ng zero-based na pagsusuri sa badyet sa ilalim ng subsection ng seksyong ito",
+      "so": "Xeerka qoondaynta hawlgalka omnibus ama sharci kale, barnaamijyo ay hay'aduhu ku qasban yihiin inay sameeyaan dib u eegis miisaaniyadeed oo eber ku salaysan sida ku xusan qaybtan hoosteeda.",
+      "ko": "포괄적 운영 예산법 또는 기타 법률에서, 기관이 이 조항의 하위 조항에 따라 제로 기반 예산 검토를 수행해야 하는 프로그램"
+    },
+    "included as a separate document in an agency's biennial budget request under this chapter; and (ii) consideration of the information provided under of this subsection by the governor and the legislature during the budget development process": {
+      "es": "incluido como documento separado en la solicitud de presupuesto bienal de una agencia conforme a este capítulo; y (ii) la consideración de la información proporcionada conforme a este subapartado por el gobernador y la legislatura durante el proceso de elaboración del presupuesto.",
+      "vi": "được bao gồm như một tài liệu riêng biệt trong yêu cầu ngân sách hai năm một lần của cơ quan theo chương này; và (ii) việc xem xét thông tin được cung cấp theo tiểu mục này bởi thống đốc và cơ quan lập pháp trong quá trình xây dựng ngân sách.",
+      "ru": "(i) включен в качестве отдельного документа в двухгодичный бюджетный запрос ведомства в соответствии с настоящей главой; и (ii) рассмотрение информации, предоставленной губернатором и законодательным органом в соответствии с настоящим подразделом, в процессе разработки бюджета.",
+      "uk": "включено як окремий документ до дворічного бюджетного запиту агентства відповідно до цього розділу; та (ii) розгляд інформації, наданої відповідно до цього підрозділу, губернатором та законодавчим органом під час процесу розробки бюджету",
+      "tl": "isinama bilang isang hiwalay na dokumento sa kahilingan sa badyet ng isang ahensya kada dalawang taon sa ilalim ng kabanatang ito; at (ii) pagsasaalang-alang sa impormasyong ibinigay sa ilalim ng subseksyon na ito ng gobernador at ng lehislatura sa panahon ng proseso ng pagbuo ng badyet",
+      "so": "waxaa lagu daray dukumeenti gaar ah codsiga miisaaniyadda laba-sannadlaha ah ee hay'adda ee hoos yimaada cutubkan; iyo (ii) tixgelinta macluumaadka lagu bixiyay qaybtan hoosteeda guddoomiyaha iyo sharci-dejinta inta lagu jiro geeddi-socodka horumarinta miisaaniyadda",
+      "ko": "(i) 본 장에 따라 기관의 2년 예산 요청에 별도의 문서로 포함되는 것, 그리고 (ii) 예산 편성 과정에서 주지사와 주의회가 본 항에 따라 제공된 정보를 고려하는 것"
+    },
+    "charged any fee for attendance and must be compensated for participating in the training under this section": {
+      "es": "No se cobrará ninguna tarifa por la asistencia y se deberá compensar por participar en la capacitación según esta sección.",
+      "vi": "không được thu bất kỳ khoản phí nào khi tham dự và phải được bồi thường cho việc tham gia khóa đào tạo theo phần này.",
+      "ru": "с них не взимается плата за посещение, и они должны получить компенсацию за участие в обучении в соответствии с данным разделом.",
+      "uk": "стягується будь-яка плата за відвідування та має бути компенсований за участь у навчанні згідно з цим розділом",
+      "tl": "sinisingil ng anumang bayad para sa pagdalo at dapat bayaran para sa pakikilahok sa pagsasanay sa ilalim ng seksyong ito",
+      "so": "waxay ku dallaceen khidmad kasta oo ka qaybgalka waana in la magdhabaa ka qaybgalka tababarka qaybtan hoos timaada",
+      "ko": "참석에 대한 어떠한 수수료도 부과되지 않았으며, 본 조항에 따라 교육 참여에 대한 보상을 받아야 합니다."
+    },
+    "the training at least once during the first year of the director's term of office": {
+      "es": "la capacitación al menos una vez durante el primer año del mandato del director.",
+      "vi": "việc đào tạo ít nhất một lần trong năm đầu tiên nhiệm kỳ của giám đốc.",
+      "ru": "обучение как минимум один раз в течение первого года срока полномочий директора.",
+      "uk": "навчання принаймні один раз протягом першого року повноважень директора",
+      "tl": "ang pagsasanay nang kahit isang beses sa unang taon ng termino ng direktor sa panunungkulan",
+      "so": "tababarka ugu yaraan hal mar sanadka ugu horreeya ee xilka agaasimaha",
+      "ko": "이사 임기 첫 해 동안 최소 한 번 이상 교육을 실시해야 합니다."
+    },
+    "the training": {
+      "es": "el entrenamiento",
+      "vi": "khóa đào tạo",
+      "ru": "обучение",
+      "uk": "навчання",
+      "tl": "ang pagsasanay",
+      "so": "tababarka",
+      "ko": "훈련"
+    },
+    "school directors' understanding of: state and local funding structures; budgeting practices; and fiscal accountability requirements applicable to school districts": {
+      "es": "Conocimiento por parte de los directores escolares de: las estructuras de financiación estatales y locales; las prácticas presupuestarias; y los requisitos de rendición de cuentas fiscales aplicables a los distritos escolares.",
+      "vi": "Sự hiểu biết của các giám đốc trường học về: cơ cấu tài trợ của tiểu bang và địa phương; các thực tiễn lập ngân sách; và các yêu cầu về trách nhiệm giải trình tài chính áp dụng cho các học khu.",
+      "ru": "Понимание директорами школ следующих аспектов: структуры государственного и местного финансирования; бюджетной практики; и требований финансовой подотчетности, применимых к школьным округам.",
+      "uk": "розуміння директорами шкіл: структур державного та місцевого фінансування; бюджетної практики; та вимог до фінансової підзвітності, що застосовуються до шкільних округів",
+      "tl": "pag-unawa ng mga direktor ng paaralan sa: mga istruktura ng pagpopondo ng estado at lokal; mga kasanayan sa pagbabadyet; at mga kinakailangan sa pananagutan sa pananalapi na naaangkop sa mga distrito ng paaralan",
+      "so": "Fahmidda agaasimayaasha iskuullada ee: qaab-dhismeedka maalgelinta gobolka iyo maxalliga ah; dhaqamada miisaaniyadda; iyo shuruudaha isla xisaabtanka maaliyadeed ee khuseeya degmooyinka iskuullada",
+      "ko": "학교 이사들이 다음 사항을 이해하고 있는지: 주 및 지방 정부의 재정 지원 구조, 예산 편성 관행, 그리고 학군에 적용되는 재정 책임 요건"
+    },
+    "and provide a training program on school district funding and finance for all members of school district boards of directors": {
+      "es": "y proporcionar un programa de capacitación sobre financiamiento y finanzas de los distritos escolares para todos los miembros de las juntas directivas de los distritos escolares.",
+      "vi": "và cung cấp chương trình đào tạo về tài trợ và tài chính của học khu cho tất cả các thành viên hội đồng quản trị học khu.",
+      "ru": "а также организовать программу обучения по вопросам финансирования и финансов школьных округов для всех членов советов директоров школьных округов.",
+      "uk": "та забезпечити навчальну програму з питань фінансування та фінансів шкільного округу для всіх членів рад директорів шкільного округу",
+      "tl": "at magbigay ng programa sa pagsasanay sa pagpopondo at pananalapi ng distrito ng paaralan para sa lahat ng miyembro ng mga lupon ng direktor ng distrito ng paaralan",
+      "so": "iyo in la bixiyo barnaamij tababar oo ku saabsan maalgelinta iyo maaliyadda degmada dugsiga dhammaan xubnaha guddiyada agaasimayaasha degmada dugsiga",
+      "ko": "또한 교육구 이사회 모든 구성원을 대상으로 교육구 재정 및 자금 조달에 관한 교육 프로그램을 제공합니다."
+    },
+    "the budget stabilization account pursuant to article vii, section 12 (ii) of the state constitution": {
+      "es": "la cuenta de estabilización presupuestaria de conformidad con el artículo vii, sección 12 (ii) de la constitución estatal.",
+      "vi": "tài khoản ổn định ngân sách theo điều VII, khoản 12 (ii) của hiến pháp tiểu bang",
+      "ru": "счет стабилизации бюджета в соответствии со статьей VII, разделом 12 (ii) конституции штата",
+      "uk": "рахунок стабілізації бюджету відповідно до статті vii, розділу 12 (ii) конституції штату",
+      "tl": "ang talaan ng pagpapatatag ng badyet alinsunod sa artikulo vii, seksyon 12 (ii) ng konstitusyon ng estado",
+      "so": "xisaabta xasilinta miisaaniyadda iyadoo la raacayo qodobka 7aad, qaybta 12aad (ii) ee dastuurka gobolka",
+      "ko": "주 헌법 제7조 12항 (ii)에 따른 예산안정계좌"
+    },
+    "the available fiscal resources for the next ensuing fiscal biennium": {
+      "es": "los recursos fiscales disponibles para el próximo bienio fiscal",
+      "vi": "nguồn lực tài chính sẵn có cho kỳ ngân sách hai năm tiếp theo.",
+      "ru": "имеющиеся бюджетные ресурсы на следующий финансовый двухлетний период",
+      "uk": "наявні фіскальні ресурси на наступний фінансовий дворічний період",
+      "tl": "ang mga magagamit na mapagkukunang pinansyal para sa susunod na biennium ng pananalapi",
+      "so": "ilaha maaliyadeed ee la heli karo ee loogu talagalay laba-biloodlaha maaliyadeed ee soo socda",
+      "ko": "다음 회계연도에 사용할 수 있는 재정 자원"
+    },
+    "a four-year balanced budget as follows: beginning in the 2013-2015 fiscal biennium, the legislature shall enact a balanced omnibus operating appropriations bill that leaves, in total, a positive ending fund balance in the general fund and related funds": {
+      "es": "un presupuesto equilibrado de cuatro años de la siguiente manera: a partir del bienio fiscal 2013-2015, la legislatura promulgará un proyecto de ley de asignaciones operativas generales equilibrado que deje, en total, un saldo final positivo en el fondo general y los fondos relacionados.",
+      "vi": "Ngân sách cân bằng bốn năm như sau: bắt đầu từ niên vụ tài chính 2013-2015, cơ quan lập pháp sẽ ban hành dự luật phân bổ ngân sách hoạt động tổng hợp cân bằng, sao cho tổng số dư quỹ cuối kỳ trong quỹ chung và các quỹ liên quan là dương.",
+      "ru": "Четырехлетний сбалансированный бюджет должен быть следующим: начиная с двухлетнего финансового года 2013-2015, законодательное собрание должно принять сбалансированный комплексный законопроект о бюджетных ассигнованиях на оперативную деятельность, который в итоге обеспечит положительный остаток средств в общем фонде и связанных с ним фондах.",
+      "uk": "чотирирічний збалансований бюджет наступним чином: починаючи з 2013-2015 фінансового дворіччя, законодавчий орган приймає збалансований законопроект про загальні операційні асигнування, який загалом залишає позитивний кінцевий баланс у загальному фонді та пов'язаних з ним фондах.",
+      "tl": "isang apat na taong balanseng badyet gaya ng sumusunod: simula sa biennium ng pananalapi ng 2013-2015, ang lehislatura ay magpapatibay ng isang balanseng omnibus operating appropriations bill na mag-iiwan, sa kabuuan, ng isang positibong balanse ng ending fund sa pangkalahatang pondo at mga kaugnay na pondo",
+      "so": "Miisaaniyad dheellitiran oo afar sano ah sida soo socota: laga bilaabo laba-biloodka maaliyadeed ee 2013-2015, sharci-dejintu waxay soo saari doontaa sharci qoondayn hawlgal oo dheellitiran oo dhan kaas oo, guud ahaan, ka tagaya dheelitirka sanduuqa dhammaadka togan ee sanduuqa guud iyo lacagaha la xiriira",
+      "ko": "다음과 같은 4년 균형 예산을 편성한다: 2013-2015 회계연도부터 의회는 일반 기금 및 관련 기금의 총 기말 잔액이 흑자가 되도록 하는 균형 잡힌 종합 운영 세출 법안을 제정해야 한다."
+    },
+    "cumulative changes in the cost of living, as measured by the consumer price index or a comparable index as determined by the office of financial management": {
+      "es": "cambios acumulados en el costo de vida, medidos por el índice de precios al consumidor o un índice comparable según lo determine la oficina de administración financiera.",
+      "vi": "Những thay đổi tích lũy về chi phí sinh hoạt, được đo bằng chỉ số giá tiêu dùng hoặc một chỉ số tương đương do Văn phòng Quản lý Tài chính xác định.",
+      "ru": "Кумулятивные изменения стоимости жизни, измеряемые индексом потребительских цен или аналогичным индексом, определяемым управлением финансового менеджмента.",
+      "uk": "кумулятивні зміни вартості життя, виміряні індексом споживчих цін або порівнянним індексом, визначеним управлінням фінансового управління",
+      "tl": "mga pinagsama-samang pagbabago sa halaga ng pamumuhay, na sinusukat ng consumer price index o isang maihahambing na index na tinutukoy ng opisina ng pamamahala sa pananalapi",
+      "so": "Isbeddellada is-biirsaday ee ku yimid qiimaha nolosha, sida lagu cabbiray tusmada qiimaha macaamiisha ama tusmada la midka ah sida uu go'aamiyo xafiiska maamulka maaliyadeed",
+      "ko": "소비자물가지수 또는 재정관리국에서 정한 유사 지수로 측정한 생활비의 누적 변동률"
+    },
+    "at intervals not to exceed five years, review and adjust the compensation provided to school directors": {
+      "es": "Revisar y ajustar la remuneración de los directores de escuela a intervalos que no excedan los cinco años.",
+      "vi": "Định kỳ, không quá năm năm, xem xét và điều chỉnh mức thù lao dành cho hiệu trưởng các trường.",
+      "ru": "с интервалами, не превышающими пяти лет, пересматривать и корректировать вознаграждение, предоставляемое директорам школ.",
+      "uk": "переглядати та коригувати компенсацію, що надається директорам шкіл, з інтервалом, що не перевищує п'яти років",
+      "tl": "sa mga pagitan na hindi hihigit sa limang taon, repasuhin at isaayos ang kabayarang ibinibigay sa mga direktor ng paaralan",
+      "so": "muddooyinka aan ka badnayn shan sano, dib u eegis iyo hagaajin magdhowga la siiyo agaasimayaasha iskuulka",
+      "ko": "5년을 넘지 않는 간격으로 학교 이사에게 제공되는 보수를 검토하고 조정하십시오."
+    },
+    "in addition to any reimbursement for expenses paid to such directors by the school district": {
+      "es": "Además de cualquier reembolso por gastos pagados a dichos directores por el distrito escolar",
+      "vi": "ngoài bất kỳ khoản bồi hoàn nào cho các chi phí mà học khu đã trả cho các giám đốc đó.",
+      "ru": "помимо возмещения расходов, понесенных такими директорами школьным округом.",
+      "uk": "на додаток до будь-якого відшкодування витрат, виплачених таким директорам шкільним округом",
+      "tl": "bilang karagdagan sa anumang pagbabayad para sa mga gastusing ibinayad sa mga naturang direktor ng distrito ng paaralan",
+      "so": "marka lagu daro lacag celin kasta oo kharash ah oo ay degmada dugsigu siisay agaasimayaashaas,",
+      "ko": "학교 교육구가 해당 이사들에게 지급한 경비 상환금 외에도"
+    },
+    "the month or period of months for which it is made": {
+      "es": "el mes o período de meses para el cual se hace",
+      "vi": "tháng hoặc khoảng thời gian mà nó được lập ra.",
+      "ru": "месяц или период месяцев, для которого он изготовлен",
+      "uk": "місяць або період місяців, за який його складено",
+      "tl": "ang buwan o panahon ng mga buwan kung saan ito ginawa",
+      "so": "bisha ama muddada bilaha loo sameeyay",
+      "ko": "그것이 만들어진 월 또는 개월 기간"
+    },
+    "filed any time after the director's election and before the date on which the compensation would otherwise be paid": {
+      "es": "presentada en cualquier momento posterior a la elección del director y antes de la fecha en que de otro modo se pagaría la compensación.",
+      "vi": "được nộp bất cứ lúc nào sau khi giám đốc được bầu và trước ngày mà khoản bồi thường lẽ ra phải được thanh toán.",
+      "ru": "подано в любое время после избрания директора и до даты, когда в противном случае была бы выплачена компенсация.",
+      "uk": "подано будь-коли після обрання директора та до дати, коли компенсація мала б бути виплачена в іншому випадку",
+      "tl": "isinampa anumang oras pagkatapos ng halalan ng direktor at bago ang petsa kung kailan dapat sana ay babayaran ang kabayaran",
+      "so": "fayl gareeyay wakhti kasta ka dib doorashada agaasimaha iyo ka hor taariikhda magdhowga la bixin lahaa",
+      "ko": "이사 선출 이후부터 보상이 지급될 예정일 이전까지 언제든지 제출할 수 있습니다."
+    },
+    "all or any portion of his or her compensation under this section as to any month or months during his or her term of office, by a written waiver filed with the district as provided in this section": {
+      "es": "la totalidad o cualquier parte de su compensación conforme a esta sección con respecto a cualquier mes o meses durante su mandato, mediante una renuncia por escrito presentada ante el distrito según lo dispuesto en esta sección.",
+      "vi": "toàn bộ hoặc một phần khoản bồi thường của người đó theo điều khoản này đối với bất kỳ tháng nào trong nhiệm kỳ của người đó, bằng một văn bản từ bỏ quyền được nộp cho quận theo quy định trong điều khoản này.",
+      "ru": "вся или любая часть его или ее вознаграждения в соответствии с настоящим разделом за любой месяц или месяцы в течение срока его или ее полномочий, путем подачи письменного заявления об отказе в округ в порядке, предусмотренном настоящим разделом.",
+      "uk": "всю або будь-яку частину його/її компенсації згідно з цим розділом за будь-який місяць або місяці протягом терміну його/її повноважень, шляхом письмової відмови, поданої до округу, як передбачено цим розділом",
+      "tl": "lahat o anumang bahagi ng kanyang kabayaran sa ilalim ng seksyong ito para sa anumang buwan o mga buwan sa panahon ng kanyang termino ng panunungkulan, sa pamamagitan ng isang nakasulat na pagtalikod na isinampa sa distrito gaya ng nakasaad sa seksyong ito",
+      "so": "dhammaan ama qayb kasta oo ka mid ah magdhowgiisa hoos yimaada qaybtan sida ku xusan bil kasta ama bilo kasta inta lagu jiro muddadiisa ama muddada xilkiisa, iyadoo la raacayo ka dhaafitaan qoraal ah oo loo gudbiyay degmada sida ku xusan qaybtan",
+      "ko": "본 조항에 따라 해당 구역에 서면으로 포기서를 제출함으로써 재임 기간 중 특정 월에 대한 본 조항에 따른 보수의 전부 또는 일부를 포기할 수 있습니다."
+    },
+    "authorized by the board of directors at a regularly scheduled meeting and may only be collected from levy funds available for this purpose": {
+      "es": "autorizado por la junta directiva en una reunión ordinaria y solo podrá recaudarse con fondos provenientes de contribuciones disponibles para tal fin.",
+      "vi": "được hội đồng quản trị phê duyệt tại cuộc họp định kỳ và chỉ được thu từ quỹ thuế dành riêng cho mục đích này.",
+      "ru": "Уполномочивается советом директоров на очередном заседании и может взиматься только из средств, предназначенных для этих целей.",
+      "uk": "затверджені радою директорів на регулярному запланованому засіданні та можуть стягуватися лише з коштів, призначених для цієї мети.",
+      "tl": "awtorisado ng lupon ng mga direktor sa isang regular na nakatakdang pagpupulong at maaari lamang kolektahin mula sa mga pondong levy na magagamit para sa layuning ito",
+      "so": "waxaa ansixiyay guddiga agaasimayaasha kulan si joogto ah loo qorsheeyay, waxaana laga qaadi karaa oo keliya lacagaha canshuurta ee loo heli karo ujeeddadaas.",
+      "ko": "이사회의 정기 회의에서 승인되어야 하며, 해당 목적을 위해 사용 가능한 부과금에서만 징수할 수 있습니다."
+    },
+    "compensation of $100 per day or portion thereof for attending board meetings and for performing other services on behalf of the school district, not to exceed $13,750 per year": {
+      "es": "Remuneración de 100 dólares por día o fracción del mismo por asistir a las reuniones de la junta directiva y por prestar otros servicios en nombre del distrito escolar, sin exceder los 13.750 dólares anuales.",
+      "vi": "Thù lao 100 đô la mỗi ngày hoặc một phần của ngày cho việc tham dự các cuộc họp hội đồng quản trị và thực hiện các dịch vụ khác thay mặt cho học khu, không vượt quá 13.750 đô la mỗi năm.",
+      "ru": "Вознаграждение в размере 100 долларов в день или его часть за посещение заседаний совета и выполнение других услуг от имени школьного округа, но не более 13 750 долларов в год.",
+      "uk": "компенсація у розмірі 100 доларів США на день або її частина за відвідування засідань ради та виконання інших послуг від імені шкільного округу, але не більше 13 750 доларів США на рік",
+      "tl": "kabayarang $100 kada araw o bahagi nito para sa pagdalo sa mga pulong ng lupon at para sa pagsasagawa ng iba pang mga serbisyo sa ngalan ng distrito ng paaralan, na hindi hihigit sa $13,750 kada taon",
+      "so": "Magdhaw dhan $100 maalintii ama qayb ka mid ah ka qaybgalka shirarka guddiga iyo fulinta adeegyada kale ee degmada dugsiga, oo aan ka badnayn $13,750 sannadkii",
+      "ko": "이사회 회의 참석 및 교육구를 대신하여 기타 업무 수행에 대한 보상으로 하루 또는 그 일부에 대해 100달러가 지급되며, 연간 최대 13,750달러를 초과할 수 없습니다."
     }
   }
 }
