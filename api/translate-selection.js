@@ -38,8 +38,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { plainMeaning, sentences, sectionType, hasContent } = renderISC({ units }, { lang });
-    return res.status(200).json({ plainMeaning, sentences, sectionType, hasContent });
+    const { plainMeaning, sentences, sectionType, hasContent, isLocalized } = renderISC({ units }, { lang });
+    return res.status(200).json({ plainMeaning, sentences, sectionType, hasContent, isLocalized });
   } catch (error) {
     return res.status(500).json({
       message: "Translation failed.",
