@@ -5904,7 +5904,7 @@
       "uk": "проживання",
       "tl": "tuluyan",
       "so": "hoyga",
-      "ko": "하숙"
+      "ko": "숙박"
     },
     "squatters": {
       "es": "ocupantes ilegales",
@@ -18335,19 +18335,19 @@
       "ko": "담당하다"
     },
     "be paid": {
-      "es": "pagado",
+      "es": "ser pagado",
       "vi": "được trả",
-      "ru": "выплачен",
-      "uk": "виплачений",
+      "ru": "быть выплачен",
+      "uk": "бути виплачений",
       "tl": "bayad",
       "so": "la bixiyo",
       "ko": "지급되다"
     },
     "be advanced": {
-      "es": "adelantado",
+      "es": "ser adelantado",
       "vi": "được ứng trước",
-      "ru": "выдан",
-      "uk": "виданий",
+      "ru": "быть выдан",
+      "uk": "бути виданий",
       "tl": "inabante",
       "so": "la siiyo",
       "ko": "지급받다"
@@ -18356,7 +18356,8 @@
       "ru": "пройти обучение",
       "uk": "пройти навчання",
       "ko": "이수하다",
-      "tl": "tapusin ang pagsasanay"
+      "tl": "tapusin ang pagsasanay",
+      "es": "completar la capacitación"
     },
     "receive compensation": {
       "ko": "보상을 받다",
