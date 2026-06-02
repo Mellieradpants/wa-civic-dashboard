@@ -18333,6 +18333,28 @@
       "tl": "responsable sa",
       "so": "mas'uul ka ah",
       "ko": "담당하다"
+    },
+    "be paid": {
+      "es": "pagado",
+      "vi": "được trả",
+      "ru": "выплачен",
+      "uk": "виплачений",
+      "tl": "bayad",
+      "so": "la bixiyo",
+      "ko": "지급되다"
+    },
+    "be advanced": {
+      "es": "adelantado",
+      "vi": "được ứng trước",
+      "ru": "выдан",
+      "uk": "виданий",
+      "tl": "inabante",
+      "so": "la siiyo",
+      "ko": "지급받다"
+    },
+    "complete training": {
+      "ru": "пройти обучение",
+      "uk": "пройти навчання"
     }
   },
   "objects": {
