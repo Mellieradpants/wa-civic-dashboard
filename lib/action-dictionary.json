@@ -18354,7 +18354,17 @@
     },
     "complete training": {
       "ru": "пройти обучение",
-      "uk": "пройти навчання"
+      "uk": "пройти навчання",
+      "ko": "이수하다",
+      "tl": "tapusin ang pagsasanay"
+    },
+    "receive compensation": {
+      "ko": "보상을 받다",
+      "tl": "tumanggap ng kompensasyon"
+    },
+    "reflect changes": {
+      "ko": "반영하다",
+      "tl": "ipakita"
     }
   },
   "objects": {
