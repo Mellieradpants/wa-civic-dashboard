@@ -18297,6 +18297,42 @@
       "tl": "gumawa",
       "so": "soo saarid",
       "ko": "제조하다"
+    },
+    "offer for sale": {
+      "es": "ofrecer a la venta",
+      "vi": "chào bán",
+      "ru": "продавать",
+      "uk": "продавати",
+      "tl": "ialok para ibenta",
+      "so": "iibi",
+      "ko": "판매하다"
+    },
+    "distribute for sale": {
+      "es": "distribuir para la venta",
+      "vi": "phân phối để bán",
+      "ru": "распространять для продажи",
+      "uk": "розповсюджувати для продажу",
+      "tl": "mamahagi para ibenta",
+      "so": "qaybin si loo iibiyo",
+      "ko": "판매용으로 배포하다"
+    },
+    "distribute for use": {
+      "es": "distribuir para el uso",
+      "vi": "phân phối để sử dụng",
+      "ru": "распространять для использования",
+      "uk": "розповсюджувати для використання",
+      "tl": "mamahagi para gamitin",
+      "so": "qaybin si loo isticmaalo",
+      "ko": "사용을 위해 배포하다"
+    },
+    "responsible for": {
+      "es": "responsable de",
+      "vi": "chịu trách nhiệm",
+      "ru": "нести ответственность за",
+      "uk": "відповідальний за",
+      "tl": "responsable sa",
+      "so": "mas'uul ka ah",
+      "ko": "담당하다"
     }
   },
   "objects": {
@@ -47161,6 +47197,24 @@
       "tl": "ang kinakailangang ito",
       "so": "shuruudan",
       "ko": "이 요구 사항"
+    },
+    "for sale": {
+      "es": "para la venta",
+      "vi": "để bán",
+      "ru": "для продажи",
+      "uk": "для продажу",
+      "tl": "para ibenta",
+      "so": "si loo iibiyo",
+      "ko": "판매용으로"
+    },
+    "for use": {
+      "es": "para el uso",
+      "vi": "để sử dụng",
+      "ru": "для использования",
+      "uk": "для використання",
+      "tl": "para gamitin",
+      "so": "si loo isticmaalo",
+      "ko": "사용을 위해"
     }
   }
 }
