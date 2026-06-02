@@ -111,13 +111,13 @@
       "ko": "구체적으로 명시하세요,"
     },
     "complete": {
-      "es": "completo",
+      "es": "completar",
       "vi": "hoàn thành",
-      "ru": "полный",
-      "uk": "повний",
-      "tl": "kumpleto",
+      "ru": "завершить",
+      "uk": "завершити",
+      "tl": "kumpletuhin",
       "so": "dhammaystiran",
-      "ko": "완벽한"
+      "ko": "이수하다"
     },
     "enhance": {
       "es": "mejorar",
@@ -170,7 +170,7 @@
       "ru": "отражать",
       "uk": "відображати",
       "tl": "sumasalamin",
-      "so": "milicsiga",
+      "so": "milicsado",
       "ko": "반영하다"
     },
     ",": {
