@@ -14990,9 +14990,9 @@
     "manufacture": {
       "es": "fabricar",
       "vi": "sản xuất",
-      "ru": "производство",
-      "uk": "виробництво",
-      "tl": "paggawa",
+      "ru": "производить",
+      "uk": "виробляти",
+      "tl": "gumawa",
       "so": "soo saarid",
       "ko": "제조"
     },
@@ -16347,12 +16347,12 @@
       "ko": "낮추다"
     },
     "lower": {
-      "es": "más bajo",
-      "vi": "thấp hơn",
-      "ru": "ниже",
-      "uk": "нижчий",
-      "tl": "mas mababa",
-      "so": "hoose",
+      "es": "bajar",
+      "vi": "hạ xuống",
+      "ru": "снижать",
+      "uk": "знижувати",
+      "tl": "ibaba",
+      "so": "hoos u dhig",
       "ko": "낮추다"
     },
     "cut": {
@@ -18261,6 +18261,15 @@
       "tl": "patunayan",
       "so": "xaqiijin",
       "ko": "인증하다"
+    },
+    "ask": {
+      "es": "solicitar",
+      "vi": "yêu cầu",
+      "ru": "запросить",
+      "uk": "запросити",
+      "tl": "humingi",
+      "so": "weydii",
+      "ko": "요청하다"
     }
   },
   "objects": {

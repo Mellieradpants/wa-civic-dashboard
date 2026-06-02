@@ -50,6 +50,7 @@ const LEGISLATIVE_VERBS = [
   "handle", "help", "hold", "include", "keep", "make", "meet", "notify",
   "offer", "open", "pay", "place", "plan", "post", "provide", "reach",
   "return", "serve", "sign", "start", "stop", "take", "treat", "work",
+  "ask", "sell", "lower", "knowingly",
 ];
 
 // Same temporal stripping as pipeline.js stripTemporalFromObj.
