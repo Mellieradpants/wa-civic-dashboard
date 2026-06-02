@@ -18355,7 +18355,7 @@
     "complete training": {
       "ru": "пройти обучение",
       "uk": "пройти навчання",
-      "ko": "이수하다",
+      "ko": "훈련을 이수하다",
       "tl": "tapusin ang pagsasanay",
       "es": "completar la capacitación"
     },
@@ -18366,6 +18366,13 @@
     "reflect changes": {
       "ko": "반영하다",
       "tl": "ipakita"
+    },
+    "charge fee": {
+      "es": "no se cobrará",
+      "vi": "không được thu",
+      "ru": "не взимается",
+      "uk": "не може бути стягована",
+      "inherent_negation": true
     }
   },
   "objects": {
