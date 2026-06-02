@@ -1,6 +1,6 @@
 # Washington Civic Dashboard
 
-A civic dashboard that makes Washington State legislation readable for everyone — including people who don't speak English. Look up any bill, read what it actually requires in plain language, switch between 8 languages.
+A civic dashboard that makes Washington State legislation readable for everyone — including people who don't speak English. Search any of 2,808 active 2025–26 bills, read what each section actually requires in plain language, and switch between 8 languages.
 
 ---
 
@@ -10,31 +10,23 @@ English, Spanish, Somali, Russian, Ukrainian, Korean, Vietnamese, Tagalog.
 
 ---
 
-## What it does
-
-- Search 2,808 active 2025–26 WA bills by keyword or number
-- Read official bill sections
-- See plain meaning output — what each section actually requires, permits, or prohibits
-- Switch languages and get native-language output
-- See section type labels — addition, amendment, repeal, appropriation
-
----
-
 ## How the pipeline works
 
-No AI anywhere in the data path. Everything is deterministic and traceable to source text. Missing information is flagged, not filled.
+No AI in the data path. Everything is deterministic and traceable to source text. Missing information is flagged, not filled.
 
-Input text runs through a 10-layer pipeline that extracts who, what, when, where, why, and how. A renderer turns that into plain sentences using one of six scope-lens templates.
+Input text runs through a 10-layer pipeline that detects section type, strips deleted text from amendments, extracts obligations, and renders plain sentences. A renderer turns those into output using one of six scope-lens templates.
 
-For non-English output, sentence structure comes from static translation templates. Action phrases come from a token dictionary — if a phrase isn't in the dictionary yet, the output flags it with `[!]` and logs it to `lib/missing-tokens.txt` for a human translator to add.
+For non-English output, sentence structure comes from language templates. Action phrases come from a dictionary populated automatically via Google Translate. Missing phrases are logged to Redis and translated on the next workflow run. Anything not yet translated shows with a `[!]` flag.
 
-The bill index is populated from the WA Legislature bulk API by a GitHub Actions workflow (`.github/workflows/populate-bill-index.yml`). It runs automatically every day at 6am UTC and can also be triggered manually. The WA Legislature API blocks Render's IPs, so the workflow runs on GitHub's infrastructure instead. `lib/missing-tokens.txt` is committed to the repo and tracked in git — it persists across Render restarts, though it resets on redeploy unless manually re-committed before deploying.
+The bill index is populated from the WA Legislature API by a GitHub Actions workflow that runs daily and can be triggered manually.
 
 ---
 
 ## Translation state
 
-Sentence structure templates are complete for all 7 non-English languages. The action phrase dictionary is a seed — one verb, one object. Most action phrases in real bills will show a `[!]` flag until human translators fill them in. That's by design. The translator work queue is at `GET /api/missing-token`.
+Sentence templates are complete for all 7 non-English languages. The action phrase dictionary is growing — common legislative verbs are translated, edge cases still fall back to English with a `[!]` flag. Linguistic rule tuning per language is in progress.
+
+Language-specific morphological rules (verb conjugation, noun cases, word order) are not built yet. Currently handled by dictionary lookup only.
 
 ---
 
@@ -42,10 +34,10 @@ Sentence structure templates are complete for all 7 non-English languages. The a
 
 - Node.js, Express 4
 - Vercel frontend, Render backend
-- No AI dependencies
-- No database — bill index is `data/wa/bill-index.json`, a static file
-- Translation dictionary is `lib/action-dictionary.json`, a static file
-- Missing tokens write to `lib/missing-tokens.txt`, a flat file
+- Bill index populated from WA Legislature API via GitHub Actions — updates daily
+- Translation dictionary auto-populated via Google Translate API
+- Missing tokens persist in Upstash Redis
+- No database — bill index and translation dictionary are static JSON files
 
 ---
 
@@ -55,15 +47,15 @@ Full spec at `/api/openapi`.
 
 | Method | Path | What it does |
 |--------|------|-------------|
-| GET | `/api/health` | Health check — confirms service URL and WA Legislature API reachability |
-| GET | `/api/wa-bill-search` | Keyword or bill-number search against the local index |
-| GET | `/api/wa-bill-detail` | Official bill metadata from the WA Legislature SOAP API |
-| GET | `/api/wa-bill-documents` | Official document links (PDF, HTML, Word) |
+| GET | `/api/health` | Health check |
+| GET | `/api/wa-bill-search` | Keyword or bill-number search |
+| GET | `/api/wa-bill-detail` | Official bill metadata from WA Legislature API |
+| GET | `/api/wa-bill-documents` | Document links (PDF, HTML, Word) |
 | GET | `/api/wa-bill-text` | Raw bill text split into sections |
-| GET | `/api/wa-bill-selection` | Sentence classification into rule candidate units |
+| GET | `/api/wa-bill-selection` | Sentence classification into rule units |
 | POST | `/api/plain-meaning` | Plain-meaning extraction — accepts `{ text }` or `{ units }` |
 | POST | `/api/translate-selection` | Re-renders ISC units in a target language |
-| GET | `/api/missing-token` | Translator work queue — phrases not yet in the dictionary |
+| GET | `/api/missing-token` | Phrases not yet in the translation dictionary |
 | GET | `/api/openapi` | OpenAPI 3.1 spec |
 
 ---
@@ -81,8 +73,7 @@ lib/
     pipeline.js             10-layer deterministic pipeline
     renderer.js             Scope-lens template renderer
   translations.json         Sentence structure templates (7 languages)
-  action-dictionary.json    Action phrase token dictionary
-  missing-tokens.txt        Flat log of phrases not yet translated
+  action-dictionary.json    Action phrase dictionary
   synonymMap.json           RCW title synonym map for search
 
 index.html                  Dashboard home
@@ -91,6 +82,8 @@ voting.html                 Voting resources
 
 scripts/
   populate-bill-index.js    Populates data/wa/bill-index.json from WA Legislature API
+  seed-missing-tokens.js    Seeds Redis with verb/object pairs for translation
+  translate-dictionary.js   Reads Redis, translates via Google Translate, writes dictionary
 
 data/wa/
   bill-index.json           2,808 active 2025-26 bills
@@ -105,9 +98,9 @@ npm install
 node server.js
 ```
 
-Server starts on port 3000. No environment variables required — everything degrades gracefully without them.
+Server starts on port 3000. No environment variables required — Redis and translation features degrade gracefully without them.
 
 | Variable | Used for |
 |----------|---------|
-| `UPSTASH_REDIS_REST_URL` | Redis caching (optional) |
-| `UPSTASH_REDIS_REST_TOKEN` | Redis caching (optional) |
+| `UPSTASH_REDIS_REST_URL` | Redis — missing token queue and caching |
+| `UPSTASH_REDIS_REST_TOKEN` | Redis — missing token queue and caching |
