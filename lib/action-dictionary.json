@@ -14701,11 +14701,11 @@
     },
     "reduce": {
       "es": "reducir",
-      "vi": "giảm bớt",
-      "ru": "уменьшать",
-      "uk": "зменшити",
+      "vi": "giảm",
+      "ru": "снижать",
+      "uk": "знижувати",
       "tl": "bawasan",
-      "so": "yaree",
+      "so": "hoos u dhig",
       "ko": "줄이다"
     },
     "reduc": {
@@ -14994,7 +14994,7 @@
       "uk": "виробляти",
       "tl": "gumawa",
       "so": "soo saarid",
-      "ko": "제조"
+      "ko": "제조하다"
     },
     "manufactur": {
       "es": "fabricación",
@@ -16347,11 +16347,11 @@
       "ko": "낮추다"
     },
     "lower": {
-      "es": "bajar",
-      "vi": "hạ xuống",
+      "es": "reducir",
+      "vi": "giảm",
       "ru": "снижать",
       "uk": "знижувати",
-      "tl": "ibaba",
+      "tl": "bawasan",
       "so": "hoos u dhig",
       "ko": "낮추다"
     },
@@ -17723,13 +17723,13 @@
       "ko": "우편"
     },
     "offer": {
-      "es": "oferta",
-      "vi": "lời đề nghị",
-      "ru": "предложение",
-      "uk": "пропозиція",
-      "tl": "alok",
-      "so": "dalab",
-      "ko": "권하다"
+      "es": "ofrecer",
+      "vi": "cung cấp",
+      "ru": "предлагать",
+      "uk": "пропонувати",
+      "tl": "mag-alok",
+      "so": "bixin",
+      "ko": "제공하다"
     },
     "meet": {
       "es": "encontrarse",
@@ -18092,13 +18092,13 @@
       "ko": "유지하다"
     },
     "request": {
-      "es": "pedido",
-      "vi": "lời yêu cầu",
-      "ru": "запрос",
-      "uk": "запит",
-      "tl": "kahilingan",
-      "so": "codsi",
-      "ko": "요구"
+      "es": "solicitar",
+      "vi": "yêu cầu",
+      "ru": "запросить",
+      "uk": "запросити",
+      "tl": "humingi",
+      "so": "weydii",
+      "ko": "요청하다"
     },
     "perform": {
       "es": "llevar a cabo",
@@ -18219,12 +18219,12 @@
     },
     "distribute": {
       "es": "distribuir",
-      "vi": "phân phát",
+      "vi": "phân phối",
       "ru": "распространять",
       "uk": "розповсюджувати",
-      "tl": "ipamahagi",
-      "so": "qaybi",
-      "ko": "분배하다"
+      "tl": "mamahagi",
+      "so": "qaybin",
+      "ko": "배포하다"
     },
     "publish": {
       "es": "publicar",
@@ -18270,6 +18270,33 @@
       "tl": "humingi",
       "so": "weydii",
       "ko": "요청하다"
+    },
+    "sell": {
+      "es": "vender",
+      "vi": "bán",
+      "ru": "продавать",
+      "uk": "продавати",
+      "tl": "magbenta",
+      "so": "iibi",
+      "ko": "판매하다"
+    },
+    "solicit": {
+      "es": "solicitar",
+      "vi": "yêu cầu",
+      "ru": "запросить",
+      "uk": "запросити",
+      "tl": "humingi",
+      "so": "weydii",
+      "ko": "요청하다"
+    },
+    "fabricate": {
+      "es": "fabricar",
+      "vi": "sản xuất",
+      "ru": "производить",
+      "uk": "виробляти",
+      "tl": "gumawa",
+      "so": "soo saarid",
+      "ko": "제조하다"
     }
   },
   "objects": {

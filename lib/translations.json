@@ -7,7 +7,7 @@
       "uk": "{actor} повинен {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+      "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
       "es": "{actor} puede {action}",
@@ -16,7 +16,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
       "es": "{actor} no puede {action}",
@@ -25,7 +25,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
+      "ko": "{actor} {action} 할 수 없습니다"
     },
     "requires": {
       "es": "Esta sección requiere: {action}",
@@ -59,11 +59,11 @@
     "with_action": {
       "es": "{actor} es responsable de {action}",
       "vi": "{actor} chịu trách nhiệm về {action}",
-      "ru": "{actor} несет ответственность за {action}",
-      "uk": "{actor} несе відповідальність за {action}",
+      "ru": "{actor} несет ответственность: {action}",
+      "uk": "{actor} несе відповідальність: {action}",
       "tl": "{actor} ang responsable sa {action}",
       "so": "{actor} ayaa mas'uul ka ah {action}",
-      "ko": "{actor}은(는) {action}을(를) 담당합니다"
+      "ko": "{actor} {action} 담당합니다"
     },
     "no_action": {
       "es": "{actor} está a cargo de esto",
@@ -72,7 +72,7 @@
       "uk": "{actor} відповідає за це",
       "tl": "{actor} ang namamahala nito",
       "so": "{actor} ayaa masuulka ka ah kan",
-      "ko": "{actor}은(는) 이 업무를 담당합니다"
+      "ko": "{actor} 이 업무를 담당합니다"
     }
   },
   "scope_change": {
@@ -83,7 +83,7 @@
       "uk": "{actor} повинен {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+      "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
       "es": "{actor} puede {action}",
@@ -92,7 +92,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
       "es": "{actor} no puede {action}",
@@ -101,7 +101,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
+      "ko": "{actor} {action} 할 수 없습니다"
     },
     "no_actor": {
       "es": "Este requisito se aplica a todos los involucrados",
@@ -121,7 +121,7 @@
       "uk": "{actor} повинен {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+      "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
       "es": "{actor} puede {action}",
@@ -130,7 +130,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
       "es": "{actor} no puede {action}",
@@ -139,7 +139,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
+      "ko": "{actor} {action} 할 수 없습니다"
     },
     "no_actor": {
       "es": "Esta sección requiere: {action}",
@@ -159,7 +159,7 @@
       "uk": "{actor} повинен {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor}은(는) {action}을(를) 반드시 해야 합니다"
+      "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
       "es": "{actor} puede {action}",
@@ -168,7 +168,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
       "es": "{actor} no puede {action}",
@@ -177,7 +177,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor}은(는) {action}을(를) 할 수 없습니다"
+      "ko": "{actor} {action} 할 수 없습니다"
     },
     "no_actor": {
       "es": "Esta sección requiere: {action}",
@@ -197,7 +197,7 @@
       "uk": "{actor} більше не зобов'язаний {action}",
       "tl": "{actor} ay hindi na kailangang {action}",
       "so": "{actor} looma baahna in markale la {action}",
-      "ko": "{actor}은(는) 더 이상 {action}할 의무가 없습니다"
+      "ko": "{actor} 더 이상 {action} 의무가 없습니다"
     },
     "no_action": {
       "es": "{actor} elimina un requisito anterior",
@@ -206,7 +206,7 @@
       "uk": "{actor} скасовує попередню вимогу",
       "tl": "{actor} inaalis ang isang nakaraang kinakailangan",
       "so": "{actor} waxay tirtirtaa shuruudii hore",
-      "ko": "{actor}은(는) 이전 요건을 삭제합니다"
+      "ko": "{actor} 이전 요건을 삭제합니다"
     }
   },
   "repeal": {
@@ -216,7 +216,7 @@
     "uk": "{actor} більше не діє",
     "tl": "{actor} ay hindi na epektibo",
     "so": "{actor} ma sariirin",
-    "ko": "{actor}은(는) 더 이상 효력이 없습니다"
+    "ko": "{actor} 더 이상 효력이 없습니다"
   },
   "appropriation": {
     "full": {
@@ -264,7 +264,7 @@
       "uk": "Новий закон — ",
       "tl": "Bagong batas — ",
       "so": "Sharciga cusub — ",
-      "ko": "신규 법률 — "
+      "ko": "신규 법률 —"
     },
     "amendment": {
       "es": "Modifica la ley vigente — ",
@@ -273,7 +273,7 @@
       "uk": "Вносить зміни до чинного закону — ",
       "tl": "Binabago ang kasalukuyang batas — ",
       "so": "Waxay bedeshaa sharciga jira — ",
-      "ko": "현행법 개정 — "
+      "ko": "현행법 개정 —"
     },
     "appropriation": {
       "es": "Financiamiento — ",
@@ -282,7 +282,7 @@
       "uk": "Фінансування — ",
       "tl": "Pondo — ",
       "so": "Maalgelin — ",
-      "ko": "예산 — "
+      "ko": "예산 —"
     },
     "delayed": {
       "es": "En vigor desde {date} — ",
@@ -291,7 +291,7 @@
       "uk": "Набирає чинності з {date} — ",
       "tl": "Epektibo mula sa {date} — ",
       "so": "Dhaqangelaya {date} — ",
-      "ko": "{date}부터 시행 — "
+      "ko": "{date}부터 시행 —"
     }
   }
 }
