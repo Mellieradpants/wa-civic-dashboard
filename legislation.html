@@ -771,7 +771,7 @@
     async function fetchTranslation(sectionUnitGroups, lang) {
       const results = await Promise.allSettled(
         sectionUnitGroups.map(units =>
-          fetch("/api/translate-selection", {
+          fetch("https://wa-civic-dashboard.vercel.app/api/translate-selection", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ units, lang }),
