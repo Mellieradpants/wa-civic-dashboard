@@ -7,7 +7,7 @@
       "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor} {action} 반드시 해야 합니다"
+      "ko": "{actor} {action} 하여야 한다"
     },
     "may": {
       "es": "{actor} podrá {action}",
@@ -16,7 +16,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor} {action} 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있다"
     },
     "cannot": {
       "es": "{actor} no se podrá {action}",
@@ -25,7 +25,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor} {action} 할 수 없습니다"
+      "ko": "{actor} {action} 하지 아니하며"
     },
     "requires": {
       "es": "Esta sección requiere: {action}",
@@ -83,7 +83,7 @@
       "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor} {action} 반드시 해야 합니다"
+      "ko": "{actor} {action} 하여야 한다"
     },
     "may": {
       "es": "{actor} podrá {action}",
@@ -92,7 +92,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor} {action} 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있다"
     },
     "cannot": {
       "es": "{actor} no se podrá {action}",
@@ -101,7 +101,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor} {action} 할 수 없습니다"
+      "ko": "{actor} {action} 하지 아니하며"
     },
     "no_actor": {
       "es": "Este requisito se aplica a todos los involucrados",
@@ -121,7 +121,7 @@
       "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor} {action} 반드시 해야 합니다"
+      "ko": "{actor} {action} 하여야 한다"
     },
     "may": {
       "es": "{actor} podrá {action}",
@@ -130,7 +130,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor} {action} 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있다"
     },
     "cannot": {
       "es": "{actor} no se podrá {action}",
@@ -139,7 +139,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor} {action} 할 수 없습니다"
+      "ko": "{actor} {action} 하지 아니하며"
     },
     "no_actor": {
       "es": "Esta sección requiere: {action}",
@@ -159,7 +159,7 @@
       "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
-      "ko": "{actor} {action} 반드시 해야 합니다"
+      "ko": "{actor} {action} 하여야 한다"
     },
     "may": {
       "es": "{actor} podrá {action}",
@@ -168,7 +168,7 @@
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
       "so": "{actor} karaa {action}",
-      "ko": "{actor} {action} 할 수 있습니다"
+      "ko": "{actor} {action} 할 수 있다"
     },
     "cannot": {
       "es": "{actor} no se podrá {action}",
@@ -177,7 +177,7 @@
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
       "so": "{actor} ma karaan {action}",
-      "ko": "{actor} {action} 할 수 없습니다"
+      "ko": "{actor} {action} 하지 아니하며"
     },
     "no_actor": {
       "es": "Esta sección requiere: {action}",

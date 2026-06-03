@@ -35739,10 +35739,10 @@
     "compensation": {
       "es": "compensación",
       "vi": "thù lao",
-      "ru": "компенсация",
+      "ru": "вознаграждение",
       "uk": "винагорода",
       "tl": "kabayaran",
-      "so": "magdhow",
+      "so": "lacag-qaadashada",
       "ko": "보상"
     },
     "compensation benefits": {
@@ -46152,11 +46152,11 @@
     "waiver": {
       "es": "renuncia",
       "vi": "văn bản từ chối",
-      "ru": "отказ",
+      "ru": "письменный отказ",
       "uk": "відмова",
-      "tl": "pagpapaubaya",
-      "so": "ka dhaafitaan",
-      "ko": "기권"
+      "tl": "pagtalikod",
+      "so": "diidin",
+      "ko": "포기서"
     },
     "& run": {
       "es": "& correr",
@@ -47304,7 +47304,20 @@
     "board of directors": {
       "es": "junta directiva",
       "vi": "hội đồng quản trị",
-      "uk": "рада директорів"
+      "uk": "рада директорів",
+      "ru": "совет директоров",
+      "ko": "이사회",
+      "so": "guddigii maamulka",
+      "tl": "lupon ng mga direktor"
+    },
+    "levy funds": {
+      "es": "fondos de recaudación",
+      "vi": "nguồn quỹ thuế",
+      "uk": "кошти збору",
+      "tl": "mga pondo mula sa buwis",
+      "ru": "средства сборов",
+      "ko": "부담금 재원",
+      "so": "lacagaha cashuuraha lagu soo ururiyey"
     }
   }
 }
