@@ -6404,10 +6404,10 @@
     "compensation": {
       "es": "compensación",
       "vi": "thù lao",
-      "ru": "компенсация",
+      "ru": "вознаграждение",
       "uk": "винагорода",
       "tl": "kabayaran",
-      "so": "magdhow",
+      "so": "lacag-qaadashada",
       "ko": "보상"
     },
     "trick-or-treat": {
@@ -18418,6 +18418,15 @@
       "ru": "не взимается",
       "uk": "не може бути стягована",
       "inherent_negation": true
+    },
+    "waiver": {
+      "es": "renuncia",
+      "vi": "văn bản từ chối",
+      "ru": "письменный отказ",
+      "uk": "відмова",
+      "tl": "pagtalikod",
+      "so": "diidin",
+      "ko": "포기서"
     }
   },
   "objects": {
