@@ -1,17 +1,17 @@
 {
   "modality_shift": {
     "must": {
-      "es": "{actor} debe {action}",
-      "vi": "{actor} phải {action}",
+      "es": "{actor} deberá {action}",
+      "vi": "{actor} có nghĩa vụ {action}",
       "ru": "{actor} обязан {action}",
-      "uk": "{actor} повинен {action}",
+      "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
       "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
-      "es": "{actor} puede {action}",
-      "vi": "{actor} có thể {action}",
+      "es": "{actor} podrá {action}",
+      "vi": "{actor} có quyền {action}",
       "ru": "{actor} вправе {action}",
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
@@ -19,8 +19,8 @@
       "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
-      "es": "{actor} no puede {action}",
-      "vi": "{actor} không thể {action}",
+      "es": "{actor} no se podrá {action}",
+      "vi": "{actor} không được {action}",
       "ru": "{actor} не вправе {action}",
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
@@ -77,17 +77,17 @@
   },
   "scope_change": {
     "must": {
-      "es": "{actor} debe {action}",
-      "vi": "{actor} phải {action}",
+      "es": "{actor} deberá {action}",
+      "vi": "{actor} có nghĩa vụ {action}",
       "ru": "{actor} обязан {action}",
-      "uk": "{actor} повинен {action}",
+      "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
       "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
-      "es": "{actor} puede {action}",
-      "vi": "{actor} có thể {action}",
+      "es": "{actor} podrá {action}",
+      "vi": "{actor} có quyền {action}",
       "ru": "{actor} вправе {action}",
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
@@ -95,8 +95,8 @@
       "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
-      "es": "{actor} no puede {action}",
-      "vi": "{actor} không thể {action}",
+      "es": "{actor} no se podrá {action}",
+      "vi": "{actor} không được {action}",
       "ru": "{actor} не вправе {action}",
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
@@ -115,17 +115,17 @@
   },
   "threshold_shift": {
     "must": {
-      "es": "{actor} debe {action}",
-      "vi": "{actor} phải {action}",
+      "es": "{actor} deberá {action}",
+      "vi": "{actor} có nghĩa vụ {action}",
       "ru": "{actor} обязан {action}",
-      "uk": "{actor} повинен {action}",
+      "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
       "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
-      "es": "{actor} puede {action}",
-      "vi": "{actor} có thể {action}",
+      "es": "{actor} podrá {action}",
+      "vi": "{actor} có quyền {action}",
       "ru": "{actor} вправе {action}",
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
@@ -133,8 +133,8 @@
       "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
-      "es": "{actor} no puede {action}",
-      "vi": "{actor} không thể {action}",
+      "es": "{actor} no se podrá {action}",
+      "vi": "{actor} không được {action}",
       "ru": "{actor} не вправе {action}",
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",
@@ -153,17 +153,17 @@
   },
   "action_domain_shift": {
     "must": {
-      "es": "{actor} debe {action}",
-      "vi": "{actor} phải {action}",
+      "es": "{actor} deberá {action}",
+      "vi": "{actor} có nghĩa vụ {action}",
       "ru": "{actor} обязан {action}",
-      "uk": "{actor} повинен {action}",
+      "uk": "{actor} зобов'язаний {action}",
       "tl": "{actor} dapat {action}",
       "so": "{actor} waa in {action}",
       "ko": "{actor} {action} 반드시 해야 합니다"
     },
     "may": {
-      "es": "{actor} puede {action}",
-      "vi": "{actor} có thể {action}",
+      "es": "{actor} podrá {action}",
+      "vi": "{actor} có quyền {action}",
       "ru": "{actor} вправе {action}",
       "uk": "{actor} може {action}",
       "tl": "{actor} maaaring {action}",
@@ -171,8 +171,8 @@
       "ko": "{actor} {action} 할 수 있습니다"
     },
     "cannot": {
-      "es": "{actor} no puede {action}",
-      "vi": "{actor} không thể {action}",
+      "es": "{actor} no se podrá {action}",
+      "vi": "{actor} không được {action}",
       "ru": "{actor} не вправе {action}",
       "uk": "{actor} не може {action}",
       "tl": "{actor} hindi maaaring {action}",

@@ -5007,13 +5007,13 @@
       "ko": "열려 있는"
     },
     "authorized": {
-      "es": "autorizado",
+      "es": "ser autorizado",
       "vi": "được ủy quyền",
-      "ru": "авторизовано",
-      "uk": "уповноважений",
+      "ru": "быть уполномочен",
+      "uk": "бути уповноважений",
       "tl": "awtorisado",
-      "so": "la oggolaaday",
-      "ko": "인정 받은"
+      "so": "la oggolaado",
+      "ko": "승인되다"
     },
     "benefits": {
       "es": "beneficios",
@@ -6403,9 +6403,9 @@
     },
     "compensation": {
       "es": "compensación",
-      "vi": "đền bù",
+      "vi": "thù lao",
       "ru": "компенсация",
-      "uk": "компенсація",
+      "uk": "винагорода",
       "tl": "kabayaran",
       "so": "magdhow",
       "ko": "보상"
@@ -18389,15 +18389,6 @@
       "ko": "보상받다"
     },
     "be authorized": {
-      "es": "ser autorizado",
-      "vi": "được ủy quyền",
-      "ru": "быть уполномочен",
-      "uk": "бути уповноважений",
-      "tl": "awtorisado",
-      "so": "la oggolaado",
-      "ko": "승인되다"
-    },
-    "authorized": {
       "es": "ser autorizado",
       "vi": "được ủy quyền",
       "ru": "быть уполномочен",
@@ -35747,9 +35738,9 @@
     },
     "compensation": {
       "es": "compensación",
-      "vi": "đền bù",
+      "vi": "thù lao",
       "ru": "компенсация",
-      "uk": "компенсація",
+      "uk": "винагорода",
       "tl": "kabayaran",
       "so": "magdhow",
       "ko": "보상"
@@ -46159,10 +46150,10 @@
       "ko": "공공주택 당국이 저렴한 주택 개발에 자금을 지원할 수 있도록 함으로써 주택 공급을 늘린다."
     },
     "waiver": {
-      "es": "exención",
-      "vi": "miễn trừ",
+      "es": "renuncia",
+      "vi": "văn bản từ chối",
       "ru": "отказ",
-      "uk": "відмова від",
+      "uk": "відмова",
       "tl": "pagpapaubaya",
       "so": "ka dhaafitaan",
       "ko": "기권"
@@ -47309,6 +47300,11 @@
       "tl": "para gamitin",
       "so": "si loo isticmaalo",
       "ko": "사용을 위해"
+    },
+    "board of directors": {
+      "es": "junta directiva",
+      "vi": "hội đồng quản trị",
+      "uk": "рада директорів"
     }
   }
 }
