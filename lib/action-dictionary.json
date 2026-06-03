@@ -18352,6 +18352,62 @@
       "so": "la siiyo",
       "ko": "지급받다"
     },
+    "be charged": {
+      "es": "cobrado",
+      "vi": "bị tính phí",
+      "ru": "взимается",
+      "uk": "стягується",
+      "tl": "sinisingil",
+      "so": "laga qaado",
+      "ko": "부과되다",
+      "inherent_negation": true
+    },
+    "charged": {
+      "es": "cobrado",
+      "vi": "bị tính phí",
+      "ru": "взимается",
+      "uk": "стягується",
+      "tl": "sinisingil",
+      "so": "laga qaado",
+      "ko": "부과되다",
+      "inherent_negation": true
+    },
+    "be compensated": {
+      "es": "compensado",
+      "vi": "được bồi thường",
+      "ru": "компенсирован",
+      "uk": "компенсований",
+      "tl": "bayaran",
+      "so": "la magdhabaa",
+      "ko": "보상받다"
+    },
+    "compensated": {
+      "es": "compensado",
+      "vi": "được bồi thường",
+      "ru": "компенсирован",
+      "uk": "компенсований",
+      "tl": "bayaran",
+      "so": "la magdhabaa",
+      "ko": "보상받다"
+    },
+    "be authorized": {
+      "es": "autorizado",
+      "vi": "được ủy quyền",
+      "ru": "уполномочен",
+      "uk": "уповноважений",
+      "tl": "awtorisado",
+      "so": "la oggolaado",
+      "ko": "승인되다"
+    },
+    "authorized": {
+      "es": "autorizado",
+      "vi": "được ủy quyền",
+      "ru": "уполномочен",
+      "uk": "уповноважений",
+      "tl": "awtorisado",
+      "so": "la oggolaado",
+      "ko": "승인되다"
+    },
     "complete training": {
       "ru": "пройти обучение",
       "uk": "пройти навчання",
