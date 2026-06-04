@@ -35,6 +35,17 @@ function decodeXml(value) {
     .replace(/&#39;/g, "'");
 }
 
+function decodeHtml(value) {
+  return String(value || "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'");
+}
+
 function getTag(xml, tagName) {
   const match = String(xml || "").match(new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, "i"));
   return match ? decodeXml(match[1].trim()) : null;
@@ -86,6 +97,49 @@ function buildBillSummaryUrl(billNumber, biennium) {
   return `${BILL_SUMMARY_BASE}?${params.toString()}`;
 }
 
+async function fetchBillSummaryPage(billNumber, biennium) {
+  const url = buildBillSummaryUrl(billNumber, biennium);
+  const res = await fetch(url, { headers: { Accept: "text/html, */*" } });
+  if (!res.ok) throw new Error(`Bill summary page fetch failed: HTTP ${res.status}`);
+  return { html: await res.text(), url };
+}
+
+function parseBillSummaryHtml(html) {
+  const result = { sponsor: null, introducedDate: null, historyLine: null };
+
+  const sponsorMatch = html.match(/Sponsors?:[\s\S]{0,500}?<a[^>]*>([^<]+)<\/a>/i);
+  if (sponsorMatch) {
+    result.sponsor = decodeHtml(sponsorMatch[1].trim());
+  }
+
+  const historySection = html.match(/[Bb]ill\s+[Hh]istory([\s\S]{0,8000})/);
+  if (historySection) {
+    const block = historySection[1];
+    const dateRe = /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2})\b/g;
+    const positions = [];
+    let m;
+    while ((m = dateRe.exec(block)) !== null) {
+      positions.push({ index: m.index, date: `${m[1]} ${m[2]}` });
+    }
+    const entries = [];
+    for (let i = 0; i < positions.length; i++) {
+      const start = positions[i].index + positions[i].date.length;
+      const end = i + 1 < positions.length ? positions[i + 1].index : Math.min(start + 400, block.length);
+      const action = decodeHtml(
+        block.slice(start, end).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+      );
+      if (action.length > 3) entries.push({ date: positions[i].date, action });
+    }
+    if (entries.length > 0) {
+      result.introducedDate = entries[0].date;
+      const last = entries[entries.length - 1];
+      result.historyLine = `${last.date} — ${last.action}`;
+    }
+  }
+
+  return result;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -112,24 +166,10 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(officialXmlUrl, {
-      headers: {
-        Accept: "text/xml, application/xml, */*",
-      },
+      headers: { Accept: "text/xml, application/xml, */*" },
     });
-
     const xml = await response.text();
-
-    if (!response.ok) {
-      return res.status(response.status).json({
-        message: "Washington legislation service request failed.",
-        billNumber,
-        biennium,
-        sourceUrl: officialXmlUrl,
-        officialSummaryUrl,
-        serviceStatus: response.status,
-        serviceBody: xml.slice(0, 800),
-      });
-    }
+    if (!response.ok) throw new Error(`XML service returned HTTP ${response.status}`);
 
     const parsed = parseLegislation(xml);
 
@@ -167,14 +207,47 @@ export default async function handler(req, res) {
       raw_xml_excerpt: xml.slice(0, 1200),
       note: "This endpoint fetches official bill metadata. Full bill text/document fetching will be added in the next adapter step.",
     });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Washington bill detail lookup failed.",
-      billNumber,
-      biennium,
-      sourceUrl: officialXmlUrl,
-      officialSummaryUrl,
-      error: error instanceof Error ? error.message : String(error),
-    });
+  } catch (xmlError) {
+    try {
+      const { html } = await fetchBillSummaryPage(billNumber, biennium);
+      const scraped = parseBillSummaryHtml(html);
+      return res.status(200).json({
+        sourceSystem: "Washington State Legislature bill summary page (HTML fallback)",
+        billNumber,
+        biennium,
+        displayNumber: `HB/SB ${billNumber}`,
+        title: null,
+        summary: null,
+        legalTitle: null,
+        request: null,
+        introducedDate: scraped.introducedDate,
+        sponsor: scraped.sponsor,
+        primeSponsorID: null,
+        status: scraped.historyLine,
+        currentStatus: scraped.historyLine ? {
+          billId: null,
+          historyLine: scraped.historyLine,
+          actionDate: null,
+          status: scraped.historyLine,
+          amendedByOppositeBody: null,
+          partialVeto: null,
+          veto: null,
+          amendmentsExist: null,
+        } : null,
+        fiscalFlags: { stateFiscalNote: null, localFiscalNote: null, appropriations: null },
+        source_url: officialSummaryUrl,
+        service_xml_url: officialXmlUrl,
+      });
+    } catch (scrapeError) {
+      return res.status(500).json({
+        message: "Washington bill detail lookup failed.",
+        billNumber,
+        biennium,
+        sourceUrl: officialXmlUrl,
+        officialSummaryUrl,
+        error: xmlError instanceof Error ? xmlError.message : String(xmlError),
+        scrapeError: scrapeError instanceof Error ? scrapeError.message : String(scrapeError),
+      });
+    }
   }
 }
