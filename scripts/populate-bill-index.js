@@ -76,6 +76,9 @@ function parseLegislationInfo(block) {
     legal_title: "",
     session: BIENNIUM,
     status,
+    sponsor: null,
+    introducedDate: null,
+    historyLine: null,
     keywords: [],
     source_url: `https://app.leg.wa.gov/billsummary?BillNumber=${billNumber}&Year=${YEAR}`,
     detail_api_path: `/api/wa-bill-detail?billNumber=${billNumber}&biennium=${BIENNIUM}`,
@@ -91,9 +94,13 @@ async function fetchBillDetail(billNumber) {
   const xml = await response.text();
   const legislationBlock = getBlock(xml, "Legislation");
   if (!legislationBlock) return null;
+  const currentStatusBlock = getBlock(legislationBlock, "CurrentStatus");
   return {
     shortDescription: getTag(legislationBlock, "ShortDescription") || "",
     legalTitle: getTag(legislationBlock, "LegalTitle") || "",
+    sponsor: getTag(legislationBlock, "Sponsor") || null,
+    introducedDate: getTag(legislationBlock, "IntroducedDate") || null,
+    historyLine: currentStatusBlock ? (getTag(currentStatusBlock, "HistoryLine") || null) : null,
   };
 }
 
@@ -112,8 +119,14 @@ async function enrichWithDetails(records) {
           if (detail) {
             record.title = detail.shortDescription || detail.legalTitle || record.bill_id_display;
             record.legal_title = detail.legalTitle;
+            record.sponsor = detail.sponsor;
+            record.introducedDate = detail.introducedDate;
+            record.historyLine = detail.historyLine;
           } else {
             record.title = record.bill_id_display;
+            record.sponsor = null;
+            record.introducedDate = null;
+            record.historyLine = null;
             failed++;
           }
         } catch {

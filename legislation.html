@@ -940,15 +940,15 @@
       billStatusPlain.textContent = [billType, translated].filter(Boolean).join(" — ");
       billCommittee.textContent = "";
       billSession.textContent = detail?.biennium || record.session || "";
-      billSponsor.textContent = detail?.sponsor || "";
-      billIntroduced.textContent = formatDate(detail?.introducedDate);
+      billSponsor.textContent = detail?.sponsor || record.sponsor || "";
+      billIntroduced.textContent = formatDate(detail?.introducedDate || record.introducedDate);
 
       const sourceUrl = detail?.source_url || record.source_url || "";
       billLink.href = sourceUrl || "#";
       billLink.textContent = sourceUrl;
 
       billSummary.textContent = detail?.legalTitle || detail?.summary || "";
-      billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || "";
+      billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || record.historyLine || record.status || "";
     }
     function applySectionTypeBadges(sectionTypes) {
       sectionTypes.forEach(({ sectionId, type }) => {
