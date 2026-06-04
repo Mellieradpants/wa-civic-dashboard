@@ -605,10 +605,6 @@
           <p id="bill-summary" class="reader-text"></p>
         </article>
         <article class="reader-card">
-          <p class="reader-label">Last action</p>
-          <p id="bill-last-action" class="reader-text"></p>
-        </article>
-        <article class="reader-card">
           <p class="reader-label">Official bill document</p>
           <p id="bill-document-summary" class="reader-text"></p>
           <div id="bill-document-links" class="document-links"></div>
@@ -669,7 +665,6 @@
     const billIntroduced = document.getElementById("bill-introduced");
     const billLink = document.getElementById("bill-link");
     const billSummary = document.getElementById("bill-summary");
-    const billLastAction = document.getElementById("bill-last-action");
     const billDocumentSummary = document.getElementById("bill-document-summary");
     const billDocumentLinks = document.getElementById("bill-document-links");
     const billDocPlainSummary = document.getElementById("bill-doc-plain-summary");
@@ -948,7 +943,6 @@
       billLink.textContent = sourceUrl;
 
       billSummary.textContent = detail?.legalTitle || detail?.summary || record.legal_title || record.title || "";
-      billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || record.historyLine || record.status || "";
     }
     function applySectionTypeBadges(sectionTypes) {
       sectionTypes.forEach(({ sectionId, type }) => {

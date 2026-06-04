@@ -271,6 +271,11 @@ function mapRecord(record) {
     detail_api_path: record.detail_api_path || null,
     source: record.source || "local_index",
     routing: route,
+    sponsor: record.sponsor || null,
+    introducedDate: record.introducedDate || null,
+    historyLine: record.historyLine || null,
+    committee: record.committee || null,
+    legal_title: record.legal_title || null,
   };
 }
 
