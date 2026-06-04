@@ -938,7 +938,7 @@
       const billType = getBillType(billId);
       const translated = translateStatus(rawStatusText);
       billStatusPlain.textContent = [billType, translated].filter(Boolean).join(" — ");
-      billCommittee.textContent = "";
+      billCommittee.textContent = detail?.currentStatus?.status || record.committee || "";
       billSession.textContent = detail?.biennium || record.session || "";
       billSponsor.textContent = detail?.sponsor || record.sponsor || "";
       billIntroduced.textContent = formatDate(detail?.introducedDate || record.introducedDate);
@@ -947,7 +947,7 @@
       billLink.href = sourceUrl || "#";
       billLink.textContent = sourceUrl;
 
-      billSummary.textContent = detail?.legalTitle || detail?.summary || "";
+      billSummary.textContent = detail?.legalTitle || detail?.summary || record.legal_title || record.title || "";
       billLastAction.textContent = detail?.currentStatus?.historyLine || detail?.status || record.historyLine || record.status || "";
     }
     function applySectionTypeBadges(sectionTypes) {

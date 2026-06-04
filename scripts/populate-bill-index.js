@@ -79,6 +79,7 @@ function parseLegislationInfo(block) {
     sponsor: null,
     introducedDate: null,
     historyLine: null,
+    committee: null,
     keywords: [],
     source_url: `https://app.leg.wa.gov/billsummary?BillNumber=${billNumber}&Year=${YEAR}`,
     detail_api_path: `/api/wa-bill-detail?billNumber=${billNumber}&biennium=${BIENNIUM}`,
@@ -101,6 +102,7 @@ async function fetchBillDetail(billNumber) {
     sponsor: getTag(legislationBlock, "Sponsor") || null,
     introducedDate: getTag(legislationBlock, "IntroducedDate") || null,
     historyLine: currentStatusBlock ? (getTag(currentStatusBlock, "HistoryLine") || null) : null,
+    committee: currentStatusBlock ? (getTag(currentStatusBlock, "Status") || null) : null,
   };
 }
 
@@ -122,11 +124,13 @@ async function enrichWithDetails(records) {
             record.sponsor = detail.sponsor;
             record.introducedDate = detail.introducedDate;
             record.historyLine = detail.historyLine;
+            record.committee = detail.committee;
           } else {
             record.title = record.bill_id_display;
             record.sponsor = null;
             record.introducedDate = null;
             record.historyLine = null;
+            record.committee = null;
             failed++;
           }
         } catch {
