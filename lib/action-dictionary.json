@@ -47328,5 +47328,79 @@
       "ko": "부담금 재원",
       "so": "lacagaha cashuuraha lagu soo ururiyey"
     }
+  },
+  "connectives": {
+    "including but not limited to": {
+      "es": "incluido, entre otros",
+      "vi": "bao gồm nhưng không giới hạn",
+      "ru": "включая, но не ограничиваясь",
+      "uk": "включаючи, але не обмежуючись",
+      "tl": "kabilang ngunit hindi limitado sa",
+      "so": "oo ay ku jiraan laakiin aan ku xidnayn",
+      "ko": "포함하되 이에 한정하지 아니한다"
+    },
+    "in accordance with": {
+      "es": "de acuerdo con",
+      "vi": "phù hợp với",
+      "ru": "согласно",
+      "uk": "згідно з",
+      "tl": "alinsunod sa",
+      "so": "iyadoo la raacayo",
+      "ko": "에 따라"
+    },
+    "in the event that": {
+      "es": "en caso de que",
+      "vi": "trong trường hợp",
+      "ru": "в случае если",
+      "uk": "у разі якщо",
+      "tl": "sakaling",
+      "so": "haddii ay dhacdo",
+      "ko": "의 경우에는"
+    },
+    "provided that": {
+      "es": "siempre que",
+      "vi": "với điều kiện là",
+      "ru": "при условии что",
+      "uk": "за умови що",
+      "tl": "sa kondisyon na",
+      "so": "haddii",
+      "ko": "단, -하는 경우에는"
+    },
+    "notwithstanding": {
+      "es": "no obstante",
+      "vi": "mặc dù",
+      "ru": "несмотря на",
+      "uk": "незважаючи на",
+      "tl": "sa kabila ng",
+      "so": "in kasta oo",
+      "ko": "에도 불구하고"
+    },
+    "pursuant to": {
+      "es": "de conformidad con",
+      "vi": "theo",
+      "ru": "в соответствии с",
+      "uk": "відповідно до",
+      "tl": "alinsunod sa",
+      "so": "sida uu leeyahay",
+      "ko": "에 따라"
+    },
+    "subject to": {
+      "es": "sujeto a",
+      "vi": "phụ thuộc vào",
+      "ru": "с учётом",
+      "uk": "з урахуванням",
+      "tl": "napapailalim sa",
+      "so": "ku xidnaanshaha",
+      "ko": "에 따르되"
+    },
+    "as defined in": {
+      "es": "según se define en",
+      "vi": "theo định nghĩa tại",
+      "ru": "как определено в",
+      "uk": "як визначено в",
+      "tl": "ayon sa kahulugang ibinibigay sa",
+      "so": "sida lagu qeexay",
+      "ko": "에서 정의한 바에 따른"
+    }
   }
 }
