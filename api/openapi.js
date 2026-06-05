@@ -666,28 +666,6 @@ function buildSpec(baseUrl) {
             },
           },
         },
-        TranslateRequest: {
-          type: "object",
-          required: ["text", "language"],
-          properties: {
-            text: { type: "string", description: "Plain-language summary text to translate." },
-            language: {
-              type: "string",
-              enum: ["es", "vi", "ru", "uk", "tl", "so", "ko"],
-              description: "Target language code (SHB 2475 priority order): es=Spanish, vi=Vietnamese, ru=Russian, uk=Ukrainian, tl=Tagalog, so=Somali, ko=Korean.",
-            },
-            billNumber: { type: "string" },
-            biennium: { type: "string" },
-          },
-        },
-        TranslateResponse: {
-          type: "object",
-          properties: {
-            translatedText: { type: "string" },
-            language: { type: "string" },
-            cached: { type: "boolean" },
-          },
-        },
         AnalyzeRequest: {
           type: "object",
           oneOf: [
