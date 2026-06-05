@@ -157,12 +157,12 @@
     },
     "adopt": {
       "es": "adoptar",
-      "vi": "nhận nuôi",
-      "ru": "усыновить",
-      "uk": "усиновити",
-      "tl": "mag-ampon",
-      "so": "korsasho",
-      "ko": "입양하다"
+      "vi": "ban hành",
+      "ru": "принять",
+      "uk": "ухвалити",
+      "tl": "magpatupad",
+      "so": "ansixin",
+      "ko": "제정하다"
     },
     "reflect": {
       "es": "reflejar",
@@ -8995,12 +8995,12 @@
     },
     "work": {
       "es": "trabajar",
-      "vi": "công việc",
-      "ru": "работа",
-      "uk": "робота",
-      "tl": "trabaho",
-      "so": "shaqo",
-      "ko": "일하다"
+      "vi": "làm việc",
+      "ru": "работать",
+      "uk": "працювати",
+      "tl": "makipagtulungan",
+      "so": "la shaqeyn",
+      "ko": "협력하다"
     },
     "retired": {
       "es": "jubilado",
@@ -14705,7 +14705,7 @@
       "ru": "снижать",
       "uk": "знижувати",
       "tl": "bawasan",
-      "so": "hoos u dhig",
+      "so": "yareeyn",
       "ko": "줄이다"
     },
     "reduc": {
@@ -17732,13 +17732,13 @@
       "ko": "제공하다"
     },
     "meet": {
-      "es": "encontrarse",
-      "vi": "gặp",
-      "ru": "встретиться",
-      "uk": "зустрітися",
-      "tl": "magkita",
-      "so": "kulan",
-      "ko": "만나다"
+      "es": "cumplir con",
+      "vi": "đáp ứng",
+      "ru": "соответствовать",
+      "uk": "відповідати",
+      "tl": "matugunan",
+      "so": "buuxin",
+      "ko": "충족하다"
     },
     "handle": {
       "es": "manejar",
@@ -47318,6 +47318,16 @@
       "ko": "이사회",
       "so": "guddigii maamulka",
       "tl": "lupon ng mga direktor"
+    },
+    "vulnerable populations": {
+      "plain_en": "groups of people who need extra protection",
+      "es": "grupos vulnerables",
+      "vi": "nhóm dân cư dễ bị tổn thương",
+      "ru": "уязвимые группы населения",
+      "uk": "вразливі групи населення",
+      "tl": "mga mahihinang pangkat ng mga tao",
+      "so": "kooxaha dadka nugul",
+      "ko": "취약 계층"
     },
     "levy funds": {
       "es": "fondos de recaudación",
