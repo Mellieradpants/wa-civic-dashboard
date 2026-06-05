@@ -42,7 +42,7 @@ function cleanHtmlToText(html) {
       .replace(/<\/p>/gi, "\n")
       .replace(/<\/div>/gi, "\n")
       .replace(/<\/tr>/gi, "\n")
-      .replace(/<[^>]*>/g, " ")
+      .replace(/<[^>]*>/g, "")
       .replace(/\r/g, "\n")
       .replace(/[ \t]+/g, " ")
       .replace(/\n[ \t]+/g, "\n")
