@@ -96,7 +96,7 @@ async function main() {
 
     if (isCheckpoint) {
       console.log(`[${fetched}/${total}] ${failed} failed so far`);
-      await fs.writeFile(CORPUS_PATH, JSON.stringify(results, null, 2), "utf8");
+      await fs.writeFile(CORPUS_PATH, JSON.stringify(results), "utf8");
     }
 
     if (i + BATCH_SIZE < total) {
@@ -104,7 +104,7 @@ async function main() {
     }
   }
 
-  await fs.writeFile(CORPUS_PATH, JSON.stringify(results, null, 2), "utf8");
+  await fs.writeFile(CORPUS_PATH, JSON.stringify(results), "utf8");
   console.log(`\nDone. ${total} bills processed, ${failed} failed.`);
   console.log(`Output written to data/wa/bill-corpus.json`);
 }
