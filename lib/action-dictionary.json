@@ -6797,6 +6797,15 @@
       "so": "u hurid",
       "ko": "헌정하다"
     },
+    "deducted": {
+      "es": "ser deducido",
+      "vi": "được khấu trừ",
+      "ru": "быть вычтен",
+      "uk": "бути вирахуваний",
+      "tl": "ibabawas",
+      "so": "laga jaray",
+      "ko": "공제되다"
+    },
     "interchange": {
       "es": "intercambio",
       "vi": "trao đổi",
@@ -47348,6 +47357,15 @@
       "tl": "kabilang ngunit hindi limitado sa",
       "so": "oo ay ku jiraan laakiin aan ku xidnayn",
       "ko": "포함하되 이에 한정하지 아니한다"
+    },
+    "but not limited to": {
+      "es": "pero no se limita a",
+      "vi": "nhưng không giới hạn ở",
+      "ru": "но не ограничиваясь",
+      "uk": "але не обмежуючись",
+      "tl": "ngunit hindi limitado sa",
+      "so": "laakiin kuma koobna",
+      "ko": "이에 국한되지 않고"
     },
     "in accordance with": {
       "es": "de acuerdo con",
