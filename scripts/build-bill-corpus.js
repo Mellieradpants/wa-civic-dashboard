@@ -34,7 +34,6 @@ async function fetchBill(record) {
       session,
       title,
       sections: data.sections,
-      text: data.text,
       fetchedAt,
       error: null,
     };
