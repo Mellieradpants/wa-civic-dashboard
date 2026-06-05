@@ -47358,6 +47358,24 @@
       "so": "oo ay ku jiraan laakiin aan ku xidnayn",
       "ko": "포함하되 이에 한정하지 아니한다"
     },
+    "including, but not limited to": {
+      "es": "incluido, entre otros",
+      "vi": "bao gồm nhưng không giới hạn",
+      "ru": "включая, но не ограничиваясь",
+      "uk": "включаючи, але не обмежуючись",
+      "tl": "kabilang ngunit hindi limitado sa",
+      "so": "oo ay ku jiraan laakiin aan ku xidnayn",
+      "ko": "포함하되 이에 한정하지 아니한다"
+    },
+    "but is not limited to": {
+      "es": "pero no se limita a",
+      "vi": "nhưng không giới hạn ở",
+      "ru": "но не ограничиваясь",
+      "uk": "але не обмежуючись",
+      "tl": "ngunit hindi limitado sa",
+      "so": "laakiin kuma koobna",
+      "ko": "이에 국한되지 않고"
+    },
     "but not limited to": {
       "es": "pero no se limita a",
       "vi": "nhưng không giới hạn ở",
