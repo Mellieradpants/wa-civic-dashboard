@@ -65,9 +65,8 @@ Before L1, each section is classified by type. The 6 types are: `addition`, `ame
 
 ## Git and branch conventions
 
-- **Always develop on a feature branch.** Never commit directly to `main` without asking first.
-- **Ask before merging to main.** Confirm PR vs. direct push. Default to PR unless told otherwise.
-- **Before pushing to main**, check whether remote main has commits the local branch doesn't (`git log --oneline origin/main..HEAD` and `git log --oneline HEAD..origin/main`). Fetch and rebase cleanly before pushing.
+- **Always push directly to main.** No feature branch by default. If any prior instruction, workflow file, or config references a different branch, disregard it and flag it.
+- **Surface conflicts, don't resolve them silently.** If something contradicts the current instruction, raise it before acting.
 - Commit messages: describe the *why*, not the what. No model identifiers in commit messages.
 
 ---
@@ -116,11 +115,20 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 - **RCW taxonomy** is hardcoded in `populate-bill-index.js` as `TAXONOMY` — 10 categories, 31 subcategories, ~35 title mappings. Edit `TAXONOMY` there to change how bills are classified.
 - **Run from a network-permitted environment** — `wslwebservices.leg.wa.gov` returns 403 from Render's container. Run the script locally or from CI with outbound access: `node scripts/populate-bill-index.js`.
 - Bills with no RCW title match are included in the index with `categories: []` — they show up in unfiltered searches but are excluded from category filters.
+- **Per-bill fields in the index**: `bill_id_display`, `bill_id_normalized`, `bill_number`, `chamber`, `title`, `legal_title`, `session`, `status`, `sponsor`, `introducedDate`, `historyLine`, `committee`, `keywords`, `source_url`, `detail_api_path`. The `sponsor`, `introducedDate`, `historyLine`, and `committee` fields are populated from the WA Legislature XML API during the populate run.
+- **`mapRecord()` in `wa-bill-search.js`** passes `sponsor`, `introducedDate`, `historyLine`, `committee`, and `legal_title` through to the search API response. `legislation.html` uses these as fallbacks when the live detail API is unavailable.
 
 ---
 
 ## Localized rendering design (do not revert)
 
+### Connective phrase substitution pass
+`DICTIONARY.connectives` in `action-dictionary.json` holds multi-word connective phrases ("pursuant to", "notwithstanding", "in accordance with", etc.) with per-language translations. At module load, `CONNECTIVE_ENTRIES` is built from this section and sorted longest-first. `substituteConnectives(obj, lang)` runs on the `obj` string after the verb/obj split, before the dictionary lookup — replaces connective substrings so they don't bleed through as English inside otherwise-translated sentences. Add new connectives by adding entries to the `"connectives"` section of `action-dictionary.json`.
+
+### Semantic alias layer
+`lib/semantic-aliases.json` holds canonical legal terms ("vulnerable populations", "employer", "employee", "residents") with per-language culturally preferred equivalents and a `plain_en` plain-language gloss. At module load, `ALIAS_ENTRIES` is built from the `aliases` array and sorted longest-first. `substituteAliases(obj, lang)` runs on `obj` before `substituteConnectives` — substitutes canonical legal terms with functional equivalents in the target language. Only modifies rendered output; `rawAction`, `fields.action`, and all ISC unit data are untouched. Add new aliases by appending to the `aliases` array in `semantic-aliases.json` — no renderer changes needed.
+
+### English sentence and localized frame
 `getLocalizedFrame` in `renderer.js` is the non-English render path. Key design decisions:
 
 - **English sentence is the primary output** — the full English plain meaning sentence is generated first by the standard English path (TEMPLATES[lens]). It carries legal weight and is traceable to source.
@@ -196,10 +204,18 @@ lib/
     renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
                                    renderISC(iscOutput, { lang }) accepts optional language code
                                    renderUnit(unit, lang) uses TRANSLATIONS for non-English output
+                                   ALIAS_ENTRIES + substituteAliases — semantic alias pass (runs first)
+                                   CONNECTIVE_ENTRIES + substituteConnectives — connective pass (runs second)
+                                   both passes operate on obj string before dictionary lookup
   translations.json              — static multi-language templates; keys: lens names + per-modal variants + prefixes
                                    languages: es, vi, ru, uk, tl, so, ko
                                    placeholders: {actor}, {action}, {condition}, {deadline}, {amount}
                                    actor-based lenses use per-modal keys (must/may/cannot) — verb baked in, no {modal} placeholder
+  action-dictionary.json         — verb and object phrase translations; also contains "connectives" section
+                                   "connectives" section: multi-word connective phrases for substituteConnectives pass
+  semantic-aliases.json          — canonical legal term → culturally preferred equivalent per language
+                                   shape: { meta, aliases: [{ term, category, translations: { plain_en, es, vi, ru, uk, tl, so, ko } }] }
+                                   extend by appending to aliases array — no renderer changes needed
   synonymMap.json                — termMap (word → RCW titles) + parentTerms (phrase → plain word)
   wa-adapter/
     index.js                     — WA Legislature API adapter (getNormalizedBill)
@@ -212,6 +228,7 @@ data/
 index.html                       — dashboard home
 legislation.html                 — bill reader (search, plain meaning, sections)
                                    uses makeBillTextPromise() to share one fetch across consumers
+                                   Last Action field removed — redundant with Where Is This Bill Now
 voting.html                      — voting resources
 scripts/populate-bill-index.js   — build-time script; deterministic RCW taxonomy tagging, no AI
                                    must be run from a network-permitted environment (not Render)

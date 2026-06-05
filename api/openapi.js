@@ -31,7 +31,7 @@ function buildSpec(baseUrl) {
           operationId: "searchBills",
           summary: "Search Washington State bills",
           description:
-            "Keyword or bill-number search against the local bill index, with optional AI query expansion. Bill-number queries also perform a live official lookup.",
+            "Keyword or bill-number search against the local bill index. Bill-number queries also perform a live official lookup against the WA Legislature API. Query expansion uses RCW title synonym mapping — no AI.",
           parameters: [
             {
               name: "q",
@@ -316,6 +316,79 @@ function buildSpec(baseUrl) {
           },
         },
       },
+      "/api/translate-selection": {
+        post: {
+          operationId: "translateSelection",
+          summary: "Re-render ISC units in a target language",
+          description:
+            "Accepts pre-processed ISC units and a target language code. Runs the scope-lens renderer with the semantic alias and connective substitution passes. No AI — fully deterministic.",
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["units", "lang"],
+                  properties: {
+                    units: { type: "array", items: { $ref: "#/components/schemas/IscUnit" } },
+                    lang: {
+                      type: "string",
+                      enum: ["es", "vi", "ru", "uk", "tl", "so", "ko"],
+                      description: "Target language code.",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Localized plain-meaning output",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      plainMeaning: { type: "string" },
+                      sentences: { type: "array", items: { $ref: "#/components/schemas/PlainMeaningSentence" } },
+                      sectionType: { type: "string" },
+                      hasContent: { type: "boolean" },
+                      isLocalized: { type: "boolean" },
+                    },
+                  },
+                },
+              },
+            },
+            400: { $ref: "#/components/responses/BadRequest" },
+            500: { $ref: "#/components/responses/ServerError" },
+          },
+        },
+      },
+      "/api/missing-token": {
+        get: {
+          operationId: "getMissingTokens",
+          summary: "List action phrases not yet in the translation dictionary",
+          description:
+            "Returns verb and object phrases that fired the [!] flag during rendering and were logged to Redis. Requires Upstash Redis — returns empty list if Redis is unavailable.",
+          responses: {
+            200: {
+              description: "Missing token list",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      count: { type: "integer" },
+                      entries: { type: "array", items: { type: "string" } },
+                    },
+                  },
+                },
+              },
+            },
+            500: { $ref: "#/components/responses/ServerError" },
+          },
+        },
+      },
       "/api/openapi": {
         get: {
           operationId: "getOpenApiSpec",
@@ -350,9 +423,14 @@ function buildSpec(baseUrl) {
             record_type: { type: "string", example: "House Bill" },
             chamber: { type: "string", example: "House" },
             title: { type: "string" },
+            legal_title: { type: "string", nullable: true, description: "Full legal title from WA Legislature XML API." },
             session: { type: "string", example: "2025-26" },
             status: { type: "string" },
             summary: { type: "string" },
+            sponsor: { type: "string", nullable: true, description: "Primary sponsor name from bill index." },
+            introducedDate: { type: "string", nullable: true, description: "ISO date string of introduction." },
+            historyLine: { type: "string", nullable: true, description: "Most recent action history line." },
+            committee: { type: "string", nullable: true, description: "Current committee or location abbreviation." },
             source_url: { type: "string", format: "uri" },
             detail_api_path: { type: "string" },
           },
@@ -494,7 +572,6 @@ function buildSpec(baseUrl) {
                   type: "object",
                   properties: {
                     responsibleParty: { type: "string", nullable: true },
-                    actors: { type: "array", items: { type: "string" } },
                     modal: { type: "string", nullable: true },
                   },
                 },
