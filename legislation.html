@@ -529,6 +529,16 @@
 
     /* URL link text has no natural break points */
     #bill-link { word-break: break-all; }
+    .disclosure-notice {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--muted);
+      background: rgba(143, 164, 145, 0.08);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 18px;
+    }
   </style>
 </head>
 <body>
@@ -545,6 +555,8 @@
   </nav>
 
   <main>
+    <p class="disclosure-notice">Plain language summaries are generated automatically from official Washington State Legislature source documents. This tool is currently in active testing. Output is validated against a 338-bill sample drawn from the 2,808-bill 2025–26 session corpus at 95% confidence with a ±5% margin of error. Translations are produced by a deterministic computational pipeline, not certified human translators, and have not been certified for legal accuracy. This tool is intended to support understanding of Washington State legislation and does not constitute legal advice. Always refer to the official source bill for authoritative legal text.</p>
+
     <section class="search-panel" aria-label="Search legislation">
       <h2>Search Washington bills</h2>
       <p>Type a bill number or keyword. This search uses the dashboard bill-search API route and returns normalized bill records.</p>
