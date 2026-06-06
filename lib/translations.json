@@ -64,15 +64,6 @@
       "tl": "{actor} ang responsable sa {action}",
       "so": "{actor} ayaa mas'uul ka ah {action}",
       "ko": "{actor} {action} 담당합니다"
-    },
-    "no_action": {
-      "es": "{actor} está a cargo de esto",
-      "vi": "{actor} phụ trách việc này",
-      "ru": "{actor} отвечает за это",
-      "uk": "{actor} відповідає за це",
-      "tl": "{actor} ang namamahala nito",
-      "so": "{actor} ayaa masuulka ka ah kan",
-      "ko": "{actor} 이 업무를 담당합니다"
     }
   },
   "scope_change": {
