@@ -30,6 +30,33 @@ Language-specific morphological rules (verb conjugation, noun cases, word order)
 
 ---
 
+## Language access compliance
+
+This tool is built to support Washington State SHB 2475 language access requirements for limited English proficient (LEP) communities.
+
+The 7 non-English target languages correspond to Washington State's priority LEP populations: Spanish, Vietnamese, Russian, Ukrainian, Tagalog, Somali, Korean.
+
+---
+
+## Validation and known limitations
+
+Output is validated against a 338-bill sample drawn from the 2,808-bill 2025–26 session corpus at 95% confidence with a ±5% margin of error (finite population correction applied).
+
+A two-tier rubric applies:
+
+- **Tier 1 (C1–C7)** — machine-scoreable structural checks applied to all 338 bills × 7 languages
+- **Tier 2 (C8–C13)** — communicative accuracy, requiring human review on a 10–20 bill spot-check subset
+
+Structural correctness claim is defensible. Communicative accuracy claim requires completion of Tier 2 human review — not yet complete.
+
+**Known pipeline limitations (confirmed, not fixable without scoped pipeline changes):**
+
+- `"May [date]"` — month "May" triggers modal substitution before the temporal parser can protect date context
+- `"shall be construed"` — misidentifies as wrong modal frame
+- `"provided that"` and `"subject to"` — fail to substitute in Somali and Korean
+
+---
+
 ## Tech stack
 
 - Node.js, Express 4
@@ -84,11 +111,14 @@ voting.html                 Voting resources
 
 scripts/
   populate-bill-index.js    Populates data/wa/bill-index.json from WA Legislature API
+  test-bills.js             Test harness — runs C1/C5/C6/C7 quality checks against a local server
   seed-missing-tokens.js    Seeds Redis with missing verb/object pairs (workflow disabled)
   translate-dictionary.js   Writes translated entries to action-dictionary.json (workflow disabled)
 
 data/wa/
   bill-index.json           Active 2025-26 bills with sponsor, committee, and status fields
+  test-bills.json           Bill numbers used by the test harness (25 bills)
+  test-results.json         Output from test-bills.js — per-bill, per-language, per-criterion results
 ```
 
 ---
