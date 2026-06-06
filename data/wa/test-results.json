@@ -5311,6 +5311,2633 @@
           }
         }
       ]
+    },
+    {
+      "runAt": "2026-06-06T15:45:36.004Z",
+      "bills": [
+        {
+          "billNumber": "2398",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nueva ley — The credit claimed no se podrá superar the tax that would otherwise …\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Luật mới — The credit claimed không được quá the tax that would otherwise be due…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Новый закон — The credit claimed не вправе превосходить the tax that would other…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Новий закон — The credit claimed не має права перевищувати the tax that would ot…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Bagong batas — The credit claimed hindi maaaring lumampas the tax that would oth…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Sharciga cusub — The credit claimed ma karaan the tax that would otherwise be du…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"신규 법률 —The credit claimed the tax that would otherwise due under this chapter 초과…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1667",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2678",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2234",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"ach or service bE.\n\nTo promote tran\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2108",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"this section.\n\nЗ An employee is onl\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"dered released bE.\n\nNotwithstanding\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1999",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1234",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2222",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1063",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"W 43.320.150.\n\nЗ the person не спра\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" to the action bE.\n\nThen the direct\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1092",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department deberá demostrar that the parent, guardian, or legal custodian ha…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department có nghĩa vụ chứng minh that the parent, guardian, or legal custod…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department обязан продемонстрировать that the parent, guardian, or legal cus…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department зобов'язаний демонструвати that the parent, guardian, or legal cu…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department dapat magpakita that the parent, guardian, or legal custodian has…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department waa in that the parent, guardian, or legal custodian has at least…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" for the court bE, the health, 복지를과\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1251",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"ins were found bE.\n\nOr person havin\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1433",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section deberá ser construed to authorize the possession, sale, …\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section có nghĩa vụ là construed to authorize the possession, sa…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section обязан быть construed to authorize the possession, sale,…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \" or location.\n\nЗ The governing body\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section dapat maging construed to authorize the possession, sale…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section waa in construed to authorize the possession, sale, or d…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section construed to authorize the possession, sale, or delivery…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1464",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"CW43.320.150.\n\nЗ the person не спра\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" to the action bE.\n\nThen the direct\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1675",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"the practice.\n\nЗ A shareholder, dir\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1753",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" for the court bE, the health, 복지를과\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1871",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"July 1, 2026.\n\nЗ A time-of-use rate\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5100",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5228",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5357",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"ed.\n\nThe rates bE, for the ensuing \""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5485",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5613",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5744",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5890",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "8649",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "9117",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }
