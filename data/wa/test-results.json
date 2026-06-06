@@ -1,0 +1,2689 @@
+{
+  "runs": [
+    {
+      "runAt": "2026-06-06T14:06:15.018Z",
+      "bills": [
+        {
+          "billNumber": "2398",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \" ley — Esta sección requiere: [?].\n\nThe credit claimed no se\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nueva ley — Esta sección requiere: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"Luật mới — Mục này yêu cầu: [?].\n\nThe credit claimed không\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Luật mới — Mục này yêu cầu: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"акон — Данный раздел требует: [?].\n\nThe credit claimed не вп\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Новый закон — Данный раздел требует: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"й закон — Цей розділ вимагає: [?].\n\nThe credit claimed не ма\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Новий закон — Цей розділ вимагає: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"as — Inaatas ng seksyong ito: [?].\n\nThe credit claimed hindi\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Bagong batas — Inaatas ng seksyong ito: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ub — Qaybtan waxay u baahdaa: [?].\n\nThe credit claimed ma ka\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Sharciga cusub — Qaybtan waxay u baahdaa: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"신규 법률 —이 조항은 다음을 요구합니다: [?].\n\nThe credit claimed the t\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"신규 법률 —이 조항은 다음을 요구합니다: [?].\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1667",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2678",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"asts.\n\nEsta sección requiere: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \" forecasts.\n\nMục này yêu cầu: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"asts.\n\nДанный раздел требует: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"recasts.\n\nЦей розділ вимагає: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ts.\n\nInaatas ng seksyong ito: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ts.\n\nQaybtan waxay u baahdaa: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \" forecasts.\n\n이 조항은 다음을 요구합니다: [?].\n\nEmployment of the superv\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2234",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"ach or service bE.\n\nTo promote tran\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2108",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"this section.\n\nЗ An employee is onl\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"dered released bE.\n\nNotwithstanding\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1999",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1234",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "2222",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"a ley — Esta sección prohíbe: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"Luật mới — Mục này cấm: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"он — Данный раздел запрещает: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"закон — Цей розділ забороняє: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"pinagbabawal ng seksyong ito: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"— Qaybtan waxay mamnuucaysaa: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"신규 법률 —이 조항은 다음을 금지합니다: [?].\n\nAll penalties collected \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1063",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"pter.\n\nEsta sección requiere: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"is chapter.\n\nMục này yêu cầu: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"pter.\n\nДанный раздел требует: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"chapter.\n\nЦей розділ вимагає: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"W 43.320.150.\n\nЗ the person не спра\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"er.\n\nInaatas ng seksyong ito: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"al.\n\nQaybtan waxay u baahdaa: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \" 사용 할 수 있다.\n\n이 조항은 다음을 요구합니다: [?].\n\n\"Provider\" does not incl\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" to the action bE.\n\nThen the direct\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1092",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department deberá demostrar that the parent, guardian, or legal custodian ha…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department có nghĩa vụ chứng minh that the parent, guardian, or legal custod…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department обязан продемонстрировать that the parent, guardian, or legal cus…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department зобов'язаний демонструвати that the parent, guardian, or legal cu…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department dapat magpakita that the parent, guardian, or legal custodian has…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"The department waa in that the parent, guardian, or legal custodian has at least…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" for the court bE, the health, 복지를과\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1251",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"if date of death is unknown.\n\n[?] не вправе быть determined \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"if date of death is unknown.\n\n[?] не має права бути determin\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"ins were found bE.\n\nOr person havin\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1433",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ances.\n\nEsta sección permite: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section deberá ser construed to authorize the possession, sale, …\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ubstances.\n\nMục này cho phép: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section có nghĩa vụ là construed to authorize the possession, sa…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"es.\n\nДанный раздел разрешает: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section обязан быть construed to authorize the possession, sale,…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"tances.\n\nЦей розділ дозволяє: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \" or location.\n\nЗ The governing body\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"pahintulutan ng seksyong ito: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section dapat maging construed to authorize the possession, sale…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"r.\n\nQaybtan waxay oggoshahay: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section waa in construed to authorize the possession, sale, or d…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"함하다 하여야 한다.\n\n이 조항은 다음을 허용합니다: [?].\n\nThree members of the boa\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Nothing in this section construed to authorize the possession, sale, or delivery…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1464",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"CW43.320.150.\n\nЗ the person не спра\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" to the action bE.\n\nThen the direct\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1675",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"the practice.\n\nЗ A shareholder, dir\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1753",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \" for the court bE, the health, 복지를과\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "1871",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"a ley — Esta sección permite: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"\nLuật mới — Mục này cho phép: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"он — Данный раздел разрешает: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \" закон — Цей розділ дозволяє: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Stray Cyrillic \"З\": \"July 1, 2026.\n\nЗ A time-of-use rate\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"pahintulutan ng seksyong ito: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"b — Qaybtan waxay oggoshahay: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \" 있다.\n\n신규 법률 —이 조항은 다음을 허용합니다: [?].\n\nThe credit for expenses \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5100",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] elimina un requisito anter\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] xóa bỏ một yêu cầu trước đ\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] отменяет ранее установленн\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] скасовує попередню вимогу.\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] inaalis ang isang nakaraan\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] waxay tirtirtaa shuruudii \""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"[?] 이전 요건을 삭제합니다.\n\n(ii) Indivi\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5228",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5357",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ship.\n\nEsta sección requiere: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"membership.\n\nMục này yêu cầu: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ship.\n\nДанный раздел требует: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"bership.\n\nЦей розділ вимагає: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"ip.\n\nInaatas ng seksyong ito: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"hip\n\nQaybtan waxay u baahdaa: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "[?] found: \"hip 하여야 한다.\n\n이 조항은 다음을 요구합니다: [?].\n\nThe employer contributio\""
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "\"bE\" artifact: \"ed.\n\nThe rates bE, for the ensuing \""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5485",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5613",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5744",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "5890",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": false,
+                "reason": "Full duplication: \"Subject to of this subsection, the license or permit to drive or any nonresident…\""
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "8649",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": true
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        },
+        {
+          "billNumber": "9117",
+          "langs": {
+            "es": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "vi": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ru": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "uk": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "tl": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "so": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            },
+            "ko": {
+              "C1": {
+                "pass": false,
+                "reason": "output is empty"
+              },
+              "C5": {
+                "pass": true
+              },
+              "C6": {
+                "pass": true
+              },
+              "C7": {
+                "pass": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
