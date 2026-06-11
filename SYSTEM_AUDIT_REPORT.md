@@ -402,9 +402,6 @@ No new HANG/SILENT/WRONG/DROPPED findings beyond what's covered by the API-handl
 ### 7.12 [DROPPED] `test-results.json` grows unboundedly with no diffing/regression detection
 `scripts/test-bills.js:196-197` — every run appends to `runs[]` (8 runs currently present) with no cap, rotation, or diff logic between runs to detect regressions/drift.
 
-### 7.13 [context, dormant] `translate-dictionary.yml.disabled` references an external Google Translate API
-`.github/workflows/translate-dictionary.yml.disabled:20-24` — invokes `node scripts/translate-dictionary.js` with `GOOGLE_TRANSLATE_API_KEY`. The file is disabled (`.yml.disabled`), so it does not currently violate the "no external AI/API at runtime" rule, but its presence — undocumented in CLAUDE.md, which describes static-template-only translation — is flagged per the audit's instruction to surface contradictions, even though it's dormant.
-
 ---
 
 ## Summary table
@@ -474,4 +471,3 @@ No new HANG/SILENT/WRONG/DROPPED findings beyond what's covered by the API-handl
 | 7.10 | data/wa/test-bills.json | (whole file) | WRONG/coverage |
 | 7.11 | scripts/test-bills.js | 117 | DROPPED |
 | 7.12 | scripts/test-bills.js | 196-197 | DROPPED |
-| 7.13 | .github/workflows/translate-dictionary.yml.disabled | 20-24 | dormant/contradiction |

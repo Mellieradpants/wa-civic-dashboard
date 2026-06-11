@@ -113,7 +113,6 @@ scripts/
   populate-bill-index.js    Populates data/wa/bill-index.json from WA Legislature API
   test-bills.js             Test harness — runs C1/C5/C6/C7 quality checks against a local server
   seed-missing-tokens.js    Seeds Redis with missing verb/object pairs (workflow disabled)
-  translate-dictionary.js   Writes translated entries to action-dictionary.json (workflow disabled)
 
 data/wa/
   bill-index.json           Active 2025-26 bills with sponsor, committee, and status fields
