@@ -66,7 +66,11 @@ async function postJSON(url, body) {
 // ─── Criteria scorers ────────────────────────────────────────────────────────
 
 function scoreC1(text, responses) {
-  if (!text || !text.trim()) return { pass: false, reason: "output is empty" };
+  if (!text || !text.trim()) {
+    const reasons = responses.map(r => r.emptyReason).filter(Boolean);
+    const detail = reasons.length ? ` (emptyReason: ${reasons.join(", ")})` : "";
+    return { pass: false, reason: `output is empty${detail}` };
+  }
   const notLocalized = responses.filter(r => r.isLocalized === false);
   if (notLocalized.length) {
     const missing = notLocalized.flatMap(r => (r.sentences || []).flatMap(s => s.missingTokens || []));
