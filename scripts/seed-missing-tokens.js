@@ -1,5 +1,5 @@
 // Loops through data/wa/bill-index.json and pushes verb+object pairs to the
-// Redis missing-tokens list so translate-dictionary.js fills the dictionary.
+// Redis missing-tokens list.
 //
 // Two sources of verbs:
 //  1. LEGISLATIVE_VERBS — hardcoded base-form verbs that appear after
@@ -10,7 +10,7 @@
 //     base-form attempt for each, since titles use gerunds but bill text uses
 //     base forms.
 //
-// Run once before translate-dictionary.js. Already-translated verbs are skipped.
+// Already-translated verbs are skipped.
 //
 // Required env vars:
 //   KV_REST_API_URL   — Upstash Redis URL
