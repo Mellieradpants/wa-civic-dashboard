@@ -168,6 +168,9 @@ async function testBill(billNumber) {
 
   // Translate each section into each language
   const langResults = {};
+  const missingMap = new Map();
+  const empties = [];
+
   for (const lang of LANGS) {
     let combined = "";
     let langSectionsWithContent = 0;
@@ -181,6 +184,20 @@ async function testBill(billNumber) {
         if (r.hasContent) {
           langSectionsWithContent++;
           if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
+        } else {
+          empties.push({ lang, emptyReason: r.emptyReason ?? null });
+        }
+        for (const s of r.sentences || []) {
+          if (s.isLocalized === false && s.missingTokens) {
+            const key = JSON.stringify(s.missingTokens);
+            let entry = missingMap.get(key);
+            if (!entry) {
+              entry = { missingTokens: s.missingTokens, units: new Set(), langs: new Set() };
+              missingMap.set(key, entry);
+            }
+            entry.units.add(JSON.stringify({ sourceLocation: s.sourceLocation, sourceAction: s.sourceAction }));
+            entry.langs.add(lang);
+          }
         }
       } catch (err) {
         console.log(`    WARN: translate-selection failed for ${lang} — ${err.message}`);
@@ -196,11 +213,20 @@ async function testBill(billNumber) {
     };
   }
 
+  const ledger = {
+    missingWords: [...missingMap.values()].map(e => ({
+      missingTokens: e.missingTokens,
+      count: e.units.size,
+      langs: [...e.langs],
+    })),
+    empties,
+  };
+
   // Log a one-line summary
   const failCount = Object.values(langResults).flatMap(r => Object.values(r)).filter(c => !c.pass).length;
   console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`} across 7 languages`);
 
-  return { billNumber, langs: langResults, failures };
+  return { billNumber, langs: langResults, failures, ledger };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
