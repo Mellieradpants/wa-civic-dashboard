@@ -18,11 +18,36 @@ const BATCH_DELAY_MS = 1000;
 
 const billNumbers = JSON.parse(readFileSync(path.join(DATA_DIR, "test-bills.json"), "utf8"));
 const RESULTS_PATH = path.join(DATA_DIR, "test-results.json");
+const TRANSLATIONS_PATH = path.join(__dirname, "../lib/translations.json");
+const TRANSLATIONS = JSON.parse(readFileSync(TRANSLATIONS_PATH, "utf8"));
+
+const REQUEST_TIMEOUT_MS = 30000;
+
+// ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
+
+function fillTemplate(tmpl, vars) {
+  return String(tmpl).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
+}
+
+function finalizeText(raw) {
+  let s = raw.replace(/\s+/g, " ").trim();
+  if (!s.endsWith(".") && !s.endsWith(":")) s += ".";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+const STATIC_PARAGRAPHS = new Set([
+  "No obligation or change detected in this section.",
+  "This section is repealed and no longer in effect.",
+  ...LANGS.map(l => TRANSLATIONS.no_obligation?.[l]).filter(Boolean),
+  ...LANGS
+    .map(l => TRANSLATIONS.repeal?.[l] ? finalizeText(fillTemplate(TRANSLATIONS.repeal[l], { actor: "This section" })) : null)
+    .filter(Boolean),
+]);
 
 // ─── Fetch helpers ────────────────────────────────────────────────────────────
 
 async function getJSON(url) {
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
@@ -32,6 +57,7 @@ async function postJSON(url, body) {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
@@ -39,17 +65,12 @@ async function postJSON(url, body) {
 
 // ─── Criteria scorers ────────────────────────────────────────────────────────
 
-function scoreC1(text) {
+function scoreC1(text, responses) {
   if (!text || !text.trim()) return { pass: false, reason: "output is empty" };
-  const qIdx = text.indexOf("[?]");
-  if (qIdx >= 0) {
-    const ctx = text.slice(Math.max(0, qIdx - 30), qIdx + 30);
-    return { pass: false, reason: `[?] found: "${ctx}"` };
-  }
-  const bIdx = text.indexOf("[!]");
-  if (bIdx >= 0) {
-    const ctx = text.slice(Math.max(0, bIdx - 30), bIdx + 30);
-    return { pass: false, reason: `[!] found: "${ctx}"` };
+  const notLocalized = responses.filter(r => r.isLocalized === false);
+  if (notLocalized.length) {
+    const missing = notLocalized.flatMap(r => (r.sentences || []).flatMap(s => s.missingTokens || []));
+    return { pass: false, reason: `isLocalized === false; missing tokens: ${missing.join(", ") || "none reported"}` };
   }
   if (text.includes("Failure to comply:")) {
     return { pass: false, reason: '"Failure to comply:" found in output' };
@@ -69,10 +90,11 @@ function scoreC6(text) {
     const ctx = text.slice(Math.max(0, idx - 15), idx + 20);
     return { pass: false, reason: `"bE" artifact: "${ctx}"` };
   }
-  if (text.includes("З")) {
-    const idx = text.indexOf("З");
+  const corruptionMatch = text.match(/(^|\n|[.!?]\s)([ЗС] )(?=[A-Za-z])/);
+  if (corruptionMatch) {
+    const idx = corruptionMatch.index + corruptionMatch[1].length;
     const ctx = text.slice(Math.max(0, idx - 15), idx + 20);
-    return { pass: false, reason: `Stray Cyrillic "З": "${ctx}"` };
+    return { pass: false, reason: `Stray capitalized Cyrillic preposition "${corruptionMatch[2].trim()}": "${ctx}"` };
   }
   if (text.includes("Failure to comply:")) {
     return { pass: false, reason: '"Failure to comply:" found in output' };
@@ -80,6 +102,7 @@ function scoreC6(text) {
   const paragraphs = text.split("\n\n").map(s => s.trim()).filter(Boolean);
   const seen = new Set();
   for (const p of paragraphs) {
+    if (STATIC_PARAGRAPHS.has(p)) continue;
     if (seen.has(p)) {
       return { pass: false, reason: `Full duplication: "${p.slice(0, 80)}${p.length > 80 ? "…" : ""}"` };
     }
@@ -103,6 +126,8 @@ function scoreC7(enCount, langCount, lang) {
 async function testBill(billNumber) {
   console.log(`  Testing bill ${billNumber}…`);
 
+  const failures = [];
+
   // Fetch bill text sections
   let textData;
   try {
@@ -111,13 +136,15 @@ async function testBill(billNumber) {
     );
   } catch (err) {
     console.log(`    SKIP: wa-bill-text failed — ${err.message}`);
-    return null;
+    failures.push({ billNumber, stage: "wa-bill-text", error: err.message });
+    return { billNumber, langs: {}, failures };
   }
 
   const sections = (textData?.sections || []).filter(s => s.text?.trim());
   if (!sections.length) {
     console.log(`    SKIP: no sections found`);
-    return null;
+    failures.push({ billNumber, stage: "wa-bill-text", error: "no sections found" });
+    return { billNumber, langs: {}, failures };
   }
 
   // Run plain-meaning pipeline for each section (English)
@@ -128,34 +155,37 @@ async function testBill(billNumber) {
       sectionResults.push({ units: r.units || [], hasContent: !!r.hasContent, plainMeaning: r.plainMeaning || "" });
     } catch (err) {
       console.log(`    WARN: plain-meaning failed for section ${sec.id} — ${err.message}`);
+      failures.push({ billNumber, stage: "plain-meaning", error: `section ${sec.id}: ${err.message}` });
       sectionResults.push({ units: [], hasContent: false, plainMeaning: "" });
     }
   }
 
-  const enSectionsWithContent = sectionResults.filter(r => r.hasContent).length;
-  const enCombined = sectionResults.map(r => r.plainMeaning).filter(Boolean).join("\n\n");
+  const enSectionsWithContent = sectionResults.filter(r => r.units.length > 0).length;
 
   // Translate each section into each language
   const langResults = {};
   for (const lang of LANGS) {
     let combined = "";
     let langSectionsWithContent = 0;
+    const responses = [];
 
     for (const sec of sectionResults) {
       if (!sec.units.length) continue;
       try {
         const r = await postJSON(`${BASE_URL}/api/translate-selection`, { units: sec.units, lang });
+        responses.push(r);
         if (r.hasContent) {
           langSectionsWithContent++;
           if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
         }
       } catch (err) {
         console.log(`    WARN: translate-selection failed for ${lang} — ${err.message}`);
+        failures.push({ billNumber, stage: "translate-selection", lang, error: err.message });
       }
     }
 
     langResults[lang] = {
-      C1: scoreC1(combined),
+      C1: scoreC1(combined, responses),
       C5: scoreC5(combined),
       C6: scoreC6(combined),
       C7: scoreC7(enSectionsWithContent, langSectionsWithContent, lang),
@@ -166,7 +196,7 @@ async function testBill(billNumber) {
   const failCount = Object.values(langResults).flatMap(r => Object.values(r)).filter(c => !c.pass).length;
   console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`} across 7 languages`);
 
-  return { billNumber, langs: langResults };
+  return { billNumber, langs: langResults, failures };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -185,7 +215,7 @@ for (let i = 0; i < billNumbers.length; i += BATCH_SIZE) {
 
   const batchResults = await Promise.all(batch.map(n => testBill(String(n))));
   for (const r of batchResults) {
-    if (r) run.bills.push(r);
+    run.bills.push(r);
   }
 
   if (i + BATCH_SIZE < billNumbers.length) {
