@@ -16,12 +16,44 @@ const LANGS = ["es", "vi", "ru", "uk", "tl", "so", "ko"];
 const BATCH_SIZE = 5;
 const BATCH_DELAY_MS = 1000;
 
-const billNumbers = JSON.parse(readFileSync(path.join(DATA_DIR, "test-bills.json"), "utf8"));
+const TEST_BILLS_CONFIG = JSON.parse(readFileSync(path.join(DATA_DIR, "test-bills.json"), "utf8"));
+const BILL_INDEX = JSON.parse(readFileSync(path.join(DATA_DIR, "bill-index.json"), "utf8"));
 const RESULTS_PATH = path.join(DATA_DIR, "test-results.json");
 const TRANSLATIONS_PATH = path.join(__dirname, "../lib/translations.json");
 const TRANSLATIONS = JSON.parse(readFileSync(TRANSLATIONS_PATH, "utf8"));
 
 const REQUEST_TIMEOUT_MS = 30000;
+
+const SEED = process.env.TEST_SEED ? Number(process.env.TEST_SEED) : Date.now();
+const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
+const SENTINELS = TEST_BILLS_CONFIG.sentinels;
+
+// ─── Seeded sampling ──────────────────────────────────────────────────────────
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function sampleBills() {
+  const rng = mulberry32(SEED);
+  const sentinelSet = new Set(SENTINELS);
+  const pool = BILL_INDEX.map(b => Number(b.bill_number)).filter(n => !sentinelSet.has(n));
+
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  const fillCount = Math.max(0, SAMPLE_SIZE - SENTINELS.length);
+  return [...SENTINELS, ...pool.slice(0, fillCount)];
+}
+
+const billNumbers = sampleBills();
 
 // ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
 
@@ -235,7 +267,7 @@ const existing = existsSync(RESULTS_PATH)
   ? JSON.parse(readFileSync(RESULTS_PATH, "utf8"))
   : { runs: [] };
 
-const run = { runAt: new Date().toISOString(), bills: [] };
+const run = { runAt: new Date().toISOString(), seed: SEED, sentinels: SENTINELS, sampledBills: billNumbers, bills: [] };
 
 console.log(`Running tests for ${billNumbers.length} bills in batches of ${BATCH_SIZE}…\n`);
 
