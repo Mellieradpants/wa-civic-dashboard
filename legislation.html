@@ -496,28 +496,6 @@
       cursor: pointer;
     }
     .summary-btn:hover { background: var(--mist); border-color: var(--sage); }
-    .lang-selector {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .lang-select {
-      min-height: 40px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: white;
-      color: var(--ink);
-      padding: 0 12px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .lang-select:focus {
-      outline: none;
-      border-color: var(--forest);
-      box-shadow: 0 0 0 3px rgba(31, 77, 58, 0.11);
-    }
 
     /* Prevent long bill text and pre-formatted content from overflowing */
     .reader-text,
@@ -628,18 +606,6 @@
             <button id="summary-copy-btn" class="summary-btn" type="button">Copy</button>
             <button id="summary-export-btn" class="summary-btn" type="button">Export .txt</button>
           </div>
-          <div id="summary-lang-selector" class="lang-selector" style="display:none">
-            <select id="summary-lang-select" class="lang-select">
-              <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="vi">Tiếng Việt</option>
-              <option value="ru">Русский</option>
-              <option value="uk">Українська</option>
-              <option value="tl">Tagalog</option>
-              <option value="so">Soomaali</option>
-              <option value="ko">한국어</option>
-            </select>
-          </div>
         </article>
         <article class="reader-card">
           <p class="reader-label">Raw bill sections</p>
@@ -683,8 +649,6 @@
     const summaryActions = document.getElementById("summary-actions");
     const summaryCopyBtn = document.getElementById("summary-copy-btn");
     const summaryExportBtn = document.getElementById("summary-export-btn");
-    const summaryLangSelector = document.getElementById("summary-lang-selector");
-    const summaryLangSelect = document.getElementById("summary-lang-select");
     const billSectionsSummary = document.getElementById("bill-sections-summary");
     const billSectionsList = document.getElementById("bill-sections-list");
     const sectionPanel = document.getElementById("section-panel");
@@ -709,37 +673,26 @@
     }
 
     let englishSummary = "";
-    let lastSectionUnits = [];
     let summaryBillNum = "";
     let summaryBiennium = "";
-    let translationCache = {};
 
     function resetSummaryControls() {
       englishSummary = "";
-      lastSectionUnits = [];
       summaryBillNum = "";
       summaryBiennium = "";
-      translationCache = {};
       summaryActions.style.display = "none";
-      summaryLangSelector.style.display = "none";
-      summaryLangSelect.value = "en";
     }
 
-    function showSummaryControls(billNum, biennium, text, sectionUnits) {
+    function showSummaryControls(billNum, biennium, text) {
       englishSummary = text;
-      lastSectionUnits = sectionUnits || [];
       summaryBillNum = billNum;
       summaryBiennium = biennium;
-      translationCache = {};
       summaryActions.style.display = "flex";
-      summaryLangSelector.style.display = "flex";
-      summaryLangSelect.value = "en";
     }
 
     // Run each bill section through the pipeline independently, then join non-empty results.
     // Per-section processing prevents 10-section bills from becoming one joined text blob.
-    // Returns { text, sectionTypes, allSectionUnits } where allSectionUnits is a list of
-    // non-empty ISC unit arrays — one per section that had detectable obligations.
+    // Returns { text, sectionTypes }.
     async function fetchPlainMeaning(sections) {
       const results = await Promise.allSettled(
         sections.map(section =>
@@ -754,11 +707,10 @@
       );
       const meanings = [];
       const sectionTypes = [];
-      const allSectionUnits = [];
       const seenParagraphs = new Set();
       results.forEach((r, i) => {
         if (r.status !== "fulfilled" || !r.value) return;
-        const { plainMeaning, sectionType, units, hasContent } = r.value;
+        const { plainMeaning, sectionType, hasContent } = r.value;
         if (!hasContent) return;
         const survivors = plainMeaning.split("\n\n").filter(p => {
           if (seenParagraphs.has(p)) return false;
@@ -767,47 +719,11 @@
         });
         if (!survivors.length) return;
         meanings.push(survivors.join("\n\n"));
-        allSectionUnits.push(units || []);
         if (sectionType && sectionType !== "standard") {
           sectionTypes.push({ sectionId: sections[i].id || `section_${i + 1}`, type: sectionType });
         }
       });
-      return { text: meanings.join("\n\n"), sectionTypes, allSectionUnits };
-    }
-
-    // Re-render cached ISC units in the target language — skips the pipeline entirely.
-    // Uses /api/translate-selection which calls renderLocalized without any English
-    // template fallback, ensuring structural words are in the target language.
-    // Returns { text, isLocalized }.
-    async function fetchTranslation(sectionUnitGroups, lang) {
-      const results = await Promise.allSettled(
-        sectionUnitGroups.map(units =>
-          fetch("/api/translate-selection", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ units, lang }),
-          })
-            .then(r => r.ok ? r.json() : null)
-            .catch(() => null)
-        )
-      );
-      const seenParagraphs = new Set();
-      const meanings = [];
-      let isLocalized = true;
-
-      results.forEach(r => {
-        if (r.status !== "fulfilled" || !r.value?.hasContent) return;
-        const survivors = r.value.plainMeaning.split("\n\n").filter(p => {
-          if (seenParagraphs.has(p)) return false;
-          seenParagraphs.add(p);
-          return true;
-        });
-        if (!survivors.length) return;
-        meanings.push(survivors.join("\n\n"));
-        if (r.value.isLocalized === false) isLocalized = false;
-      });
-
-      return { text: meanings.join("\n\n"), isLocalized };
+      return { text: meanings.join("\n\n"), sectionTypes };
     }
 
     summaryCopyBtn.addEventListener("click", () => {
@@ -845,41 +761,6 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    });
-
-    summaryLangSelect.addEventListener("change", async () => {
-      if (!englishSummary) return;
-      const lang = summaryLangSelect.value;
-
-      if (lang === "en") {
-        billDocPlainSummary.textContent = englishSummary;
-        return;
-      }
-
-      if (translationCache[lang]) {
-        billDocPlainSummary.textContent = translationCache[lang];
-        return;
-      }
-
-      billDocPlainSummary.textContent = "Translating…";
-      try {
-        const result = await fetchTranslation(lastSectionUnits, lang);
-        if (result.text) {
-          let displayText = result.text;
-          if (!result.isLocalized) {
-            displayText += "\n\n[!] Some action phrases remain in English. Dictionary entries are being added.";
-          }
-          translationCache[lang] = displayText;
-          billDocPlainSummary.textContent = displayText;
-        } else {
-          billDocPlainSummary.textContent = englishSummary;
-          summaryLangSelect.value = "en";
-        }
-      } catch (error) {
-        billDocPlainSummary.textContent = englishSummary;
-        summaryLangSelect.value = "en";
-        console.error("Translation error:", error);
-      }
     });
 
     function clearSearchResults() {
@@ -1229,12 +1110,12 @@
           return;
         }
 
-        const { text: plainMeaning, sectionTypes, allSectionUnits } = await fetchPlainMeaning(sections);
+        const { text: plainMeaning, sectionTypes } = await fetchPlainMeaning(sections);
         if (sectionTypes.length) applySectionTypeBadges(sectionTypes);
 
         if (plainMeaning) {
           billDocPlainSummary.textContent = plainMeaning;
-          showSummaryControls(billNum, biennium, plainMeaning, allSectionUnits);
+          showSummaryControls(billNum, biennium, plainMeaning);
         } else {
           billDocPlainSummary.textContent = "No actionable provisions were identified in this bill text.";
         }
