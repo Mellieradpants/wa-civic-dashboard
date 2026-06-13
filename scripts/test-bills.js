@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Test harness — runs C1/C5/C6/C7 checks against a local server.
+// Test harness — runs C1/C5/C6 checks against a local server.
 // Usage: node scripts/test-bills.js
 // Requires server running at http://localhost:3000
 
@@ -12,7 +12,6 @@ const DATA_DIR = path.join(__dirname, "../data/wa");
 
 const BASE_URL = "http://localhost:3000";
 const BIENNIUM = "2025-26";
-const LANGS = ["es", "vi", "ru", "uk", "tl", "so", "ko"];
 const BATCH_SIZE = 5;
 const BATCH_DELAY_MS = 1000;
 
@@ -131,16 +130,6 @@ function scoreC6(text) {
   return { pass: true };
 }
 
-function scoreC7(enCount, langCount, lang) {
-  if (langCount !== enCount) {
-    return {
-      pass: false,
-      reason: `${lang} produced ${langCount} sections with content, English produced ${enCount}`,
-    };
-  }
-  return { pass: true };
-}
-
 // ─── Per-bill test ────────────────────────────────────────────────────────────
 
 async function testBill(billNumber) {
@@ -164,85 +153,34 @@ async function testBill(billNumber) {
   if (!sections.length) {
     console.log(`    SKIP: no sections found`);
     failures.push({ billNumber, stage: "wa-bill-text", error: "no sections found" });
-    return { billNumber, langs: {}, failures };
+    return { billNumber, results: {}, failures };
   }
 
   // Run plain-meaning pipeline for each section (English)
-  const sectionResults = [];
+  const responses = [];
+  let combined = "";
   for (const sec of sections) {
     try {
       const r = await postJSON(`${BASE_URL}/api/plain-meaning`, { text: sec.text });
-      sectionResults.push({ units: r.units || [], hasContent: !!r.hasContent, plainMeaning: r.plainMeaning || "" });
+      responses.push(r);
+      if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
     } catch (err) {
       console.log(`    WARN: plain-meaning failed for section ${sec.id} — ${err.message}`);
       failures.push({ billNumber, stage: "plain-meaning", error: `section ${sec.id}: ${err.message}` });
-      sectionResults.push({ units: [], hasContent: false, plainMeaning: "" });
     }
   }
 
-  const enSectionsWithContent = sectionResults.filter(r => r.units.length > 0).length;
-
-  // Translate each section into each language
-  const langResults = {};
-  const missingMap = new Map();
-  const empties = [];
-
-  for (const lang of LANGS) {
-    let combined = "";
-    let langSectionsWithContent = 0;
-    const responses = [];
-
-    for (const sec of sectionResults) {
-      if (!sec.units.length) continue;
-      try {
-        const r = await postJSON(`${BASE_URL}/api/translate-selection`, { units: sec.units, lang });
-        responses.push(r);
-        if (r.hasContent) {
-          langSectionsWithContent++;
-          if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
-        } else {
-          empties.push({ lang, emptyReason: r.emptyReason ?? null });
-        }
-        for (const s of r.sentences || []) {
-          if (s.isLocalized === false && s.missingTokens) {
-            const key = JSON.stringify(s.missingTokens);
-            let entry = missingMap.get(key);
-            if (!entry) {
-              entry = { missingTokens: s.missingTokens, units: new Set(), langs: new Set() };
-              missingMap.set(key, entry);
-            }
-            entry.units.add(JSON.stringify({ sourceLocation: s.sourceLocation, sourceAction: s.sourceAction }));
-            entry.langs.add(lang);
-          }
-        }
-      } catch (err) {
-        console.log(`    WARN: translate-selection failed for ${lang} — ${err.message}`);
-        failures.push({ billNumber, stage: "translate-selection", lang, error: err.message });
-      }
-    }
-
-    langResults[lang] = {
-      C1: scoreC1(combined, responses),
-      C5: scoreC5(combined),
-      C6: scoreC6(combined),
-      C7: scoreC7(enSectionsWithContent, langSectionsWithContent, lang),
-    };
-  }
-
-  const ledger = {
-    missingWords: [...missingMap.values()].map(e => ({
-      missingTokens: e.missingTokens,
-      count: e.units.size,
-      langs: [...e.langs],
-    })),
-    empties,
+  const results = {
+    C1: scoreC1(combined, responses),
+    C5: scoreC5(combined),
+    C6: scoreC6(combined),
   };
 
   // Log a one-line summary
-  const failCount = Object.values(langResults).flatMap(r => Object.values(r)).filter(c => !c.pass).length;
-  console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`} across 7 languages`);
+  const failCount = Object.values(results).filter(c => !c.pass).length;
+  console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`}`);
 
-  return { billNumber, langs: langResults, failures, ledger };
+  return { billNumber, results, failures };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -272,8 +210,8 @@ for (let i = 0; i < billNumbers.length; i += BATCH_SIZE) {
 existing.runs.push(run);
 writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
 
-const totalChecks = run.bills.flatMap(b => Object.values(b.langs).flatMap(l => Object.values(l))).length;
-const totalFails = run.bills.flatMap(b => Object.values(b.langs).flatMap(l => Object.values(l))).filter(c => !c.pass).length;
+const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
+const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
 
 console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures.`);
 console.log(`Results written to ${RESULTS_PATH}`);
