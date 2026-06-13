@@ -146,7 +146,7 @@ async function testBill(billNumber) {
   } catch (err) {
     console.log(`    SKIP: wa-bill-text failed — ${err.message}`);
     failures.push({ billNumber, stage: "wa-bill-text", error: err.message });
-    return { billNumber, langs: {}, failures };
+    return { billNumber, results: {}, failures };
   }
 
   const sections = (textData?.sections || []).filter(s => s.text?.trim());
