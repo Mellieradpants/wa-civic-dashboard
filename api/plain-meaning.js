@@ -69,13 +69,17 @@ export default async function handler(req, res) {
       iscOutput = runPipeline(text.trim());
     }
 
-    const { plainMeaning, sentences, sectionType, hasContent } = renderISC(iscOutput, { lang: language || null });
+    const { plainMeaning, sentences, sectionType, hasContent, isLocalized, emptyReason } = renderISC(iscOutput, { lang: language || null });
 
     return res.status(200).json({
       plainMeaning,
       sentences,
       sectionType,
       hasContent,
+      // Lineage-tracing scaffolding: isLocalized becomes meaningful once the
+      // headless/subjectless detector is built.
+      isLocalized,
+      emptyReason,
       units: iscOutput.units || [],
       pipeline: {
         inputSource: units ? "isc_units" : "raw_text",
