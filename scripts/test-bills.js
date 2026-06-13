@@ -19,8 +19,6 @@ const BATCH_DELAY_MS = 1000;
 const TEST_BILLS_CONFIG = JSON.parse(readFileSync(path.join(DATA_DIR, "test-bills.json"), "utf8"));
 const BILL_INDEX = JSON.parse(readFileSync(path.join(DATA_DIR, "bill-index.json"), "utf8"));
 const RESULTS_PATH = path.join(DATA_DIR, "test-results.json");
-const TRANSLATIONS_PATH = path.join(__dirname, "../lib/translations.json");
-const TRANSLATIONS = JSON.parse(readFileSync(TRANSLATIONS_PATH, "utf8"));
 
 const REQUEST_TIMEOUT_MS = 30000;
 
@@ -57,23 +55,9 @@ const billNumbers = sampleBills();
 
 // ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
 
-function fillTemplate(tmpl, vars) {
-  return String(tmpl).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
-}
-
-function finalizeText(raw) {
-  let s = raw.replace(/\s+/g, " ").trim();
-  if (!s.endsWith(".") && !s.endsWith(":")) s += ".";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
 const STATIC_PARAGRAPHS = new Set([
   "No obligation or change detected in this section.",
   "This section is repealed and no longer in effect.",
-  ...LANGS.map(l => TRANSLATIONS.no_obligation?.[l]).filter(Boolean),
-  ...LANGS
-    .map(l => TRANSLATIONS.repeal?.[l] ? finalizeText(fillTemplate(TRANSLATIONS.repeal[l], { actor: "This section" })) : null)
-    .filter(Boolean),
 ]);
 
 // ─── Fetch helpers ────────────────────────────────────────────────────────────
