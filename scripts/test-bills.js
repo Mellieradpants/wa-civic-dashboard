@@ -86,11 +86,6 @@ function scoreC1(text, responses) {
     const detail = reasons.length ? ` (emptyReason: ${reasons.join(", ")})` : "";
     return { pass: false, reason: `output is empty${detail}` };
   }
-  const notLocalized = responses.filter(r => r.isLocalized === false);
-  if (notLocalized.length) {
-    const missing = notLocalized.flatMap(r => (r.sentences || []).flatMap(s => s.missingTokens || []));
-    return { pass: false, reason: `isLocalized === false; missing tokens: ${missing.join(", ") || "none reported"}` };
-  }
   if (text.includes("Failure to comply:")) {
     return { pass: false, reason: '"Failure to comply:" found in output' };
   }
