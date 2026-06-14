@@ -7,7 +7,6 @@
 // app.leg.wa.gov (used by fetchBillTextData) is the correct fetch target.
 
 import fs from "node:fs/promises";
-import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchBillTextData } from "../api/wa-bill-text.js";
@@ -33,7 +32,7 @@ async function fetchBill(record) {
       bill_number,
       session,
       title,
-      sections: data.sections,
+      sections: data.sections.map(({ characterCount, ...rest }) => rest),
       fetchedAt,
       error: null,
     };
@@ -51,16 +50,13 @@ async function fetchBill(record) {
 }
 
 async function main() {
-  if (existsSync(CORPUS_PATH)) {
-    console.error(
-      "data/wa/bill-corpus.json already exists.\n" +
-      "Delete it first if a fresh run is needed: rm data/wa/bill-corpus.json"
-    );
-    process.exit(1);
-  }
-
   const bills = JSON.parse(await fs.readFile(INDEX_PATH, "utf8"));
-  const total  = bills.length;
+
+  const seen = new Map();
+  for (const record of bills) seen.set(record.bill_number, record);
+  const dedupedBills = [...seen.values()];
+
+  const total  = dedupedBills.length;
 
   console.log(`Starting corpus build — ${total} bills`);
   console.log(`Batch size: ${BATCH_SIZE} | Delay: ${BATCH_DELAY_MS}ms | Checkpoint every: ${LOG_INTERVAL} bills\n`);
@@ -69,7 +65,7 @@ async function main() {
   let failed = 0;
 
   for (let i = 0; i < total; i += BATCH_SIZE) {
-    const batch    = bills.slice(i, i + BATCH_SIZE);
+    const batch    = dedupedBills.slice(i, i + BATCH_SIZE);
     const settled  = await Promise.allSettled(batch.map(fetchBill));
 
     for (const outcome of settled) {
