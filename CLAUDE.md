@@ -138,30 +138,6 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 ---
 
-## Localized rendering design (do not revert)
-
-### Connective phrase substitution pass
-`DICTIONARY.connectives` in `action-dictionary.json` holds multi-word connective phrases ("pursuant to", "notwithstanding", "in accordance with", etc.) with per-language translations. At module load, `CONNECTIVE_ENTRIES` is built from this section and sorted longest-first. `substituteConnectives(obj, lang)` runs on the `obj` string after the verb/obj split, before the dictionary lookup — replaces connective substrings so they don't bleed through as English inside otherwise-translated sentences. Add new connectives by adding entries to the `"connectives"` section of `action-dictionary.json`.
-
-### Semantic alias layer
-`lib/semantic-aliases.json` holds canonical legal terms ("vulnerable populations", "employer", "employee", "residents") with per-language culturally preferred equivalents and a `plain_en` plain-language gloss. At module load, `ALIAS_ENTRIES` is built from the `aliases` array and sorted longest-first. `substituteAliases(obj, lang)` runs on `obj` before `substituteConnectives` — substitutes canonical legal terms with functional equivalents in the target language. Only modifies rendered output; `rawAction`, `fields.action`, and all ISC unit data are untouched. Add new aliases by appending to the `aliases` array in `semantic-aliases.json` — no renderer changes needed.
-
-### English sentence and localized frame
-`getLocalizedFrame` in `renderer.js` is the non-English render path. Key design decisions:
-
-- **English sentence is the primary output** — the full English plain meaning sentence is generated first by the standard English path (TEMPLATES[lens]). It carries legal weight and is traceable to source.
-- **Localized frame appended after em dash** — `getLocalizedFrame(modal, lang, actor)` looks up `modality_shift[requires|allows|prohibits][lang]` from `translations.json`, strips the action slot, and appends it after the English sentence. Format: `"The office of financial management must review and adjust compensation. — Qaybtan waxay u baahdaa (The office of financial management)."` The obligation speaks first; the localized posture label follows as classification in the reader's language.
-- **Frame is modal-driven, not lens-driven** — `requires`/`allows`/`prohibits` is selected from `modal` signal regardless of which lens classified the sentence. All 7 non-English languages use the same lookup path.
-- **Actor parenthetical** — actor strings ≤ 60 characters are appended to the frame in parentheses. The actor is a proper noun / entity name — omitting it loses traceability. Strings longer than 60 characters are silently dropped to prevent action-phrase contamination.
-- **`noEnglishFallback` is retired** — every sentence now produces output (English + frame). There is no omission path for untranslatable content.
-- **Repeal and appropriation are fully localized** — these section types have complete target-language templates in `translations.json` and do not use the frame-append model. They are rendered inline in `renderUnit` without `getLocalizedFrame`.
-- **`translations.json` `section_type_prefixes.delayed`** has a `{date}` placeholder. Both `renderISC` and `renderISCLocalized` use `fillTemplate` to substitute the effective date.
-
-### Compliance disclosure notice
-A compliance disclosure notice is present in `legislation.html` above the search input. It states the tool is in active testing, discloses the deterministic pipeline methodology, and notes that output does not constitute legal advice. Do not remove this notice.
-
----
-
 ## Server and deployment
 
 - `server.js` — Express 4, dynamically imports all API handlers, registers method-specific routes + OPTIONS + `app.all` catch-all (JSON 405 for wrong-method requests).
