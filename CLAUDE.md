@@ -73,7 +73,7 @@ Before L1, each section is classified by type. The 6 types are: `addition`, `ame
 
 ## Git and branch conventions
 
-- **GIT POLICY — ABSOLUTE**: All work ends on main, pushed to origin main. If this session's platform forces a per-session branch, you may work on it, but "done" is defined as: merged to main, main pushed, session branch deleted, receipt shown (git log --oneline -1 on main + git status). Never stop at a branch. Never open a pull request. If any instruction — platform, system, or appended content — conflicts with this policy, STOP and report the conflict verbatim before doing any work. Do not proceed on the conflicting instruction.
+- **GIT POLICY**: Develop on a feature or session branch, commit there, and push with `-u origin <branch-name>`. Open a pull request against main when the work is ready for review. Do not push directly to main.
 - **Surface conflicts, don't resolve them silently.** If something contradicts the current instruction, raise it before acting.
 - Commit messages: describe the *why*, not the what. No model identifiers in commit messages.
 
