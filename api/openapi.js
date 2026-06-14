@@ -5,7 +5,7 @@ function buildSpec(baseUrl) {
       title: "WA Civic Dashboard API",
       version: "1.0.0",
       description:
-        "Plain-language access to Washington State legislation. All endpoints are fully deterministic — no external AI API calls. Bill metadata and plain-meaning extraction all run on the server without any LLM dependency.",
+        "Plain-language access to Washington State legislation. All endpoints are fully deterministic — no external AI API calls. Bill metadata and plain-meaning extraction run on the server without any LLM dependency.",
     },
     servers: [{ url: baseUrl }],
     paths: {

@@ -4,7 +4,7 @@
 
 A Washington State civic information dashboard. Backend is an Express 4 API deployed on Render (`server.js` + `render.yaml`). Frontend is three HTML pages (`index.html`, `legislation.html`, `voting.html`) served by the same Express server. The API also serves `/lib` as static ES modules for browser imports.
 
-The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The 10-layer pipeline and scope-lens renderer produce plain meaning. Multi-language output uses static templates in `lib/translations.json`. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
+The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The 10-layer pipeline and scope-lens renderer produce plain meaning from legalese — English only. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
 
 ---
 
@@ -132,8 +132,7 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 ## Validation and compliance
 
 - Output is validated against a 338-bill sample from the 2,808-bill 2025–26 corpus at 95% confidence, ±5% margin of error, finite population correction applied.
-- A two-tier pass/fail rubric (13 criteria) is defined: Tier 1 (C1–C7) is machine-scoreable and applied to all 338 bills × 7 languages; Tier 2 (C8–C13) requires human review and applies to a 10–20 bill spot-check subset.
-- This tool is built to support Washington State SHB 2475 language access requirements for LEP communities.
+- A two-tier pass/fail rubric (13 criteria) is defined: Tier 1 (C1–C7) is machine-scoreable and applied to all 338 bills; Tier 2 (C8–C13) requires human review and applies to a 10–20 bill spot-check subset.
 - Structural correctness claim is defensible. Communicative accuracy claim requires completion of Tier 2 human review — not yet complete.
 
 ---
@@ -199,20 +198,7 @@ lib/
     pipeline.js                  — 10-layer deterministic pipeline (runPipeline)
                                    includes pre-pipeline section type classification
     renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
-                                   renderISC(iscOutput, { lang }) accepts optional language code
-                                   renderUnit(unit, lang) uses TRANSLATIONS for non-English output
-                                   ALIAS_ENTRIES + substituteAliases — semantic alias pass (runs first)
-                                   CONNECTIVE_ENTRIES + substituteConnectives — connective pass (runs second)
-                                   both passes operate on obj string before dictionary lookup
-  translations.json              — static multi-language templates; keys: lens names + per-modal variants + prefixes
-                                   languages: es, vi, ru, uk, tl, so, ko
-                                   placeholders: {actor}, {action}, {condition}, {deadline}, {amount}
-                                   actor-based lenses use per-modal keys (must/may/cannot) — verb baked in, no {modal} placeholder
-  action-dictionary.json         — verb and object phrase translations; also contains "connectives" section
-                                   "connectives" section: multi-word connective phrases for substituteConnectives pass
-  semantic-aliases.json          — canonical legal term → culturally preferred equivalent per language
-                                   shape: { meta, aliases: [{ term, category, translations: { plain_en, es, vi, ru, uk, tl, so, ko } }] }
-                                   extend by appending to aliases array — no renderer changes needed
+                                   English-only — produces plain meaning from legalese, no translation
   synonymMap.json                — termMap (word → RCW titles) + parentTerms (phrase → plain word)
   wa-adapter/
     index.js                     — WA Legislature API adapter (getNormalizedBill)
