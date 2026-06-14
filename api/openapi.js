@@ -304,7 +304,7 @@ function buildSpec(baseUrl) {
           },
           responses: {
             200: {
-              description: "Plain-language translation",
+              description: "Plain-language summary",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/AnalyzeResponse" },
@@ -603,7 +603,7 @@ function buildSpec(baseUrl) {
         AnalyzeResponse: {
           type: "object",
           properties: {
-            translation: { type: "string", description: "Plain-language paragraph." },
+            summary: { type: "string", description: "Plain-language paragraph." },
           },
         },
         ErrorResponse: {
