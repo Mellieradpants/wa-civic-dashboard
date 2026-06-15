@@ -75,6 +75,7 @@ Before L1, each section is classified by type. The 6 types are: `addition`, `ame
 
 - **GIT POLICY**: Develop on a feature or session branch, commit there, and push with `-u origin <branch-name>`. Open a pull request against main when the work is ready for review. Do not push directly to main.
 - **Surface conflicts, don't resolve them silently.** If something contradicts the current instruction, raise it before acting.
+- **Communication standard: plain language only.** Every prompt, question, change request, and explanation uses plain language. One ask at a time. No jargon. If you can't explain it plainly, stop and reframe before sending.
 - Commit messages: describe the *why*, not the what. No model identifiers in commit messages.
 
 ---
