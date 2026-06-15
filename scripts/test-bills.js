@@ -174,6 +174,9 @@ async function testBill(billNumber) {
   // Log a one-line summary
   const failCount = Object.values(results).filter(c => !c.pass).length;
   console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`}`);
+  for (const [check, result] of Object.entries(results)) {
+    if (!result.pass) console.log(`      ${check}: ${result.reason}`);
+  }
 
   return { billNumber, results, failures };
 }
