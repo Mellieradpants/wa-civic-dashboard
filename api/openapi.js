@@ -568,19 +568,28 @@ function buildSpec(baseUrl) {
             controlFlags: { type: "array", items: { type: "string" } },
             status: { type: "string", enum: ["ok", "incomplete"] },
             debug: {
-              type: "object",
-              description: "Only present when the request set debug: true. The actor/modal/action/conditions/deadlines fields used by the renderer, and the lens template applied.",
-              properties: {
-                actor: { type: "string", nullable: true },
-                modal: { type: "string" },
-                rawModal: { type: "string" },
-                action: { type: "string", nullable: true },
-                conditions: { type: "array", items: { type: "string" } },
-                deadlines: { type: "array", items: { type: "string" } },
-                enforcement: { type: "string", nullable: true },
-                templateUsed: { type: "string" },
-              },
+              description: "Only present when the request set debug: true. The actor/modal/action/conditions/deadlines fields used by the renderer, and the lens template applied. A single object for most sentences; an array with one entry per clause when a compound sentence (e.g. 'shall X and must Y') was split and rendered as separate clauses.",
+              oneOf: [
+                { $ref: "#/components/schemas/PlainMeaningDebugFields" },
+                {
+                  type: "array",
+                  items: { $ref: "#/components/schemas/PlainMeaningDebugFields" },
+                },
+              ],
             },
+          },
+        },
+        PlainMeaningDebugFields: {
+          type: "object",
+          properties: {
+            actor: { type: "string", nullable: true },
+            modal: { type: "string" },
+            rawModal: { type: "string" },
+            action: { type: "string", nullable: true },
+            conditions: { type: "array", items: { type: "string" } },
+            deadlines: { type: "array", items: { type: "string" } },
+            enforcement: { type: "string", nullable: true },
+            templateUsed: { type: "string" },
           },
         },
         PlainMeaningResponse: {
