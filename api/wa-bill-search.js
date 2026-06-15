@@ -204,7 +204,7 @@ function parseLegislation(xml) {
   };
 }
 
-function scoreRecord(record, query) {
+function scoreRecord(record, query, bodyText) {
   const normalized = normalizeQuery(query);
   const lowered = String(query || "").trim().toLowerCase();
   const terms = lowered.split(/\s+/).filter(Boolean);
@@ -237,17 +237,37 @@ function scoreRecord(record, query) {
     loweredFields.some((field) => field.includes(term))
   ).length * 10;
 
+  if (bodyText) {
+    score += terms.filter((term) => bodyText.includes(term)).length * 5;
+  }
+
   return score;
 }
 
-function scoreRecordMulti(record, terms) {
-  return Math.max(...terms.map((t) => scoreRecord(record, t)));
+function scoreRecordMulti(record, terms, bodyText) {
+  return Math.max(...terms.map((t) => scoreRecord(record, t, bodyText)));
 }
 
 async function loadBillIndex() {
   const filePath = path.join(process.cwd(), "data", "wa", "bill-index.json");
   const raw = await fs.readFile(filePath, "utf8");
   return JSON.parse(raw);
+}
+
+async function loadBillCorpus() {
+  const filePath = path.join(process.cwd(), "data", "wa", "bill-corpus.json");
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    const entries = JSON.parse(raw);
+    const corpus = new Map();
+    for (const entry of entries) {
+      const text = (entry.sections || []).map((section) => section.text).join("\n");
+      if (text) corpus.set(String(entry.bill_number), text.toLowerCase());
+    }
+    return corpus;
+  } catch {
+    return new Map();
+  }
 }
 
 function mapRecord(record) {
@@ -380,6 +400,7 @@ export default async function handler(req, res) {
     }
 
     const billIndex = await loadBillIndex();
+    const billCorpus = await loadBillCorpus();
 
     const parentWords = applyParentTerms(query);
     const allTerms = [query, ...parentWords].filter(Boolean);
@@ -388,7 +409,8 @@ export default async function handler(req, res) {
 
     const localResults = billIndex
       .map((record) => {
-        const score = scoreRecordMulti(record, allTerms);
+        const bodyText = billCorpus.get(String(record.bill_number)) || "";
+        const score = scoreRecordMulti(record, allTerms, bodyText);
         const titleMatch =
           rcwTitleFilter.size > 0 &&
           (record.rcw_titles || []).some((t) => rcwTitleFilter.has(t));
