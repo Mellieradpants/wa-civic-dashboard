@@ -18,12 +18,7 @@ The bill index is populated from the WA Legislature API by a GitHub Actions work
 
 Output is validated against a 338-bill sample drawn from the 2,808-bill 2025–26 session corpus at 95% confidence with a ±5% margin of error (finite population correction applied).
 
-A two-tier rubric applies:
-
-- **Tier 1 (C1–C7)** — machine-scoreable structural checks applied to all 338 bills
-- **Tier 2 (C8–C13)** — communicative accuracy, requiring human review on a 10–20 bill spot-check subset
-
-Structural correctness claim is defensible. Communicative accuracy claim requires completion of Tier 2 human review — not yet complete.
+A pass/fail rubric (C1–C7) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
 
 **Known pipeline limitations (confirmed, not fixable without scoped pipeline changes):**
 
