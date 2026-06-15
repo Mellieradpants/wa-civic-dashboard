@@ -40,3 +40,10 @@ jobs:
 
       - name: Run test harness
         run: node scripts/test-bills.js
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: data/wa/test-results.json
