@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const { text, units } = body || {};
+  const { text, units, debug } = body || {};
 
   if (!text && !units) {
     return res.status(400).json({
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
       iscOutput = runPipeline(text.trim());
     }
 
-    const { plainMeaning, sentences, sectionType, hasContent, emptyReason } = renderISC(iscOutput);
+    const { plainMeaning, sentences, sectionType, hasContent, emptyReason } = renderISC(iscOutput, { debug: debug === true });
 
     return res.status(200).json({
       plainMeaning,
