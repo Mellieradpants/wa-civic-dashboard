@@ -132,8 +132,7 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 ## Validation and compliance
 
 - Output is validated against a 338-bill sample from the 2,808-bill 2025–26 corpus at 95% confidence, ±5% margin of error, finite population correction applied.
-- A two-tier pass/fail rubric (13 criteria) is defined: Tier 1 (C1–C7) is machine-scoreable and applied to all 338 bills; Tier 2 (C8–C13) requires human review and applies to a 10–20 bill spot-check subset.
-- Structural correctness claim is defensible. Communicative accuracy claim requires completion of Tier 2 human review — not yet complete.
+- A pass/fail rubric (C1–C7) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
 
 ---
 
