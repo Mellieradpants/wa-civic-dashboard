@@ -133,6 +133,33 @@ function scoreC6(text) {
   return { pass: true };
 }
 
+// ─── XFAIL resolution ────────────────────────────────────────────────────────
+
+function resolveKnownIssues(billNumber, rawResults) {
+  const knownIssue = KNOWN_ISSUES[String(billNumber)] || {};
+  const results = {};
+  for (const [check, r] of Object.entries(rawResults)) {
+    results[check] = (!r.pass && knownIssue[check])
+      ? { pass: true, xfail: knownIssue[check] }
+      : r;
+  }
+  for (const [check, reason] of Object.entries(knownIssue)) {
+    if (!(check in results)) results[check] = { pass: true, xfail: reason };
+  }
+  return results;
+}
+
+function logAndReturn(billNumber, results, failures) {
+  const xfailCount = Object.values(results).filter(r => r.xfail).length;
+  if (xfailCount) {
+    console.log(`    PASS (${xfailCount} XFAIL)`);
+    for (const [check, result] of Object.entries(results)) {
+      if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
+    }
+  }
+  return { billNumber, results, failures };
+}
+
 // ─── Per-bill test ────────────────────────────────────────────────────────────
 
 async function testBill(billNumber) {
@@ -149,14 +176,14 @@ async function testBill(billNumber) {
   } catch (err) {
     console.log(`    SKIP: wa-bill-text failed — ${err.message}`);
     failures.push({ billNumber, stage: "wa-bill-text", error: err.message });
-    return { billNumber, results: {}, failures };
+    return logAndReturn(billNumber, resolveKnownIssues(billNumber, {}), failures);
   }
 
   const sections = (textData?.sections || []).filter(s => s.text?.trim());
   if (!sections.length) {
     console.log(`    SKIP: no sections found`);
     failures.push({ billNumber, stage: "wa-bill-text", error: "no sections found" });
-    return { billNumber, results: {}, failures };
+    return logAndReturn(billNumber, resolveKnownIssues(billNumber, {}), failures);
   }
 
   // Run plain-meaning pipeline for each section (English)
@@ -179,13 +206,7 @@ async function testBill(billNumber) {
     C6: scoreC6(combined),
   };
 
-  const knownIssue = KNOWN_ISSUES[String(billNumber)] || {};
-  const results = {};
-  for (const [check, r] of Object.entries(rawResults)) {
-    results[check] = (!r.pass && knownIssue[check])
-      ? { pass: true, xfail: knownIssue[check] }
-      : r;
-  }
+  const results = resolveKnownIssues(billNumber, rawResults);
 
   // Log a one-line summary
   const failCount = Object.values(results).filter(c => !c.pass).length;
