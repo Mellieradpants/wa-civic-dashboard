@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   test:
@@ -37,6 +38,17 @@ jobs:
             fi
             sleep 1
           done
+
+      - name: Download previous test results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUN_ID=$(gh run list --workflow=run-tests.yml --status=success --limit=1 --json databaseId --jq '.[0].databaseId')
+          if [ -n "$RUN_ID" ]; then
+            gh run download "$RUN_ID" --name test-results --dir data/wa || echo "No previous artifact found for run $RUN_ID"
+          else
+            echo "No previous successful run found"
+          fi
 
       - name: Run test harness
         run: node scripts/test-bills.js
