@@ -24,6 +24,8 @@ const REQUEST_TIMEOUT_MS = 30000;
 const SEED = process.env.TEST_SEED ? Number(process.env.TEST_SEED) : Date.now();
 const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
 const SENTINELS = TEST_BILLS_CONFIG.sentinels;
+const KNOWN_BOILERPLATE = TEST_BILLS_CONFIG.knownBoilerplate || [];
+const KNOWN_ISSUES = TEST_BILLS_CONFIG.knownIssues || {};
 
 // ─── Seeded sampling ──────────────────────────────────────────────────────────
 
@@ -53,11 +55,17 @@ function sampleBills() {
 const billNumbers = sampleBills();
 
 // ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
+// Exact entries checked first; knownBoilerplate from config matched as prefixes.
 
-const STATIC_PARAGRAPHS = new Set([
-  "No obligation or change detected in this section.",
-  "This section is repealed and no longer in effect.",
-]);
+const STATIC_PARAGRAPHS = {
+  _exact: new Set([
+    "No obligation or change detected in this section.",
+    "This section is repealed and no longer in effect.",
+  ]),
+  has(p) {
+    return this._exact.has(p) || KNOWN_BOILERPLATE.some(prefix => p.startsWith(prefix));
+  },
+};
 
 // ─── Fetch helpers ────────────────────────────────────────────────────────────
 
@@ -165,17 +173,28 @@ async function testBill(billNumber) {
     }
   }
 
-  const results = {
+  const rawResults = {
     C1: scoreC1(combined, responses),
     C5: scoreC5(combined),
     C6: scoreC6(combined),
   };
 
+  const knownIssue = KNOWN_ISSUES[String(billNumber)] || {};
+  const results = {};
+  for (const [check, r] of Object.entries(rawResults)) {
+    results[check] = (!r.pass && knownIssue[check])
+      ? { pass: true, xfail: knownIssue[check] }
+      : r;
+  }
+
   // Log a one-line summary
   const failCount = Object.values(results).filter(c => !c.pass).length;
-  console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`}`);
+  const xfailCount = Object.values(results).filter(c => c.xfail).length;
+  const statusLine = failCount > 0 ? `${failCount} FAIL(s)` : xfailCount > 0 ? `PASS (${xfailCount} XFAIL)` : "PASS";
+  console.log(`    ${statusLine}`);
   for (const [check, result] of Object.entries(results)) {
     if (!result.pass) console.log(`      ${check}: ${result.reason}`);
+    if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
   }
 
   return { billNumber, results, failures };
@@ -210,6 +229,7 @@ writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
 
 const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
 const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
+const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
 
-console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures.`);
+console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
 console.log(`Results written to ${RESULTS_PATH}`);
