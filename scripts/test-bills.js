@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Test harness — runs C1/C5/C6 checks against a local server.
+// Test harness — runs C1/C4/C5/C6 checks against a local server.
 // Usage: node scripts/test-bills.js
 // Requires server running at http://localhost:3000
 
@@ -21,38 +21,37 @@ const RESULTS_PATH = path.join(DATA_DIR, "test-results.json");
 
 const REQUEST_TIMEOUT_MS = 30000;
 
-const SEED = process.env.TEST_SEED ? Number(process.env.TEST_SEED) : Date.now();
 const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
 const SENTINELS = TEST_BILLS_CONFIG.sentinels;
 const KNOWN_BOILERPLATE = TEST_BILLS_CONFIG.knownBoilerplate || [];
 const KNOWN_ISSUES = TEST_BILLS_CONFIG.knownIssues || {};
 
-// ─── Seeded sampling ──────────────────────────────────────────────────────────
+const existing = existsSync(RESULTS_PATH)
+  ? JSON.parse(readFileSync(RESULTS_PATH, "utf8"))
+  : { runs: [] };
 
-function mulberry32(seed) {
-  return function () {
-    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+// ─── Round-robin coverage sampling ─────────────────────────────────────────
+// Walks the full bill pool in a fixed order so every bill is guaranteed to be
+// tested at least once, instead of relying on random sampling.
 
-function sampleBills() {
-  const rng = mulberry32(SEED);
+function buildCoveragePool() {
   const sentinelSet = new Set(SENTINELS);
-  const pool = BILL_INDEX.map(b => Number(b.bill_number)).filter(n => !sentinelSet.has(n));
-
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-
-  const fillCount = Math.max(0, SAMPLE_SIZE - SENTINELS.length);
-  return [...SENTINELS, ...pool.slice(0, fillCount)];
+  return BILL_INDEX.map(b => Number(b.bill_number))
+    .filter(n => !sentinelSet.has(n))
+    .sort((a, b) => a - b);
 }
 
-const billNumbers = sampleBills();
+const coveragePool = buildCoveragePool();
+const cursorStart = existing.coverageCursor || 0;
+const fillCount = Math.max(0, SAMPLE_SIZE - SENTINELS.length);
+const picked = [];
+for (let i = 0; i < fillCount; i++) {
+  picked.push(coveragePool[(cursorStart + i) % coveragePool.length]);
+}
+const cursorEnd = (cursorStart + fillCount) % coveragePool.length;
+const passesCompletedThisRun = Math.floor((cursorStart + fillCount) / coveragePool.length);
+
+const billNumbers = [...SENTINELS, ...picked];
 
 // ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
 // Exact entries checked first; knownBoilerplate from config matched as prefixes.
@@ -240,11 +239,7 @@ async function testBill(billNumber) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-const existing = existsSync(RESULTS_PATH)
-  ? JSON.parse(readFileSync(RESULTS_PATH, "utf8"))
-  : { runs: [] };
-
-const run = { runAt: new Date().toISOString(), seed: SEED, sentinels: SENTINELS, sampledBills: billNumbers, bills: [] };
+const run = { runAt: new Date().toISOString(), cursorStart, cursorEnd, sentinels: SENTINELS, sampledBills: billNumbers, bills: [] };
 
 console.log(`Running tests for ${billNumbers.length} bills in batches of ${BATCH_SIZE}…\n`);
 
@@ -263,11 +258,17 @@ for (let i = 0; i < billNumbers.length; i += BATCH_SIZE) {
 }
 
 existing.runs.push(run);
+existing.coverageCursor = cursorEnd;
+existing.coveragePasses = (existing.coveragePasses || 0) + passesCompletedThisRun;
 writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
 
 const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
 const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
 const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
 
+const allTestedBills = new Set(existing.runs.flatMap(r => r.sampledBills));
+const coveragePct = (allTestedBills.size / BILL_INDEX.length * 100).toFixed(1);
+
 console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
+console.log(`Coverage: ${allTestedBills.size}/${BILL_INDEX.length} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
 console.log(`Results written to ${RESULTS_PATH}`);
