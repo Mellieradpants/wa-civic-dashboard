@@ -106,6 +106,20 @@ function scoreC5(text) {
   return { pass: true };
 }
 
+function scoreC4(sectionPairs) {
+  for (const { sectionText, response } of sectionPairs) {
+    const normalized = sectionText.replace(/\s+/g, " ");
+    for (const s of (response.sentences || [])) {
+      if (s.lens === "fallback" || !s.anchorText) continue;
+      const anchor = s.anchorText.replace(/\s+/g, " ").trim();
+      if (!normalized.includes(anchor)) {
+        return { pass: false, reason: `anchor not found in source — "${anchor.slice(0, 60)}${anchor.length > 60 ? "…" : ""}"` };
+      }
+    }
+  }
+  return { pass: true };
+}
+
 function scoreC6(text) {
   if (text.includes("bE")) {
     const idx = text.indexOf("bE");
@@ -188,11 +202,13 @@ async function testBill(billNumber) {
 
   // Run plain-meaning pipeline for each section (English)
   const responses = [];
+  const sectionPairs = [];
   let combined = "";
   for (const sec of sections) {
     try {
       const r = await postJSON(`${BASE_URL}/api/plain-meaning`, { text: sec.text });
       responses.push(r);
+      sectionPairs.push({ sectionText: sec.text, response: r });
       if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
     } catch (err) {
       console.log(`    WARN: plain-meaning failed for section ${sec.id} — ${err.message}`);
@@ -202,6 +218,7 @@ async function testBill(billNumber) {
 
   const rawResults = {
     C1: scoreC1(combined, responses),
+    C4: scoreC4(sectionPairs),
     C5: scoreC5(combined),
     C6: scoreC6(combined),
   };
