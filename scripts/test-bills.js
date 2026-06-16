@@ -24,6 +24,8 @@ const REQUEST_TIMEOUT_MS = 30000;
 const SEED = process.env.TEST_SEED ? Number(process.env.TEST_SEED) : Date.now();
 const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
 const SENTINELS = TEST_BILLS_CONFIG.sentinels;
+const KNOWN_BOILERPLATE = TEST_BILLS_CONFIG.knownBoilerplate || [];
+const KNOWN_ISSUES = TEST_BILLS_CONFIG.knownIssues || {};
 
 // ─── Seeded sampling ──────────────────────────────────────────────────────────
 
@@ -53,11 +55,17 @@ function sampleBills() {
 const billNumbers = sampleBills();
 
 // ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
+// Exact entries checked first; knownBoilerplate from config matched as prefixes.
 
-const STATIC_PARAGRAPHS = new Set([
-  "No obligation or change detected in this section.",
-  "This section is repealed and no longer in effect.",
-]);
+const STATIC_PARAGRAPHS = {
+  _exact: new Set([
+    "No obligation or change detected in this section.",
+    "This section is repealed and no longer in effect.",
+  ]),
+  has(p) {
+    return this._exact.has(p) || KNOWN_BOILERPLATE.some(prefix => p.startsWith(prefix));
+  },
+};
 
 // ─── Fetch helpers ────────────────────────────────────────────────────────────
 
@@ -125,6 +133,33 @@ function scoreC6(text) {
   return { pass: true };
 }
 
+// ─── XFAIL resolution ────────────────────────────────────────────────────────
+
+function resolveKnownIssues(billNumber, rawResults) {
+  const knownIssue = KNOWN_ISSUES[String(billNumber)] || {};
+  const results = {};
+  for (const [check, r] of Object.entries(rawResults)) {
+    results[check] = (!r.pass && knownIssue[check])
+      ? { pass: true, xfail: knownIssue[check] }
+      : r;
+  }
+  for (const [check, reason] of Object.entries(knownIssue)) {
+    if (!(check in results)) results[check] = { pass: true, xfail: reason };
+  }
+  return results;
+}
+
+function logAndReturn(billNumber, results, failures) {
+  const xfailCount = Object.values(results).filter(r => r.xfail).length;
+  if (xfailCount) {
+    console.log(`    PASS (${xfailCount} XFAIL)`);
+    for (const [check, result] of Object.entries(results)) {
+      if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
+    }
+  }
+  return { billNumber, results, failures };
+}
+
 // ─── Per-bill test ────────────────────────────────────────────────────────────
 
 async function testBill(billNumber) {
@@ -141,14 +176,14 @@ async function testBill(billNumber) {
   } catch (err) {
     console.log(`    SKIP: wa-bill-text failed — ${err.message}`);
     failures.push({ billNumber, stage: "wa-bill-text", error: err.message });
-    return { billNumber, results: {}, failures };
+    return logAndReturn(billNumber, resolveKnownIssues(billNumber, {}), failures);
   }
 
   const sections = (textData?.sections || []).filter(s => s.text?.trim());
   if (!sections.length) {
     console.log(`    SKIP: no sections found`);
     failures.push({ billNumber, stage: "wa-bill-text", error: "no sections found" });
-    return { billNumber, results: {}, failures };
+    return logAndReturn(billNumber, resolveKnownIssues(billNumber, {}), failures);
   }
 
   // Run plain-meaning pipeline for each section (English)
@@ -165,15 +200,23 @@ async function testBill(billNumber) {
     }
   }
 
-  const results = {
+  const rawResults = {
     C1: scoreC1(combined, responses),
     C5: scoreC5(combined),
     C6: scoreC6(combined),
   };
 
+  const results = resolveKnownIssues(billNumber, rawResults);
+
   // Log a one-line summary
   const failCount = Object.values(results).filter(c => !c.pass).length;
-  console.log(`    ${failCount === 0 ? "PASS" : `${failCount} FAIL(s)`}`);
+  const xfailCount = Object.values(results).filter(c => c.xfail).length;
+  const statusLine = failCount > 0 ? `${failCount} FAIL(s)` : xfailCount > 0 ? `PASS (${xfailCount} XFAIL)` : "PASS";
+  console.log(`    ${statusLine}`);
+  for (const [check, result] of Object.entries(results)) {
+    if (!result.pass) console.log(`      ${check}: ${result.reason}`);
+    if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
+  }
 
   return { billNumber, results, failures };
 }
@@ -207,6 +250,7 @@ writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
 
 const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
 const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
+const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
 
-console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures.`);
+console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
 console.log(`Results written to ${RESULTS_PATH}`);

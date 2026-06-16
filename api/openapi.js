@@ -448,6 +448,13 @@ function buildSpec(baseUrl) {
         },
         PlainMeaningRequest: {
           type: "object",
+          properties: {
+            debug: {
+              type: "boolean",
+              description:
+                "When true, each entry in sentences[] includes a debug object with the actor/modal/action/conditions/deadlines fields used to render it and the lens template applied.",
+            },
+          },
           oneOf: [
             {
               required: ["text"],
@@ -560,6 +567,29 @@ function buildSpec(baseUrl) {
             missingSignals: { type: "array", items: { type: "string" } },
             controlFlags: { type: "array", items: { type: "string" } },
             status: { type: "string", enum: ["ok", "incomplete"] },
+            debug: {
+              description: "Only present when the request set debug: true. The actor/modal/action/conditions/deadlines fields used by the renderer, and the lens template applied. A single object for most sentences; an array with one entry per clause when a compound sentence (e.g. 'shall X and must Y') was split and rendered as separate clauses.",
+              oneOf: [
+                { $ref: "#/components/schemas/PlainMeaningDebugFields" },
+                {
+                  type: "array",
+                  items: { $ref: "#/components/schemas/PlainMeaningDebugFields" },
+                },
+              ],
+            },
+          },
+        },
+        PlainMeaningDebugFields: {
+          type: "object",
+          properties: {
+            actor: { type: "string", nullable: true },
+            modal: { type: "string" },
+            rawModal: { type: "string" },
+            action: { type: "string", nullable: true },
+            conditions: { type: "array", items: { type: "string" } },
+            deadlines: { type: "array", items: { type: "string" } },
+            enforcement: { type: "string", nullable: true },
+            templateUsed: { type: "string" },
           },
         },
         PlainMeaningResponse: {
