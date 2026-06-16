@@ -1,4 +1,13 @@
 {
   "sentinels": [5890, 9117, 2108, 2398, 1433],
-  "sampleSize": 25
+  "sampleSize": 25,
+  "knownBoilerplate": [
+    "Nothing in this section must be construed to authorize the possession, sale, or",
+    "New law — The credit claimed cannot exceed the tax that would otherwise be due"
+  ],
+  "knownIssues": {
+    "9117": {
+      "C6": "gubernatorial appointment — single sentence, no actionable provisions, wrong sentinel for duplication check"
+    }
+  }
 }
