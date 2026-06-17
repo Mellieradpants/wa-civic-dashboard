@@ -36,9 +36,8 @@ const existing = existsSync(RESULTS_PATH)
 
 function buildCoveragePool() {
   const sentinelSet = new Set(SENTINELS);
-  return BILL_INDEX.map(b => Number(b.bill_number))
-    .filter(n => !sentinelSet.has(n))
-    .sort((a, b) => a - b);
+  const numbers = BILL_INDEX.map(b => Number(b.bill_number)).filter(n => !sentinelSet.has(n));
+  return [...new Set(numbers)].sort((a, b) => a - b);
 }
 
 const coveragePool = buildCoveragePool();
@@ -266,9 +265,10 @@ const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
 const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
 const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
 
+const totalUniqueBills = coveragePool.length + SENTINELS.length;
 const allTestedBills = new Set(existing.runs.flatMap(r => r.sampledBills));
-const coveragePct = (allTestedBills.size / BILL_INDEX.length * 100).toFixed(1);
+const coveragePct = (allTestedBills.size / totalUniqueBills * 100).toFixed(1);
 
 console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
-console.log(`Coverage: ${allTestedBills.size}/${BILL_INDEX.length} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
+console.log(`Coverage: ${allTestedBills.size}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
 console.log(`Results written to ${RESULTS_PATH}`);
