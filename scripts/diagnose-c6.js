@@ -25,9 +25,7 @@ const STATIC_PARAGRAPHS = {
   },
 };
 
-const SENTINELS = [5890, 9117, 2108, 2398, 1433];
-const RANGE = Array.from({ length: 20 }, (_, i) => 1101 + i);
-const BILLS = [...SENTINELS, ...RANGE];
+const BILLS = [5890, 2398, 1433, 1101, 1104, 1109];
 
 async function getJSON(url) {
   const res = await fetch(url);
@@ -76,24 +74,42 @@ async function diagnoseBill(billNumber) {
     return;
   }
 
+  console.log(`BILL ${billNumber}: ${sections.length} sections — ids: ${sections.map(s => s.id).join(", ")}`);
+  const rawTextSeen = new Map();
+  for (const sec of sections) {
+    const norm = sec.text.replace(/\s+/g, " ").trim();
+    if (rawTextSeen.has(norm)) {
+      console.log(`BILL ${billNumber}: RAW SECTION TEXT DUPLICATE — section ${sec.id} has identical raw text to section ${rawTextSeen.get(norm)}`);
+    } else {
+      rawTextSeen.set(norm, sec.id);
+    }
+  }
+
   let combined = "";
+  const paragraphOrigin = [];
   for (const sec of sections) {
     try {
       const r = await postJSON(`${BASE_URL}/api/plain-meaning`, { text: sec.text });
-      if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
+      if (r.plainMeaning) {
+        combined += (combined ? "\n\n" : "") + r.plainMeaning;
+        for (const para of r.plainMeaning.split("\n\n")) {
+          paragraphOrigin.push({ sectionId: sec.id, para: para.trim() });
+        }
+      }
     } catch (err) {
       console.log(`BILL ${billNumber}: plain-meaning failed for section ${sec.id} — ${err.message}`);
     }
   }
 
-  const paragraphs = combined.split("\n\n").map(s => s.trim()).filter(Boolean);
-  const seen = new Set();
+  const paragraphs = paragraphOrigin.filter(po => po.para);
+  const firstSeenAt = new Map();
   let dupCount = 0;
-  for (const p of paragraphs) {
+  for (const { sectionId, para: p } of paragraphs) {
     if (STATIC_PARAGRAPHS.has(p)) continue;
-    if (seen.has(p)) {
+    if (firstSeenAt.has(p)) {
       dupCount++;
       console.log(`\n=== BILL ${billNumber}: DUPLICATE #${dupCount} ===`);
+      console.log(`FIRST SEEN IN SECTION: ${firstSeenAt.get(p)} — REPEATED IN SECTION: ${sectionId}`);
       console.log(`LENGTH: ${p.length} chars`);
       console.log(`FULL TEXT:\n${p}`);
       const close = closestBoilerplate(p);
@@ -104,7 +120,7 @@ async function diagnoseBill(billNumber) {
       );
       continue;
     }
-    seen.add(p);
+    firstSeenAt.set(p, sectionId);
   }
   if (!dupCount) console.log(`BILL ${billNumber}: no C6 duplication found`);
 }
