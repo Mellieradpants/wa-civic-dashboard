@@ -125,8 +125,32 @@ async function diagnoseBill(billNumber) {
   if (!dupCount) console.log(`BILL ${billNumber}: no C6 duplication found`);
 }
 
+async function debugSection(billNumber, sectionId) {
+  const textData = await getJSON(
+    `${BASE_URL}/api/wa-bill-text?${new URLSearchParams({ billNumber, biennium: BIENNIUM })}`
+  );
+  const sec = (textData?.sections || []).find(s => s.id === sectionId);
+  if (!sec) {
+    console.log(`BILL ${billNumber} ${sectionId}: NOT FOUND`);
+    return;
+  }
+  console.log(`\n##### BILL ${billNumber} ${sectionId} — RAW TEXT (${sec.text.length} chars) #####`);
+  console.log(sec.text);
+
+  const r = await postJSON(`${BASE_URL}/api/plain-meaning`, { text: sec.text, debug: true });
+  console.log(`\n##### BILL ${billNumber} ${sectionId} — ${r.sentences.length} RENDERED UNIT(S) #####`);
+  r.sentences.forEach((s, i) => {
+    console.log(`\n--- unit ${i} — lens: ${s.lens} — status: ${s.status} ---`);
+    console.log(`anchorText: ${s.anchorText}`);
+    console.log(`sentence (contains \\n\\n: ${s.sentence?.includes("\n\n")}):\n${s.sentence}`);
+    if (s.debug) console.log(`debug fields: ${JSON.stringify(s.debug)}`);
+  });
+}
+
 (async () => {
   for (const b of BILLS) {
     await diagnoseBill(b);
   }
+  await debugSection("1104", "section_6");
+  await debugSection("1104", "section_10");
 })();
