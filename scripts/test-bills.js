@@ -272,3 +272,6 @@ const coveragePct = (allTestedBills.size / totalUniqueBills * 100).toFixed(1);
 console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
 console.log(`Coverage: ${allTestedBills.size}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
 console.log(`Results written to ${RESULTS_PATH}`);
+
+console.log("\nFull results (bill-labeled, this run only):");
+console.log(JSON.stringify(run.bills, null, 2));
