@@ -1,0 +1,26 @@
+name: Debug Dump Bill Text
+
+on:
+  workflow_dispatch:
+    inputs:
+      billNumber:
+        required: true
+        default: "5890"
+      biennium:
+        required: true
+        default: "2025-26"
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - run: node scripts/_debug-dump-bill.js "${{ inputs.billNumber }}" "${{ inputs.biennium }}"
