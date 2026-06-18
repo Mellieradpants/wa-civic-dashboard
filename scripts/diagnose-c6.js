@@ -153,4 +153,6 @@ async function debugSection(billNumber, sectionId) {
   }
   await debugSection("1104", "section_6");
   await debugSection("1104", "section_10");
+  await debugSection("5890", "section_1");
+  await debugSection("5890", "section_2");
 })();
