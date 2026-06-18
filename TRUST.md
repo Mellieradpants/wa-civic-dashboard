@@ -33,3 +33,7 @@ Why these constraints exist
 Some of the behaviors described here may appear conservative. They are intentional. The purpose of this system is not to maximize the amount of plain language output it can produce. The purpose is to ensure that every rendered statement remains connected to the legislative record and that users can always distinguish between what the system knows and what it cannot determine.
 
 Future changes should preserve these principles, even if alternative implementations appear more convenient or produce more complete output.
+
+Trace meaning, not text. Preserve meaning, not style. Optimize for accuracy before efficiency.
+
+The renderer should never change wording for the sake of variety, flow, or avoiding repetition. If a transformation makes text read better but can't be traced word-for-word back to who the source text says is responsible for what, it's wrong — even if it looks cleaner. Repeated wording is acceptable. Lost or altered meaning is not.
