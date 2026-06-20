@@ -12,16 +12,16 @@ app.use(express.urlencoded({ extended: false }));
 // ─── Load and register all API handlers ──────────────────────────────────────
 
 const HANDLERS = [
-  { path: "/api/health",                 file: "./api/health.js",                 methods: ["GET"] },
-  { path: "/api/wa-bill-search",         file: "./api/wa-bill-search.js",         methods: ["GET"] },
-  { path: "/api/wa-bill-detail",         file: "./api/wa-bill-detail.js",         methods: ["GET"] },
-  { path: "/api/wa-bill-documents",      file: "./api/wa-bill-documents.js",      methods: ["GET"] },
-  { path: "/api/wa-bill-text",           file: "./api/wa-bill-text.js",           methods: ["GET"] },
-  { path: "/api/wa-bill-selection",      file: "./api/wa-bill-selection.js",      methods: ["GET"] },
-  { path: "/api/wa-bill-plain-summary",  file: "./api/wa-bill-plain-summary.js",  methods: ["GET"] },
-  { path: "/api/analyze",               file: "./api/analyze.js",               methods: ["POST"] },
-  { path: "/api/plain-meaning",          file: "./api/plain-meaning.js",          methods: ["POST"] },
-  { path: "/api/openapi",               file: "./api/openapi.js",               methods: ["GET"] },
+  { path: "/api/health",                 file: "./api/health.js",                 methods: ["GET"],  description: "Service health check — bill index and WA Legislature API reachability" },
+  { path: "/api/wa-bill-search",         file: "./api/wa-bill-search.js",         methods: ["GET"],  description: "Search the bill index by keyword" },
+  { path: "/api/wa-bill-detail",         file: "./api/wa-bill-detail.js",         methods: ["GET"],  description: "Fetch metadata and status for a bill by bill number" },
+  { path: "/api/wa-bill-documents",      file: "./api/wa-bill-documents.js",      methods: ["GET"],  description: "List available documents for a bill" },
+  { path: "/api/wa-bill-text",           file: "./api/wa-bill-text.js",           methods: ["GET"],  description: "Fetch bill text by bill number" },
+  { path: "/api/wa-bill-selection",      file: "./api/wa-bill-selection.js",      methods: ["GET"],  description: "Classify bill sentences (obligation, permission, condition, etc.) and extract references" },
+  { path: "/api/wa-bill-plain-summary",  file: "./api/wa-bill-plain-summary.js",  methods: ["GET"],  description: "Discontinued — replaced by /api/plain-meaning" },
+  { path: "/api/analyze",               file: "./api/analyze.js",               methods: ["POST"], description: "Discontinued — replaced by /api/plain-meaning" },
+  { path: "/api/plain-meaning",          file: "./api/plain-meaning.js",          methods: ["POST"], description: "Generate a deterministic plain-language summary from bill text" },
+  { path: "/api/openapi",               file: "./api/openapi.js",               methods: ["GET"],  description: "Full OpenAPI 3.1 spec for this API" },
 ];
 
 async function registerHandlers() {
@@ -73,6 +73,7 @@ app.get("/", (req, res) => {
     endpoints: HANDLERS.map((h) => ({
       path: h.path,
       methods: h.methods,
+      description: h.description,
     })),
   });
 });
