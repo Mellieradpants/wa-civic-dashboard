@@ -4,7 +4,7 @@
 
 Run these before assuming anything below is still current — verify reality first:
 
-1. Hit the deployed API's root route and `/api/openapi` — confirm what endpoints actually exist right now.
+1. Hit the deployed API's root route and `/api/openapi` — confirm what endpoints actually exist right now. The production URL is documented under "Server and deployment" below — use that one, not a guessed URL.
 2. Check `git status` and recent merges on `main` — know what's actually landed before assuming the state of any in-progress work.
 3. Check the test harness's cumulative stats (`data/wa/test-results.json` or the latest CI artifact) for current pass/fail numbers — don't reuse a number from a previous session without confirming it's still current.
 4. Note the Node version and dependency versions currently in use, in case anything's gone stale since the last session.
@@ -153,6 +153,7 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 - `/lib` is served as a static route so browser ES module imports (e.g. `import from '/lib/wa-adapter/index.js'`) resolve.
 - All API calls in the frontend use **relative URLs** — same origin, same server. Do not hardcode absolute URLs in the HTML pages.
 - The health check (`GET /api/health`) returns `serviceUrl` and `plainMeaningEndpoint` derived from the request `host` header — this is how deployed clients discover the Render URL.
+- **Production URL**: `https://https-github-com-mellieradpants-wa-civic.onrender.com` — this is the actual deployed service. Don't assume or guess a cleaner-looking URL like `wa-civic-dashboard-api.onrender.com` — that one doesn't exist, and hitting it will look exactly like the service is down when it isn't.
 
 ---
 

@@ -31,6 +31,7 @@ A pass/fail rubric (C1–C7) defines machine-scoreable structural checks, applie
 
 - Node.js, Express 4
 - Single Render service — Express serves both the API and the HTML pages
+- Live at `https://https-github-com-mellieradpants-wa-civic.onrender.com`
 - Bill index populated from WA Legislature API via GitHub Actions — updates daily
 - Upstash Redis — optional cache layer, degrades gracefully if absent
 - No database — bill index and synonym map are static JSON files
