@@ -145,6 +145,27 @@ function scoreC6(text) {
   return { pass: true };
 }
 
+// ─── Cumulative coverage across all runs ──────────────────────────────────────
+// A bill can be re-sampled in a later run after the round-robin pool wraps;
+// keep its most recent result so cumulative totals reflect current behavior.
+
+function computeCumulativeStats(runs) {
+  const latestByBill = new Map();
+  for (const run of runs) {
+    for (const bill of run.bills) {
+      if (Object.keys(bill.results).length) latestByBill.set(bill.billNumber, bill.results);
+    }
+  }
+  const byCheck = {};
+  for (const results of latestByBill.values()) {
+    for (const [check, result] of Object.entries(results)) {
+      if (!byCheck[check]) byCheck[check] = { passed: 0, failed: 0 };
+      byCheck[check][result.pass ? "passed" : "failed"]++;
+    }
+  }
+  return { testedBills: latestByBill.size, byCheck };
+}
+
 // ─── XFAIL resolution ────────────────────────────────────────────────────────
 
 function resolveKnownIssues(billNumber, rawResults) {
@@ -259,6 +280,7 @@ for (let i = 0; i < billNumbers.length; i += BATCH_SIZE) {
 existing.runs.push(run);
 existing.coverageCursor = cursorEnd;
 existing.coveragePasses = (existing.coveragePasses || 0) + passesCompletedThisRun;
+existing.cumulativeStats = computeCumulativeStats(existing.runs);
 writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
 
 const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
@@ -271,6 +293,13 @@ const coveragePct = (allTestedBills.size / totalUniqueBills * 100).toFixed(1);
 
 console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
 console.log(`Coverage: ${allTestedBills.size}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
+
+const { testedBills: cumulativeTested, byCheck: cumulativeByCheck } = existing.cumulativeStats;
+const cumulativePct = (cumulativeTested / totalUniqueBills * 100).toFixed(1);
+console.log(`Cumulative results across all runs (${cumulativeTested}/${totalUniqueBills} bills, ${cumulativePct}%):`);
+for (const [check, { passed, failed }] of Object.entries(cumulativeByCheck)) {
+  console.log(`  ${check}: ${passed} passed, ${failed} failed`);
+}
 console.log(`Results written to ${RESULTS_PATH}`);
 
 console.log("\nFull results (bill-labeled, this run only):");
