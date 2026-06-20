@@ -1,5 +1,16 @@
 # WA Civic Dashboard — Claude Session Briefing
 
+## Start-of-session checklist
+
+Run these before assuming anything below is still current — verify reality first:
+
+1. Hit the deployed API's root route and `/api/openapi` — confirm what endpoints actually exist right now.
+2. Check `git status` and recent merges on `main` — know what's actually landed before assuming the state of any in-progress work.
+3. Check the test harness's cumulative stats (`data/wa/test-results.json` or the latest CI artifact) for current pass/fail numbers — don't reuse a number from a previous session without confirming it's still current.
+4. Note the Node version and dependency versions currently in use, in case anything's gone stale since the last session.
+
+---
+
 ## What this project is
 
 A Washington State civic information dashboard. Backend is an Express 4 API deployed on Render (`server.js` + `render.yaml`). Frontend is three HTML pages (`index.html`, `legislation.html`, `voting.html`) served by the same Express server. The API also serves `/lib` as static ES modules for browser imports.
