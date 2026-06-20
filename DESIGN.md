@@ -49,6 +49,46 @@ The Extraction Framework
 
 Legislative information is structured around the 5W1H framework used throughout this project. What — what action, requirement, or change exists. Who — which people, agencies, or entities are affected. When — what dates, deadlines, or triggering conditions apply. Where — which jurisdiction, program, or context applies. Why — what explicit purpose or rationale is stated in the source, do not infer unstated motives. How — what mechanism, process, or implementation pathway exists.
 
+The Meaning Lineage Schema
+
+"Present source-anchored summaries" is a principle. This is its technical shape — what gets recorded so any sentence in the output can be traced back to the exact span of source text it came from, and through which steps it passed to get there.
+
+The lineage is a small graph. Nodes are snapshots of text. Edges are the steps that turned one snapshot into the next. The graph begins the moment sec.text exists — the cleaned, section-split text produced by wa-bill-text.js, the same text scoreC4 already treats as ground truth. Nothing earlier than that has a position in the graph; what happens before sec.text exists is recorded separately, in the pre-source log below.
+
+Node
+
+A node is a snapshot of text at one point in the pipeline. Each node holds:
+
+	1.	text — the text itself, exactly as it exists at this point.
+	2.	producedBy — the step that produced this snapshot (for example, L4 LNS, the amendment-header strip, or a sentence split).
+	3.	position — a character [start, end] range into sec.text. Not into raw HTML, not into any intermediate string. sec.text, the same text scoreC4 treats as ground truth.
+
+The first node in any section's graph is sec.text itself: position [0, sec.text.length], producedBy the section split in wa-bill-text.js.
+
+Edge
+
+An edge is the transformation connecting one node to the next. Each edge holds:
+
+	1.	step — which pipeline step ran (for example, L3 CFS, L5 AAC, the subsection-marker strip).
+	2.	rule — the specific rule or pattern the step checked (for example OBLIGATION_RE, the "is amended to read as follows" header strip, the subsection-marker pattern).
+	3.	matched — whether that rule matched and produced a change, or was checked and did not apply.
+
+A step that runs and finds nothing to act on still produces an edge. The rule was checked, it did not match, and that is recorded explicitly — it is not the same as the step never having run, and the schema does not collapse the two.
+
+A node can have more than one edge out. That is a branch point. Sentence splitting is the clearest case: one node goes in — the section text after the header and subsection-marker strips — and one edge comes out per resulting sentence, each landing on its own new node positioned at that sentence's [start, end] range within sec.text.
+
+Pre-Source Log
+
+Two deletions happen in wa-bill-text.js before sec.text exists: struck-text markup (the (( )) WA legislative markup for struck and substituted text) and structural breaks (the paragraph and row boundary tags — <br>, </p>, </div>, </tr> — collapsed into a single newline). Neither has a position in sec.text, because sec.text does not exist yet when either happens. Recording them as full nodes would imply a position they don't have.
+
+Instead, each is one entry in a separate, small log, not part of the main graph. Each entry holds:
+
+	1.	type — struck_text or structural_break.
+	2.	removed — the text or marker that was removed.
+	3.	location — where it was found, described relative to the raw document (for example, a raw-HTML offset, or "row boundary before section 3"). Never a sec.text range.
+
+The pre-source log exists so this information is not silently lost. It is just not claiming a position in sec.text that it cannot have.
+
 Where This Came From
 
 This framework was mapped from direct experience as the kind of person this system serves — working class, a parent, a community college student, someone who has had to navigate government information under pressure and found the existing tools inadequate.
