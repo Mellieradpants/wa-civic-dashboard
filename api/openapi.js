@@ -673,7 +673,7 @@ export default function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const proto = req.headers["x-forwarded-proto"] || "https";
+  const proto = req.headers["x-forwarded-proto"] || "http";
   const host = req.headers.host || "localhost";
   const baseUrl = `${proto}://${host}`;
 
