@@ -14,7 +14,7 @@ The goal is not just a passing build. The goal is a system whose behavior can be
 
 The Three Layers
 
-Layer 1 — Correctness. Is this output from the official source? Did anything get added that wasn't there? Every plain language sentence must trace back to the original bill text. No AI fill-in. No guessing. No content that doesn't exist in the source. What we check: did the system produce output, can every sentence be matched back to a line in the original bill, are there any artifacts that signal something went wrong. What failure means: a sentence appeared that has no source, or the output is empty with no explanation.
+Layer 1 — Correctness. Is this output from the official source? Did anything get added that wasn't there? Every plain language sentence must trace back to the original bill text. No AI fill-in. No guessing. No content that doesn't exist in the source. What we check: did the system produce output, does every sentence's anchor text appear as a literal match somewhere in the original bill text, are there any artifacts that signal something went wrong. What failure means: a sentence appeared whose anchor text cannot be found in the source, or the output is empty with no explanation.
 
 Layer 2 — Change Detection. When a new bill comes in or something upstream changes, does the pipeline handle it without breaking what was already working? What we check: does the same bill produce the same output every time it runs, when a new bill comes in does it process without breaking existing bills, are there duplicate sentences or output drift that wasn't there before. What failure means: something changed upstream and the pipeline didn't accommodate it cleanly.
 
