@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "engines": { "node": ">=18" },
+  "engines": { "node": ">=22" },
   "scripts": {
     "build": "node scripts/populate-bill-index.js",
     "start": "node server.js"
