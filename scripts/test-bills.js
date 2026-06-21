@@ -104,9 +104,11 @@ function scoreC1(text, responses) {
 // C4 (which only checks the final anchorText survives somewhere in the
 // section). Records with position: null (locateFailed) are skipped — those
 // are already honestly flagged as unverified, not silently wrong.
+// Reads the top-level lineage field so zero-unit sections (no surviving
+// units to carry a copy of the chain) are still checked.
 function scoreL1(sectionPairs) {
   for (const { sectionText, response } of sectionPairs) {
-    const records = response.units?.[0]?.lineage?.section?.records;
+    const records = response.lineage?.records;
     if (!records) continue;
     for (const r of records) {
       if (r.position == null || r.locateFailed) continue;

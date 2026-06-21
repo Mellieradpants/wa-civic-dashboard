@@ -78,6 +78,7 @@ export default async function handler(req, res) {
       hasContent,
       emptyReason,
       units: iscOutput.units || [],
+      lineage: iscOutput.lineage?.section ?? null,
       pipeline: {
         inputSource: units ? "isc_units" : "raw_text",
         unitCount: (iscOutput.units || units || []).length,
