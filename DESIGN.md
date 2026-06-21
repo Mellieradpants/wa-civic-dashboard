@@ -53,35 +53,33 @@ The Meaning Lineage Schema
 
 "Present source-anchored summaries" is a principle. This is its technical shape — what gets recorded so any sentence in the output can be traced back to the exact span of source text it came from, and through which steps it passed to get there.
 
-The lineage is a small graph. Nodes are snapshots of text. Edges are the steps that turned one snapshot into the next. The graph begins the moment sec.text exists — the cleaned, section-split text produced by wa-bill-text.js, the same text scoreC4 already treats as ground truth. Nothing earlier than that has a position in the graph; what happens before sec.text exists is recorded separately, in the pre-source log below.
+The lineage is a tree, not a general graph — every record has exactly one parent. The tree begins the moment sec.text exists — the cleaned, section-split text produced by wa-bill-text.js, the same text scoreC4 already treats as ground truth. Nothing earlier than that has a position in the tree; what happens before sec.text exists is recorded separately, in the pre-source log below.
 
-Node
+Record
 
-A node is a snapshot of text at one point in the pipeline. Each node holds:
+There is one record type, not a node/edge split — every snapshot of text already is the outcome of the step that produced it, so there's no need for a second object to describe that outcome. Each record holds:
 
-	1.	text — the text itself, exactly as it exists at this point.
-	2.	producedBy — the step that produced this snapshot (for example, L4 LNS, the amendment-header strip, or a sentence split).
-	3.	position — a character [start, end] range into sec.text. Not into raw HTML, not into any intermediate string. sec.text, the same text scoreC4 treats as ground truth.
+	1.	id — unique within its section's chain. IDs are assigned per-section, in pipeline step order — deterministic, not random, since the pipeline is single-threaded and this makes two runs on the same bill text reproducibly comparable later.
+	2.	parentNodeId — the record that produced this one. The root record (sec.text itself) has parentNodeId: null.
+	3.	text — the text itself, exactly as it exists at this point.
+	4.	producedBy — the step that produced this snapshot (for example, L4 LNS, the amendment-header strip, or a sentence split).
+	5.	position — a character [start, end] range into sec.text. Not into raw HTML, not into any intermediate string. sec.text, the same text scoreC4 treats as ground truth.
+	6.	rule — the specific rule or pattern the step checked (for example OBLIGATION_RE, the "is amended to read as follows" header strip, the subsection-marker pattern).
+	7.	matched — whether that rule matched and produced a change, or was checked and did not apply.
 
-The first node in any section's graph is sec.text itself: position [0, sec.text.length], producedBy the section split in wa-bill-text.js.
+The root record in any section's chain is sec.text itself: position [0, sec.text.length], producedBy the section split in wa-bill-text.js, parentNodeId: null.
 
-Edge
+A step that runs and finds nothing to act on still produces a record. The rule was checked, it did not match, and that is recorded explicitly — it is not the same as the step never having run, and the schema does not collapse the two.
 
-An edge is the transformation connecting one node to the next. Each edge holds:
+A record referenced as parentNodeId by more than one other record is a branch point — this is what makes "a node can have more than one edge out" concrete and checkable, rather than just a description of intent. Sentence splitting is the only current example: one record goes in — the section text after the header and subsection-marker strips — and one record comes out per resulting sentence, each pointing back at that same parentNodeId and positioned at that sentence's [start, end] range within sec.text.
 
-	1.	step — which pipeline step ran (for example, L3 CFS, L5 AAC, the subsection-marker strip).
-	2.	rule — the specific rule or pattern the step checked (for example OBLIGATION_RE, the "is amended to read as follows" header strip, the subsection-marker pattern).
-	3.	matched — whether that rule matched and produced a change, or was checked and did not apply.
-
-A step that runs and finds nothing to act on still produces an edge. The rule was checked, it did not match, and that is recorded explicitly — it is not the same as the step never having run, and the schema does not collapse the two.
-
-A node can have more than one edge out. That is a branch point. Sentence splitting is the clearest case: one node goes in — the section text after the header and subsection-marker strips — and one edge comes out per resulting sentence, each landing on its own new node positioned at that sentence's [start, end] range within sec.text.
+Forward note, not a build requirement: this schema assumes a tree — one parent per record. If a future step ever needs to merge multiple records into one (for example, combining clauses into a single unit at ISC assembly), that assumption breaks and the identity model will need revisiting then — not now.
 
 Pre-Source Log
 
-Two deletions happen in wa-bill-text.js before sec.text exists: struck-text markup (the (( )) WA legislative markup for struck and substituted text) and structural breaks (the paragraph and row boundary tags — <br>, </p>, </div>, </tr> — collapsed into a single newline). Neither has a position in sec.text, because sec.text does not exist yet when either happens. Recording them as full nodes would imply a position they don't have.
+Two deletions happen in wa-bill-text.js before sec.text exists: struck-text markup (the (( )) WA legislative markup for struck and substituted text) and structural breaks (the paragraph and row boundary tags — <br>, </p>, </div>, </tr> — collapsed into a single newline). Neither has a position in sec.text, because sec.text does not exist yet when either happens. Recording them as full records would imply a position they don't have.
 
-Instead, each is one entry in a separate, small log, not part of the main graph. Each entry holds:
+Instead, each is one entry in a separate, small log, not part of the main tree. Each entry holds:
 
 	1.	type — struck_text or structural_break.
 	2.	removed — the text or marker that was removed.
