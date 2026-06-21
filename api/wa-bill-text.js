@@ -52,6 +52,78 @@ function cleanHtmlToText(html) {
   );
 }
 
+const STRUCTURAL_BREAK_RE = /<br\s*\/?>|<\/p>|<\/div>|<\/tr>/gi;
+const STRUCK_TEXT_RE = /\(\([\s\S]*?\)\)/g;
+const HTML_SECTION_HEADING_RE = /(?:NEW SECTION\.\s*)?Sec\.\s+(\d+)\.?/gi;
+const TEXT_SECTION_HEADING_RE = /(?:^|\n)\s*(?:NEW SECTION\.\s*)?Sec\.\s+(\d+)\.?/gi;
+
+function findSectionStarts(str, headingRe) {
+  const starts = [];
+  for (const m of str.matchAll(headingRe)) {
+    starts.push({ index: m.index, sectionNumber: m[1] });
+  }
+  return starts;
+}
+
+function nearestSectionNumber(starts, offset) {
+  let current = null;
+  for (const s of starts) {
+    if (s.index <= offset) current = s;
+    else break;
+  }
+  return current ? current.sectionNumber : null;
+}
+
+// Struck-text and structural-break deletions happen before sec.text exists,
+// so they're tracked relative to the raw document / pre-strike text and
+// joined onto sections by nearest preceding section number — not by a
+// sec.text position, which none of these deletions ever had.
+function buildPreSourceLog(sections, rawHtml, preStruckText) {
+  const htmlStarts = findSectionStarts(rawHtml, HTML_SECTION_HEADING_RE);
+  const textStarts = findSectionStarts(preStruckText, TEXT_SECTION_HEADING_RE);
+  const bySectionNumber = new Map();
+  const preamble = [];
+
+  const record = (sectionNumber, entry) => {
+    if (sectionNumber == null) {
+      preamble.push(entry);
+      return;
+    }
+    if (!bySectionNumber.has(sectionNumber)) bySectionNumber.set(sectionNumber, []);
+    bySectionNumber.get(sectionNumber).push(entry);
+  };
+
+  for (const m of rawHtml.matchAll(STRUCTURAL_BREAK_RE)) {
+    record(nearestSectionNumber(htmlStarts, m.index), {
+      type: "structural_break",
+      removed: m[0],
+      location: `raw HTML offset ${m.index}`,
+    });
+  }
+
+  for (const m of preStruckText.matchAll(STRUCK_TEXT_RE)) {
+    const sectionNumber = nearestSectionNumber(textStarts, m.index);
+    record(sectionNumber, {
+      type: "struck_text",
+      removed: m[0],
+      location: sectionNumber
+        ? `Sec. ${sectionNumber} (pre-strip offset ${m.index})`
+        : `before first section (pre-strip offset ${m.index})`,
+    });
+  }
+
+  if (sections.length === 1 && sections[0].sectionNumber == null) {
+    sections[0].preSourceLog = [...preamble, ...[...bySectionNumber.values()].flat()];
+    return [];
+  }
+
+  for (const sec of sections) {
+    sec.preSourceLog = (sec.sectionNumber && bySectionNumber.get(sec.sectionNumber)) || [];
+  }
+
+  return preamble;
+}
+
 function findHtmlDocumentUrl(html, billNumber) {
   const matches = [...String(html).matchAll(/<a[^>]+href="([^"]+)"[^>]*>/gi)];
   for (const [, href] of matches) {
@@ -114,16 +186,20 @@ function splitIntoSections(text) {
 
 export async function fetchBillTextData(billNumber, biennium) {
   const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
-  const text = cleanHtmlToText(rawDocument)
+  const preStruckText = cleanHtmlToText(rawDocument);
+  const text = preStruckText
     .replace(/\(\([\s\S]*?\)\)/g, "")
     .replace(/ {2,}/g, " ")
     .trim();
+  const sections = splitIntoSections(text);
+  const preSourceLog = buildPreSourceLog(sections, rawDocument, preStruckText);
   return {
     billNumber,
     biennium,
     sourceDocument: { url: sourceUrl, file_type: "html" },
-    sections: splitIntoSections(text),
+    sections,
     text,
+    preSourceLog,
   };
 }
 
@@ -148,11 +224,13 @@ export default async function handler(req, res) {
 
   try {
     const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
-    const text = cleanHtmlToText(rawDocument)
+    const preStruckText = cleanHtmlToText(rawDocument);
+    const text = preStruckText
       .replace(/\(\([\s\S]*?\)\)/g, "")
       .replace(/ {2,}/g, " ")
       .trim();
     const sections = splitIntoSections(text);
+    const preSourceLog = buildPreSourceLog(sections, rawDocument, preStruckText);
 
     return res.status(200).json({
       sourceSystem: "Washington State Legislature official bill document",
@@ -162,6 +240,7 @@ export default async function handler(req, res) {
       textCharacterCount: text.length,
       sectionCount: sections.length,
       sections,
+      preSourceLog,
       textPreview: text.slice(0, 1200),
       note: "This endpoint extracts source text and rough sections only. Structural node parsing and plain meaning are later steps.",
     });
