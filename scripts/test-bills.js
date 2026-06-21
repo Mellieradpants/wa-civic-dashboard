@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Test harness — runs C1/C4/C5/C6 checks against a local server.
+// Test harness — runs C1/C4/C5/C6/L1 checks against a local server.
 // Usage: node scripts/test-bills.js
 // Requires server running at http://localhost:3000
 
@@ -94,6 +94,32 @@ function scoreC1(text, responses) {
   }
   if (text.includes("Failure to comply:")) {
     return { pass: false, reason: '"Failure to comply:" found in output' };
+  }
+  return { pass: true };
+}
+
+// L1: position fidelity — does slicing sec.text at a lineage record's own
+// recorded [start, end] actually reproduce that record's text? Catches a
+// record whose position silently points at the wrong span, as opposed to
+// C4 (which only checks the final anchorText survives somewhere in the
+// section). Records with position: null (locateFailed) are skipped — those
+// are already honestly flagged as unverified, not silently wrong.
+function scoreL1(sectionPairs) {
+  for (const { sectionText, response } of sectionPairs) {
+    const records = response.units?.[0]?.lineage?.section?.records;
+    if (!records) continue;
+    for (const r of records) {
+      if (r.position == null || r.locateFailed) continue;
+      const [start, end] = r.position;
+      const slice = sectionText.slice(start, end);
+      if (slice !== r.text) {
+        const truncate = (s) => `${s.slice(0, 60)}${s.length > 60 ? "…" : ""}`;
+        return {
+          pass: false,
+          reason: `position [${start}, ${end}] (producedBy=${r.producedBy}, id=${r.id}) sliced to "${truncate(slice)}" but record text is "${truncate(r.text)}"`,
+        };
+      }
+    }
   }
   return { pass: true };
 }
@@ -240,6 +266,7 @@ async function testBill(billNumber) {
     C4: scoreC4(sectionPairs),
     C5: scoreC5(combined),
     C6: scoreC6(combined),
+    L1: scoreL1(sectionPairs),
   };
 
   const results = resolveKnownIssues(billNumber, rawResults);
