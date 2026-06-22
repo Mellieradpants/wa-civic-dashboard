@@ -136,11 +136,15 @@ function scoreC5(text) {
 // walk that sentence's lineage chain (via parentNodeId) from the leaf
 // (sentence_split) back to the root (sec.text), re-running L1's own
 // position-fidelity check at EVERY record in the chain instead of just the
-// leaf. The first record where that check fails — or where a known-risk
-// step fired (subsection_marker_strip skipped right after a semicolon/
-// colon, which is the one place a marker is deliberately left untouched) —
-// is the most likely actual point of divergence; everything downstream of
-// it just inherited the broken text rather than caused it.
+// leaf. The first record where that check actually fails is the real point
+// of divergence; everything downstream of it just inherited the broken
+// text rather than caused it.
+// A record matching the known-risk pattern (subsection_marker_strip skipped
+// right after a semicolon/colon) is NOT treated as a divergence on its own —
+// that pattern is normal, correct behavior most of the time, and stopping
+// there without checking the fidelity slice would blame an innocent step
+// while a real break later in the chain goes unfound. It's only surfaced as
+// extra context when the fidelity check at that same record actually fails.
 // Position fidelity is checked whitespace-tolerant (collapsing runs to a
 // single space before comparing), not byte-exact like L1's own check —
 // collapseRunsAndTrim legitimately turns a single "\n" into " " on the very
@@ -164,20 +168,18 @@ function diagnoseLineageDivergence(sectionText, records, anchorText) {
 
   const truncate = (s) => `${s.slice(0, 60)}${s.length > 60 ? "…" : ""}`;
   const collapse = (s) => s.replace(/\s+/g, " ");
+  const isKnownRiskPattern = (r) =>
+    r.producedBy === "subsection_marker_strip" &&
+    r.rule === "marker after semicolon/colon — not a sentence boundary" &&
+    r.matched === true;
 
   for (const r of chain) {
-    if (
-      r.producedBy === "subsection_marker_strip" &&
-      r.rule === "marker after semicolon/colon — not a sentence boundary" &&
-      r.matched === true
-    ) {
-      return `likely point of divergence: step "${r.producedBy}" (id=${r.id}) — ${r.rule}; text at this step: "${truncate(r.text)}"`;
-    }
     if (r.position == null || r.locateFailed) continue;
     const [start, end] = r.position;
     const slice = sectionText.slice(start, end);
     if (collapse(slice) !== collapse(r.text)) {
-      return `divergence at step "${r.producedBy}" (id=${r.id}) — position [${start}, ${end}] sliced to "${truncate(slice)}" but record text is "${truncate(r.text)}"`;
+      const riskNote = isKnownRiskPattern(r) ? ` [known risk pattern: ${r.rule}]` : "";
+      return `divergence at step "${r.producedBy}" (id=${r.id})${riskNote} — position [${start}, ${end}] sliced to "${truncate(slice)}" but record text is "${truncate(r.text)}"`;
     }
   }
 
