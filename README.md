@@ -14,11 +14,7 @@ The bill index is populated from the WA Legislature API by a GitHub Actions work
 
 ---
 
-## Validation and known limitations
 
-Output is validated against a 338-bill sample drawn from the 2,808-bill 2025–26 session corpus at 95% confidence with a ±5% margin of error (finite population correction applied).
-
-A pass/fail rubric (C1–C7) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
 
 **Known pipeline limitations (confirmed, not fixable without scoped pipeline changes):**
 
