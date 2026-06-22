@@ -19,6 +19,14 @@ const TEST_BILLS_CONFIG = JSON.parse(readFileSync(path.join(DATA_DIR, "test-bill
 const BILL_INDEX = JSON.parse(readFileSync(path.join(DATA_DIR, "bill-index.json"), "utf8"));
 const RESULTS_PATH = path.join(DATA_DIR, "test-results.json");
 
+// Cached by build-bill-corpus.js — when present, bill text comes from here
+// instead of a live wa-bill-text fetch, so results don't depend on whether
+// WA Legislature's servers happen to be reachable on test day.
+const CORPUS_PATH = path.join(DATA_DIR, "bill-corpus.json");
+const BILL_CORPUS = existsSync(CORPUS_PATH)
+  ? new Map(JSON.parse(readFileSync(CORPUS_PATH, "utf8")).map(b => [String(b.bill_number), b]))
+  : null;
+
 const REQUEST_TIMEOUT_MS = 30000;
 
 const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
@@ -69,8 +77,20 @@ const STATIC_PARAGRAPHS = {
 
 async function getJSON(url) {
   const res = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.error ? `HTTP ${res.status}: ${body.error}` : `HTTP ${res.status}`);
+  }
   return res.json();
+}
+
+// wa-bill-text proxies app.leg.wa.gov — a failure there means WA Legislature's
+// servers weren't reachable, not that our own pipeline is broken. Keep that
+// distinct from a genuine application-level failure so a network outage
+// can't masquerade as a pipeline regression in the results.
+const UNREACHABLE_RE = /document search failed|bill document fetch failed|fetch failed|ECONNREFUSED|ENOTFOUND|ETIMEDOUT|AbortError|timed? ?out/i;
+function classifyFetchFailure(err) {
+  return UNREACHABLE_RE.test(err.message) ? "unreachable" : "error";
 }
 
 async function postJSON(url, body) {
@@ -271,7 +291,7 @@ function resolveKnownIssues(billNumber, rawResults) {
   return results;
 }
 
-function logAndReturn(billNumber, results, failures) {
+function logAndReturn(billNumber, results, failures, textSource) {
   const xfailCount = Object.values(results).filter(r => r.xfail).length;
   if (xfailCount) {
     console.log(`    PASS (${xfailCount} XFAIL)`);
@@ -279,7 +299,7 @@ function logAndReturn(billNumber, results, failures) {
       if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
     }
   }
-  return { billNumber, results, failures };
+  return { billNumber, results, failures, textSource };
 }
 
 // ─── Per-bill test ────────────────────────────────────────────────────────────
@@ -289,23 +309,34 @@ async function testBill(billNumber) {
 
   const failures = [];
 
-  // Fetch bill text sections
+  // Fetch bill text sections — cached corpus first, live fetch as fallback.
   let textData;
-  try {
-    textData = await getJSON(
-      `${BASE_URL}/api/wa-bill-text?${new URLSearchParams({ billNumber, biennium: BIENNIUM })}`
-    );
-  } catch (err) {
-    console.log(`    SKIP: wa-bill-text failed — ${err.message}`);
-    failures.push({ billNumber, stage: "wa-bill-text", error: err.message });
-    return logAndReturn(billNumber, resolveKnownIssues(billNumber, {}), failures);
+  let textSource = "corpus";
+  const cached = BILL_CORPUS?.get(billNumber);
+  if (cached?.sections?.length) {
+    textData = cached;
+  } else {
+    textSource = "live";
+    try {
+      textData = await getJSON(
+        `${BASE_URL}/api/wa-bill-text?${new URLSearchParams({ billNumber, biennium: BIENNIUM })}`
+      );
+    } catch (err) {
+      const kind = classifyFetchFailure(err);
+      console.log(`    SKIP: wa-bill-text ${kind} — ${err.message}`);
+      failures.push({ billNumber, stage: "wa-bill-text", kind, error: err.message });
+      // No fetch, no checks ran — leave results empty rather than letting
+      // resolveKnownIssues backfill an XFAIL "pass" for a check that never
+      // executed, which would make an untested bill look tested.
+      return logAndReturn(billNumber, {}, failures, textSource);
+    }
   }
 
   const sections = (textData?.sections || []).filter(s => s.text?.trim());
   if (!sections.length) {
     console.log(`    SKIP: no sections found`);
-    failures.push({ billNumber, stage: "wa-bill-text", error: "no sections found" });
-    return logAndReturn(billNumber, resolveKnownIssues(billNumber, {}), failures);
+    failures.push({ billNumber, stage: "wa-bill-text", kind: "error", error: "no sections found" });
+    return logAndReturn(billNumber, {}, failures, textSource);
   }
 
   // Run plain-meaning pipeline for each section (English)
@@ -344,7 +375,7 @@ async function testBill(billNumber) {
     if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
   }
 
-  return { billNumber, results, failures };
+  return { billNumber, results, failures, textSource };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -377,11 +408,23 @@ const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
 const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
 const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
 
+const stageFailures = run.bills.flatMap(b => b.failures).filter(f => f.stage === "wa-bill-text");
+const unreachableCount = stageFailures.filter(f => f.kind === "unreachable").length;
+const otherStageFailureCount = stageFailures.length - unreachableCount;
+const actuallyTestedCount = run.bills.filter(b => Object.keys(b.results).length).length;
+const corpusSourcedCount = run.bills.filter(b => b.textSource === "corpus").length;
+
 const totalUniqueBills = coveragePool.length + SENTINELS.length;
 const allTestedBills = new Set(existing.runs.flatMap(r => r.sampledBills));
 const coveragePct = (allTestedBills.size / totalUniqueBills * 100).toFixed(1);
 
-console.log(`\nDone. ${run.bills.length} bills tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
+console.log(`\nDone. ${run.bills.length} bills attempted, ${actuallyTestedCount} actually tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
+if (stageFailures.length) {
+  console.log(`Untested: ${stageFailures.length} (${unreachableCount} WA Legislature unreachable, ${otherStageFailureCount} other wa-bill-text error) — these are excluded from cumulative pass/fail stats below.`);
+}
+if (corpusSourcedCount) {
+  console.log(`Bill text source: ${corpusSourcedCount} from cached corpus, ${run.bills.length - corpusSourcedCount} from live fetch.`);
+}
 console.log(`Coverage: ${allTestedBills.size}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
 
 const { testedBills: cumulativeTested, byCheck: cumulativeByCheck } = existing.cumulativeStats;
