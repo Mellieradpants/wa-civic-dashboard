@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '22'
 
-      - run: npm install
+      - run: npm ci
 
       - run: node scripts/populate-bill-index.js
 
