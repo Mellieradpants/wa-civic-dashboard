@@ -205,7 +205,6 @@ export default async function handler(req, res) {
       source_url: officialSummaryUrl,
       service_xml_url: officialXmlUrl,
       raw_xml_excerpt: xml.slice(0, 1200),
-      note: "This endpoint fetches official bill metadata. Full bill text/document fetching will be added in the next adapter step.",
     });
   } catch (xmlError) {
     try {
