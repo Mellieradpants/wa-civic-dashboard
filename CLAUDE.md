@@ -70,7 +70,7 @@ All layers are in `lib/plain-meaning/pipeline.js`. The renderer (`lib/plain-mean
 - `scope_change` lens trigger is intentionally narrow: only `throughout`, `across all`, `all covered`, `applies? to`, `regardless of`. Generic words like `all/each/any` were removed to prevent false-positive scope_change classification on nearly every section.
 
 ### Section type detection (pre-pipeline step — do not remove)
-Before L1, each section is classified by type. The 6 types are: `addition`, `amendment`, `repeal`, `delayed`, `appropriation`, `standard`. The type is stored on the ISC unit as `sectionType`. This classification runs in `pipeline.js` (look for `classifySectionType`). Do not move this into a lens or post-render step — it must tag the unit before extraction so the renderer can use it.
+Before L1, each section is classified by type. The 6 types are: `addition`, `amendment`, `repeal`, `delayed`, `appropriation`, `standard`. The type is stored on the ISC unit as `sectionType`. This classification runs in `pipeline.js` (look for `detectSectionType`). Do not move this into a lens or post-render step — it must tag the unit before extraction so the renderer can use it.
 
 ---
 
@@ -78,7 +78,6 @@ Before L1, each section is classified by type. The 6 types are: `addition`, `ame
 
 - **"May [date]"** — month "May" triggers modal substitution before the temporal parser can protect date context.
 - **"shall be construed"** — misidentifies as wrong modal frame.
-- **"provided that" and "subject to"** — fail to substitute in Somali and Korean; entries exist in the dictionary, failure is in `sanitizeSomaliOutput` / `sanitizeKoreanOutput` — constrained, do not touch.
 
 ---
 
