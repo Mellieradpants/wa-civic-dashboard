@@ -1,0 +1,1108 @@
+{
+  "runs": [
+    {
+      "runAt": "2026-06-26T20:44:59.888Z",
+      "cursorStart": 0,
+      "cursorEnd": 20,
+      "sentinels": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433
+      ],
+      "sampledBills": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        1000,
+        1001,
+        1002,
+        1003,
+        1004,
+        1005,
+        1006,
+        1007,
+        1008,
+        1009,
+        1010,
+        1011,
+        1012,
+        1013,
+        1014,
+        1015,
+        1016,
+        1017,
+        1018,
+        1019
+      ],
+      "bills": [
+        {
+          "billNumber": "5890",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "5890",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "9117",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "9117",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "2108",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "2108",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "2398",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "2398",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1433",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1433",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1000",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1000",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1001",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1001",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1002",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1002",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1003",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1003",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1004",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1004",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1005",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1005",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1006",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1006",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1007",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1007",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1008",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1008",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1009",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1009",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1010",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1010",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1011",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1011",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1012",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1012",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1013",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1013",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1014",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1014",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1015",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1015",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1016",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1016",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1017",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1017",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1018",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1018",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1019",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1019",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        }
+      ]
+    },
+    {
+      "runAt": "2026-06-26T20:45:24.961Z",
+      "cursorStart": 20,
+      "cursorEnd": 40,
+      "sentinels": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433
+      ],
+      "sampledBills": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        1020,
+        1021,
+        1022,
+        1023,
+        1024,
+        1025,
+        1026,
+        1027,
+        1028,
+        1029,
+        1030,
+        1031,
+        1032,
+        1033,
+        1034,
+        1035,
+        1036,
+        1037,
+        1038,
+        1039
+      ],
+      "bills": [
+        {
+          "billNumber": "5890",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "5890",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "9117",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "9117",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "2108",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "2108",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "2398",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "2398",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1433",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1433",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1020",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1020",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1021",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1021",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1022",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1022",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1023",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1023",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1024",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1024",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1025",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1025",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1026",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1026",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1027",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1027",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1028",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1028",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1029",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1029",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1030",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1030",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1031",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1031",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1032",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1032",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1033",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1033",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1034",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1034",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1035",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1035",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1036",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1036",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1037",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1037",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1038",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1038",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1039",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1039",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        }
+      ]
+    },
+    {
+      "runAt": "2026-06-26T20:46:44.881Z",
+      "cursorStart": 40,
+      "cursorEnd": 60,
+      "sentinels": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433
+      ],
+      "sampledBills": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        1040,
+        1041,
+        1042,
+        1043,
+        1044,
+        1045,
+        1046,
+        1047,
+        1048,
+        1049,
+        1050,
+        1051,
+        1052,
+        1053,
+        1054,
+        1055,
+        1056,
+        1057,
+        1058,
+        1059
+      ],
+      "bills": [
+        {
+          "billNumber": "5890",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "5890",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "9117",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "9117",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "2108",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "2108",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "2398",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "2398",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1433",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1433",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1040",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1040",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1041",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1041",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1042",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1042",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1043",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1043",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1044",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1044",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1045",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1045",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1046",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1046",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1047",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1047",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1048",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1048",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1049",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1049",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1050",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1050",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1051",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1051",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1052",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1052",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1053",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1053",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1054",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1054",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1055",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1055",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1056",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1056",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1057",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1057",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1058",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1058",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1059",
+          "results": {},
+          "failures": [
+            {
+              "billNumber": "1059",
+              "stage": "wa-bill-text",
+              "kind": "unreachable",
+              "error": "HTTP 500: Document search failed: HTTP 403"
+            }
+          ],
+          "textSource": "live"
+        }
+      ]
+    }
+  ],
+  "coverageCursor": 60,
+  "coveragePasses": 0,
+  "cumulativeStats": {
+    "testedBills": 0,
+    "byCheck": {}
+  }
+}
