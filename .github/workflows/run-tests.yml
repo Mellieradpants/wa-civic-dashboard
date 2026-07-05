@@ -86,6 +86,16 @@ jobs:
           TEST_SAMPLE_SIZE: ${{ inputs.sample_size }}
         run: node scripts/test-bills.js
 
+      - name: Commit test results
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/wa/test-results.json
+          git diff --staged --quiet || git commit -m "Update test results from CI run"
+          git pull --rebase origin main
+          git push
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
