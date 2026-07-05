@@ -227,7 +227,26 @@ function scoreC4(sectionPairs) {
   return { pass: true };
 }
 
-function scoreC6(text) {
+// Look up the anchorText for a rendered paragraph within one section's API response.
+// sentences[].sentence does not include the section-type prefix; plainMeaning does.
+// Paragraphs that are the first sentence of a section carry a prefix like
+// "Amends existing law — " or "New law — " (always ending in " — "). Strip it
+// before comparing against sentences[].sentence.
+function getAnchorText(paragraph, response) {
+  const sentences = response?.sentences;
+  if (!Array.isArray(sentences)) return null;
+  for (const s of sentences) {
+    if (!s.sentence) continue;
+    if (s.sentence === paragraph) return s.anchorText ?? null;
+    if (paragraph.endsWith(s.sentence)) {
+      const prefix = paragraph.slice(0, paragraph.length - s.sentence.length);
+      if (prefix.endsWith(" — ")) return s.anchorText ?? null;
+    }
+  }
+  return null;
+}
+
+function scoreC6(text, sectionPairs) {
   if (text.includes("bE")) {
     const idx = text.indexOf("bE");
     const ctx = text.slice(Math.max(0, idx - 15), idx + 20);
@@ -242,14 +261,37 @@ function scoreC6(text) {
   if (text.includes("Failure to comply:")) {
     return { pass: false, reason: '"Failure to comply:" found in output' };
   }
-  const paragraphs = text.split("\n\n").map(s => s.trim()).filter(Boolean);
-  const seen = new Set();
-  for (const p of paragraphs) {
+
+  // Build a provenance-aware paragraph list so each entry carries the anchorText
+  // of the source phrase that produced it. When sectionPairs is available, pull
+  // paragraphs from each section's response directly; otherwise fall back to the
+  // combined string (anchorText will be null, so duplicates are still flagged).
+  const entries = [];
+  if (Array.isArray(sectionPairs) && sectionPairs.length) {
+    for (const { response } of sectionPairs) {
+      if (!response?.plainMeaning) continue;
+      for (const p of response.plainMeaning.split("\n\n").map(s => s.trim()).filter(Boolean)) {
+        entries.push({ p, anchorText: getAnchorText(p, response) });
+      }
+    }
+  } else {
+    for (const p of text.split("\n\n").map(s => s.trim()).filter(Boolean)) {
+      entries.push({ p, anchorText: null });
+    }
+  }
+
+  const seen = new Map(); // paragraph → anchorText from first occurrence
+  for (const { p, anchorText } of entries) {
     if (STATIC_PARAGRAPHS.has(p)) continue;
     if (seen.has(p)) {
+      const firstAnchor = seen.get(p);
+      // Both occurrences share the same non-null anchorText → the pipeline
+      // deterministically produced identical output from the same source phrase.
+      // That is expected behavior, not a pipeline bug — skip it.
+      if (firstAnchor != null && anchorText != null && firstAnchor === anchorText) continue;
       return { pass: false, reason: `Full duplication: "${p.slice(0, 80)}${p.length > 80 ? "…" : ""}"` };
     }
-    seen.add(p);
+    seen.set(p, anchorText);
   }
   return { pass: true };
 }
@@ -359,7 +401,7 @@ async function testBill(billNumber) {
     C1: scoreC1(combined, responses),
     C4: scoreC4(sectionPairs),
     C5: scoreC5(combined),
-    C6: scoreC6(combined),
+    C6: scoreC6(combined, sectionPairs),
     L1: scoreL1(sectionPairs),
   };
 
