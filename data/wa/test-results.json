@@ -1097,12 +1097,747 @@
           "textSource": "live"
         }
       ]
+    },
+    {
+      "runAt": "2026-07-05T13:54:14.834Z",
+      "cursorStart": 60,
+      "cursorEnd": 85,
+      "sentinels": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433
+      ],
+      "sampledBills": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        1060,
+        1061,
+        1062,
+        1063,
+        1064,
+        1065,
+        1066,
+        1067,
+        1068,
+        1069,
+        1070,
+        1071,
+        1072,
+        1073,
+        1074,
+        1075,
+        1076,
+        1077,
+        1079,
+        1080,
+        1081,
+        1082,
+        1083,
+        1084,
+        1085
+      ],
+      "bills": [
+        {
+          "billNumber": "5890",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"The department must grant credit on a day-for-day basis for any portion of a sus…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "9117",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "2108",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "2398",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"Any amount of credit earned under this section not claimed by the taxpayer in on…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1433",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"A licensee must verify that an individual has a valid permit before allowing the…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1060",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"The exemption under this section must be reduced by an amount equal to the value…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1061",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1062",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"Biomarker testing must be covered for the purposes of diagnosis, treatment, appr…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1063",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1064",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1065",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1066",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1067",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1068",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1069",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1070",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1071",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"The registration information submitted to the department under this section must…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1072",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1073",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1074",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1075",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1076",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1077",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1079",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1080",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"An action to enforce this section may be brought by a city attorney, county pros…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1081",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1082",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1083",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1084",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"Persons or activities which the state may not taxing under the United States Con…\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1085",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        }
+      ]
     }
   ],
-  "coverageCursor": 60,
+  "coverageCursor": 85,
   "coveragePasses": 0,
   "cumulativeStats": {
-    "testedBills": 0,
-    "byCheck": {}
+    "testedBills": 30,
+    "byCheck": {
+      "C1": {
+        "passed": 30,
+        "failed": 0
+      },
+      "C4": {
+        "passed": 30,
+        "failed": 0
+      },
+      "C5": {
+        "passed": 30,
+        "failed": 0
+      },
+      "C6": {
+        "passed": 22,
+        "failed": 8
+      },
+      "L1": {
+        "passed": 30,
+        "failed": 0
+      }
+    }
   }
 }
