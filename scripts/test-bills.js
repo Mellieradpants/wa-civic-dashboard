@@ -227,11 +227,16 @@ function scoreC4(sectionPairs) {
   return { pass: true };
 }
 
+// The four section-type prefixes renderISC prepends to the first sentence of a section.
+// "Effective …" carries a dynamic date, so it is matched by pattern rather than literal.
+const SECTION_PREFIX_RE = /^(?:New law|Amends existing law|Funding|Effective .+) — $/;
+
 // Look up the anchorText for a rendered paragraph within one section's API response.
 // sentences[].sentence does not include the section-type prefix; plainMeaning does.
 // Paragraphs that are the first sentence of a section carry a prefix like
-// "Amends existing law — " or "New law — " (always ending in " — "). Strip it
-// before comparing against sentences[].sentence.
+// "Amends existing law — " or "New law — ". Strip it before comparing against
+// sentences[].sentence, but only when the leftover is exactly one of the four known
+// prefixes — not merely anything that ends with " — ".
 function getAnchorText(paragraph, response) {
   const sentences = response?.sentences;
   if (!Array.isArray(sentences)) return null;
@@ -240,7 +245,7 @@ function getAnchorText(paragraph, response) {
     if (s.sentence === paragraph) return s.anchorText ?? null;
     if (paragraph.endsWith(s.sentence)) {
       const prefix = paragraph.slice(0, paragraph.length - s.sentence.length);
-      if (prefix.endsWith(" — ")) return s.anchorText ?? null;
+      if (SECTION_PREFIX_RE.test(prefix)) return s.anchorText ?? null;
     }
   }
   return null;
