@@ -319,7 +319,8 @@ function computeCumulativeStats(runs) {
       byCheck[check][result.pass ? "passed" : "failed"]++;
     }
   }
-  return { testedBills: latestByBill.size, byCheck };
+  const testedBillNumbers = [...latestByBill.keys()].sort((a, b) => a - b);
+  return { testedBills: latestByBill.size, testedBillNumbers, byCheck };
 }
 
 // ─── XFAIL resolution ────────────────────────────────────────────────────────
