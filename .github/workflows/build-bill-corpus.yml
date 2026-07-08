@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
+      # Not currently used — the corpus file is too large to commit to the
+      # repo, so this workflow only uploads it as an artifact. Left in case
+      # that changes later.
       contents: write
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +21,7 @@ jobs:
         with:
           node-version: '22'
 
-      - run: npm install
+      - run: npm ci
 
       - name: Clear old corpus
         run: rm -f data/wa/bill-corpus.json
