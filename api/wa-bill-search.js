@@ -220,7 +220,6 @@ function scoreRecord(record, query, bodyText) {
     record.status,
     record.plain_meaning_summary,
     record.summary,
-    ...(record.keywords || []),
     ...(record.aliases || []),
   ].filter(Boolean);
 

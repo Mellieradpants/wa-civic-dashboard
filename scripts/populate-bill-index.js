@@ -80,7 +80,6 @@ function parseLegislationInfo(block) {
     introducedDate: null,
     historyLine: null,
     committee: null,
-    keywords: [],
     source_url: `https://app.leg.wa.gov/billsummary?BillNumber=${billNumber}&Year=${YEAR}`,
     detail_api_path: `/api/wa-bill-detail?billNumber=${billNumber}&biennium=${BIENNIUM}`,
   };
