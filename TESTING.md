@@ -32,11 +32,13 @@ Each bill gets a PASS or a list of failures. Each failure includes the exact rea
 
 Sentinel Bills
 
-Sentinel bills are specific bills we always test, every run, because they cover edge cases the pipeline must handle correctly. They are not random. They are chosen because they are hard. To add a sentinel bill, add its bill number to data/wa/test-bills.json under the sentinels array.
+Sentinel bills are specific bills we always test, every run, because they cover edge cases the pipeline must handle correctly. They are not random. Some are chosen because a single bill is individually hard to parse. Others are chosen because they represent a whole structural category that behaves differently — for example, procedural chamber resolutions (HR/SR), which lack the Sec. N. structure most bills have. To add a sentinel bill, add its bill number to data/wa/test-bills.json under the sentinels array, along with a knownIssues entry explaining why its expected result differs from a normal bill.
 
 Test History
 
 Every run is appended to data/wa/test-results.json. That file is the record. It does not get overwritten — it grows over time so patterns of failure are visible across runs.
+
+The cumulative stats in data/wa/test-results.json include a testedBillNumbers array — the real, sorted list of every distinct bill number tested so far, not just a count. This can be checked directly against data/wa/bill-index.json to confirm coverage and catch any bill that's been skipped.
 
 The Ongoing Commitment
 
