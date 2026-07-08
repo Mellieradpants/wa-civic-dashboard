@@ -143,7 +143,7 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 ## Validation and compliance
 
 - Output is validated against a 338-bill sample from the 2,517-bill 2025–26 corpus (2,517 distinct bills; the index has 2,808 listings because substitute stages like HB/SHB/2SHB share one underlying bill) at 95% confidence, ±5% margin of error, finite population correction applied.
-- A pass/fail rubric (C1–C7) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
+- A pass/fail rubric (C1, C4, C5, C6, and L1) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
 
 ---
 
