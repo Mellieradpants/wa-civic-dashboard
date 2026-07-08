@@ -7,6 +7,9 @@ Run these before assuming anything below is still current — verify reality fir
 1. Hit the deployed API's root route and `/api/openapi` — confirm what endpoints actually exist right now. The production URL is documented under "Server and deployment" below — use that one, not a guessed URL.
 2. Check `git status` and recent merges on `main` — know what's actually landed before assuming the state of any in-progress work.
 3. Check the test harness's cumulative stats (`data/wa/test-results.json` or the latest CI artifact) for current pass/fail numbers — don't reuse a number from a previous session without confirming it's still current.
+
+`data/wa/test-results.json` is committed back to the repo automatically after every CI run of `run-tests.yml` — it is not just a build artifact. Read it directly from the repo for current pass/fail numbers; no need to pull an artifact.
+
 4. Note the Node version and dependency versions currently in use, in case anything's gone stale since the last session.
 
 ---
@@ -68,6 +71,7 @@ All layers are in `lib/plain-meaning/pipeline.js`. The renderer (`lib/plain-mean
 - `parseActorActionCondition` (L5 AAC) strips leading condition clauses from the actor string. If the pre-modal text starts with `if/when/unless/until/except/provided that/in the event`, the actor is taken from the text after the last comma, with prepositional-fragment tails rejected. No clean tail → actor is null.
 - `cleanAction` strips a leading comma+space from the action string — prevents `"must , at intervals..."` artifacts when a mid-clause modal is followed by a comma-delimited adverbial phrase.
 - `scope_change` lens trigger is intentionally narrow: only `throughout`, `across all`, `all covered`, `applies? to`, `regardless of`. Generic words like `all/each/any` were removed to prevent false-positive scope_change classification on nearly every section.
+- C6 (duplicate-paragraph check in `scripts/test-bills.js`) compares the source anchor text behind two matching rendered paragraphs before flagging a failure. Same source text producing the same output is expected and cleared; only genuinely different source text producing identical output counts as a real failure.
 
 ### Section type detection (pre-pipeline step — do not remove)
 Before L1, each section is classified by type. The 6 types are: `addition`, `amendment`, `repeal`, `delayed`, `appropriation`, `standard`. The type is stored on the ISC unit as `sectionType`. This classification runs in `pipeline.js` (look for `detectSectionType`). Do not move this into a lens or post-render step — it must tag the unit before extraction so the renderer can use it.
@@ -138,7 +142,7 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 ## Validation and compliance
 
-- Output is validated against a 338-bill sample from the 2,808-bill 2025–26 corpus at 95% confidence, ±5% margin of error, finite population correction applied.
+- Output is validated against a 338-bill sample from the 2,517-bill 2025–26 corpus (2,517 distinct bills; the index has 2,808 listings because substitute stages like HB/SHB/2SHB share one underlying bill) at 95% confidence, ±5% margin of error, finite population correction applied.
 - A pass/fail rubric (C1–C7) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
 
 ---
