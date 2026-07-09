@@ -1,0 +1,33 @@
+name: Debug 5890 Trace C6 Anchor Matching
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Start server
+        run: node server.js &
+
+      - name: Wait for server
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3000/api/health && break
+            if [ "$i" = "30" ]; then
+              echo "Server did not start within 30 seconds"
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - run: node scripts/_debug-5890-trace-c6.js
