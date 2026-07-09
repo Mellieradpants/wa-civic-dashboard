@@ -1,5 +1,5 @@
 {
-  "sentinels": [5890, 9117, 2108, 2398, 1433, 4600],
+  "sentinels": [5890, 9117, 2108, 2398, 1433, 4600, 4607],
   "sampleSize": 25,
   "knownBoilerplate": [
     "Nothing in this section must be construed to authorize the possession, sale, or",
@@ -18,6 +18,9 @@
     },
     "4600": {
       "C1": "HR record — no Sec. structure, no obligation language, expected empty output"
+    },
+    "4607": {
+      "C1": "EHR record — permanent House rules text exceeds the 50,000-character plain-meaning length guard, HTTP 400 response, expected empty output"
     }
   }
 }
