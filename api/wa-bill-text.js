@@ -147,6 +147,11 @@ async function fetchBillHtml(billNumber, biennium) {
   const docRes = await fetch(docUrl, { headers: { Accept: "text/html, text/plain, */*" } });
   if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
 
+  const contentType = docRes.headers.get("content-type") || "";
+  if (!/^(?:text\/html|text\/plain)\b/i.test(contentType)) {
+    throw new Error(`Expected HTML document but got content-type: ${contentType} (url: ${docUrl})`);
+  }
+
   return { html: await docRes.text(), sourceUrl: docUrl };
 }
 
