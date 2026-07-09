@@ -247,6 +247,17 @@ function getAnchorText(paragraph, response) {
       const prefix = paragraph.slice(0, paragraph.length - s.sentence.length);
       if (SECTION_PREFIX_RE.test(prefix)) return s.anchorText ?? null;
     }
+    // A compound-action split renders one source sentence as two clauses
+    // joined by "\n\n" within a single sentence field. scoreC6 splits the
+    // combined output on that same "\n\n" as part of normal paragraph
+    // separation, cutting this one record into two paragraph pieces that
+    // neither equal nor end with the full sentence field. Check each half
+    // of the compound sentence directly so both pieces still resolve back
+    // to the record they actually came from.
+    if (s.sentence.includes("\n\n")) {
+      const clauses = s.sentence.split("\n\n").map(c => c.trim());
+      if (clauses.includes(paragraph)) return s.anchorText ?? null;
+    }
   }
   return null;
 }
