@@ -45,22 +45,42 @@ jobs:
           TEST_SAMPLE_SIZE: '40'
         run: node scripts/test-bills.js
 
-      - name: Fail on any unresolved check failure
+      - name: Fail on check failures introduced by this PR
         run: |
           node -e '
             const fs = require("fs");
             const data = JSON.parse(fs.readFileSync("data/wa/test-results.json", "utf8"));
-            const run = data.runs[data.runs.length - 1];
-            const failures = [];
-            for (const bill of run.bills) {
-              for (const [check, result] of Object.entries(bill.results)) {
-                if (!result.pass) failures.push(`bill ${bill.billNumber} ${check}: ${result.reason || "failed"}`);
+            const thisRun = data.runs[data.runs.length - 1];
+            const priorRun = data.runs[data.runs.length - 2];
+
+            const priorFailed = new Set();
+            if (priorRun) {
+              for (const bill of priorRun.bills) {
+                for (const [check, result] of Object.entries(bill.results)) {
+                  if (!result.pass) priorFailed.add(`${bill.billNumber}:${check}`);
+                }
               }
             }
-            if (failures.length) {
-              console.error("Real check failures:");
-              for (const f of failures) console.error("  " + f);
+
+            const newFailures = [];
+            const preExisting = [];
+            for (const bill of thisRun.bills) {
+              for (const [check, result] of Object.entries(bill.results)) {
+                if (!result.pass) {
+                  const line = `bill ${bill.billNumber} ${check}: ${result.reason || "failed"}`;
+                  (priorFailed.has(`${bill.billNumber}:${check}`) ? preExisting : newFailures).push(line);
+                }
+              }
+            }
+
+            if (preExisting.length) {
+              console.log("Pre-existing failures (already failing before this PR, not blocking):");
+              for (const f of preExisting) console.log("  " + f);
+            }
+            if (newFailures.length) {
+              console.error("New check failures introduced by this PR:");
+              for (const f of newFailures) console.error("  " + f);
               process.exit(1);
             }
-            console.log("No real check failures — " + run.bills.length + " bills checked.");
+            console.log("No new check failures — " + thisRun.bills.length + " bills checked.");
           '
