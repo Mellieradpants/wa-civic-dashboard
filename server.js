@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 
 const HANDLERS = [
   { path: "/api/health",                 file: "./api/health.js",                 methods: ["GET"],  description: "Service health check — bill index and WA Legislature API reachability" },
+  { path: "/api/testing-stats",          file: "./api/testing-stats.js",          methods: ["GET"],  description: "Current corpus size and cumulative tested-bill count for the validation disclaimer" },
   { path: "/api/wa-bill-search",         file: "./api/wa-bill-search.js",         methods: ["GET"],  description: "Search the bill index by keyword" },
   { path: "/api/wa-bill-detail",         file: "./api/wa-bill-detail.js",         methods: ["GET"],  description: "Fetch metadata and status for a bill by bill number" },
   { path: "/api/wa-bill-documents",      file: "./api/wa-bill-documents.js",      methods: ["GET"],  description: "List available documents for a bill" },
