@@ -21,9 +21,6 @@
     },
     "4607": {
       "C1": "EHR record — permanent House rules text exceeds the 50,000-character plain-meaning length guard, HTTP 400 response, expected empty output"
-    },
-    "1433": {
-      "C6": "two sections word the same civil-penalties clause differently (\"shall\" vs \"must\"); renderer.js normalizes both to \"must\" by design, so they render identically — confirmed genuine source difference, not a pipeline bug"
     }
   }
 }
