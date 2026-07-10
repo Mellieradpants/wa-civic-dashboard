@@ -533,7 +533,7 @@
   </nav>
 
   <main>
-    <p class="disclosure-notice">Plain language summaries are generated automatically from official Washington State Legislature source documents. This tool is currently in active testing. Output is validated against a 338-bill sample drawn from the 2,808-bill 2025–26 session corpus at 95% confidence with a ±5% margin of error. This tool is intended to support understanding of Washington State legislation and does not constitute legal advice. Always refer to the official source bill for authoritative legal text.</p>
+    <p id="testing-disclosure" class="disclosure-notice">Plain language summaries are generated automatically from official Washington State Legislature source documents. This tool is currently in active testing. Output is validated against a sample of the 2025–26 session corpus at 95% confidence with a ±5% margin of error. This tool is intended to support understanding of Washington State legislation and does not constitute legal advice. Always refer to the official source bill for authoritative legal text.</p>
 
     <section class="search-panel" aria-label="Search legislation">
       <h2>Search Washington bills</h2>
@@ -1226,6 +1226,21 @@
         runSearch();
       }
     });
+
+    (async function loadTestingStats() {
+      try {
+        const response = await fetch("/api/testing-stats", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const { totalDistinctBills, testedBills } = await response.json();
+        if (!Number.isFinite(totalDistinctBills) || !Number.isFinite(testedBills)) {
+          throw new Error("Invalid testing stats response");
+        }
+        document.getElementById("testing-disclosure").textContent =
+          `Plain language summaries are generated automatically from official Washington State Legislature source documents. This tool is currently in active testing. Output is validated against a ${testedBills}-bill sample drawn from the ${totalDistinctBills}-bill 2025–26 session corpus at 95% confidence with a ±5% margin of error. This tool is intended to support understanding of Washington State legislation and does not constitute legal advice. Always refer to the official source bill for authoritative legal text.`;
+      } catch (error) {
+        console.error("Testing stats unavailable:", error);
+      }
+    })();
   </script>
   
 </body>
