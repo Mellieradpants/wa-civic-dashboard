@@ -63,13 +63,19 @@ const billNumbers = [...SENTINELS, ...picked];
 // ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
 // Exact entries checked first; knownBoilerplate from config matched as prefixes.
 
+// renderISC prepends one of four section-type prefixes to a section's first sentence
+// (see SECTION_PREFIX_RE below); the no-obligation message renders identically across
+// every section of the same type, which is expected, not a duplication bug. The
+// "Effective …" prefix carries a dynamic date, so it's matched by pattern, not a literal.
+const PREFIXED_NO_OBLIGATION_RE = /^(?:New law|Amends existing law|Funding|Effective [^—\n]+) — No obligation or change detected in this section\.$/;
+
 const STATIC_PARAGRAPHS = {
   _exact: new Set([
     "No obligation or change detected in this section.",
     "This section is repealed and no longer in effect.",
   ]),
   has(p) {
-    return this._exact.has(p) || KNOWN_BOILERPLATE.some(prefix => p.startsWith(prefix));
+    return this._exact.has(p) || PREFIXED_NO_OBLIGATION_RE.test(p) || KNOWN_BOILERPLATE.some(prefix => p.startsWith(prefix));
   },
 };
 
