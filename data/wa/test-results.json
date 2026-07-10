@@ -68309,9 +68309,732 @@
           "textSource": "corpus"
         }
       ]
+    },
+    {
+      "runAt": "2026-07-10T19:54:40.596Z",
+      "cursorStart": 87,
+      "cursorEnd": 110,
+      "sentinels": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        4600,
+        4607
+      ],
+      "sampledBills": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        4600,
+        4607,
+        1088,
+        1089,
+        1090,
+        1091,
+        1092,
+        1093,
+        1094,
+        1095,
+        1096,
+        1097,
+        1098,
+        1099,
+        1100,
+        1101,
+        1102,
+        1103,
+        1104,
+        1105,
+        1106,
+        1107,
+        1108,
+        1109,
+        1110
+      ],
+      "bills": [
+        {
+          "billNumber": "5890",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "9117",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "2108",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "2398",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1433",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"The board must impose civil penalties under this section in the manner provided …\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "4600",
+          "results": {
+            "C1": {
+              "pass": true,
+              "xfail": "HR record — no Sec. structure, no obligation language, expected empty output"
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [
+            {
+              "billNumber": "4600",
+              "stage": "plain-meaning",
+              "error": "section section_1: HTTP 400"
+            }
+          ],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "4607",
+          "results": {
+            "C1": {
+              "pass": true,
+              "xfail": "EHR record — permanent House rules text exceeds the 50,000-character plain-meaning length guard, HTTP 400 response, expected empty output"
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [
+            {
+              "billNumber": "4607",
+              "stage": "plain-meaning",
+              "error": "section section_1: HTTP 400"
+            }
+          ],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1088",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1089",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1090",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1091",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1092",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1093",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1094",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1095",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1096",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1097",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1098",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1099",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1100",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1101",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1102",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1103",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1104",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1105",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1106",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1107",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1108",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1109",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1110",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        }
+      ]
     }
   ],
-  "coverageCursor": 87,
+  "coverageCursor": 110,
   "coveragePasses": 1,
   "cumulativeStats": {
     "testedBills": 2512,
