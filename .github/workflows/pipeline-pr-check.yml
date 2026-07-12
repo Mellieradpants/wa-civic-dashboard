@@ -51,13 +51,22 @@ jobs:
             const fs = require("fs");
             const data = JSON.parse(fs.readFileSync("data/wa/test-results.json", "utf8"));
             const thisRun = data.runs[data.runs.length - 1];
-            const priorRun = data.runs[data.runs.length - 2];
+            const priorRuns = data.runs.slice(0, data.runs.length - 1);
 
-            const priorFailed = new Set();
-            if (priorRun) {
-              for (const bill of priorRun.bills) {
+            // For each bill+check, the baseline is whichever run most recently
+            // actually sampled that bill — not just the single run immediately
+            // before this one (which may have sampled a different random 40
+            // bills and missed this one entirely), and not the full history
+            // either (which would let an old, already-fixed failure excuse a
+            // genuine new regression that happens to share a bill number).
+            // Scanning newest-to-oldest and keeping only the first match per
+            // key gives the most recent result, whether pass or fail.
+            const mostRecentPriorResult = new Map();
+            for (let i = priorRuns.length - 1; i >= 0; i--) {
+              for (const bill of priorRuns[i].bills) {
                 for (const [check, result] of Object.entries(bill.results)) {
-                  if (!result.pass) priorFailed.add(`${bill.billNumber}:${check}`);
+                  const key = `${bill.billNumber}:${check}`;
+                  if (!mostRecentPriorResult.has(key)) mostRecentPriorResult.set(key, result.pass);
                 }
               }
             }
@@ -67,14 +76,19 @@ jobs:
             for (const bill of thisRun.bills) {
               for (const [check, result] of Object.entries(bill.results)) {
                 if (!result.pass) {
+                  const key = `${bill.billNumber}:${check}`;
                   const line = `bill ${bill.billNumber} ${check}: ${result.reason || "failed"}`;
-                  (priorFailed.has(`${bill.billNumber}:${check}`) ? preExisting : newFailures).push(line);
+                  // Only a confirmed prior failure for this exact bill+check
+                  // excuses it. No prior sample at all (undefined) or a prior
+                  // pass both count as new, so a real regression can never
+                  // hide behind "this bill was never checked before."
+                  (mostRecentPriorResult.get(key) === false ? preExisting : newFailures).push(line);
                 }
               }
             }
 
             if (preExisting.length) {
-              console.log("Pre-existing failures (already failing before this PR, not blocking):");
+              console.log("Pre-existing failures (already failing the last time this bill+check was sampled, not blocking):");
               for (const f of preExisting) console.log("  " + f);
             }
             if (newFailures.length) {
