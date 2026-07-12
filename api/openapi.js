@@ -490,6 +490,18 @@ function buildSpec(baseUrl) {
                   type: "array",
                   items: { type: "string", enum: ["obligation", "permission", "prohibition"] },
                 },
+                subordinateClauseSignals: {
+                  type: "array",
+                  description: "Optional. One entry per relative clause (which/that/who) found to carry its own modal word, separate from the main clause's. Absent or empty on units that predate this field.",
+                  items: {
+                    type: "object",
+                    properties: {
+                      marker: { type: "string", enum: ["which", "that", "who"] },
+                      clauseText: { type: "string" },
+                      signal: { type: "string", enum: ["obligation", "permission", "prohibition"], nullable: true },
+                    },
+                  },
+                },
               },
             },
             parse: {
