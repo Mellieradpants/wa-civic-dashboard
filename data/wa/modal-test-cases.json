@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "id": "aggrieved-original-motivating-case",
+      "description": "The original case the whole-sentence obligation-priority override was built to handle correctly: a short relative clause with its own permission modal, followed by the main clause's own obligation modal.",
+      "sentence": "Any person who may be aggrieved shall file a written objection within 10 days.",
+      "expectedPrimary": "obligation",
+      "expectedAdditional": [
+        { "marker": "who", "signal": "permission", "clauseText": "who may be aggrieved" }
+      ]
+    },
+    {
+      "id": "bill-2366-permission-flipped-to-obligation",
+      "description": "The bug found in bill 2366: a main-clause permission wrongly forced to obligation by an unrelated relative clause's own obligation modal, before PR #108.",
+      "sentence": "The school directors, school superintendents, other school representatives or superintendent candidates may be advanced sufficient sums to cover their anticipated expenses in accordance with rules and regulations promulgated by the state auditor and which shall substantially conform to the procedures provided in RCW 43.03.150 through 43.03.210.",
+      "expectedPrimary": "permission",
+      "expectedAdditional": [
+        { "marker": "which", "signal": "obligation", "clauseText": "which shall substantially conform to the procedures provided in RCW 43.03.150 through 43.03.210." }
+      ]
+    },
+    {
+      "id": "bill-5380-two-that-clauses",
+      "description": "Bill 5380: a main-clause permission with two separate 'PROVIDED, That...' relative clauses, one carrying a prohibition and one an obligation, both correctly isolated from the main clause.",
+      "sentence": "The department of ecology or board may require such notice to be accompanied by a fee and determine the amount of such fee: PROVIDED, That the amount of the fee may not exceed the cost of reviewing the plans, specifications, and other information and administering such notice: PROVIDED FURTHER, That any such notice given or notice of construction application submitted to either the board or to the department of ecology shall preclude a further submittal of a duplicate application to any board or to the department of ecology.",
+      "expectedPrimary": "permission",
+      "expectedAdditional": [
+        { "marker": "that", "signal": "prohibition", "clauseText": "That the amount of the fee may not exceed the cost of reviewing the plans, specifications, and other information and administering such notice: PROVIDED FURTHER," },
+        { "marker": "that", "signal": "obligation", "clauseText": "That any such notice given or notice of construction application submitted to either the board or to the department of ecology shall preclude a further submittal of a duplicate application to any board or to the department of ecology." }
+      ]
+    },
+    {
+      "id": "bill-1139-two-back-to-back-relative-clauses",
+      "description": "The multi-relative-clause bug found while investigating bill 1139: a first 'which' clause with no modal of its own must not swallow the modal belonging to a second, later 'which' clause.",
+      "sentence": "(18) If the present conviction is for failure to register as a sex offender under RCW 9A.44.130 or 9A.44.132 , count priors as in subsections (7) through (11) and (13) through (16) of this section; however count three points for each adult prior sex offense conviction and juvenile prior sex offense conviction which is scorable under subsection (1)(b) of this section, excluding adult prior convictions for failure to register as a sex offender under RCW 9A.44.130 or 9A.44.132 , which shall count as one point.",
+      "expectedPrimary": null,
+      "expectedAdditional": [
+        { "marker": "which", "signal": "obligation", "clauseText": "which shall count as one point." }
+      ]
+    },
+    {
+      "id": "baseline-plain-permission",
+      "description": "A plain permission sentence with no relative clause at all, guarding against a future change breaking the ordinary, common case.",
+      "sentence": "The board may adopt rules to implement this chapter.",
+      "expectedPrimary": "permission",
+      "expectedAdditional": []
+    },
+    {
+      "id": "baseline-plain-obligation",
+      "description": "A plain obligation sentence with no relative clause at all, guarding against a future change breaking the ordinary, common case.",
+      "sentence": "The department shall submit an annual report to the legislature by June 30th of each year.",
+      "expectedPrimary": "obligation",
+      "expectedAdditional": []
+    }
+  ]
+}
