@@ -50,6 +50,23 @@
       "sentence": "The department shall submit an annual report to the legislature by June 30th of each year.",
       "expectedPrimary": "obligation",
       "expectedAdditional": []
+    },
+    {
+      "id": "bill-1251-two-genuine-relative-clauses",
+      "description": "Bill 1251: a main-clause permission with two genuine relative clauses ('which' and 'who'), both carrying their own obligation modal, both correctly isolated from the main clause.",
+      "sentence": "The commission may establish rules governing mandatory continuing education requirements which shall be met by physicians applying for renewal of licenses, including a requirement that any physician who in the normal course of practice may be required to certify a report of death under chapter 70.58A RCW has received training on entering information into the vital records system operated by the department of health.",
+      "expectedPrimary": "permission",
+      "expectedAdditional": [
+        { "marker": "which", "signal": "obligation", "clauseText": "which shall be met by physicians applying for renewal of licenses, including a requirement" },
+        { "marker": "who", "signal": "obligation", "clauseText": "who in the normal course of practice may be required to certify a report of death under chapter 70.58A RCW has received training on entering information into the vital records system operated by the department of health." }
+      ]
+    },
+    {
+      "id": "baseline-plain-prohibition",
+      "description": "A plain prohibition sentence with no relative clause at all, guarding against a future change breaking the ordinary, common case.",
+      "sentence": "A person shall not operate a motor vehicle without a valid license.",
+      "expectedPrimary": "prohibition",
+      "expectedAdditional": []
     }
   ]
 }
