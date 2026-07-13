@@ -43,14 +43,4 @@ jobs:
           fi
 
       - name: Run comparison
-        run: node scripts/_debug-new-design-comparison.js > /tmp/comparison-output.txt 2>&1 || true
-
-      - name: Show summary (head)
-        run: head -n 20 /tmp/comparison-output.txt
-
-      - name: Upload full output
-        uses: actions/upload-artifact@v4
-        with:
-          name: new-design-comparison-${{ github.run_id }}
-          path: /tmp/comparison-output.txt
-          retention-days: 30
+        run: node scripts/_debug-new-design-comparison.js
