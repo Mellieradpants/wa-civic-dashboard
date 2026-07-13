@@ -193,19 +193,25 @@ for (const bill of CORPUS) {
   }
 }
 
+const outLines = [];
+outLines.push(`Total sentences scanned: ${totalSentences}`);
+outLines.push(`Candidate sentences (contain which/that/who/including/excluding): ${candidateSentences}`);
+outLines.push(`Same classification under old vs new design: ${sameCount}`);
+outLines.push(`Different classification under old vs new design: ${diffCount}`);
+outLines.push("");
+outLines.push("=== ALL DIFFERENCES (real before/after) ===");
+for (const d of diffs) {
+  outLines.push("=".repeat(80));
+  outLines.push(`BILL: ${d.billNumber}`);
+  outLines.push(`SENTENCE: ${JSON.stringify(d.sentence)}`);
+  outLines.push(`OLD: ${JSON.stringify(d.oldResult)}`);
+  outLines.push(`NEW: ${JSON.stringify(d.newResult)}`);
+}
+
 console.log("Total sentences scanned:", totalSentences);
 console.log("Candidate sentences (contain which/that/who/including/excluding):", candidateSentences);
 console.log("Same classification under old vs new design:", sameCount);
 console.log("Different classification under old vs new design:", diffCount);
-console.log();
-console.log("=== ALL DIFFERENCES (real before/after) ===");
-for (const d of diffs) {
-  console.log("=".repeat(80));
-  console.log("BILL:", d.billNumber);
-  console.log("SENTENCE:", JSON.stringify(d.sentence));
-  console.log("OLD:", JSON.stringify(d.oldResult));
-  console.log("NEW:", JSON.stringify(d.newResult));
-}
 
 // ─── Bill 5118 explicit trace, run through both the real old runPipeline and
 // the new-design local reimplementation, for direct side-by-side comparison ──
@@ -251,3 +257,25 @@ if (realCorpusSentence5118) {
   const newReal = newDetectSignals(realCorpusSentence5118);
   console.log("NEW on real corpus sentence:", JSON.stringify(newReal));
 }
+
+// ─── Write full results to a file in the repo checkout so the complete
+// diff list survives regardless of job-log size limits — committed by the
+// workflow, read directly, then deleted along with the rest of this temp setup.
+import { writeFileSync } from "node:fs";
+const reportLines = [
+  `Total sentences scanned: ${totalSentences}`,
+  `Candidate sentences (contain which/that/who/including/excluding): ${candidateSentences}`,
+  `Same classification under old vs new design: ${sameCount}`,
+  `Different classification under old vs new design: ${diffCount}`,
+  "",
+  "=== BILL 5118 EXPLICIT TRACE ===",
+  `SENTENCE: ${JSON.stringify(BILL_5118_SENTENCE)}`,
+  `OLD (real runPipeline): ${JSON.stringify({ matchedSignals: oldUnit?.tetherAnchor.matchedSignals ?? null, subordinateClauseSignals: oldUnit?.tetherAnchor.subordinateClauseSignals ?? null })}`,
+  `NEW (design reimplementation): ${JSON.stringify(newResult5118)}`,
+  `REAL CORPUS SENTENCE FOR BILL 5118: ${JSON.stringify(realCorpusSentence5118)}`,
+  "",
+  ...outLines,
+];
+writeFileSync(path.join(__dirname, "_debug-comparison-report.txt"), reportLines.join("\n"), "utf8");
+console.log();
+console.log("Report written to scripts/_debug-comparison-report.txt");
