@@ -69032,9 +69032,272 @@
           "textSource": "corpus"
         }
       ]
+    },
+    {
+      "runAt": "2026-07-13T01:35:14.140Z",
+      "cursorStart": 110,
+      "cursorEnd": 113,
+      "sentinels": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        4600,
+        4607
+      ],
+      "sampledBills": [
+        5890,
+        9117,
+        2108,
+        2398,
+        1433,
+        4600,
+        4607,
+        1111,
+        1112,
+        1113
+      ],
+      "bills": [
+        {
+          "billNumber": "5890",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "9117",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "2108",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "2398",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "live"
+        },
+        {
+          "billNumber": "1433",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": false,
+              "reason": "Full duplication: \"The board must impose civil penalties under this section in the manner provided …\""
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "4600",
+          "results": {
+            "C1": {
+              "pass": true,
+              "xfail": "HR record — no Sec. structure, no obligation language, expected empty output"
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [
+            {
+              "billNumber": "4600",
+              "stage": "plain-meaning",
+              "error": "section section_1: HTTP 400"
+            }
+          ],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "4607",
+          "results": {
+            "C1": {
+              "pass": true,
+              "xfail": "EHR record — permanent House rules text exceeds the 50,000-character plain-meaning length guard, HTTP 400 response, expected empty output"
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [
+            {
+              "billNumber": "4607",
+              "stage": "plain-meaning",
+              "error": "section section_1: HTTP 400"
+            }
+          ],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1111",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1112",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        },
+        {
+          "billNumber": "1113",
+          "results": {
+            "C1": {
+              "pass": true
+            },
+            "C4": {
+              "pass": true
+            },
+            "C5": {
+              "pass": true
+            },
+            "C6": {
+              "pass": true
+            },
+            "L1": {
+              "pass": true
+            }
+          },
+          "failures": [],
+          "textSource": "corpus"
+        }
+      ]
     }
   ],
-  "coverageCursor": 110,
+  "coverageCursor": 113,
   "coveragePasses": 1,
   "cumulativeStats": {
     "testedBills": 2512,
