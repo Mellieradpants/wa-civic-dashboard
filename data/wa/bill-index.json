@@ -19562,8 +19562,8 @@
     "status": "",
     "sponsor": "(Parshley)",
     "introducedDate": "2025-04-08T00:00:00",
-    "historyLine": "Rules Committee relieved of further consideration.  Placed on second reading.",
-    "committee": "H 2nd Reading",
+    "historyLine": "Returned to Rules Committee for second reading.",
+    "committee": "H Rules C",
     "source_url": "https://app.leg.wa.gov/billsummary?BillNumber=2073&Year=2025",
     "detail_api_path": "/api/wa-bill-detail?billNumber=2073&biennium=2025-26"
   },
