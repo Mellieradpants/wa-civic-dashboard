@@ -12,17 +12,8 @@ if (!existsSync(CORPUS_PATH)) {
 }
 const CORPUS = JSON.parse(readFileSync(CORPUS_PATH, "utf8"));
 
-function splitSentences(text) {
-  return text
-    .split(/(?<=[.!?])\s+(?=[A-Z("])/)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 15);
-}
-
 // ─── Frozen snapshot of the pre-merge algorithm, exactly as it stood in
-// pipeline.js before this change — used only as the "before" baseline for
-// this one-time comparison. The "after" side below calls the REAL merged
-// runPipeline directly, not a reimplementation. ──────────────────────────────
+// pipeline.js before this change — used only as the "before" baseline. ──────
 const OLD_MARKER_RE = /\b(which|that|who)\b/gi;
 const OLD_NEXT_MARKER_RE = /\b(which|that|who)\b/i;
 const OLD_CLAUSE_MODAL_RE = /\b(may|shall|must)\b/i;
@@ -77,23 +68,12 @@ function oldDetectSignals(text) {
   };
 }
 
-// ─── NEW: the real merged pipeline.js, called through its public API only. ──
-function newDetectSignalsViaRealPipeline(sentence) {
-  const { units } = runPipeline(sentence, { billId: "corpus-check" });
-  const unit = units[0];
-  if (!unit) return { primary: null, additional: [] };
-  return {
-    primary: unit.tetherAnchor.matchedSignals[0] ?? null,
-    additional: unit.tetherAnchor.subordinateClauseSignals ?? [],
-  };
-}
-
-const MARKER_PRESENCE_RE = /\b(which|that|who)\b/i;
-
 function additionalEqual(a, b) {
   if (a.length !== b.length) return false;
   return a.every((x, i) => x.marker === b[i].marker && x.signal === b[i].signal && x.clauseText === b[i].clauseText);
 }
+
+const MARKER_PRESENCE_RE = /\b(which|that|who)\b/i;
 
 let totalSentences = 0;
 let candidateSentences = 0;
@@ -105,22 +85,40 @@ for (const bill of CORPUS) {
   const billNumber = String(bill.bill_number);
   for (const sec of bill.sections || []) {
     if (!sec.text?.trim()) continue;
-    for (const sentence of splitSentences(sec.text)) {
+
+    // Run the REAL merged pipeline on the full section text, exactly as any
+    // real caller would — this is what does the amendment-header stripping,
+    // subsection-marker stripping, and sentence splitting that OLD's frozen
+    // snapshot never saw when compared naively. Reading the already-cleaned
+    // sentence text back out of the lineage keeps the comparison fair: both
+    // sides now see identical input text, differing only in the algorithm.
+    const result = runPipeline(sec.text, { billId: billNumber });
+    const unitBySentenceId = new Map();
+    for (const unit of result.units) {
+      if (unit.lineage?.sentence?.id !== undefined) unitBySentenceId.set(unit.lineage.sentence.id, unit);
+    }
+
+    for (const record of result.lineage.sentences) {
+      const cleanedSentence = record.text;
       totalSentences++;
-      if (!MARKER_PRESENCE_RE.test(sentence)) continue;
+      if (!MARKER_PRESENCE_RE.test(cleanedSentence)) continue;
       candidateSentences++;
 
-      const oldResult = oldDetectSignals(sentence);
-      // Compare against the exact same sentence text runPipeline receives —
-      // buildUnit's CFS/normalize steps run on the raw sentence, same as the
-      // frozen OLD path above, so both sides see identical input text.
-      const newResult = newDetectSignalsViaRealPipeline(sentence);
+      const oldResult = oldDetectSignals(cleanedSentence);
+
+      const unit = unitBySentenceId.get(record.id);
+      const newResult = unit
+        ? {
+            primary: unit.tetherAnchor.matchedSignals[0] ?? null,
+            additional: unit.tetherAnchor.subordinateClauseSignals ?? [],
+          }
+        : { primary: null, additional: [] };
 
       const same = oldResult.primary === newResult.primary && additionalEqual(oldResult.additional, newResult.additional);
       if (same) sameCount++;
       else {
         diffCount++;
-        diffs.push({ billNumber, sentence, oldResult, newResult });
+        diffs.push({ billNumber, sentence: cleanedSentence, oldResult, newResult });
       }
     }
   }
@@ -132,7 +130,7 @@ outLines.push(`Candidate sentences (which/that/who only): ${candidateSentences}`
 outLines.push(`Same classification, frozen pre-merge snapshot vs the real merged pipeline.js: ${sameCount}`);
 outLines.push(`Different classification: ${diffCount}`);
 outLines.push("");
-outLines.push("=== ALL CORPUS-WIDE DIFFERENCES (real before/after, via the real merged runPipeline) ===");
+outLines.push("=== ALL CORPUS-WIDE DIFFERENCES (real before/after, via the real merged runPipeline, on identical preprocessed input text) ===");
 for (const d of diffs) {
   outLines.push("=".repeat(80));
   outLines.push(`BILL: ${d.billNumber}`);
