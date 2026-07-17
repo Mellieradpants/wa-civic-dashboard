@@ -77,6 +77,7 @@ const MARKER_PRESENCE_RE = /\b(which|that|who)\b/i;
 
 let totalSentences = 0;
 let candidateSentences = 0;
+let cfsExcludedCount = 0;
 let sameCount = 0;
 let diffCount = 0;
 const diffs = [];
@@ -97,11 +98,27 @@ for (const bill of CORPUS) {
     for (const unit of result.units) {
       if (unit.lineage?.sentence?.id !== undefined) unitBySentenceId.set(unit.lineage.sentence.id, unit);
     }
+    // L3 CFS is a separate, unchanged layer (blocks intent/narrative language
+    // like "designed to", "intends to") — when it fires, buildUnit returns
+    // null and no unit exists at all, for reasons having nothing to do with
+    // relative-clause detection. Treating "no unit" as "no signal found" in
+    // that case would misattribute an unrelated, pre-existing CFS block to
+    // today's change. Detected directly from the lineage and excluded from
+    // the comparison, not silently folded into either side's count.
+    const cfsBlockedSentenceIds = new Set(
+      result.lineage.section.records
+        .filter((r) => r.producedBy === "L3 CFS" && r.matched)
+        .map((r) => r.parentNodeId)
+    );
 
     for (const record of result.lineage.sentences) {
       const cleanedSentence = record.text;
       totalSentences++;
       if (!MARKER_PRESENCE_RE.test(cleanedSentence)) continue;
+      if (cfsBlockedSentenceIds.has(record.id)) {
+        cfsExcludedCount++;
+        continue;
+      }
       candidateSentences++;
 
       const oldResult = oldDetectSignals(cleanedSentence);
@@ -126,7 +143,9 @@ for (const bill of CORPUS) {
 
 const outLines = [];
 outLines.push(`Total sentences scanned: ${totalSentences}`);
-outLines.push(`Candidate sentences (which/that/who only): ${candidateSentences}`);
+outLines.push(`Candidate sentences (which/that/who only): ${candidateSentences + cfsExcludedCount}`);
+outLines.push(`  Excluded (CFS-blocked — unrelated, unchanged layer): ${cfsExcludedCount}`);
+outLines.push(`  Compared: ${candidateSentences}`);
 outLines.push(`Same classification, frozen pre-merge snapshot vs the real merged pipeline.js: ${sameCount}`);
 outLines.push(`Different classification: ${diffCount}`);
 outLines.push("");
@@ -141,6 +160,6 @@ for (const d of diffs) {
 
 writeFileSync(path.join(__dirname, "_debug-merged-corpus-check-report.txt"), outLines.join("\n"), "utf8");
 console.log("Total sentences scanned:", totalSentences);
-console.log("Candidate sentences:", candidateSentences);
+console.log("Candidate sentences:", candidateSentences + cfsExcludedCount, "(excluded CFS-blocked:", cfsExcludedCount, ", compared:", candidateSentences, ")");
 console.log("Same:", sameCount, "Diff:", diffCount);
 console.log("Report written to scripts/_debug-merged-corpus-check-report.txt");
