@@ -1,7 +1,11 @@
 name: Temporary - merged corpus check
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - claude/position-verification-pipeline-tccasu
+    paths:
+      - '.github/workflows/debug-merged-corpus-check.yml'
 
 jobs:
   check:
