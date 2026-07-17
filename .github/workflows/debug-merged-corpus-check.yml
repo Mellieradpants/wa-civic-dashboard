@@ -6,6 +6,7 @@ on:
       - claude/position-verification-pipeline-tccasu
     paths:
       - '.github/workflows/debug-merged-corpus-check.yml'
+      - 'scripts/_debug-merged-corpus-check.js'
 
 jobs:
   check:
