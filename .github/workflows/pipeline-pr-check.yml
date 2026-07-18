@@ -40,6 +40,9 @@ jobs:
             sleep 1
           done
 
+      - name: Snapshot pre-run results as baseline
+        run: cp data/wa/test-results.json /tmp/test-results-baseline.json
+
       - name: Run test harness
         env:
           TEST_SAMPLE_SIZE: '40'
@@ -49,40 +52,27 @@ jobs:
         run: |
           node -e '
             const fs = require("fs");
-            const data = JSON.parse(fs.readFileSync("data/wa/test-results.json", "utf8"));
-            const thisRun = data.runs[data.runs.length - 1];
-            const priorRuns = data.runs.slice(0, data.runs.length - 1);
+            const baseline = JSON.parse(fs.readFileSync("/tmp/test-results-baseline.json", "utf8"));
+            const current = JSON.parse(fs.readFileSync("data/wa/test-results.json", "utf8"));
 
-            // For each bill+check, the baseline is whichever run most recently
-            // actually sampled that bill — not just the single run immediately
-            // before this one (which may have sampled a different random 40
-            // bills and missed this one entirely), and not the full history
-            // either (which would let an old, already-fixed failure excuse a
-            // genuine new regression that happens to share a bill number).
-            // Scanning newest-to-oldest and keeping only the first match per
-            // key gives the most recent result, whether pass or fail.
-            const mostRecentPriorResult = new Map();
-            for (let i = priorRuns.length - 1; i >= 0; i--) {
-              for (const bill of priorRuns[i].bills) {
-                for (const [check, result] of Object.entries(bill.results)) {
-                  const key = `${bill.billNumber}:${check}`;
-                  if (!mostRecentPriorResult.has(key)) mostRecentPriorResult.set(key, result.pass);
-                }
-              }
-            }
-
+            // latestResults already holds one current snapshot per bill, so a
+            // bill this run never sampled has an identical entry in both
+            // baseline and current — comparing the whole map is equivalent to
+            // comparing only the bills this run actually touched.
             const newFailures = [];
             const preExisting = [];
-            for (const bill of thisRun.bills) {
-              for (const [check, result] of Object.entries(bill.results)) {
+            let checkedBills = 0;
+            for (const [billNumber, entry] of Object.entries(current.latestResults)) {
+              checkedBills++;
+              for (const [check, result] of Object.entries(entry.results)) {
                 if (!result.pass) {
-                  const key = `${bill.billNumber}:${check}`;
-                  const line = `bill ${bill.billNumber} ${check}: ${result.reason || "failed"}`;
+                  const line = `bill ${billNumber} ${check}: ${result.reason || "failed"}`;
                   // Only a confirmed prior failure for this exact bill+check
                   // excuses it. No prior sample at all (undefined) or a prior
                   // pass both count as new, so a real regression can never
                   // hide behind "this bill was never checked before."
-                  (mostRecentPriorResult.get(key) === false ? preExisting : newFailures).push(line);
+                  const priorPass = baseline.latestResults?.[billNumber]?.results?.[check]?.pass;
+                  (priorPass === false ? preExisting : newFailures).push(line);
                 }
               }
             }
@@ -96,5 +86,5 @@ jobs:
               for (const f of newFailures) console.error("  " + f);
               process.exit(1);
             }
-            console.log("No new check failures — " + thisRun.bills.length + " bills checked.");
+            console.log("No new check failures — " + checkedBills + " bills checked.");
           '

@@ -36,7 +36,7 @@ const KNOWN_ISSUES = TEST_BILLS_CONFIG.knownIssues || {};
 
 const existing = existsSync(RESULTS_PATH)
   ? JSON.parse(readFileSync(RESULTS_PATH, "utf8"))
-  : { runs: [] };
+  : { latestResults: {}, coverageSeenBillNumbers: [] };
 
 // ─── Round-robin coverage sampling ─────────────────────────────────────────
 // Walks the full bill pool in a fixed order so every bill is guaranteed to be
@@ -318,26 +318,21 @@ function scoreC6(text, sectionPairs) {
   return { pass: true };
 }
 
-// ─── Cumulative coverage across all runs ──────────────────────────────────────
-// A bill can be re-sampled in a later run after the round-robin pool wraps;
-// keep its most recent result so cumulative totals reflect current behavior.
+// ─── Cumulative coverage across all bills ─────────────────────────────────────
+// latestResults already holds exactly one current snapshot per bill (a bill
+// re-sampled after the round-robin pool wraps just overwrites its own entry),
+// so this is a direct pass over the map — no history to re-scan.
 
-function computeCumulativeStats(runs) {
-  const latestByBill = new Map();
-  for (const run of runs) {
-    for (const bill of run.bills) {
-      if (Object.keys(bill.results).length) latestByBill.set(bill.billNumber, bill.results);
-    }
-  }
+function computeCumulativeStats(latestResults) {
   const byCheck = {};
-  for (const results of latestByBill.values()) {
+  for (const { results } of Object.values(latestResults)) {
     for (const [check, result] of Object.entries(results)) {
       if (!byCheck[check]) byCheck[check] = { passed: 0, failed: 0 };
       byCheck[check][result.pass ? "passed" : "failed"]++;
     }
   }
-  const testedBillNumbers = [...latestByBill.keys()].sort((a, b) => a - b);
-  return { testedBills: latestByBill.size, testedBillNumbers, byCheck };
+  const testedBillNumbers = Object.keys(latestResults).sort((a, b) => Number(a) - Number(b));
+  return { testedBills: testedBillNumbers.length, testedBillNumbers, byCheck };
 }
 
 // ─── XFAIL resolution ────────────────────────────────────────────────────────
@@ -463,10 +458,26 @@ for (let i = 0; i < billNumbers.length; i += BATCH_SIZE) {
   }
 }
 
-existing.runs.push(run);
+// Each bill's row is overwritten in place — a bill re-sampled after the
+// round-robin pool wraps just replaces its own prior snapshot, so this file
+// never grows past one entry per distinct bill, no matter how many more runs
+// happen after this one.
+const runAt = new Date().toISOString();
+for (const bill of run.bills) {
+  if (Object.keys(bill.results).length) {
+    existing.latestResults[bill.billNumber] = {
+      lastTestedAt: runAt,
+      textSource: bill.textSource,
+      results: bill.results,
+    };
+  }
+}
+const seenBillNumbers = new Set(existing.coverageSeenBillNumbers);
+for (const n of run.sampledBills) seenBillNumbers.add(n);
+existing.coverageSeenBillNumbers = [...seenBillNumbers].sort((a, b) => a - b);
 existing.coverageCursor = cursorEnd;
 existing.coveragePasses = (existing.coveragePasses || 0) + passesCompletedThisRun;
-existing.cumulativeStats = computeCumulativeStats(existing.runs);
+existing.cumulativeStats = computeCumulativeStats(existing.latestResults);
 writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
 
 const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
@@ -480,8 +491,7 @@ const actuallyTestedCount = run.bills.filter(b => Object.keys(b.results).length)
 const corpusSourcedCount = run.bills.filter(b => b.textSource === "corpus").length;
 
 const totalUniqueBills = coveragePool.length + SENTINELS.length;
-const allTestedBills = new Set(existing.runs.flatMap(r => r.sampledBills));
-const coveragePct = (allTestedBills.size / totalUniqueBills * 100).toFixed(1);
+const coveragePct = (existing.coverageSeenBillNumbers.length / totalUniqueBills * 100).toFixed(1);
 
 console.log(`\nDone. ${run.bills.length} bills attempted, ${actuallyTestedCount} actually tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
 if (stageFailures.length) {
@@ -490,7 +500,7 @@ if (stageFailures.length) {
 if (corpusSourcedCount) {
   console.log(`Bill text source: ${corpusSourcedCount} from cached corpus, ${run.bills.length - corpusSourcedCount} from live fetch.`);
 }
-console.log(`Coverage: ${allTestedBills.size}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
+console.log(`Coverage: ${existing.coverageSeenBillNumbers.length}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
 
 const { testedBills: cumulativeTested, byCheck: cumulativeByCheck } = existing.cumulativeStats;
 const cumulativePct = (cumulativeTested / totalUniqueBills * 100).toFixed(1);
