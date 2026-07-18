@@ -31,6 +31,7 @@ const REQUEST_TIMEOUT_MS = 30000;
 
 const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
 const SENTINELS = TEST_BILLS_CONFIG.sentinels;
+const NO_DOCUMENT_BILLS = TEST_BILLS_CONFIG.noDocumentBills || [];
 const KNOWN_BOILERPLATE = TEST_BILLS_CONFIG.knownBoilerplate || [];
 const KNOWN_ISSUES = TEST_BILLS_CONFIG.knownIssues || {};
 
@@ -43,8 +44,13 @@ const existing = existsSync(RESULTS_PATH)
 // tested at least once, instead of relying on random sampling.
 
 function buildCoveragePool() {
-  const sentinelSet = new Set(SENTINELS);
-  const numbers = BILL_INDEX.map(b => Number(b.bill_number)).filter(n => !sentinelSet.has(n));
+  // Gubernatorial appointment records confirmed (repeatedly, across every prior
+  // sample) to have no HTML bill document at all — wa-bill-text fails before
+  // any check can run, so knownIssues can't help; they'd sit "untested"
+  // forever otherwise. Not a blanket SGA-range exclusion — only the numbers
+  // actually confirmed to fail this way.
+  const excluded = new Set([...SENTINELS, ...NO_DOCUMENT_BILLS]);
+  const numbers = BILL_INDEX.map(b => Number(b.bill_number)).filter(n => !excluded.has(n));
   return [...new Set(numbers)].sort((a, b) => a - b);
 }
 

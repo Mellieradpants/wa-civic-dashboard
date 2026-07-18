@@ -137,6 +137,7 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 - **Run from a network-permitted environment** — `wslwebservices.leg.wa.gov` returns 403 from Render's container. Run the script locally or from CI with outbound access: `node scripts/populate-bill-index.js`.
 - **Per-bill fields in the index**: `bill_id_display`, `bill_id_normalized`, `bill_number`, `chamber`, `title`, `legal_title`, `session`, `status`, `sponsor`, `introducedDate`, `historyLine`, `committee`, `source_url`, `detail_api_path`. The `sponsor`, `introducedDate`, `historyLine`, and `committee` fields are populated from the WA Legislature XML API during the populate run.
 - **`mapRecord()` in `wa-bill-search.js`** passes `sponsor`, `introducedDate`, `historyLine`, `committee`, and `legal_title` through to the search API response. `legislation.html` uses these as fallbacks when the live detail API is unavailable.
+- **`data/wa/test-bills.json`'s `noDocumentBills`** lists bill numbers confirmed, repeatedly, to have no HTML bill document at all (currently five Senate Gubernatorial Appointment records: 9241–9245) — `scripts/test-bills.js` excludes them from the round-robin sample pool the same way it excludes sentinels, since `wa-bill-text` fails before any check can run and they'd otherwise sit "untested" forever. This is not a blanket exclusion of the whole SGA range (9000–9999) — only numbers with confirmed repeated failures are listed; other SGA bills, like sentinel 9117, do return a document.
 
 ---
 
