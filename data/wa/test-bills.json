@@ -1,6 +1,7 @@
 {
   "sentinels": [5890, 9117, 2108, 2398, 1433, 4600, 4607],
   "sampleSize": 25,
+  "noDocumentBills": [9241, 9242, 9243, 9244, 9245],
   "knownBoilerplate": [
     "Nothing in this section must be construed to authorize the possession, sale, or",
     "New law — The credit claimed cannot exceed the tax that would otherwise be due",
