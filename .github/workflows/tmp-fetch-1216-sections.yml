@@ -1,0 +1,35 @@
+name: Tmp Fetch 1216 Sections
+
+on:
+  workflow_dispatch:
+    inputs:
+      bill_number:
+        description: 'Bill number to fetch'
+        required: false
+        default: '1216'
+      section_ids:
+        description: 'Comma-separated section ids to print'
+        required: false
+        default: 'section_8028,section_8029,section_8030,section_8031,section_8032'
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch and print sections
+        env:
+          SCAN_BILL_NUMBER: ${{ inputs.bill_number }}
+          SCAN_SECTION_IDS: ${{ inputs.section_ids }}
+        run: node scripts/tmp-fetch-1216-sections.js
