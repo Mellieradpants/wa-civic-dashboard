@@ -1,0 +1,30 @@
+name: Tmp Scan And Sentences
+
+on:
+  workflow_dispatch:
+    inputs:
+      cursor_start:
+        description: 'Bill pool index to start sampling from'
+        required: false
+        default: '0'
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scan for candidate sentences
+        env:
+          SCAN_CURSOR_START: ${{ inputs.cursor_start }}
+        run: node scripts/tmp-scan-and-sentences.js
