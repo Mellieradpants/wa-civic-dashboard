@@ -132,6 +132,25 @@ function findEnclosingParen(sentence, markerStart) {
   return stack.length > 0 ? stack[stack.length - 1] : -1;
 }
 
+// "May" the month (e.g. "May 1, 2026", "no later than May 15") must not be
+// treated as the modal "may" in STOP-2/STOP-4 — only a bare "may" (not
+// "may not") immediately followed by a day-number is the date case.
+function isMayDateMatch(text, matchIndex, matchText) {
+  if (matchText.toLowerCase() !== "may") return false;
+  const after = text.slice(matchIndex + matchText.length);
+  return /^\s+\d{1,2}(st|nd|rd|th)?\b/i.test(after);
+}
+
+function stop2SegmentFires(segment) {
+  const re = new RegExp(STOP2_RE.source, "gi");
+  let mm;
+  while ((mm = re.exec(segment))) {
+    if (isMayDateMatch(segment, mm.index, mm[0])) continue;
+    return true;
+  }
+  return false;
+}
+
 function findCommaBoundedStop(sentence, scanPos) {
   const candidates = [];
 
@@ -145,6 +164,7 @@ function findCommaBoundedStop(sentence, scanPos) {
   let bm;
   while ((bm = BARE_WORD_RE.exec(sentence))) {
     if (bm.index < scanPos) continue;
+    if (isMayDateMatch(sentence, bm.index, bm[0])) continue;
     const before = sentence.slice(0, bm.index).replace(/\s+$/, "");
     if (before.endsWith(",")) continue;
     candidates.push(bm.index);
@@ -177,7 +197,7 @@ function findCommaBoundedStop(sentence, scanPos) {
       continue;
     }
 
-    if (STOP2_RE.test(segment)) {
+    if (stop2SegmentFires(segment)) {
       candidates.push(idx);
       continue;
     }
