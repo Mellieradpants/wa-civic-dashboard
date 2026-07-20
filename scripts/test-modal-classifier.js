@@ -20,6 +20,11 @@ const { cases } = JSON.parse(readFileSync(CASES_PATH, "utf8"));
 
 function classify(sentence) {
   const { units } = runPipeline(sentence, { billId: "modal-test" });
+  // A sentence can now produce more than one unit (see pipeline.js's L5 AAC
+  // second-instruction detection). None of the fixtures below trigger that
+  // yet, so checking only units[0] is still correct for this suite — but a
+  // future fixture that does trigger it would need this to check units[1]
+  // too, not just silently ignore it.
   const unit = units[0];
   if (!unit) return { primary: null, additional: [] };
   return {
