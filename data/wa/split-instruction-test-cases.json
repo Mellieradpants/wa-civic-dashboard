@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "id": "bill-1163-genuine-different-actor",
+      "description": "Two independent instructions, different actors, joined by \"and\" — the real bug this feature fixes. Must split into two units.",
+      "sentence": "The matter must be heard de novo without a jury and the court must include written findings of fact and conclusions of law in its ruling.",
+      "expectedUnitCount": 2,
+      "expectedActors": ["The matter", "the court"]
+    },
+    {
+      "id": "bill-1197-teams-identical-wording-different-referents",
+      "description": "Same actor wording on both sides of \"and\", but referring to two different specific teams. Identical wording must not by itself block the split.",
+      "sentence": "One of the teams must provide services to people in Seattle and one of the teams must provide services to people in Spokane.",
+      "expectedUnitCount": 2,
+      "expectedActors": ["One of the teams", "one of the teams"]
+    },
+    {
+      "id": "bill-1216-such-board-non-pronoun-back-reference",
+      "description": "The second actor is a non-pronoun back-reference (\"such board\") to an entity named earlier in the sentence, not to the first clause's own actor. Must still split — a back-reference is only rejected when it points back to the first actor.",
+      "sentence": "The state treasurer shall notify the college board and such board shall adjust its certificate so that all requirements of moneys shall be fully met at all times.",
+      "expectedUnitCount": 2,
+      "expectedActors": ["The state treasurer", "such board"]
+    },
+    {
+      "id": "bill-1197-1198-pierce-county-pronoun-back-reference",
+      "description": "\"and, therefore, it must...\" — \"it\" back-references the first clause's own actor. Must NOT split; this is one actor, one instruction.",
+      "sentence": "The program must meet the diverse needs of Pierce county residents and, therefore, it must be flexible, culturally appropriate, and culturally responsive.",
+      "expectedUnitCount": 1
+    },
+    {
+      "id": "bill-1204-may-date-not-a-modal",
+      "description": "\"May 15th\" is a calendar date, not the permission modal — must not be miscounted as a second instruction.",
+      "sentence": "A repayment plan required by a landlord must be designed both to pay the past due bill by the following May 15th, or as soon as possible after May 15th if needed to maintain monthly payments.",
+      "expectedUnitCount": 1
+    },
+    {
+      "id": "baseline-one-actor-two-verbs-no-second-modal",
+      "description": "\"review and approve\" — one actor doing two things, no second modal at all. Must not split.",
+      "sentence": "The director must review and approve the application.",
+      "expectedUnitCount": 1
+    },
+    {
+      "id": "baseline-same-actor-zero-gap-compound",
+      "description": "Modal sits immediately after \"and\" with nothing between — the already-handled same-actor case (renderer.js's splitCompoundAction), left alone at this layer.",
+      "sentence": "The recipient cannot be charged any fee and must be compensated for expenses.",
+      "expectedUnitCount": 1
+    },
+    {
+      "id": "known-limitation-three-clause-sentence-not-caught",
+      "description": "Three independent clauses, not two — documented out-of-scope case. The design only detects a second instruction, not a third, so this stays one unit.",
+      "sentence": "Three members shall be appointed for a term of one year, three members shall be appointed for a term of two years, and three members shall be appointed for a term of three years.",
+      "expectedUnitCount": 1
+    }
+  ]
+}
