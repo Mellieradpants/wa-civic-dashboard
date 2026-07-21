@@ -1,0 +1,147 @@
+{
+  "cases": [
+    {
+      "id": "bill-5056-firearm-description",
+      "description": "Bill 5056: a mid-sentence list where the real continuation ('if available...') follows immediately with no comma — STOP-4's bare-word check must catch it, not swallow it into the list.",
+      "billId": "5056",
+      "sentence": "The applicant shall submit a description of the firearm including the make, model, caliber and manufacturer's number if available at the time of applying for the purchase of the firearm.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including the make, model, caliber and manufacturer's number" }
+      ]
+    },
+    {
+      "id": "bill-5176-retainage-bare-verb",
+      "description": "Bill 5176: 'payment including retainage is not made' — the bare verb 'is' (no comma before it) ends the list right after the single named item.",
+      "billId": "5176",
+      "sentence": "If payment including retainage is not made within thirty days, the contractor may suspend work under the contract.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including retainage" }
+      ]
+    },
+    {
+      "id": "bill-1388-also-allow",
+      "description": "Bill 1388: 'other states including Pennsylvania and Virginia also allow...' — the bare 'also allow' (no comma before it) ends the list before the real continuation.",
+      "billId": "1388",
+      "sentence": "The department shall study whether other states including Pennsylvania and Virginia also allow similar licensing reciprocity agreements.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including Pennsylvania and Virginia" }
+      ]
+    },
+    {
+      "id": "bill-1171-employees-of-academic",
+      "description": "Bill 1171: 'employees, including student employees, of academic...' — STOP-3's 'of' connector ends the list at the second comma.",
+      "billId": "1171",
+      "sentence": "The university shall provide training to employees, including student employees, of academic departments within ninety days.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including student employees" }
+      ]
+    },
+    {
+      "id": "bill-1894-but-that-tribes",
+      "description": "Bill 1894: '...tribes that are based in Washington but that now reside in Oregon, to incorporate...' — the 'but that' exception absorbs the description instead of stopping, and the real stop is STOP-3's 'to' connector at the next comma.",
+      "billId": "1894",
+      "sentence": "The commission shall consult with Indian tribes, including tribes that are based in Washington but that now reside in Oregon, to incorporate their input into the plan.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including tribes that are based in Washington but that now reside in Oregon" }
+      ]
+    },
+    {
+      "id": "bill-2020-hospitals-relative-shield",
+      "description": "Bill 2020: 'including any hospital that comes within... if the hospital is also licensed...' — the relative-clause shield ('that') blocks every bare-verb stop in the clause (is/also licensed/if), so the list runs to the sentence's own period.",
+      "billId": "2020",
+      "sentence": "The department shall regulate hospitals, including any hospital that comes within the definition of a critical access hospital if the hospital is also licensed as a rural health clinic.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "SENTENCE_END", "listText": "including any hospital that comes within the definition of a critical access hospital if the hospital is also licensed as a rural health clinic" }
+      ]
+    },
+    {
+      "id": "bill-1921-power-to-be-used",
+      "description": "Bill 1921: 'including its make, model, vehicle identification number, type of body, and power to be used' — the coordinated to-be guard (', and power to be used') prevents an early stop at 'be', so the full list survives to the period.",
+      "billId": "1921",
+      "sentence": "The registrant shall report the vehicle's specifications, including its make, model, vehicle identification number, type of body, and power to be used for commercial purposes.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "SENTENCE_END", "listText": "including its make, model, vehicle identification number, type of body, and power to be used for commercial purposes" }
+      ]
+    },
+    {
+      "id": "bill-1267-multiplied",
+      "description": "Bill 1267: 'excluding students... enrolled in kindergarten, multiplied by...' — STOP-2's 'multiplied' resumption word ends the list at the comma.",
+      "billId": "1267",
+      "sentence": "The office shall calculate enrollment excluding students who are enrolled in kindergarten, multiplied by the funding rate per student.",
+      "expectedInclusionLists": [
+        { "marker": "excluding", "classification": "COMMA_BOUNDED", "listText": "excluding students who are enrolled in kindergarten" }
+      ]
+    },
+    {
+      "id": "bill-5601-whether-shield",
+      "description": "Bill 5601: 'including whether biomethane availability is sufficient...' — the 'whether' shield blocks the bare-verb stop at 'is', so the real stop is the semicolon (STOP-1), not the relative clause's own verb.",
+      "billId": "5601",
+      "sentence": "The commission shall evaluate factors including whether biomethane availability is sufficient to meet demand; the commission shall also consider cost impacts on ratepayers.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including whether biomethane availability is sufficient to meet demand" }
+      ]
+    },
+    {
+      "id": "bill-1000-colon-lookahead",
+      "description": "Bill 1000 utility-employee sentence: 'including: (i) ... ; or (ii) ...' — the colon look-ahead detects the sublist even though other clause text (who/is) sits between the marker and the colon-triggering point isn't relevant here; the lettered items run to the sentence's own end.",
+      "billId": "1000",
+      "sentence": "The court shall consider whether the current offense involved the assault of a utility employee of any publicly or privately owned utility company or agency, who is at the time of the act engaged in official duties, including: (i) The maintenance or repair of utility poles, lines, conduits, pipes, or other infrastructure; or (ii) connecting, disconnecting, or recording utility meters.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COLON_SUBLIST", "listText": "including: (i) The maintenance or repair of utility poles, lines, conduits, pipes, or other infrastructure; or (ii) connecting, disconnecting, or recording utility meters." }
+      ]
+    },
+    {
+      "id": "parenthetical-full-time-residential",
+      "description": "A parenthetical case — the list is exactly the text inside the parentheses, not including the parens themselves.",
+      "billId": "list-boundary-test",
+      "sentence": "The facility must provide treatment services (including full-time residential treatment) to eligible patients.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "PARENTHETICAL", "listText": "including full-time residential treatment" }
+      ]
+    },
+    {
+      "id": "reversed-not-including-cold-storage",
+      "description": "A 'not including' case — Gate 1 classifies it REVERSED and no boundary is computed; the instruction is unaffected.",
+      "billId": "list-boundary-test",
+      "sentence": "The tenant may use the storage area, not including the rental of cold storage lockers, unless otherwise agreed in writing.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "REVERSED", "listText": null }
+      ]
+    },
+    {
+      "id": "not-a-list-cost-of-including",
+      "description": "A verb-use case — 'cost of including' is not a list at all (Gate 2), since the marker isn't followed by a filler phrase.",
+      "billId": "list-boundary-test",
+      "sentence": "The agency may recover the additional cost of including such service in the annual budget.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "NOT_A_LIST", "listText": null }
+      ]
+    },
+    {
+      "id": "bill-1121-filler-core-plus",
+      "description": "Bill 1121: 'including but not limited to core plus programs' — the filler phrase is absorbed as part of the list start, and the list runs to the sentence's own end.",
+      "billId": "1121",
+      "sentence": "The board shall fund innovative programs, including but not limited to core plus programs.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "SENTENCE_END", "listText": "including but not limited to core plus programs" }
+      ]
+    },
+    {
+      "id": "baseline-two-markers-one-sentence",
+      "description": "A sentence with two genuinely separate markers — inclusionLists must hold both entries, in order, each independently bounded.",
+      "billId": "list-boundary-test",
+      "sentence": "The district shall serve all residents, including part-time staff, if funding is available, excluding volunteers who serve fewer than ten hours per month.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including part-time staff" },
+        { "marker": "excluding", "classification": "SENTENCE_END", "listText": "excluding volunteers who serve fewer than ten hours per month" }
+      ]
+    },
+    {
+      "id": "baseline-no-marker-unaffected",
+      "description": "A plain sentence with no 'including'/'excluding' marker at all, guarding against a future change producing spurious detections.",
+      "billId": "list-boundary-test",
+      "sentence": "The department shall submit an annual report to the legislature by June 30th of each year.",
+      "expectedInclusionLists": []
+    }
+  ]
+}
