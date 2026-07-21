@@ -142,6 +142,31 @@
       "billId": "list-boundary-test",
       "sentence": "The department shall submit an annual report to the legislature by June 30th of each year.",
       "expectedInclusionLists": []
+    },
+    {
+      "id": "bill-1433-bare-include-not-a-marker",
+      "description": "Bill 1433: 'shall include, but not be limited to: (a) Establishing requirements...' — bare 'include' is never a marker (only the words 'including'/'excluding' are), and Gate 0 additionally confirms this occurrence is the sentence's own verb (immediately preceded by the modal 'shall') rather than a marker candidate at all. No list is detected; the unit's action retains the full 'include, but not be limited to: (a) ...' content untouched, since nothing was excised.",
+      "billId": "1433",
+      "sentence": "The rules adopted by the department shall include, but not be limited to: (a) Establishing requirements for licensure.",
+      "expectedInclusionLists": []
+    },
+    {
+      "id": "bill-1166-coordinate-split-list-detection",
+      "description": "Bill 1166: 'may accept ... including but not limited to nonprofit entities ..., and may receive, utilize, and dispose of same ...' — a same-actor compound sentence that renders as two clauses (renderer.js's splitCompoundAction), with the detected list belonging to the first ('may accept') clause. At the pipeline level (what this suite checks) there is exactly one detection, correctly bounded past the coordinate split point rather than truncated by it. Renderer-level verification (the rendered note attaching to the first clause's paragraph, not the second, and the filler 'but not limited to' being stripped from that note) was confirmed separately by direct execution against renderISC/renderUnit, since that is outside what runPipeline's tetherAnchor exposes.",
+      "billId": "1166",
+      "sentence": "The department may accept any and all donations and grants of money, equipment, supplies, materials, and services from any third party, including but not limited to nonprofit entities and community-based postsecondary education programs, and may receive, utilize, and dispose of same in accordance with the terms of the donation or grant.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including but not limited to nonprofit entities and community-based postsecondary education programs" }
+      ]
+    },
+    {
+      "id": "bill-1166-filler-stripped-note-regression-anchor",
+      "description": "Same bill 1166 sentence as bill-1166-coordinate-split-list-detection, anchoring the filler-stripping fix specifically: the pipeline's recorded listText legitimately retains the filler phrase 'but not limited to' as part of the detected span (that's the validated rule's boundary, unchanged here) — but the renderer's displayed note strips it, reading 'Named examples: nonprofit entities and community-based postsecondary education programs' with no filler words. Confirmed by direct execution against renderISC/renderUnit; not checkable via tetherAnchor alone, which is why this entry's own expectedInclusionLists matches the pipeline-level (filler-retained) span exactly like the sibling case above.",
+      "billId": "1166",
+      "sentence": "The department may accept any and all donations and grants of money, equipment, supplies, materials, and services from any third party, including but not limited to nonprofit entities and community-based postsecondary education programs, and may receive, utilize, and dispose of same in accordance with the terms of the donation or grant.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including but not limited to nonprofit entities and community-based postsecondary education programs" }
+      ]
     }
   ]
 }
