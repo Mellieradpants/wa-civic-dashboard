@@ -416,8 +416,19 @@ async function testBill(billNumber) {
       sectionPairs.push({ sectionText: sec.text, response: r });
       if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
     } catch (err) {
-      console.log(`    WARN: plain-meaning failed for section ${sec.id} — ${err.message}`);
-      failures.push({ billNumber, stage: "plain-meaning", error: `section ${sec.id}: ${err.message}` });
+      // A failure here can mean the local server itself died mid-run — a
+      // dead pipeline service, not a pipeline regression. Partial output
+      // must never be scored: C4/C6 compare across sections, so a bill
+      // with some sections missing is as corrupted as a bill with all
+      // sections missing. Stop immediately with empty results, exactly
+      // like the wa-bill-text unreachable path above — no check ever runs
+      // against partial or empty accumulated output, and this bill's
+      // latestResults entry is left untouched rather than overwritten with
+      // a false failure like "C1: output is empty".
+      const kind = classifyFetchFailure(err);
+      console.log(`    SKIP: plain-meaning ${kind} — section ${sec.id}: ${err.message}`);
+      failures.push({ billNumber, stage: "plain-meaning", kind, error: `section ${sec.id}: ${err.message}` });
+      return logAndReturn(billNumber, {}, failures, textSource);
     }
   }
 
@@ -490,7 +501,11 @@ const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
 const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
 const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
 
-const stageFailures = run.bills.flatMap(b => b.failures).filter(f => f.stage === "wa-bill-text");
+// Both stages can leave a bill untested (empty results): wa-bill-text
+// failing before any check runs, or plain-meaning failing mid-section —
+// e.g. the local server dying mid-run. Either way the bill's results are
+// empty rather than scored, so both count toward the same "untested" line.
+const stageFailures = run.bills.flatMap(b => b.failures).filter(f => f.stage === "wa-bill-text" || f.stage === "plain-meaning");
 const unreachableCount = stageFailures.filter(f => f.kind === "unreachable").length;
 const otherStageFailureCount = stageFailures.length - unreachableCount;
 const actuallyTestedCount = run.bills.filter(b => Object.keys(b.results).length).length;
@@ -501,7 +516,7 @@ const coveragePct = (existing.coverageSeenBillNumbers.length / totalUniqueBills 
 
 console.log(`\nDone. ${run.bills.length} bills attempted, ${actuallyTestedCount} actually tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
 if (stageFailures.length) {
-  console.log(`Untested: ${stageFailures.length} (${unreachableCount} WA Legislature unreachable, ${otherStageFailureCount} other wa-bill-text error) — these are excluded from cumulative pass/fail stats below.`);
+  console.log(`Untested: ${stageFailures.length} (${unreachableCount} WA Legislature/service unreachable, ${otherStageFailureCount} other stage error) — these are excluded from cumulative pass/fail stats below.`);
 }
 if (corpusSourcedCount) {
   console.log(`Bill text source: ${corpusSourcedCount} from cached corpus, ${run.bills.length - corpusSourcedCount} from live fetch.`);
