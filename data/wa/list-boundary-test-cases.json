@@ -167,6 +167,15 @@
       "expectedInclusionLists": [
         { "marker": "including", "classification": "COMMA_BOUNDED", "listText": "including but not limited to nonprofit entities and community-based postsecondary education programs" }
       ]
+    },
+    {
+      "id": "bill-1433-nested-colon-sublist-fail-open",
+      "description": "Real bill 1433 text, verbatim, with the nested 'including:' inside lettered item (a) that a previous version's colon-sublist extraction over-consumed: 'shall include, but not be limited to:' at the top level is correctly not a marker (Gate 0), but the nested 'including:' after '(a) Establishing requirements for an administration session' is a real marker producing a COLON_SUBLIST detection. This specific excerpt's extraction happens to leave a non-empty action and does not itself reduce the unit count, so it is a straightforward regression anchor confirming the real text still parses this way. The fail-open invariant this case is named for (extraction is skipped, with the list still recorded as extracted: false, whenever removing a list's span would reduce the sentence's unit count or leave a resulting unit's action empty/effectively-empty) was exercised and confirmed separately by direct execution against a fuller reconstruction of this same structure with an embedded second obligation inside the lettered item, since that specific failure mode needs more surrounding text than this excerpt alone provides, and unit counts/action text are not fields this suite's script checks.",
+      "billId": "1433",
+      "sentence": "The rules adopted by the department shall include, but not be limited to:\n(a) Establishing requirements for an administration session, including:\n(i) The form and content of client information to be collected by the facilitator;\n(ii) Procedures for reporting information to the department.",
+      "expectedInclusionLists": [
+        { "marker": "including", "classification": "COLON_SUBLIST", "listText": "including: (i) The form and content of client information to be collected by the facilitator; (ii) Procedures for reporting information to the department." }
+      ]
     }
   ]
 }
