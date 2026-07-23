@@ -147,6 +147,14 @@ for (const billNumber of batch) {
 console.log(`Total candidate sentences (with duplicates): ${candidateCount}`);
 console.log(`Distinct sentences after dedup: ${seen.size}\n`);
 
+// Collapses embedded newlines (common in lettered/numbered sub-items) to a
+// single space for LOGGING ONLY — classification/matching above already ran
+// against the real, unmodified sentence text. Multi-line sentences each cost
+// GitHub Actions one timestamped log line per embedded newline, which can
+// push a large run's raw log past the job-log fetch size cap; this keeps
+// the same words on one line so the full run's output is retrievable.
+const singleLine = (s) => s.replace(/\s+/g, " ").trim();
+
 const familyCounts = {};
 const noFamilySentences = [];
 let printedIdx = 0;
@@ -164,7 +172,7 @@ for (const [sentence, { forceWordCount, families, duties, occurrences }] of seen
     ? ` [appeared in ${occurrences.length} places: ${occurrences.map(o => `bill ${o.bill} ${o.section}`).join(", ")}]`
     : "";
   console.log(`--- RESULT ${printedIdx} — bill ${firstOcc.bill}, section ${firstOcc.section}, families=${familyLabel}, duties=${duties}, forceWords=${forceWordCount}${dupNote} ---`);
-  console.log(`sentence: ${sentence}`);
+  console.log(`sentence: ${singleLine(sentence)}`);
   console.log();
 }
 
@@ -180,7 +188,7 @@ noFamilySentences.forEach((entry, i) => {
     ? ` [appeared in ${entry.occurrences.length} places: ${entry.occurrences.map(o => `bill ${o.bill} ${o.section}`).join(", ")}]`
     : "";
   console.log(`--- NO-FAMILY ${i + 1} — bill ${firstOcc.bill}, section ${firstOcc.section}, duties=${entry.duties}, forceWords=${entry.forceWordCount}${dupNote} ---`);
-  console.log(`sentence: ${entry.sentence}`);
+  console.log(`sentence: ${singleLine(entry.sentence)}`);
   console.log();
 });
 
