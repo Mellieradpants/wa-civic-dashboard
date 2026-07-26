@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Temporary diagnostic — not part of the pipeline, deleted after use.
 // Validation run #4 for the "and"-split rule. Reuses round 3's logic with
-// exactly two changes:
+// exactly three changes:
 //   1. LOOK THROUGH AN INFINITIVE: when the second half's main verb is on
 //      the no-actor list and is immediately followed by "to" + another verb
 //      ("continue to make provisions"), evaluate that later verb instead.
@@ -18,6 +18,14 @@
 //      offender..." -- splitting strands "is not authorized to" unfinished).
 //      The existing fail-safe does not catch this because the fragment is
 //      not empty, only incomplete.
+//   3. RETIRE AND_MAY_BE_PASSIVE: this control tag was defined in round 1
+//      on the assumption that a passive second half was not a duty. Rounds
+//      2-3 established the opposite -- a passive second half is performed
+//      by someone even when nobody is named, and splitting it is correct.
+//      Round 3 flagged 53 such splits as control-group false positives and
+//      every one checked was a genuine split. The tag is removed entirely,
+//      not just unreported. AS_MAY_BE and AND_WILL, evaluated at the
+//      trigger, are unchanged.
 // Trigger definition, "will" excluded as a trigger word, the chain fix
 // (fail-safe tests from sentence start), multiple splits per sentence,
 // actor inheritance, the no-actor verb list, and the fail-safe are
@@ -181,15 +189,12 @@ function endsWithOtherIncompleteWord(duty1Assigned) {
   return OTHER_INCOMPLETE_ENDINGS.has(last) ? last : null;
 }
 
-// ─── Control tags evaluated at the trigger — unchanged from rounds 2-3 ─────
-
-function checkAndMayBePassive(sentence, trigger) {
-  const after = sentence.slice(trigger.endIndex);
-  const m = after.match(/^\s*be\s+([a-zA-Z]+)\b/);
-  if (!m) return false;
-  const word = m[1].toLowerCase();
-  return /ed$/.test(word) || PARTICIPLE_IRREGULAR.has(word);
-}
+// ─── Control tags evaluated at the trigger ─────────────────────────────────
+// CHANGE 3: AND_MAY_BE_PASSIVE is retired. Rounds 2-3 established that a
+// passive second half is performed by someone even when nobody is named,
+// so a passive split is correct, not a false positive -- round 3 flagged 53
+// such splits as "control group" and every one checked was a genuine duty.
+// It is no longer tagged or reported here at all.
 
 function checkAsMayBe(sentence, trigger) {
   const windowStart = Math.max(0, trigger.index - 25);
@@ -206,7 +211,6 @@ function checkAndWill(sentence, trigger) {
 function controlTagsAtTrigger(sentence, trigger) {
   const tags = [];
   if (checkAsMayBe(sentence, trigger)) tags.push("AS_MAY_BE");
-  if (checkAndMayBePassive(sentence, trigger)) tags.push("AND_MAY_BE_PASSIVE");
   if (checkAndWill(sentence, trigger)) tags.push("AND_WILL");
   return tags;
 }
