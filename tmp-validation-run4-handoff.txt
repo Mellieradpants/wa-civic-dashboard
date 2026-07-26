@@ -1,6 +1,8 @@
-VALIDATION RUN 4 — and-split rule — handoff summary
+VALIDATION RUN 4 (corrected) — and-split rule — handoff summary
 Source: tmp-validation-run4-results.txt, committed to main at https://github.com/Mellieradpants/wa-civic-dashboard/blob/main/tmp-validation-run4-results.txt
 Bill count confirmation: 212 bills sampled, 212 fetched successfully -- matches rounds 1-3.
+This corrects the earlier round-4 run by adding CHANGE 3: AND_MAY_BE_PASSIVE is retired from control tagging entirely.
+Confirmed via grep: zero AND_MAY_BE_PASSIVE occurrences anywhere in the full results file.
 
 === SUMMARY ===
 Summary:
@@ -10,7 +12,7 @@ Summary:
   total SHARED_ENDING blocks: 3
   total SECOND_SIDE_NO_ACTOR blocks: 3
 
-=== FORCE-WORD PAIR BREAKDOWN ===
+=== FORCE-WORD PAIR BREAKDOWN (identical to the pre-Change-3 run -- confirms Change 3 only affects control tagging, not split decisions) ===
 Force-word pair breakdown (first half force -> second half force), per split event:
   shall -> shall: 59
   must -> must: 31
@@ -35,7 +37,7 @@ Force-word pair breakdown (first half force -> second half force), per split eve
   must_not -> must_not: 1
   shall_not -> shall_not: 1
 
-=== ROUND-OVER-ROUND COMPARISON ===
+=== ROUND-OVER-ROUND COMPARISON (against round 3: 216 splits, 4 blocks -- unchanged from the pre-Change-3 run) ===
 Round-over-round comparison:
   round 3 total splits: 216, round 3 total blocks: 4
   round 4 total splits: 214, round 4 total blocks: 6
@@ -45,7 +47,7 @@ Round-over-round comparison:
   unchanged: 210
 
 
-=== CHANGED OUTCOMES vs round 3 (full list, 4) ===
+=== CHANGED OUTCOMES vs round 3 (full list, 4 -- same 4 as before: Defect 1 and Defect 2 fixes) ===
 === CHANGED OUTCOMES vs round 3 (4) ===
 
 --- CHANGED 1 — bill 1378, section section_7, newly-blocked, round3_splits=1, round4_splits=0 ---
@@ -62,7 +64,7 @@ sentence: (3) Every municipality shall make provisions for the collection and pa
 
 
 
-=== SHARED_ENDING blocks (full list, 3) -- both Defect-2 shared-ending sentences correctly block; the third (railroad police officers) correctly blocks only its first trigger, leaving 'revoke' still splitting ===
+=== SHARED_ENDING blocks (full list, 3) ===
 === SHARED_ENDING blocks (3) ===
 
 --- SHARED-ENDING 1 — bill 1378, section section_7 [appeared in 2 places: bill 1378 section_7, bill 1378 section_8] ---
@@ -85,7 +87,7 @@ sentence: Tips and service charges paid to an employee are in addition to, and m
 
 === REPORT-ONLY: possible incomplete first half, other than bare to (0 -- none found) ===
 
-=== SECOND_SIDE_NO_ACTOR blocks (full list, 3) -- confirms bill 5085 'continue to make provisions' is GONE from this list (now allowed, see CHANGED OUTCOMES above); the 3 remaining are the same ones round 3 already confirmed correct ===
+=== SECOND_SIDE_NO_ACTOR blocks (full list, 3) -- confirms bill 5085's 'continue to make provisions' case is still correctly absent ===
 === SECOND_SIDE_NO_ACTOR blocks (3) ===
 
 --- NO-ACTOR-BLOCKED 1 — bill 1400, section section_1, verb=occur, evaluated_verb=occur, look_through=false ---
@@ -102,7 +104,7 @@ sentence: Regulations adopted under this subsection may not prohibit uses legall
 
 
 
-=== REPORT-ONLY: "be X" copula cases (full list, 10 -- down from round 3's 11, since 'lost' was added to the participle list so 'be lost' now correctly classifies as passive instead of copula) ===
+=== REPORT-ONLY: "be X" copula cases (full list, 10) ===
 === REPORT-ONLY: "be X" copula cases, not passive, not in no-actor list (10) ===
 (These are NOT blocked -- allowed per the literal rule.)
 
@@ -279,331 +281,19 @@ sentence: The following goals are not listed in order of priority and shall be u
 
 
 
-=== CONTROL GROUP: real splits whose own trigger carries a control tag (full list, 54) ===
-=== CONTROL GROUP: real splits whose own trigger carries a control tag (54) ===
+=== CONTROL GROUP: real splits whose own trigger carries a control tag (full list, 2 -- down from 54, since AND_MAY_BE_PASSIVE is retired; both remaining are AS_MAY_BE, zero AND_WILL) ===
+=== CONTROL GROUP: real splits whose own trigger carries a control tag (2) ===
 
---- CONTROL-SPLIT 1 — bill 1000, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: A departure from the standards in RCW 9.94A.589 (1) and (2) governing whether sentences are to be served consecutively or concurrently is an exceptional sentence subject to the limitations in this section, and may be appealed by the offender or the state as set forth in RCW 9.94A.585 (2) through (6).
-  trigger: ", and may" force=may
-  side1: A departure from the standards in RCW 9.94A.589 (1) and (2) governing whether sentences are to be served consecutively or concurrently is an exceptional sentence subject to the limitations in this section
-  side2: be appealed by the offender or the state as set forth in RCW 9.94A.585 (2) through (6).
-
---- CONTROL-SPLIT 2 — bill 1100, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The tax is in addition to other taxes authorized by law and must be collected from those persons who are taxable by the state under chapters 82.08 and 82.12 RCW upon the occurrence of any taxable event within the city or county.
-  trigger: "and must" force=must
-  side1: The tax is in addition to other taxes authorized by law
-  side2: be collected from those persons who are taxable by the state under chapters 82.08 and 82.12 RCW upon the occurrence of any taxable event within the city or county.
-
---- CONTROL-SPLIT 3 — bill 1156, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: This subsection does not apply to higher education undergraduate and graduate student employees and shall be administered consistent with the requirements of the federal internal revenue code.
-  trigger: "and shall" force=shall
-  side1: This subsection does not apply to higher education undergraduate and graduate student employees
-  side2: be administered consistent with the requirements of the federal internal revenue code.
-
---- CONTROL-SPLIT 4 — bill 1201, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The legislature further finds that partnerships with nongovernmental organizations support emergency planning and preparedness and may be used to support identification and operation of coshelters.
-  trigger: "and may" force=may
-  side1: The legislature further finds that partnerships with nongovernmental organizations support emergency planning and preparedness
-  side2: be used to support identification and operation of coshelters.
-
---- CONTROL-SPLIT 5 — bill 1234, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (d) One member must be either a licensed advanced social worker or a licensed independent clinical social worker; and (e) Three members must be consumers and represent the public at large and may not be licensed mental health care providers.
-  trigger: "and may not" force=may_not
-  side1: (d) One member must be either a licensed advanced social worker or a licensed independent clinical social worker; and (e) Three members must be consumers and represent the public at large
-  side2: be licensed mental health care providers.
-
---- CONTROL-SPLIT 6 — bill 1234, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (b) Each member must not hold a governing office or board position in a professional association for mental health, social work, or marriage and family therapy and must not be employed by the state of Washington.
-  trigger: "and must not" force=must_not
-  side1: (b) Each member must not hold a governing office or board position in a professional association for mental health, social work, or marriage and family therapy
-  side2: be employed by the state of Washington.
-
---- CONTROL-SPLIT 7 — bill 1345, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (b) Owners who do not seek voluntary compliance and are found to have constructed or placed a detached accessory dwelling unit without all required permits must be subject to a civil infraction of at least $1,000 and must be required to remove the detached accessory dwelling unit or ensure that it meets all existing development regulations, if applicable.
-  trigger: "and must" force=must
-  side1: (b) Owners who do not seek voluntary compliance and are found to have constructed or placed a detached accessory dwelling unit without all required permits must be subject to a civil infraction of at least $1,000
-  side2: be required to remove the detached accessory dwelling unit or ensure that it meets all existing development regulations, if applicable.
-
---- CONTROL-SPLIT 8 — bill 1400, section section_8, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The application shall be signed by the president or some managing officer of the railroad corporation and shall be accompanied by an affidavit stating that the officer is acquainted with the person whose commission is sought, that the officer believes the person to be of good moral character, and that the person is of such character and experience that he or she can be safely entrusted with the powers of a police officer.
-  trigger: "and shall" force=shall
-  side1: The application shall be signed by the president or some managing officer of the railroad corporation
-  side2: be accompanied by an affidavit stating that the officer is acquainted with the person whose commission is sought, that the officer believes the person to be of good moral character, and that the person is of such character and experience that he or she can be safely entrusted with the powers of a police officer.
-
---- CONTROL-SPLIT 9 — bill 1423, section section_3, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (11) Notwithstanding any other provision of law, all photographs, microphotographs, electronic images, or audio recordings, or any other personally identifying data prepared under this section are for the exclusive use of authorized city or county employees, as specified in RCW 46.63.030 (1)(d), in the discharge of duties under this section and are not open to the public and may not be used in a court in a pending action or proceeding unless the action or proceeding relates to a violation under this section.
-  trigger: "and may not" force=may_not
-  side1: (11) Notwithstanding any other provision of law, all photographs, microphotographs, electronic images, or audio recordings, or any other personally identifying data prepared under this section are for the exclusive use of authorized city or county employees, as specified in RCW 46.63.030 (1)(d), in the discharge of duties under this section and are not open to the public
-  side2: be used in a court in a pending action or proceeding unless the action or proceeding relates to a violation under this section.
-
---- CONTROL-SPLIT 10 — bill 1423, section section_3, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (12) If a county or city has established an automated traffic safety camera program as authorized under this section, the compensation paid to the manufacturer or vendor of the equipment used must be based only upon the value of the equipment and services provided or rendered in support of the system and may not be based upon a portion of the fine or civil penalty imposed or the revenue generated by the equipment.
-  trigger: "and may not" force=may_not
-  side1: (12) If a county or city has established an automated traffic safety camera program as authorized under this section, the compensation paid to the manufacturer or vendor of the equipment used must be based only upon the value of the equipment and services provided or rendered in support of the system
-  side2: be based upon a portion of the fine or civil penalty imposed or the revenue generated by the equipment.
-
---- CONTROL-SPLIT 11 — bill 1468, section section_8, control=[AND_MAY_BE_PASSIVE] [appeared in 2 places: bill 1468 section_8, bill 5441 section_8] ---
-sentence: RCW 43.79A.040 and 2024 c 327 s 16 and 2024 c 168 s 10 are each reenacted and amended to read as follows: (1) Money in the treasurer's trust fund may be deposited, invested, and reinvested by the state treasurer in accordance with RCW 43.84.080 in the same manner and to the same extent as if the money were in the state treasury, and may be commingled with moneys in the state treasury for cash management and cash balance purposes.
-  trigger: ", and may" force=may
-  side1: RCW 43.79A.040 and 2024 c 327 s 16 and 2024 c 168 s 10 are each reenacted and amended to read as follows: (1) Money in the treasurer's trust fund may be deposited, invested, and reinvested by the state treasurer in accordance with RCW 43.84.080 in the same manner and to the same extent as if the money were in the state treasury
-  side2: be commingled with moneys in the state treasury for cash management and cash balance purposes.
-
---- CONTROL-SPLIT 12 — bill 1468, section section_9, control=[AND_MAY_BE_PASSIVE] [appeared in 2 places: bill 1468 section_9, bill 5441 section_9] ---
-sentence: RCW 43.79A.040 and 2024 c 327 s 17 and 2024 c 168 s 11 are each reenacted and amended to read as follows: (1) Money in the treasurer's trust fund may be deposited, invested, and reinvested by the state treasurer in accordance with RCW 43.84.080 in the same manner and to the same extent as if the money were in the state treasury, and may be commingled with moneys in the state treasury for cash management and cash balance purposes.
-  trigger: ", and may" force=may
-  side1: RCW 43.79A.040 and 2024 c 327 s 17 and 2024 c 168 s 11 are each reenacted and amended to read as follows: (1) Money in the treasurer's trust fund may be deposited, invested, and reinvested by the state treasurer in accordance with RCW 43.84.080 in the same manner and to the same extent as if the money were in the state treasury
-  side2: be commingled with moneys in the state treasury for cash management and cash balance purposes.
-
---- CONTROL-SPLIT 13 — bill 1534, section section_11, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (5) After 30 days following removal from the directory, the vapor products containing nicotine of a manufacturer identified in the notice of removal and intended for retail sale in this state or to a consumer in this state are subject to seizure, in accordance with RCW 82.25.095 , from distributors and retailers, forfeiture from distributors and retailers, and destruction or disposal, and may not be purchased or sold for retail sale in this state or to a consumer in this state.
-  trigger: ", and may not" force=may_not
-  side1: (5) After 30 days following removal from the directory, the vapor products containing nicotine of a manufacturer identified in the notice of removal and intended for retail sale in this state or to a consumer in this state are subject to seizure, in accordance with RCW 82.25.095 , from distributors and retailers, forfeiture from distributors and retailers, and destruction or disposal
-  side2: be purchased or sold for retail sale in this state or to a consumer in this state.
-
---- CONTROL-SPLIT 14 — bill 1534, section section_12, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (4) After 60 days following publication of the directory, vapor products containing nicotine not listed in the directory and intended for retail sale in this state or to a consumer in this state are subject to seizure, forfeiture, and destruction or disposal, and may not be purchased or sold for retail sale in this state or to a consumer in this state except as provided in subsections (2) and (3) of this section.
-  trigger: ", and may not" force=may_not
-  side1: (4) After 60 days following publication of the directory, vapor products containing nicotine not listed in the directory and intended for retail sale in this state or to a consumer in this state are subject to seizure, forfeiture, and destruction or disposal
-  side2: be purchased or sold for retail sale in this state or to a consumer in this state except as provided in subsections (2) and (3) of this section.
-
---- CONTROL-SPLIT 15 — bill 1534, section section_13, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (4) Vapor products containing nicotine offered for sale in violation of sections 7 through 17 of this act are considered contraband and may be seized and disposed of or destroyed by an enforcement officer of the board.
-  trigger: "and may" force=may
-  side1: (4) Vapor products containing nicotine offered for sale in violation of sections 7 through 17 of this act are considered contraband
-  side2: be seized and disposed of or destroyed by an enforcement officer of the board.
-
---- CONTROL-SPLIT 16 — bill 1534, section section_15, control=[AS_MAY_BE,AND_MAY_BE_PASSIVE] ---
+--- CONTROL-SPLIT 1 — bill 1534, section section_15, control=[AS_MAY_BE] ---
 sentence: (3) Any manufacturer whose vapor products containing nicotine are sold in this state, who has not appointed and engaged an agent as required in this section, must be deemed to have appointed the secretary of state as the agent and may be proceeded against in courts of this state by service of process upon the secretary of state.
   trigger: "and may" force=may
   side1: (3) Any manufacturer whose vapor products containing nicotine are sold in this state, who has not appointed and engaged an agent as required in this section, must be deemed to have appointed the secretary of state as the agent
   side2: be proceeded against in courts of this state by service of process upon the secretary of state.
 
---- CONTROL-SPLIT 17 — bill 1545, section section_4, control=[AND_MAY_BE_PASSIVE] ---
-sentence: All data must be reported in the aggregate form and shall be posted on the department's website and submitted to the governor and the relevant committees of the legislature.
-  trigger: "and shall" force=shall
-  side1: All data must be reported in the aggregate form
-  side2: be posted on the department's website and submitted to the governor and the relevant committees of the legislature.
-
---- CONTROL-SPLIT 18 — bill 1635, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: RCW 24.06.130 and 2011 c 336 s 665 are each amended to read as follows: (1) The number of directors of a corporation shall be not less than three and shall be fixed by the bylaws: PROVIDED, That the number of the first board of directors shall be fixed by the articles of incorporation.
-  trigger: "and shall" force=shall
-  side1: RCW 24.06.130 and 2011 c 336 s 665 are each amended to read as follows: (1) The number of directors of a corporation shall be not less than three
-  side2: be fixed by the bylaws: PROVIDED, That the number of the first board of directors shall be fixed by the articles of incorporation.
-
---- CONTROL-SPLIT 19 — bill 1679, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (f) Nonemitting electric generation used to meet the standard under (a) of this subsection must be generated during the compliance period and must be verified by documentation that the electric utility owns the nonpower attributes of the electricity generated by the nonemitting electric generation resource.
-  trigger: "and must" force=must
-  side1: (f) Nonemitting electric generation used to meet the standard under (a) of this subsection must be generated during the compliance period
-  side2: be verified by documentation that the electric utility owns the nonpower attributes of the electricity generated by the nonemitting electric generation resource.
-
---- CONTROL-SPLIT 20 — bill 1714, section section_10, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (2) All interest and earnings collected on program funds belong to the program and must be deposited to the program's credit in the proper program account.
-  trigger: "and must" force=must
-  side1: (2) All interest and earnings collected on program funds belong to the program
-  side2: be deposited to the program's credit in the proper program account.
-
---- CONTROL-SPLIT 21 — bill 1818, section section_5, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (6) It is a violation of this chapter, and may be restrained by injunctive action and found illegal as provided in this chapter, to sell, transfer, or lease any lot or tract that is on a binding site plan that has not been approved and recorded or does not conform to the requirements of the binding site plan.
-  trigger: ", and may" force=may
-  side1: (6) It is a violation of this chapter
-  side2: be restrained by injunctive action and found illegal as provided in this chapter, to sell, transfer, or lease any lot or tract that is on a binding site plan that has not been approved and recorded or does not conform to the requirements of the binding site plan.
-
---- CONTROL-SPLIT 22 — bill 1818, section section_8, control=[AND_MAY_BE_PASSIVE] ---
-sentence: RCW 58.17.065 and 1974 ex.s. c 134 s 12 are each amended to read as follows: Each short plat and short subdivision granted by a city, town, or county pursuant to local regulations after July 1, 1974, and for which a complete application was submitted for approval on or before June 30, 2026, shall be recorded with the county auditor of the county or counties in which the land is located and shall not be deemed "approved" unless the documents are recorded .
-  trigger: "and shall not" force=shall_not
-  side1: RCW 58.17.065 and 1974 ex.s. c 134 s 12 are each amended to read as follows: Each short plat and short subdivision granted by a city, town, or county pursuant to local regulations after July 1, 1974, and for which a complete application was submitted for approval on or before June 30, 2026, shall be recorded with the county auditor of the county or counties in which the land is located
-  side2: be deemed "approved" unless the documents are recorded .
-
---- CONTROL-SPLIT 23 — bill 1818, section section_9, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The final plat must be processed administratively pursuant to RCW 58.17.140 (4) and may not be required to provide notice pursuant to RCW 36.70B.110 and may not require a public hearing.
-  trigger: "and may not" force=may_not
-  side1: The final plat must be processed administratively pursuant to RCW 58.17.140 (4)
-  side2: be required to provide notice pursuant to RCW 36.70B.110
-
---- CONTROL-SPLIT 24 — bill 1946, section section_1, control=[AND_MAY_BE_PASSIVE] [appeared in 4 places: bill 1946 section_1, bill 1946 section_2, bill 1946 section_3, bill 1946 section_4] ---
-sentence: (a) The remaining board members must be persons who are not elected officials and must be selected from the following categories consistent with the requirements of this section and the rules adopted by the state board of health under RCW 43.20.300 : (i) Public health, health care facilities, and providers.
-  trigger: "and must" force=must
-  side1: (a) The remaining board members must be persons who are not elected officials
-  side2: be selected from the following categories consistent with the requirements of this section and the rules adopted by the state board of health under RCW 43.20.300 : (i) Public health, health care facilities, and providers.
-
---- CONTROL-SPLIT 25 — bill 1981, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (2) The tax rate is three percent of the selling price of the renewable energy facility and must be assessed on the seller.
-  trigger: "and must" force=must
-  side1: (2) The tax rate is three percent of the selling price of the renewable energy facility
-  side2: be assessed on the seller.
-
---- CONTROL-SPLIT 26 — bill 1992, section section_206, control=[AND_MAY_BE_PASSIVE] ---
-sentence: RCW 46.61.140 and 2020 c 199 s 2 are each amended to read as follows: Whenever any roadway has been divided into two or more clearly marked lanes for traffic the following rules in addition to all others consistent herewith shall apply: (1) A vehicle shall be driven as nearly as practicable entirely within a single lane and shall not be moved from such lane until the driver has first ascertained that such movement can be made with safety.
-  trigger: "and shall not" force=shall_not
-  side1: RCW 46.61.140 and 2020 c 199 s 2 are each amended to read as follows: Whenever any roadway has been divided into two or more clearly marked lanes for traffic the following rules in addition to all others consistent herewith shall apply: (1) A vehicle shall be driven as nearly as practicable entirely within a single lane
-  side2: be moved from such lane until the driver has first ascertained that such movement can be made with safety.
-
---- CONTROL-SPLIT 27 — bill 2014, section section_1, control=[AND_MAY_BE_PASSIVE] [appeared in 2 places: bill 2014 section_1, bill 2014 section_2] ---
-sentence: (10) "Crime-related prohibition" means an order of a court prohibiting conduct that directly relates to the circumstances of the crime for which the offender has been convicted, and shall not be construed to mean orders directing an offender affirmatively to participate in rehabilitative programs or to otherwise perform affirmative conduct.
-  trigger: ", and shall not" force=shall_not
-  side1: (10) "Crime-related prohibition" means an order of a court prohibiting conduct that directly relates to the circumstances of the crime for which the offender has been convicted
-  side2: be construed to mean orders directing an offender affirmatively to participate in rehabilitative programs or to otherwise perform affirmative conduct.
-
---- CONTROL-SPLIT 28 — bill 2081, section section_109, control=[AND_MAY_BE_PASSIVE] ---
-sentence: Requests under this subsection (2)(d)(i) must be in writing and may be made electronically.
-  trigger: "and may" force=may
-  side1: Requests under this subsection (2)(d)(i) must be in writing
-  side2: be made electronically.
-
---- CONTROL-SPLIT 29 — bill 2112, section section_5, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (1) This chapter does not apply to a bona fide news or public interest broadcast, website video, report, or event and may not be construed to affect the rights of a news-gathering organization.
-  trigger: "and may not" force=may_not
-  side1: (1) This chapter does not apply to a bona fide news or public interest broadcast, website video, report, or event
-  side2: be construed to affect the rights of a news-gathering organization.
-
---- CONTROL-SPLIT 30 — bill 2189, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: If the department determines that an employer has engaged in a pattern of harassment or coercion, the employer may be subject to penalty or corrective action, and may be removed from the retrospective rating program or be decertified from self-insurance under RCW 51.14.030 .
-  trigger: ", and may" force=may
-  side1: If the department determines that an employer has engaged in a pattern of harassment or coercion, the employer may be subject to penalty or corrective action
-  side2: be removed from the retrospective rating program or be decertified from self-insurance under RCW 51.14.030 .
-
---- CONTROL-SPLIT 31 — bill 5085, section section_403, control=[AND_MAY_BE_PASSIVE] [appeared in 2 places: bill 5085 section_403, bill 5085 section_404] ---
-sentence: (2) The value of the ratio obtained is the annual adjustment to the original retirement allowance and must be applied beginning with the July payment.
-  trigger: "and must" force=must
-  side1: (2) The value of the ratio obtained is the annual adjustment to the original retirement allowance
-  side2: be applied beginning with the July payment.
-
---- CONTROL-SPLIT 32 — bill 5085, section section_506, control=[AND_MAY_BE_PASSIVE] ---
-sentence: Except as provided in subsections (6), (7), and (9) of this section, the supplemental contribution rates required by this section shall be calculated by the state actuary and shall be charged regardless of language to the contrary contained in the statute which authorizes additional benefits.
-  trigger: "and shall" force=shall
-  side1: Except as provided in subsections (6), (7), and (9) of this section, the supplemental contribution rates required by this section shall be calculated by the state actuary
-  side2: be charged regardless of language to the contrary contained in the statute which authorizes additional benefits.
-
---- CONTROL-SPLIT 33 — bill 5085, section section_606, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (b) Once an eligible person elects to participate in the salary reduction plan and determines the amount his or her gross salary shall be reduced and the benefit plan for which the funds are to be used during the plan year, the agreement shall be irrevocable and may not be amended during the plan year except as provided in (c) of this subsection.
-  trigger: "and may not" force=may_not
-  side1: (b) Once an eligible person elects to participate in the salary reduction plan and determines the amount his or her gross salary shall be reduced and the benefit plan for which the funds are to be used during the plan year, the agreement shall be irrevocable
-  side2: be amended during the plan year except as provided in (c) of this subsection.
-
---- CONTROL-SPLIT 34 — bill 5118, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (f) A limited license issued under this subsection is valid for two years and may be renewed three times by the commission upon application for renewal by the nominating entity for a total of eight years .
-  trigger: "and may" force=may
-  side1: (f) A limited license issued under this subsection is valid for two years
-  side2: be renewed three times by the commission upon application for renewal by the nominating entity for a total of eight years .
-
---- CONTROL-SPLIT 35 — bill 5129, section section_26, control=[AND_MAY_BE_PASSIVE] ---
-sentence: Any other payments you make to the seller of a unit are at risk and may be lost if the seller defaults." (g) "CONSTRUCTION DEFECT CLAIMS.
-  trigger: "and may" force=may
-  side1: Any other payments you make to the seller of a unit are at risk
-  side2: be lost if the seller defaults." (g) "CONSTRUCTION DEFECT CLAIMS.
-
---- CONTROL-SPLIT 36 — bill 5140, section section_8, control=[AND_MAY_BE_PASSIVE] ---
-sentence: A licensee renewing after the expiration date of the license under this subsection shall pay only the renewal fee specified in subsection (6) of this section and shall not be required to pay a late renewal penalty in addition to the renewal fee.
-  trigger: "and shall not" force=shall_not
-  side1: A licensee renewing after the expiration date of the license under this subsection shall pay only the renewal fee specified in subsection (6) of this section
-  side2: be required to pay a late renewal penalty in addition to the renewal fee.
-
---- CONTROL-SPLIT 37 — bill 5218, section section_5, control=[AS_MAY_BE] ---
+--- CONTROL-SPLIT 2 — bill 5218, section section_5, control=[AS_MAY_BE] ---
 sentence: RCW 46.20.329 and 1982 c 189 s 4 are each amended to read as follows: Upon receiving a request for a formal hearing as provided in RCW 46.20.328 , the department shall fix a time and place for hearing , including a remote hearing, as early as may be arranged , and shall give 10 days' notice of the hearing to the applicant or licensee.
   trigger: ", and shall" force=shall
   side1: RCW 46.20.329 and 1982 c 189 s 4 are each amended to read as follows: Upon receiving a request for a formal hearing as provided in RCW 46.20.328 , the department shall fix a time and place for hearing , including a remote hearing, as early as may be arranged
   side2: give 10 days' notice of the hearing to the applicant or licensee.
-
---- CONTROL-SPLIT 38 — bill 5262, section section_7, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (4) Appoints the insurance commissioner as its true and lawful attorney upon whom may be served lawful process in any action, suit, or proceeding in any court, which appointment is irrevocable, binds the insurer or institution or any successor in interest, remains in effect as long as there is in force in this state any contract made or issued by the insurer or institution, or any obligation arising therefrom, and must be processed in accordance with RCW 48.05.200 ;
-  trigger: ", and must" force=must
-  side1: (4) Appoints the insurance commissioner as its true and lawful attorney upon whom may be served lawful process in any action, suit, or proceeding in any court, which appointment is irrevocable, binds the insurer or institution or any successor in interest, remains in effect as long as there is in force in this state any contract made or issued by the insurer or institution, or any obligation arising therefrom
-  side2: be processed in accordance with RCW 48.05.200 ;
-
---- CONTROL-SPLIT 39 — bill 5262, section section_10, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The notice must be in writing and must be transmitted at the earliest of the next mailing to the policyholder, the yearly summary of benefits sent to the policyholder, or January 1 of the year following June 6, 1996.
-  trigger: "and must" force=must
-  side1: The notice must be in writing
-  side2: be transmitted at the earliest of the next mailing to the policyholder, the yearly summary of benefits sent to the policyholder, or January 1 of the year following June 6, 1996.
-
---- CONTROL-SPLIT 40 — bill 5296, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: A disposition outside the standard range shall be determinate , subject to the review hearings in RCW 13.40.185 (3) when appropriate, and shall be comprised of confinement or community supervision, or a combination thereof.
-  trigger: ", and shall" force=shall
-  side1: A disposition outside the standard range shall be determinate , subject to the review hearings in RCW 13.40.185 (3) when appropriate
-  side2: be comprised of confinement or community supervision, or a combination thereof.
-
---- CONTROL-SPLIT 41 — bill 5352, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (8)(a) Except as provided in (b) of this subsection, the minimum allocation for each school district shall include allocations per annual average full-time equivalent student for the following materials, supplies, and operating costs as provided in the 2023-24 school year, after which the allocations shall be adjusted annually for inflation as specified in the omnibus appropriations act: Per annual average full-time equivalent student in grades K-12 Technology. . . . $178.98 Utilities and insurance. . . . $430.26 Curriculum and textbooks. . . . $164.48 Other supplies . . . . $326.54 Library materials. . . .$22.65 Instructional professional development for certificated and classified staff. . . . $28.94 Facilities maintenance. . . . $206.22 Security and central office administration. . . . $146.37 (b) In addition to the amounts provided in (a) of this subsection, beginning in the 2023-24 school year, the omnibus appropriations act shall provide the following minimum allocation for each annual average full-time equivalent student in grades nine through 12 for the following materials, supplies, and operating costs, to be adjusted annually for inflation: Per annual average full-time equivalent student in grades 9-12 Technology. . . .$44.05 Curriculum and textbooks. . . .$48.06 Other supplies . . . . $94.07 Library materials. . . .$6.05 Instructional professional development for certificated and classified staff. . . .$8.01 (c) The increased allocation amount of $21 per annual average full-time equivalent student for materials, supplies, and operating costs provided under (a) of this subsection is intended to address growing costs in the enumerated categories and may not be expended for any other purpose.
-  trigger: "and may not" force=may_not
-  side1: (8)(a) Except as provided in (b) of this subsection, the minimum allocation for each school district shall include allocations per annual average full-time equivalent student for the following materials, supplies, and operating costs as provided in the 2023-24 school year, after which the allocations shall be adjusted annually for inflation as specified in the omnibus appropriations act: Per annual average full-time equivalent student in grades K-12 Technology. . . . $178.98 Utilities and insurance. . . . $430.26 Curriculum and textbooks. . . . $164.48 Other supplies . . . . $326.54 Library materials. . . .$22.65 Instructional professional development for certificated and classified staff. . . . $28.94 Facilities maintenance. . . . $206.22 Security and central office administration. . . . $146.37 (b) In addition to the amounts provided in (a) of this subsection, beginning in the 2023-24 school year, the omnibus appropriations act shall provide the following minimum allocation for each annual average full-time equivalent student in grades nine through 12 for the following materials, supplies, and operating costs, to be adjusted annually for inflation: Per annual average full-time equivalent student in grades 9-12 Technology. . . .$44.05 Curriculum and textbooks. . . .$48.06 Other supplies . . . . $94.07 Library materials. . . .$6.05 Instructional professional development for certificated and classified staff. . . .$8.01 (c) The increased allocation amount of $21 per annual average full-time equivalent student for materials, supplies, and operating costs provided under (a) of this subsection is intended to address growing costs in the enumerated categories
-  side2: be expended for any other purpose.
-
---- CONTROL-SPLIT 42 — bill 5352, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The definition of full-time equivalent student shall be determined by rules of the superintendent of public instruction and shall be included as part of the superintendent's biennial budget request.
-  trigger: "and shall" force=shall
-  side1: The definition of full-time equivalent student shall be determined by rules of the superintendent of public instruction
-  side2: be included as part of the superintendent's biennial budget request.
-
---- CONTROL-SPLIT 43 — bill 5352, section section_7, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (3) Household income information received by the office of the superintendent of public instruction, school employees, school district employees, or their designees in accordance with this section is exempt from disclosure under chapter 42.56 RCW and may not be disseminated except as provided by law.
-  trigger: "and may not" force=may_not
-  side1: (3) Household income information received by the office of the superintendent of public instruction, school employees, school district employees, or their designees in accordance with this section is exempt from disclosure under chapter 42.56 RCW
-  side2: be disseminated except as provided by law.
-
---- CONTROL-SPLIT 44 — bill 5352, section section_9, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (4) The bonuses provided under this section are in addition to compensation received under a district's salary schedule adopted in accordance with RCW 28A.405.200 and shall not be included in calculations of a district's average salary and associated salary limitations under RCW 28A.400.200 .
-  trigger: "and shall not" force=shall_not
-  side1: (4) The bonuses provided under this section are in addition to compensation received under a district's salary schedule adopted in accordance with RCW 28A.405.200
-  side2: be included in calculations of a district's average salary and associated salary limitations under RCW 28A.400.200 .
-
---- CONTROL-SPLIT 45 — bill 5374, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: Public services and public facilities shall be limited to those necessary to serve the recreation or tourist use and shall be provided in a manner that does not permit low-density sprawl;
-  trigger: "and shall" force=shall
-  side1: Public services and public facilities shall be limited to those necessary to serve the recreation or tourist use
-  side2: be provided in a manner that does not permit low-density sprawl;
-
---- CONTROL-SPLIT 46 — bill 5374, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: Public services and public facilities shall be limited to those necessary to serve the isolated nonresidential use and shall be provided in a manner that does not permit low-density sprawl;
-  trigger: "and shall" force=shall
-  side1: Public services and public facilities shall be limited to those necessary to serve the isolated nonresidential use
-  side2: be provided in a manner that does not permit low-density sprawl;
-
---- CONTROL-SPLIT 47 — bill 5374, section section_3, control=[AND_MAY_BE_PASSIVE] [appeared in 2 places: bill 5374 section_3, bill 5374 section_4] ---
-sentence: (6)(a) Documents prepared by or for the council are inadmissible and may not be used in a civil or administrative proceeding, except that any document that exists before its use or consideration in a review by the council, or that is created independently of such review, does not become inadmissible merely because it is reviewed or used by the council.
-  trigger: "and may not" force=may_not
-  side1: (6)(a) Documents prepared by or for the council are inadmissible
-  side2: be used in a civil or administrative proceeding, except that any document that exists before its use or consideration in a review by the council, or that is created independently of such review, does not become inadmissible merely because it is reviewed or used by the council.
-
---- CONTROL-SPLIT 48 — bill 5640, section section_1, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (5) Applications for certification shall be upon forms prescribed by the council and shall be supported by such information and technical studies as the council may require.
-  trigger: "and shall" force=shall
-  side1: (5) Applications for certification shall be upon forms prescribed by the council
-  side2: be supported by such information and technical studies as the council may require.
-
---- CONTROL-SPLIT 49 — bill 5674, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: Once filed, the exemption is valid for six years or eight years and may not be renewed.
-  trigger: "and may not" force=may_not
-  side1: Once filed, the exemption is valid for six years or eight years
-  side2: be renewed.
-
---- CONTROL-SPLIT 50 — bill 5685, section section_2, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (b) A conviction vacated on or after July 28, 2019, qualifies as a prior conviction for the purpose of charging a present recidivist offense occurring on or after July 28, 2019, and may be used to establish an ongoing pattern of abuse for purposes of RCW 9.94A.535 . --- END ---
-  trigger: ", and may" force=may
-  side1: (b) A conviction vacated on or after July 28, 2019, qualifies as a prior conviction for the purpose of charging a present recidivist offense occurring on or after July 28, 2019
-  side2: be used to establish an ongoing pattern of abuse for purposes of RCW 9.94A.535 . --- END ---
-
---- CONTROL-SPLIT 51 — bill 5732, section section_3, control=[AND_MAY_BE_PASSIVE] ---
-sentence: The following goals are not listed in order of priority and shall be used exclusively for the purpose of guiding the development of comprehensive plans, development regulations, and, where specified, regional plans, policies, and strategies: (1) Urban growth.
-  trigger: "and shall" force=shall
-  side1: The following goals are not listed in order of priority
-  side2: be used exclusively for the purpose of guiding the development of comprehensive plans, development regulations, and, where specified, regional plans, policies, and strategies: (1) Urban growth.
-
---- CONTROL-SPLIT 52 — bill 5732, section section_5, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (7) Multicounty planning policies shall be adopted by two or more counties, each with a population of four hundred fifty thousand or more, with contiguous urban areas and may be adopted by other counties, according to the process established under this section or other processes agreed to among the counties and cities within the affected counties throughout the multicounty region.
-  trigger: "and may" force=may
-  side1: (7) Multicounty planning policies shall be adopted by two or more counties, each with a population of four hundred fifty thousand or more, with contiguous urban areas
-  side2: be adopted by other counties, according to the process established under this section or other processes agreed to among the counties and cities within the affected counties throughout the multicounty region.
-
---- CONTROL-SPLIT 53 — bill 5776, section section_3, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (2) The credit may be used against any tax due under this chapter, and may be carried over until used, except as provided in subsection (4) of this section.
-  trigger: ", and may" force=may
-  side1: (2) The credit may be used against any tax due under this chapter
-  side2: be carried over until used, except as provided in subsection (4) of this section.
-
---- CONTROL-SPLIT 54 — bill 5798, section section_301, control=[AND_MAY_BE_PASSIVE] ---
-sentence: (13) The direct cost of foreclosure and sale of real property, and the direct fees and costs of distraint and sale of personal property, for delinquent taxes, must, when collected, be credited to the operation and maintenance fund of the county treasurer prosecuting the foreclosure or distraint or sale; and must be used by the county treasurer as a revolving fund to defray the cost of further foreclosure, distraint, and sale because of delinquent taxes without regard to budget limitations and not subject to indirect costs of other charges.
-  trigger: "; and must" force=must
-  side1: (13) The direct cost of foreclosure and sale of real property, and the direct fees and costs of distraint and sale of personal property, for delinquent taxes, must, when collected, be credited to the operation and maintenance fund of the county treasurer prosecuting the foreclosure or distraint or sale
-  side2: be used by the county treasurer as a revolving fund to defray the cost of further foreclosure, distraint, and sale because of delinquent taxes without regard to budget limitations and not subject to indirect costs of other charges.
 
 
