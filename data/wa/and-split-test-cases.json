@@ -128,16 +128,15 @@
     },
     {
       "id": "bill-1981-status-first-half-tax-rate",
-      "description": "First half is a statement of status (what the tax rate is), not a duty. Must split, and the status must be presented as the condition the duty applies under, not as its own 'must' item.",
+      "description": "First half is a statement of status (what the tax rate is), not a duty. Must split, and its own subject ('the tax rate') is short enough to carry onto the duty directly, reading as a complete sentence rather than a bare 'be assessed' fragment or a peer duty of its own.",
       "sentence": "(2) The tax rate is three percent of the selling price of the renewable energy facility and must be assessed on the seller.",
       "expectedParagraphCount": 1,
-      "mustStartWith": "Because",
       "paragraphContains": [
-        "the tax rate is three percent"
+        "the tax rate must be assessed on the seller"
       ],
       "mustNotContain": [
-        "the tax rate is three percent of the selling price of the renewable energy facility must",
-        "the tax rate is three percent of the selling price of the renewable energy facility may"
+        "this section requires",
+        "requires: be assessed"
       ]
     },
     {
@@ -152,22 +151,65 @@
     },
     {
       "id": "bill-5118-status-first-half-license-term",
-      "description": "First half states the license's term, a status, not a duty. Must split with the status attached as a condition.",
+      "description": "First half states the license's term, a status, not a duty. Its own subject ('a limited license issued under this subsection') is short enough to carry onto the duty directly. Regression case for the defect where this rendered as 'requires' regardless of the detected permission -- must render as allowed, never as required.",
       "sentence": "(f) A limited license issued under this subsection is valid for two years and may be renewed three times by the commission upon application for renewal by the nominating entity for a total of eight years .",
       "expectedParagraphCount": 1,
-      "mustStartWith": "Because",
       "paragraphContains": [
-        "valid for two years"
+        "a limited license issued under this subsection may be renewed three times"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be renewed"
       ]
     },
     {
       "id": "bill-5129-status-first-half-liability",
-      "description": "First half states that the association is liable -- a status -- which is why the penalty duty applies. Must split with the status attached as a condition.",
+      "description": "First half states that the association is liable -- a status -- which is why the penalty duty applies. Its own subject is short enough to carry onto the duty directly.",
       "sentence": "(10)(a) A unit owners association that willfully violates this section is liable to the unit owner for actual damages, and shall pay a civil penalty to the unit owner in an amount not to exceed $1,000.",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "a unit owners association that willfully violates this section must pay a civil penalty"
+      ]
+    },
+    {
+      "id": "bill-5674-status-first-half-prohibition-not-required",
+      "description": "Regression case for Defect 1: the status half's own subject ('once filed, the exemption') can't be carried cleanly (it starts with a leading adverbial before the comma), so this keeps the 'Because ...' attachment -- but the duty itself is a prohibition and must render as forbidden, never as required. This exact sentence previously rendered as 'this section requires: be renewed', telling a reader to do the very thing the law forbids.",
+      "sentence": "Once filed, the exemption is valid for six years or eight years and may not be renewed.",
       "expectedParagraphCount": 1,
       "mustStartWith": "Because",
       "paragraphContains": [
-        "liable to the unit owner"
+        "this section prohibits: be renewed"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be renewed"
+      ]
+    },
+    {
+      "id": "bill-5352-status-first-half-prohibition-control",
+      "description": "A second, independent prohibition-not-required regression case, confirming the fix isn't specific to one sentence. Also serves as the direct-wording prohibition assertion for the and-split rule as a whole.",
+      "sentence": "(3) Household income information received by the office of the superintendent of public instruction, school employees, school district employees, or their designees in accordance with this section is exempt from disclosure under chapter 42.56 RCW and may not be disseminated except as provided by law.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "this section prohibits: be disseminated"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be disseminated"
+      ]
+    },
+    {
+      "id": "bill-1100-status-first-half-required-with-subject",
+      "description": "Direct-wording obligation assertion with a carried subject: the tax's own status ('the tax is in addition to other taxes authorized by law') carries its short subject ('the tax') onto the duty, reading as a complete sentence with 'must', not a bare 'be collected' fragment.",
+      "sentence": "The tax is in addition to other taxes authorized by law and must be collected from those persons who are taxable by the state under chapters 82.08 and 82.12 RCW upon the occurrence of any taxable event within the city or county.",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "the tax must be collected from those persons who are taxable by the state"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be collected"
       ]
     },
     {
