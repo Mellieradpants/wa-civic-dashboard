@@ -1,0 +1,36 @@
+name: Tmp Scan Colon Lettered Duties
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scan real bills for colon-plus-lettered-item duty sentences
+        run: node scripts/tmp-scan-colon-lettered-duties.js
+
+      - name: Commit results file
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tmp-scan-colon-lettered-duties-results.txt
+          git diff --staged --quiet || git commit -m "Add colon-plus-lettered-item duty scan results for review"
+          git pull --rebase
+          git push origin HEAD
