@@ -1,0 +1,263 @@
+{
+  "cases": [
+    {
+      "id": "bill-1946-chain-three-instructions",
+      "description": "Three instructions chained by 'and may not' with no restated actor. Must produce three separate duties, not two.",
+      "sentence": "These individuals may not be elected officials and may not have any fiduciary obligation to a health facility or other health agency, and may not have a material financial interest in the rendering of health services; and (iii) Other community stakeholders.",
+      "expectedParagraphCount": 3,
+      "paragraphContains": [
+        "cannot be elected officials",
+        "cannot have any fiduciary obligation",
+        "cannot have a material financial interest"
+      ]
+    },
+    {
+      "id": "bill-5085-infinitive-lookthrough-must-split",
+      "description": "'continue' is on the no-actor list, but is followed by 'to make provisions' -- a genuine action a municipality performs. Must split, looking through the infinitive to 'make'.",
+      "sentence": "(3) Every municipality shall make provisions for the collection and payment of the fees required under this chapter, and shall continue to make provisions for all reserve officers who come under this chapter as long as they continue to be employed as reserve officers.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must make provisions for the collection and payment",
+        "must continue to make provisions for all reserve officers"
+      ]
+    },
+    {
+      "id": "bill-1378-shared-ending-bare-to",
+      "description": "First half ends on a bare 'to' -- 'is not authorized to' shares 'supervise any offender...' with the second half. Must not split.",
+      "sentence": "(6) The department is not authorized to, and may not, supervise any offender sentenced to a term of community custody or any probationer unless the offender or probationer is one for whom supervision is required under this section or RCW 9.94A.5011 .",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "is not authorized to"
+      ]
+    },
+    {
+      "id": "bill-1623-shared-ending-bare-to",
+      "description": "First half ends on a bare 'to' -- 'are in addition to' shares 'the employee's hourly minimum wage' with the second half. Must not split.",
+      "sentence": "Tips and service charges paid to an employee are in addition to, and may not count towards, the employee's hourly minimum wage.",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "in addition to"
+      ]
+    },
+    {
+      "id": "bill-1400-shared-ending-blocks-only-one-trigger",
+      "description": "Two triggers in one sentence: 'shall have the power to and may in its discretion commission...' shares a bare 'to' ending and must not split there, but the later 'and may revoke...' is a genuine, unrelated second duty and must still split.",
+      "sentence": "RCW 81.60.010 and 2001 c 72 s 1 are each amended to read as follows: The criminal justice training commission shall have the power to and may in its discretion commission railroad police officers at the request of any railroad corporation and may revoke any commission at its pleasure.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "have the power to and may in its discretion commission railroad police officers",
+        "may revoke any commission"
+      ]
+    },
+    {
+      "id": "bill-1400-no-actor-occur",
+      "description": "'occurs' describes something happening, not someone acting. Must not split.",
+      "sentence": "The event, \"chief for a day,\" occurs on one day, annually or every other year and may occur on the grounds and in the facilities of the commission.",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "chief for a day"
+      ]
+    },
+    {
+      "id": "bill-1842-no-actor-remain",
+      "description": "'shall remain in effect' describes a status persisting, not an action performed. Must not split.",
+      "sentence": "(c) The appointment of the risk manager as attorney shall be irrevocable, shall bind any successor in interest or to the assets or liabilities of the joint self-insurance program, and shall remain in effect as long as there is in force in this state any contract made by the joint self-insurance program or liabilities or duties arising therefrom.",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "risk manager"
+      ]
+    },
+    {
+      "id": "bill-5820-no-actor-remain",
+      "description": "A second, independent 'shall remain in effect' case confirming the no-actor block is not specific to one sentence.",
+      "sentence": "Regulations adopted under this subsection may not prohibit uses legally existing on any parcel prior to their adoption and shall remain in effect until the county or city adopts development regulations pursuant to RCW 36.70A.040 .",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "regulations adopted under this subsection"
+      ]
+    },
+    {
+      "id": "requirement-to-permission-preserves-distinct-forces",
+      "description": "The two halves carry different force -- a requirement and a permission. Must split and keep them distinct, not collapse both to the same force.",
+      "sentence": "The committee must meet at least once a month and may hold additional meetings at the call of the chair or by a majority vote of the members of the committee.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must meet at least once a month",
+        "may hold additional meetings"
+      ]
+    },
+    {
+      "id": "voter-registration-prohibition-preserves-negation",
+      "description": "The second half is a prohibition on the same actor. Must split and preserve the negation, not render it as a second requirement.",
+      "sentence": "(b) If a voter is successfully challenged under RCW 29A.08.810 (1)(c), the county auditor shall send a notice to the voter and shall not remove the voter from the official state voter registration list unless the voter fails to respond to the notice and fails to vote or confirm their voter registration address during the time period that includes the next two general elections.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must send a notice",
+        "cannot remove the voter"
+      ]
+    },
+    {
+      "id": "bill-2081-passive-second-half",
+      "description": "Passive second half -- performed by someone even though nobody is named. Must split.",
+      "sentence": "Requests under this subsection (2)(d)(i) must be in writing and may be made electronically.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must be in writing",
+        "may be made electronically"
+      ]
+    },
+    {
+      "id": "bill-5262-passive-second-half",
+      "description": "A second, independent passive-second-half case.",
+      "sentence": "The notice must be in writing and must be transmitted at the earliest of the next mailing to the policyholder, the yearly summary of benefits sent to the policyholder, or January 1 of the year following June 6, 1996.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must be in writing",
+        "must be transmitted"
+      ]
+    },
+    {
+      "id": "bill-1534-passive-second-half",
+      "description": "A third, independent passive-second-half case, with a fully passive first half too.",
+      "sentence": "(3) Any manufacturer whose vapor products containing nicotine are sold in this state, who has not appointed and engaged an agent as required in this section, must be deemed to have appointed the secretary of state as the agent and may be proceeded against in courts of this state by service of process upon the secretary of state.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must be deemed to have appointed the secretary of state",
+        "may be proceeded against"
+      ]
+    },
+    {
+      "id": "bill-1981-status-first-half-tax-rate",
+      "description": "First half is a statement of status, not a duty -- and its own predicate ('is three percent of the selling price...') is a real fact (the rate's value), not a pure lead-in, so pulling out just the subject would drop it. Must split with the whole status kept in the 'Because ...' framing rather than losing the rate value.",
+      "sentence": "(2) The tax rate is three percent of the selling price of the renewable energy facility and must be assessed on the seller.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "the tax rate is three percent of the selling price"
+      ],
+      "mustNotContain": [
+        "this section prohibits",
+        "this section allows"
+      ]
+    },
+    {
+      "id": "bill-1534-status-first-half-contraband",
+      "description": "First half classifies the product as contraband -- a status, not a duty -- which is why the enforcement duty applies. Must split with the status attached as a condition.",
+      "sentence": "(4) Vapor products containing nicotine offered for sale in violation of sections 7 through 17 of this act are considered contraband and may be seized and disposed of or destroyed by an enforcement officer of the board.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "considered contraband"
+      ]
+    },
+    {
+      "id": "bill-5118-status-first-half-license-term",
+      "description": "First half states the license's term ('is valid for two years') -- a real fact, not a pure lead-in, so it must not be dropped by pulling out only the subject. Must split with the whole status kept in the 'Because ...' framing. Also a regression case for the defect where this rendered as 'requires' regardless of the detected permission -- must render as allowed, never as required.",
+      "sentence": "(f) A limited license issued under this subsection is valid for two years and may be renewed three times by the commission upon application for renewal by the nominating entity for a total of eight years .",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "is valid for two years"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be renewed"
+      ]
+    },
+    {
+      "id": "bill-5129-status-first-half-liability",
+      "description": "First half states that the association is liable for actual damages -- a real fact separate from the civil penalty duty that follows, not a pure lead-in, so it must not be dropped by pulling out only the subject. Must split with the whole status kept in the 'Because ...' framing.",
+      "sentence": "(10)(a) A unit owners association that willfully violates this section is liable to the unit owner for actual damages, and shall pay a civil penalty to the unit owner in an amount not to exceed $1,000.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "is liable to the unit owner for actual damages"
+      ]
+    },
+    {
+      "id": "bill-5674-status-first-half-prohibition-not-required",
+      "description": "Regression case for Defect 1: the status half's own subject ('once filed, the exemption') can't be carried cleanly (it starts with a leading adverbial before the comma), so this keeps the 'Because ...' attachment -- but the duty itself is a prohibition and must render as forbidden, never as required. This exact sentence previously rendered as 'this section requires: be renewed', telling a reader to do the very thing the law forbids.",
+      "sentence": "Once filed, the exemption is valid for six years or eight years and may not be renewed.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "this section prohibits: be renewed"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be renewed"
+      ]
+    },
+    {
+      "id": "bill-5352-status-first-half-prohibition-control",
+      "description": "A second, independent prohibition-not-required regression case, confirming the fix isn't specific to one sentence. Also serves as the direct-wording prohibition assertion for the and-split rule as a whole.",
+      "sentence": "(3) Household income information received by the office of the superintendent of public instruction, school employees, school district employees, or their designees in accordance with this section is exempt from disclosure under chapter 42.56 RCW and may not be disseminated except as provided by law.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "this section prohibits: be disseminated"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be disseminated"
+      ]
+    },
+    {
+      "id": "bill-1100-status-first-half-required-with-subject",
+      "description": "Direct-wording obligation assertion with a carried subject: the tax's own status ('the tax is in addition to other taxes authorized by law') carries its short subject ('the tax') onto the duty, reading as a complete sentence with 'must', not a bare 'be collected' fragment.",
+      "sentence": "The tax is in addition to other taxes authorized by law and must be collected from those persons who are taxable by the state under chapters 82.08 and 82.12 RCW upon the occurrence of any taxable event within the city or county.",
+      "expectedParagraphCount": 1,
+      "paragraphContains": [
+        "the tax must be collected from those persons who are taxable by the state"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be collected"
+      ]
+    },
+    {
+      "id": "previous-question-prohibition-content-preserved",
+      "description": "Regression case for content loss: the status half's predicate ('is not debatable') is a real fact, not a pure lead-in, so subject-carry must not fire here -- both the status fact and the prohibition on amendment must reach the reader.",
+      "sentence": "The previous question is not debatable and cannot be amended.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "not debatable"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be amended"
+      ]
+    },
+    {
+      "id": "executive-director-exemption-content-preserved",
+      "description": "Regression case for content loss: the civil service exemption is a real fact stated by the status clause, not a pure lead-in, so it must still reach the reader alongside the duty to serve at the board's pleasure.",
+      "sentence": "The executive director is exempt from the provisions of the state civil service law, chapter 41.06 RCW, and must serve at the pleasure of the board established in this section.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "exempt from the provisions of the state civil service law"
+      ]
+    },
+    {
+      "id": "arbitrator-decision-final-binding-content-preserved",
+      "description": "Regression case for content loss: 'final and binding on the parties' is a real fact about the arbitrator's decision, not a pure lead-in, so it must still reach the reader alongside the enforcement duty.",
+      "sentence": "A decision of the arbitrator is final and binding on the parties, and may be enforced at the instance of either party, the arbitrator, or the commission in the superior court to enforce compliance therewith or restrain violations thereof.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "final and binding on the parties"
+      ]
+    },
+    {
+      "id": "bill-1635-control-as-may-be-does-not-block-real-trigger",
+      "description": "Control case: the sentence contains 'as may be' well after a genuine trigger. The phrase must not be mistaken for a trigger itself, and must not block the real one -- the sentence must still split normally.",
+      "sentence": "(2) The directors constituting the first board of directors shall be named in the articles of incorporation and shall hold office until the first annual election of directors or for such other period as may be specified in the articles of incorporation or the bylaws.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": [
+        "must be named in the articles of incorporation",
+        "must hold office"
+      ]
+    }
+  ]
+}
