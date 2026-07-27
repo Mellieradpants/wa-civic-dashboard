@@ -128,15 +128,16 @@
     },
     {
       "id": "bill-1981-status-first-half-tax-rate",
-      "description": "First half is a statement of status (what the tax rate is), not a duty. Must split, and its own subject ('the tax rate') is short enough to carry onto the duty directly, reading as a complete sentence rather than a bare 'be assessed' fragment or a peer duty of its own.",
+      "description": "First half is a statement of status, not a duty -- and its own predicate ('is three percent of the selling price...') is a real fact (the rate's value), not a pure lead-in, so pulling out just the subject would drop it. Must split with the whole status kept in the 'Because ...' framing rather than losing the rate value.",
       "sentence": "(2) The tax rate is three percent of the selling price of the renewable energy facility and must be assessed on the seller.",
       "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
       "paragraphContains": [
-        "the tax rate must be assessed on the seller"
+        "the tax rate is three percent of the selling price"
       ],
       "mustNotContain": [
-        "this section requires",
-        "requires: be assessed"
+        "this section prohibits",
+        "this section allows"
       ]
     },
     {
@@ -151,11 +152,12 @@
     },
     {
       "id": "bill-5118-status-first-half-license-term",
-      "description": "First half states the license's term, a status, not a duty. Its own subject ('a limited license issued under this subsection') is short enough to carry onto the duty directly. Regression case for the defect where this rendered as 'requires' regardless of the detected permission -- must render as allowed, never as required.",
+      "description": "First half states the license's term ('is valid for two years') -- a real fact, not a pure lead-in, so it must not be dropped by pulling out only the subject. Must split with the whole status kept in the 'Because ...' framing. Also a regression case for the defect where this rendered as 'requires' regardless of the detected permission -- must render as allowed, never as required.",
       "sentence": "(f) A limited license issued under this subsection is valid for two years and may be renewed three times by the commission upon application for renewal by the nominating entity for a total of eight years .",
       "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
       "paragraphContains": [
-        "a limited license issued under this subsection may be renewed three times"
+        "is valid for two years"
       ],
       "mustNotContain": [
         "this section requires",
@@ -164,11 +166,12 @@
     },
     {
       "id": "bill-5129-status-first-half-liability",
-      "description": "First half states that the association is liable -- a status -- which is why the penalty duty applies. Its own subject is short enough to carry onto the duty directly.",
+      "description": "First half states that the association is liable for actual damages -- a real fact separate from the civil penalty duty that follows, not a pure lead-in, so it must not be dropped by pulling out only the subject. Must split with the whole status kept in the 'Because ...' framing.",
       "sentence": "(10)(a) A unit owners association that willfully violates this section is liable to the unit owner for actual damages, and shall pay a civil penalty to the unit owner in an amount not to exceed $1,000.",
       "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
       "paragraphContains": [
-        "a unit owners association that willfully violates this section must pay a civil penalty"
+        "is liable to the unit owner for actual damages"
       ]
     },
     {
@@ -210,6 +213,40 @@
       "mustNotContain": [
         "this section requires",
         "requires: be collected"
+      ]
+    },
+    {
+      "id": "previous-question-prohibition-content-preserved",
+      "description": "Regression case for content loss: the status half's predicate ('is not debatable') is a real fact, not a pure lead-in, so subject-carry must not fire here -- both the status fact and the prohibition on amendment must reach the reader.",
+      "sentence": "The previous question is not debatable and cannot be amended.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "not debatable"
+      ],
+      "mustNotContain": [
+        "this section requires",
+        "requires: be amended"
+      ]
+    },
+    {
+      "id": "executive-director-exemption-content-preserved",
+      "description": "Regression case for content loss: the civil service exemption is a real fact stated by the status clause, not a pure lead-in, so it must still reach the reader alongside the duty to serve at the board's pleasure.",
+      "sentence": "The executive director is exempt from the provisions of the state civil service law, chapter 41.06 RCW, and must serve at the pleasure of the board established in this section.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "exempt from the provisions of the state civil service law"
+      ]
+    },
+    {
+      "id": "arbitrator-decision-final-binding-content-preserved",
+      "description": "Regression case for content loss: 'final and binding on the parties' is a real fact about the arbitrator's decision, not a pure lead-in, so it must still reach the reader alongside the enforcement duty.",
+      "sentence": "A decision of the arbitrator is final and binding on the parties, and may be enforced at the instance of either party, the arbitrator, or the commission in the superior court to enforce compliance therewith or restrain violations thereof.",
+      "expectedParagraphCount": 1,
+      "mustStartWith": "Because",
+      "paragraphContains": [
+        "final and binding on the parties"
       ]
     },
     {
