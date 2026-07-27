@@ -2,6 +2,12 @@ name: Tmp Validate Status Content Loss Fix
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - implement-and-split-rule
+    paths:
+      - scripts/tmp-validate-status-content-loss.js
+      - .github/workflows/tmp-validate-status-content-loss.yml
 
 permissions:
   contents: write
