@@ -1,0 +1,83 @@
+{
+  "cases": [
+    {
+      "id": "bill-5218-motor-vehicle-transfer-both-items-present",
+      "description": "Confirmed real drop: neither item's content appeared in any of the section's 11 units before the fix. Both items must now be present.",
+      "sentence": "The requirements of this section also apply to the transfer of a motor vehicle held: (a) For lease when transferred to a lessee and then to the lessor at the end of the leasehold; (b) In a fleet when transferred to a purchaser.",
+      "mustContainWords": ["lessee", "lessor", "leasehold", "fleet", "purchaser"],
+      "minUnitCount": 1
+    },
+    {
+      "id": "bill-1749-factor-list-zero-unit-case-now-produces-output",
+      "description": "Confirmed real drop: this whole list produced ZERO units before the fix (neither the lead-in nor any item carries shall/must/may/will). Must now produce at least one unit with every item present.",
+      "sentence": "(2) Similarly, the legislature finds that the current state environmental policy act checklist and review process does not give adequate guidance to ensure that applicants understand that they should be considering in threshold determinations: (a) The potential for projects and programs to significantly contribute to climate change, including from life-cycle emissions of greenhouse gases; (b) the potential to harm climate change related goals and policies related to promoting carbon sequestration; (c) the potential for increasing health disparities in overburdened communities and vulnerable communities; (d) the potential for harming treaty-protected resources on ceded lands within Washington and adversely affecting access to, or preservation of, tribal cultural resources.",
+      "mustContainWords": ["sequestration", "disparities", "treaty", "greenhouse"],
+      "minUnitCount": 1
+    },
+    {
+      "id": "bill-5063-factor-list-zero-unit-case-now-produces-output",
+      "description": "A second, independent zero-unit case (lead-in uses 'should', not a recognized force-word) confirming the fix isn't specific to one sentence. All 9 items must be present.",
+      "sentence": "(4) In conducting its review under this section, the joint legislative audit and review committee should consider, among other measures: (a) The total miles capable of transporting 286,000 pound railcars; (b) The number of miles of track rehabilitated to 90 pound rail or greater; (c) The number of ties replaced; (d) The amount of ballast replaced; (e) The number of bridges returned from out of service or able to operate heavier loaded equipment; (f) The number of switches installed; (g) Any related safety benefits of addressing at-grade crossings; (h) The number of rail cars from increased economic activity; (i) Any improvement in federal railroad administration track classification designation up to and including class II track and the ability to operate at greater speeds.",
+      "mustContainWords": ["railcars", "rehabilitated", "ballast", "bridges", "switches", "crossings"],
+      "minUnitCount": 1
+    },
+    {
+      "id": "bill-1000-utility-employee-list-both-items-present",
+      "description": "Confirmed real drop: both items missing before the fix (lead-in has no force-word). Must now be present.",
+      "sentence": "(ff) The current offense involved the assault of a utility employee of any publicly or privately owned utility company or agency, who is at the time of the act engaged in official duties, including: (i) The maintenance or repair of utility poles, lines, conduits, pipes, or other infrastructure; (ii) connecting, disconnecting, or recording utility meters.",
+      "mustContainWords": ["conduits", "infrastructure", "meters"],
+      "minUnitCount": 1
+    },
+    {
+      "id": "bill-1011-project-types-all-five-items-present",
+      "description": "The open-question case: a partial-drop pattern (items i, ii, v present; iii 'fencing' and iv 'lighting' missing) that didn't match the 'nothing survives' mechanism seen elsewhere. The fix must make all five items present, including the two short ones.",
+      "sentence": "Examples of eligible project types under this section include, but are not limited to: (i) Design and construction of security vestibules; (ii) purchase and installation of metal detectors, facility key card access, remote door access, panic buttons, or silent alarms; (iii) fencing; (iv) lighting; (v) crime prevention through environmental design projects.",
+      "mustContainWords": ["vestibules", "detectors", "fencing", "lighting", "prevention"],
+      "minUnitCount": 1
+    },
+    {
+      "id": "mixed-case-items-with-own-force-not-absorbed-into-lead-in",
+      "description": "A MIXED-shape list (some items restate a force-word, some don't). The chair's item (which has its own 'must') must produce its own separately-attributed content, not be silently folded into the lead-in's action text alongside the force-less items.",
+      "sentence": "(2) The committee shall consist of the following members: (a) One member appointed by the governor; (b) One member appointed by the attorney general; (c) The chair, who must be elected annually by the other members.",
+      "mustContainWords": ["governor", "attorney general", "elected annually"],
+      "minUnitCount": 1
+    },
+    {
+      "id": "each-item-own-force-both-items-render-correctly",
+      "description": "The already-working EACH-ITEM-OWN-FORCE shape (ordinary statute amendment with two independently complete sentences carrying sequential subsection numbers, each with its own force-word) must be unaffected by this fix -- confirms the fix doesn't regress a shape that never needed it.",
+      "sentence": "RCW 59.12.050 and 1891 c 96 s 6 are each amended to read as follows: (1) The superior court of the county in which the property or some part of it is situated shall have jurisdiction of proceedings under this chapter. (2) In each county, the superior court may appoint one or more attorneys to act as commissioners pursuant to this chapter to exercise all powers and perform all duties of a court commissioner appointed pursuant to RCW 2.24.010 .",
+      "minUnitCount": 2,
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "superior court" },
+        { "index": 1, "modal": "may", "actorContains": "superior court" }
+      ]
+    },
+    {
+      "id": "period-separated-continuation-inherits-lead-in-force",
+      "description": "A genuine period-separated list continuation (item (b), with no requirement word of its own) must inherit the lead-in's actor and modal rather than being dropped.",
+      "sentence": "The trial court may impose an aggravated exceptional sentence without a finding of fact by a jury under the following circumstances: (a) both parties stipulate to the imposition of an exceptional sentence outside the standard range. (b) the offender score calculation excludes a prior criminal history omitted from the sentencing record. (c) the defendant committed multiple current offenses under this chapter.",
+      "minUnitCount": 3,
+      "unitChecks": [
+        { "index": 0, "modal": "may", "actorContains": "trial court" },
+        { "index": 1, "modal": "may", "actorContains": "trial court", "actionContains": "offender score calculation" },
+        { "index": 2, "modal": "may", "actorContains": "trial court", "actionContains": "multiple current offenses" }
+      ]
+    },
+    {
+      "id": "own-requirement-word-not-overwritten-by-lead-in",
+      "description": "A period-separated continuation item that DOES carry its own requirement word (a stricter 'must') must keep its own actor and modal, not have them overwritten by the lead-in's ('may').",
+      "sentence": "The trial court may impose an aggravated exceptional sentence without a finding of fact by a jury under the following circumstances: (a) both parties stipulate to the imposition of an exceptional sentence outside the standard range. (b) the offender score calculation excludes a prior criminal history omitted from the sentencing record. (c) the court must additionally consider aggravating factors under this chapter.",
+      "minUnitCount": 3,
+      "unitChecks": [
+        { "index": 2, "modal": "must", "actorContains": "the court" }
+      ]
+    },
+    {
+      "id": "bill-1089-not-a-list-still-unaffected",
+      "description": "Confirms the fix does not turn ordinary statute-amendment subsection numbering into a false list binding -- item (1) is independently a complete sentence, so this stays two separate, already-correct units, exactly as before the fix.",
+      "sentence": "RCW 59.12.050 and 1891 c 96 s 6 are each amended to read as follows: (1) The superior court of the county in which the property or some part of it is situated shall have jurisdiction of proceedings under this chapter. (2) In each county, the superior court may appoint one or more attorneys to act as commissioners pursuant to this chapter to exercise all powers and perform all duties of a court commissioner appointed pursuant to RCW 2.24.010 .",
+      "minUnitCount": 2,
+      "maxUnitCount": 2
+    }
+  ]
+}
