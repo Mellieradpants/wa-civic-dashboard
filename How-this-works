@@ -1,0 +1,311 @@
+#
+
+Purpose of this document: describe what the service is, what each part does, and
+the process run against it, in enough detail for another engineer to take over.
+Every statement names an identifier that can be checked against the code. Where a
+name is a real term from an established field, it is labeled as such. Facts that
+could read as problems are stated without evaluation.
+
+Verified against the repository and GitHub Actions run history on 2026-07-28.
+
+---
+
+## 1. What the service does
+
+A deterministic HTTP service that converts Washington State legislative bill text
+into plain-English "plain-meaning" output. No AI model is called in the parsing or
+rendering path; every transformation is rule-based JavaScript. Input is Washington
+bill text (fetched by bill number, or supplied directly). Output is structured
+plain-language text stating, per sentence, who must / may / cannot do what, and
+under what conditions.
+
+## 2. Runtime and how to run it
+
+- Language: JavaScript, ES modules (`package.json` `"type": "module"`).
+- Node.js: version 22 or higher (`engines.node: ">=22"`).
+- Runtime dependencies: `express` ^4.18 (HTTP server), `@upstash/redis` ^1.34.
+- Start: `node server.js` (`scripts.start`). Listens on `PORT` (3000 in local and
+  workflow runs; the health check hits `http://localhost:3000/api/health`).
+- Build the bill index: `node scripts/populate-bill-index.js` (`scripts.build`) —
+  writes `data/wa/bill-index.json`.
+- Entry point `server.js`: JSON body limit 2 MB; serves `/lib` as static files
+  (so browser ES modules resolve); serves top-level HTML pages; registers an
+  11-route API table; listens on `PORT`.
+
+## 3. End-to-end request path (what happens to a bill)
+
+1. Client requests a bill by number → `GET /api/wa-bill-text` → `api/wa-bill-text.js`
+   fetches document text from `app.leg.wa.gov` (`.../bi/tld/documentsearchresults`),
+   resolving the biennium (the two-year legislative period) from the year.
+2. `lib/wa-adapter/index.js` `getNormalizedBill(biennium, billNumber)` normalizes the
+   fetched bill into the shape the pipeline consumes.
+3. Client POSTs bill text to `POST /api/plain-meaning` → `api/plain-meaning.js`:
+   - `{ text }` body → `runPipeline(text)` (`lib/plain-meaning/pipeline.js`) →
+     ISC output → `renderISC()` (`lib/plain-meaning/renderer.js`) → plain-meaning text.
+   - `{ units }` body → skips the pipeline, goes straight to `renderISC()`
+     (see §6 note on this path).
+4. The response returns the plain-meaning text plus per-sentence records
+   (`sentences[]`, `lineage.records`) that the test checks read.
+
+External data sources the code contacts: `app.leg.wa.gov` (bill text) and
+`wslwebservices.leg.wa.gov/legislationservice.asmx` (health-check reachability ping).
+
+## 4. The parsing pipeline (`lib/plain-meaning/pipeline.js`)
+
+Exported entry point: `runPipeline(rawText, context = {})`. About 1,580 lines. The
+file header declares it deterministic, no AI, each layer a pure function. Ten layers,
+run in order (acronyms are project-internal names defined in the file header, not
+standard external terminology):
+
+- L1  5WIH — who/what/when/where/why/how assembly
+- L2  SSE  — source statement extraction (signal-anchored spans)
+- L3  CFS  — constraint filter (removes intent, emotion, narrative)
+- L4  LNS  — language normalization
+- L5  AAC  — actor-action-condition parsing
+- L6  TPS  — temporal parsing (deadlines, triggers, sequence)
+- L7  SJM  — system/jurisdiction mapping
+- L8  MPS  — mechanism parsing (how + enforcement)
+- L9  RDS  — risk decomposition (likelihood vs consequence)
+- L10 ISC  — information set construction (assembles the object the renderer consumes)
+
+Central design assumption to hold onto: the pipeline derives exactly one actor, one
+action, and one modal (must / may / cannot) per sentence. Real legislative sentences
+that violate this one-to-one assumption are the recurring source of parsing defects.
+The known violation patterns are handled by targeted code, including:
+
+- `detectSecondInstruction` / `parseActorActionCondition` (L5) — detect a second
+  actor+modal joined by "and", so a coordinate clause is not collapsed into one
+  action string. `parseActorActionCondition` returns one or more
+  `{actor, modal, action, conditions}` groups.
+- Relative-clause modal handling (which / that / who) — bounds a relative clause so
+  its own modal cannot override the main clause's modal.
+- including / excluding list detection — marks a list span as absent during
+  actor/action parsing so list items are not mis-read as the action.
+
+Key functions: `runPipeline` (entry), `splitSentences`, `detectSecondInstruction`,
+`parseActorActionCondition`, `signalForModal`, and the inclusion/exclusion list
+detectors.
+
+Meaning lineage (provenance): every transformation records what it did, so output can
+be traced back to source text. Records live on the pipeline output
+(`lineage.records`, each with `position` `[start, end]`, `text`, `producedBy`, `id`)
+and drive two of the test checks (C4, L1). The renderer-side tracer is
+`traceRenderUnit`. Project plain-language name for this: "meaning lineage" — a chain
+of custody for meaning.
+
+## 5. The renderer (`lib/plain-meaning/renderer.js`)
+
+Exports:
+- `renderISC(iscOutput, { debug })` — top level; turns the pipeline's ISC output into
+  plain-meaning text. Prepends a section-type prefix to each section's first sentence,
+  one of: `New law — `, `Amends existing law — `, `Funding — `, `Effective <date> — `.
+- `renderUnit(unit, { debug })` — renders a single unit.
+- `traceRenderUnit(unit)` — provenance tracer.
+
+`analyzeCoordinateSplit` handles the same-actor "and"-joined coordinate case on the
+renderer side (distinct from L5's different-actor case). Sentence templates come from
+`templates.js` (`TEMPLATES`, `cleanActor`, `cleanAction`).
+
+## 6. HTTP API (route table declared in `server.js`)
+
+Eleven routes:
+
+- `GET  /api/health` — bill index load status + WA Legislature reachability.
+- `GET  /api/testing-stats` — corpus size + cumulative tested-bill count (for the UI
+  validation disclaimer). Reads `bill-index.json` and `test-results.json`.
+- `GET  /api/wa-bill-search` — keyword search over the bill index.
+- `GET  /api/wa-bill-detail` — metadata and status for a bill number.
+- `GET  /api/wa-bill-documents` — documents available for a bill.
+- `GET  /api/wa-bill-text` — bill text by number (fetches `leg.wa.gov`).
+- `GET  /api/wa-bill-selection` — classifies bill sentences (obligation / permission /
+  condition / …) and extracts references.
+- `GET  /api/wa-bill-plain-summary` — returns HTTP 410 (discontinued; replaced by
+  `/api/plain-meaning`).
+- `POST /api/analyze` — returns HTTP 410 (discontinued; replaced by
+  `/api/plain-meaning`).
+- `POST /api/plain-meaning` — main endpoint. `{ text }` runs `runPipeline` then
+  `renderISC`; `{ units }` skips to `renderISC`. `MAX_TEXT_LENGTH` 50,000 chars.
+  CORS open. `Cache-Control: no-store`.
+- `GET  /api/openapi` — full OpenAPI 3.1 spec for the API (OpenAPI is the field-standard
+  contract format for an HTTP API).
+
+Fact to know, stated without evaluation: the `{ units }` path and the OpenAPI text
+describe pre-processed "ISC units from the TCS Python pipeline" as the primary,
+higher-fidelity path and `{ text }` / `runPipeline` as fallback. `CLAUDE.md` records
+that this TCS integration is confirmed inactive and that no external pipeline currently
+produces or consumes that schema. In the running service, the `{ text }` → `runPipeline`
+path is therefore the active one. The `{ units }` schema is retained as an integration
+contract per `CLAUDE.md`.
+
+## 7. Data files (`data/wa/`)
+
+- `bill-index.json` — the searchable bill index (list of bills with `bill_number` and
+  related fields); rebuilt by `populate-bill-index.js`.
+- `test-results.json` — persisted state of the system harness. Keys: `latestResults`
+  (one entry per bill, keyed by bill number, overwritten in place), `coverageCursor`
+  (integer; where the next run resumes in the bill pool), `coveragePasses` (count of
+  completed full passes), `coverageSeenBillNumbers` (list),
+  `cumulativeStats { testedBills, testedBillNumbers[], byCheck { C1..L1: {passed, failed} } }`.
+- `test-results-archive.json` — archived prior results.
+- `test-bills.json` — system-harness config, including the fixed sentinel bills run
+  every run.
+- `modal-test-cases.json`, `list-boundary-test-cases.json`, `and-split-test-cases.json`,
+  `split-instruction-test-cases.json` — expected-answer fixtures for the four rule
+  harnesses.
+
+## 8. Testing
+
+Two kinds of tests. They check different things; do not conflate them.
+
+### 8a. System harness — `scripts/test-bills.js`
+
+Runs five output checks against a running local server, over real bill text. Field
+term: a **test harness** (code that drives inputs through the system and checks its
+outputs). The five checks are **invariant / property checks** — they assert properties
+the output must always hold. They are NOT comparisons against hand-authored correct
+summaries. Exact definitions as implemented:
+
+- **C1** (`scoreC1`) — output is non-empty and contains no `"Failure to comply:"`
+  string. (well-formedness / smoke check)
+- **C4** (`scoreC4`) — for each rendered sentence carrying an `anchorText` (skipping
+  fallback-lens sentences), the whitespace-normalized anchor must appear as a substring
+  of the source section text. On failure it runs a lineage-divergence diagnosis. Field
+  term: a **faithfulness / groundedness check** — output must trace to source, not be
+  invented.
+- **C5** (`scoreC5`) — output must not contain a dollar-spacing corruption matching
+  `/$\d+,\s\d{3}/` (e.g. `"$1, 000"`). (formatting-artifact check)
+- **C6** (`scoreC6`) — output must not contain known corruption artifacts (`"bE"`; a
+  stray capitalized Cyrillic `"З"`/`"С"` preposition; `"Failure to comply:"`) and must
+  not contain duplicate paragraphs (provenance-aware deduplication using each
+  paragraph's `anchorText`). (corruption + duplication check)
+- **L1** (`scoreL1`) — position fidelity: for each lineage record with a `position`
+  `[start, end]`, slicing the source section text at those offsets must be byte-exactly
+  equal to the record's stored `text`. Field term: a **provenance / position-integrity
+  check**.
+
+Harness mechanics:
+
+- It walks the whole bill pool in fixed numeric order using `coverageCursor`, so
+  coverage accumulates across runs rather than sampling at random (systematic sampling
+  with a persisted cursor). `latestResults` is an index keyed by bill number
+  (overwrite-in-place), not an append log.
+- The `sentinel` bills in `test-bills.json` run every run — known-tricky inputs kept as
+  a standing guard (field term: **canary cases**).
+- A known, documented failure is converted from fail to expected — field term **XFAIL
+  (expected failure)** — so it does not count as a new break.
+- Network/server failures are separated from real defects (`classifyFetchFailure`:
+  "unreachable" vs "error"), so a WA Legislature outage is not scored as a pipeline
+  break (guards against **flaky tests**).
+- Accuracy boundary, stated plainly: these checks certify the output is well-formed and
+  traceable to source. They do NOT certify that the plain-English meaning is correct.
+
+### 8b. Rule harnesses — `scripts/test-modal-classifier.js`, `test-list-boundary.js`, `test-and-split-rule.js`, `test-split-instructions.js`
+
+Each is an **example-based (golden) regression suite**: a fixed set of real
+bill-derived sentences paired with confirmed-correct expected answers, held in the
+matching `*-test-cases.json`. Each targets one detector. They call the exported
+`runPipeline` (testing through the public interface, not private functions). This is
+where meaning-correctness is actually checked, on curated cases.
+
+## 9. Workflows (`.github/workflows/`) — with verified firing state
+
+Four operational workflows. Firing state below verified from Actions run history on
+2026-07-28.
+
+- **`populate-bill-index.yml`** — trigger: daily cron `'0 6 * * *'` (06:00 UTC) plus
+  manual (`workflow_dispatch`). Runs the index script, then commits the updated
+  `bill-index.json` back to the repo (a self-committing / write-back workflow).
+  Verified: active; firing daily; success.
+- **`build-bill-corpus.yml`** — trigger: daily cron `'30 6 * * *'` (06:30 UTC) plus
+  manual. Rebuilds the full-text corpus and uploads it as a build artifact with
+  `retention-days: 90`. Does NOT commit it (comment: too large to commit). Field term:
+  **build artifact** (produced by a run, stored by CI, not in the repo). The workflow
+  holds `contents: write` permission but writes nothing back — an unused/over-broad
+  grant. Verified: active; firing daily; success.
+- **`run-tests.yml`** — trigger: manual only (`workflow_dispatch`), input `sample_size`
+  (default `'30'`, passed as `TEST_SAMPLE_SIZE`). Steps: start server; poll
+  `/api/health` until ready (readiness gate); download the previous `test-results`
+  artifact from the last 20 successful runs to resume the coverage cursor
+  (**artifact-passed state**); download the latest `bill-corpus` artifact from the last
+  10 successful corpus runs into `data/wa/bill-corpus.json` so the run reads the corpus
+  instead of live government servers (**hermetic testing**); run
+  `scripts/test-bills.js`; then commit `test-results.json` to the repo AND upload it as
+  an artifact, both with `if: always()` (results persist even when checks fail).
+  Verified: last run 2026-07-19, success.
+- **`pipeline-pr-check.yml`** — trigger: `pull_request` touching paths
+  `lib/plain-meaning/**`, `scripts/test-bills.js`, or `data/wa/test-bills.json` (a path
+  filter). Steps: start server; readiness poll; snapshot current `test-results.json` as
+  a baseline (`cp` → `/tmp`); run the harness at `TEST_SAMPLE_SIZE '40'`; compare
+  current vs baseline. Gate rule: a failing check blocks the merge only if that same
+  bill+check passed before or was never sampled before; a check already failing in the
+  baseline is reported but does not block (a **regression-only failure policy**). Field
+  term: a **required status check** acting as a **regression gate**. Verified: firing on
+  PRs; most recent run conclusion `action_required` (paused pending required approval).
+
+Temporary workflows (`tmp-*.yml`, plus older debug ones) also exist. Project
+convention: a single-use diagnostic/data-gathering workflow is placed on the default
+branch only because GitHub's `workflow_dispatch` trigger recognizes a workflow only on
+the default branch, and is meant to be deleted after the data is collected. Fact,
+stated without evaluation: several `tmp-*` scripts, workflows, and their large
+results `.txt` files are currently present on `main`.
+
+Registry-vs-branch caveat: `gh workflow list --all` returns 14 workflows, all
+`active`; the default branch holds 7 workflow files. In GitHub Actions, `active` means
+a workflow is neither manually disabled nor auto-disabled for inactivity — it does NOT
+mean a file for it exists on the branch. Deleting a workflow file leaves its registry
+entry and run history in place. Firing state must therefore be read from run history,
+not from the workflow list.
+
+## 10. The working loop (the process run repeatedly)
+
+1. Run the harness: trigger `run-tests` (manual). It runs the five checks over a sample
+   of real bills, resuming coverage from `coverageCursor`.
+2. Results land in `data/wa/test-results.json` (committed to the repo) and as an
+   artifact. `cumulativeStats.byCheck` gives pass/fail per check; `latestResults` gives
+   per-bill detail.
+3. Analyze: when a check fails on real bill text, identify the specific bill and the
+   grammatical pattern that caused it. Project rule: no fix is made without a concrete
+   real-bill example proving the problem occurs.
+4. Fix on a branch (never push to `main`). Open a pull request.
+5. `pipeline-pr-check` gates the PR: it re-runs the harness on a 40-bill sample and
+   blocks only on new regressions (a check that used to pass and now fails), not on
+   pre-existing failures.
+6. Merge; the branch auto-deletes (repo setting).
+7. When a fix targets a specific grammatical pattern, its case is added to the matching
+   rule harness (§8b) so the fix is locked as a golden case and cannot silently
+   regress.
+8. Independently, the two scheduled workflows keep `bill-index.json` (committed daily)
+   and the corpus artifact (daily) current.
+
+Branch/PR discipline (rules to follow): changes go on a branch → PR → merge; never push
+directly to `main`. Exception: a single-use diagnostic workflow may be pushed to `main`
+only because `workflow_dispatch` requires it, and is deleted right after.
+
+## 11. Current recorded state (from `data/wa/test-results.json`, `cumulativeStats.byCheck`)
+
+- Bills with results: 2,512. `coverageCursor` 159; `coveragePasses` 1.
+- C1: passed 2,511 / failed 1.
+- C4: passed 2,512 / failed 0.
+- C5: passed 2,512 / failed 0.
+- C6: passed 2,415 / failed 97.  ← the open failure area (corruption / duplication).
+- L1: passed 2,512 / failed 0.
+
+These numbers are as of the last committed `run-tests` run (2026-07-19); they are
+static until `run-tests` is run again.
+
+## 12. Things that will trip up a new engineer (stated as facts)
+
+- The `{ units }` "primary path" / "TCS Python pipeline" wording in the code and
+  OpenAPI spec vs. `CLAUDE.md`'s record that the integration is inactive — the
+  `{ text }` / `runPipeline` path is the one that runs (§6).
+- `test-results.json` is both committed to the repo and uploaded as an artifact by
+  `run-tests` — two copies of the same state.
+- The workflow list shows more workflows than there are workflow files on the branch
+  (§9 caveat).
+- Several temporary diagnostic files are currently present on `main` (§9).
+- The five system-harness checks verify form and source-traceability, not meaning
+  correctness (§8a). Meaning correctness is checked only by the rule harnesses on
+  curated cases (§8b).
+- Documentation convention: `README.md`, `DESIGN.md`, `TESTING.md`, and other `.md`
+  files are changed only in a dedicated documentation pass, not as a side effect of a
+  build/fix. `CLAUDE.md` is the exception that may be updated during build work.
