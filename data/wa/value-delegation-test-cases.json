@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "id": "hb-1278-deems-necessary-resolves-pronoun-to-board",
+      "description": "Real cue: 'as it deems necessary'. The actor named in the cue is the pronoun 'it', which must resolve back to the sentence's own main actor ('the board') rather than being left as a bare pronoun. 'Necessary' is not on the evaluative lexicon, but the deems/may-deem cue does not require lexicon membership — 'deem' itself makes its object evaluative.",
+      "sentence": "The board may adopt such bylaws, rules, and regulations as it deems necessary to carry out the purposes of this chapter.",
+      "expectedFindings": [
+        {
+          "valueTermContains": "necessary",
+          "resolutionState": "delegated",
+          "resolutionHolderContains": "board",
+          "cueContains": "deems necessary"
+        }
+      ]
+    },
+    {
+      "id": "hb-1263-determined-by-department-value-term-not-adjacent-to-cue",
+      "description": "Real cue: 'as determined by the department'. The value term ('good cause') is the sentence's own subject, stated well before the cue — this cue has no inline object, so the value term is found by scanning the whole sentence for a lexicon match, not by proximity to the cue.",
+      "sentence": "Good cause must be found to exist when a person's medical condition, as determined by the department, prevents the person from complying with the reporting requirement.",
+      "expectedFindings": [
+        {
+          "valueTermContains": "good cause",
+          "resolutionState": "delegated",
+          "resolutionHolderContains": "the department",
+          "cueContains": "determined by the department"
+        }
+      ]
+    },
+    {
+      "id": "hb-2046-finds-that-value-exists-resolves-pronoun-to-department",
+      "description": "Real cue: 'if it finds that good cause exists'. Inline object ('good cause') gated against the evaluative lexicon so an ordinary factual finding wouldn't be mistaken for delegation; the cue's pronoun actor resolves to the sentence's main actor ('the department').",
+      "sentence": "The department must grant the petition only if it finds that good cause exists to modify the terms of the order.",
+      "expectedFindings": [
+        {
+          "valueTermContains": "good cause",
+          "resolutionState": "delegated",
+          "resolutionHolderContains": "department",
+          "cueContains": "finds that good cause exists"
+        }
+      ]
+    },
+    {
+      "id": "hb-1433-defined-by-rules-of-disciplining-authority",
+      "description": "Real cue: 'as defined by rules of the disciplining authority' — delegated rulemaking. The value term ('cultural competency') is captured directly from the phrase immediately preceding the cue, not gated against the lexicon, since defining a term BY RULEMAKING is itself the delegation regardless of which term is being defined.",
+      "sentence": "An applicant must demonstrate cultural competency, as defined by rules of the disciplining authority.",
+      "expectedFindings": [
+        {
+          "valueTermContains": "cultural competency",
+          "resolutionState": "delegated",
+          "resolutionHolderContains": "disciplining authority",
+          "cueContains": "defined by rules of"
+        }
+      ]
+    },
+    {
+      "id": "hb-1433-defined-in-rcw-must-not-flag-external-reference",
+      "description": "Must NOT flag as delegated. 'As defined in RCW 69.50.335' is an external reference (a later, separate case), not a delegation to an authority's judgment or rulemaking — distinguishing this from the 'as defined by rules of <authority>' cue above is the point of the guard.",
+      "sentence": "The department must consider social equity goals as defined in RCW 69.50.335 when awarding licenses.",
+      "expectedFindings": []
+    },
+    {
+      "id": "sb-5250-good-faith-must-not-flag-bare-value-no-holder",
+      "description": "Must NOT flag as delegated. 'Good faith' is a bare evaluative value term with no delegation cue and no named holder anywhere in the sentence — that is the residual/open case, not this one.",
+      "sentence": "A public agency employee shall not be held liable for any acts or omissions made in good faith under this section.",
+      "expectedFindings": []
+    },
+    {
+      "id": "functional-appropriate-costs-must-not-flag",
+      "description": "Must NOT flag as delegated. 'Appropriate' is a functional adjective ('suitable/pertinent'), not a contested value term, and there is no delegation cue in the sentence at all.",
+      "sentence": "The agency must assign appropriate costs to each program based on actual usage.",
+      "expectedFindings": []
+    }
+  ]
+}
