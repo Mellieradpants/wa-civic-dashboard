@@ -37,3 +37,14 @@ is resolved by an external citation. If/when found, Case 2 becomes:
   real source is a non-modal enumerated item with the value term detached from the
   cue, which the current detector does not handle. Needs its own pass.
 - "in the (sole) discretion of <authority>" — no real WA anchor found yet.
+
+## Cross-sentence reconciliation (organization step, not detection)
+
+Detection is per-sentence. A value term can be DEFINED internally in one sentence
+(Case 1 -> "internal") and USED bare in a duty in another (Case 4 -> "open"). Both
+findings are correct per-sentence, but at the bill level a term defined in section 2
+is not truly "open" when used in section 5. Reconciling them — recognizing that an
+"open" duty-use is actually resolved by an "internal" definition elsewhere in the
+same bill — is an ORGANIZATION step (bill-level / renderer pass), not per-sentence
+detection. It is deliberately NOT built into the detectors. Handle it in the
+renderer-surfacing pass, where all resolution states are brought together.
