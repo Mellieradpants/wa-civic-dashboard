@@ -1,0 +1,46 @@
+{
+  "cases": [
+    {
+      "id": "ssb-5101-undue-hardship-internal",
+      "description": "Verbatim SSB 5101 sentence. The bill defines 'undue hardship' itself — a self-contained internal definition, no duty modal needed to fire.",
+      "sentence": "For the purposes of this section, an \"undue hardship\" means an action requiring significant difficulty or expense.",
+      "expectedInternalFindings": [
+        { "valueTermContains": "undue hardship" }
+      ]
+    },
+    {
+      "id": "esb-5721-competent-internal",
+      "description": "Verbatim ESB 5721 sentence. 'Competent' requires judgment the same way 'reasonable' does, and is defined internally by this sentence.",
+      "sentence": "\"Competent\" means the person has subject matter expertise, relevant training, and experience to make decisions and valuations relating to the amount of loss.",
+      "expectedInternalFindings": [
+        { "valueTermContains": "Competent" }
+      ]
+    },
+    {
+      "id": "eshb-1233-unfair-competition-internal",
+      "description": "Verbatim ESHB 1233 sentence. 'Unfair competition' is defined internally by this sentence, not pointed elsewhere or handed to an authority.",
+      "sentence": "\"Unfair competition\" means any net competitive advantage that a business may acquire as a result of a correctional industries contract.",
+      "expectedInternalFindings": [
+        { "valueTermContains": "Unfair competition" }
+      ]
+    },
+    {
+      "id": "e2shb-1686-private-equity-fund-technical-homograph-zero-internal",
+      "description": "Verbatim E2SHB 1686 sentence. Must NOT flag as internal: 'private equity fund' merely contains 'equity' but names a type of company, not a contested value — a technical/financial homograph.",
+      "sentence": "\"Private equity fund\" means a publicly traded or nonpublicly traded company that collects capital investments from individuals or entities.",
+      "expectedInternalFindings": []
+    },
+    {
+      "id": "sb-5422-unfair-labor-practice-external-pointer-body-zero-internal",
+      "description": "Verbatim SB 5422 sentence. Must NOT flag as internal: the definition body only points to an external citation ('listed in RCW 41.80.110'), which is deferred Case 2's shape, not a self-contained internal definition.",
+      "sentence": "\"Unfair labor practice\" means any unfair labor practice listed in RCW 41.80.110.",
+      "expectedInternalFindings": []
+    },
+    {
+      "id": "hb-1820-duty-use-not-a-definition-zero-internal",
+      "description": "Verbatim HB 1820 sentence. Must NOT flag as internal: this is a duty USE of 'reasonable' (Case 4's territory), not a definition sentence — there is no quoted term followed by 'means' anywhere in it.",
+      "sentence": "An internet platform or network must take all reasonable steps to permanently delete the video segment.",
+      "expectedInternalFindings": []
+    }
+  ]
+}
