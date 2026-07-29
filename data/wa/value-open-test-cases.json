@@ -1,0 +1,54 @@
+{
+  "cases": [
+    {
+      "id": "sb-5250-good-faith-open-bare-no-holder",
+      "description": "Verbatim SB 5250 sentence. 'Good faith' sits in the commanded position (governed by 'shall') and is never resolved — no cue, no holder, no citation. Case 4's residual, open case.",
+      "sentence": "Neither the peace officer nor his or her law enforcement agency shall be held liable for actions or omissions made in good faith under this section.",
+      "expectedOpenFindings": [
+        { "valueTermContains": "good faith" }
+      ]
+    },
+    {
+      "id": "hb-1820-reasonable-steps-open",
+      "description": "Verbatim HB 1820 sentence. 'Reasonable' governs the standard the actor ('an internet platform or network') is told to meet ('must take all reasonable steps'), with no resolving cue anywhere in the sentence.",
+      "sentence": "An internet platform or network must take all reasonable steps to permanently delete the video segment for which a request described in subsection (1) of this section has been made.",
+      "expectedOpenFindings": [
+        { "valueTermContains": "reasonable" }
+      ]
+    },
+    {
+      "id": "hb-1197-equitable-funding-formula-open",
+      "description": "Verbatim HB 1197 sentence. 'Equitable' governs the duty ('shall develop an equitable funding distribution formula'), left entirely to judgment.",
+      "sentence": "The administrator for the courts, in conjunction with the juvenile court administrators, shall develop an equitable funding distribution formula.",
+      "expectedOpenFindings": [
+        { "valueTermContains": "equitable" }
+      ]
+    },
+    {
+      "id": "shb-1216-reasonable-cost-effective-open",
+      "description": "Verbatim SHB 1216 sentence. 'Reasonable' governs the standard agencies must choose by; 'as supported by the life-cycle cost analysis' is not a resolution cue (no named authority, no citation), so this stays open.",
+      "sentence": "Agencies must choose the most reasonable and cost-effective solution, as supported by the life-cycle cost analysis.",
+      "expectedOpenFindings": [
+        { "valueTermContains": "reasonable" }
+      ]
+    },
+    {
+      "id": "hb-1263-good-cause-already-delegated-zero-open",
+      "description": "Verbatim HB 1263 sentence. Must NOT produce an open finding: Case 3 already resolves 'good cause' as delegated (to 'the department'), so Case 4 must not double-flag it as open.",
+      "sentence": "Good cause must be found to exist when a person's physical or mental condition, as determined by the department, prevents the person from participating in substance use treatment.",
+      "expectedOpenFindings": []
+    },
+    {
+      "id": "shb-1216-appropriate-committees-functional-zero-open",
+      "description": "Verbatim SHB 1216 sentence. Must NOT produce an open finding: 'appropriate' is a functional adjective, not a contested value term.",
+      "sentence": "The department must provide a report to the appropriate committees of the legislature and the governor by October 1, 2026.",
+      "expectedOpenFindings": []
+    },
+    {
+      "id": "shb-1621-fairness-established-in-rcw-external-zero-open",
+      "description": "Verbatim SHB 1621 sentence. Must NOT produce an open finding: 'fairness' is resolved by an external citation ('established in RCW 3.34.110'), broader than Case 3's own 'as defined in' guard.",
+      "sentence": "A person appointed as a housing court commissioner shall comply with the fairness and impartiality standards established in RCW 3.34.110.",
+      "expectedOpenFindings": []
+    }
+  ]
+}

@@ -21,7 +21,15 @@ let failCount = 0;
 
 for (const c of cases) {
   const { units } = runPipeline(c.sentence);
-  const actualFindings = units.flatMap((u) => u.tetherAnchor.valueResolution || []);
+  // Scoped to "delegated" findings specifically, same reasoning as
+  // test-value-open.js's own scoping to "open" — Case 4 shares this
+  // suite's SB 5250 sentence and correctly adds an "open" finding to it
+  // (that sentence's own fixture description already called this out: "that
+  // is the residual/open case, not this one"), so an unscoped count would
+  // wrongly fail once Case 4 exists.
+  const actualFindings = units
+    .flatMap((u) => u.tetherAnchor.valueResolution || [])
+    .filter((f) => f.resolutionState === "delegated");
 
   const failures = [];
 
