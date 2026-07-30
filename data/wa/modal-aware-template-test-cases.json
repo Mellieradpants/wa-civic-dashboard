@@ -1,0 +1,60 @@
+{
+  "cases": [
+    {
+      "id": "hb-2344-may-lower-permission-not-inverted-to-obligation",
+      "description": "The confirmed bug. actor_power_shift lens fires on 'in consultation with'. Modal is permission ('may'); output must render it plainly and must never say 'is responsible for'.",
+      "sentence": "After December 2030, the department, in consultation with the department of health, may lower the 10 parts per million limit established in subsection (1)(a) and (b) of this section by rule if it determines that the lower limit is feasible.",
+      "mustContain": ["may lower"],
+      "mustNotContain": ["is responsible for"]
+    },
+    {
+      "id": "hb-1111-may-provide-rental-vouchers-permission",
+      "description": "Verbatim HB 1111 sentence.",
+      "sentence": "The department may provide rental vouchers to a person who successfully petitions the board under subsection (1) of this section.",
+      "mustContain": ["may provide"],
+      "mustNotContain": ["is responsible for"]
+    },
+    {
+      "id": "hb-1111-board-may-consider-permission",
+      "description": "Verbatim HB 1111 sentence.",
+      "sentence": "The board may consider a person's failure to participate in an evaluation under this subsection in determining whether to release the person.",
+      "mustContain": ["may consider"],
+      "mustNotContain": ["is responsible for"]
+    },
+    {
+      "id": "hb-1111-may-only-be-paid-restriction-preserved",
+      "description": "Verbatim HB 1111 sentence. 'Only' must survive since the restriction is the point of the sentence.",
+      "sentence": "If more than two voucher recipients will be residing per dwelling unit, rental vouchers for those recipients may only be paid to a housing provider on the department's list.",
+      "mustContain": ["may only be paid"],
+      "mustNotContain": ["is responsible for"]
+    },
+    {
+      "id": "hb-1111-shall-maintain-list-obligation-preserved",
+      "description": "Verbatim HB 1111 sentence. Regression guard: obligation rendering must not be over-corrected into permission.",
+      "sentence": "The department shall maintain a list of housing providers that meets the requirements of RCW 72.09.285.",
+      "mustContainAny": ["must maintain", "is responsible for maintaining"],
+      "mustNotContain": ["may maintain"]
+    },
+    {
+      "id": "hb-1111-shall-make-programming-available-obligation-preserved",
+      "description": "Verbatim HB 1111 sentence. Regression guard: obligation rendering must not be over-corrected into permission.",
+      "sentence": "To the extent possible, the department shall make programming available as identified by the assessment.",
+      "mustContainAny": ["must make", "is responsible for making"],
+      "mustNotContain": ["may make"]
+    },
+    {
+      "id": "actor-power-shift-obligation-gerund-not-bare-verb-stem",
+      "description": "Directly exercises actor_power_shift's obligation branch (constructed from the confirmed bug's own sentence, with 'shall' substituted for 'may') to confirm the gerund fix: 'is responsible for lower...' must never appear.",
+      "sentence": "The department, in consultation with the department of health, shall lower the 10 parts per million limit established in subsection (1)(a) and (b) of this section by rule if it determines that the lower limit is feasible.",
+      "mustContain": ["is responsible for lowering"],
+      "mustNotContain": ["is responsible for lower ", "is responsible for lower,"]
+    },
+    {
+      "id": "actor-power-shift-prohibition-never-responsible-for",
+      "description": "Directly exercises actor_power_shift's prohibition branch (constructed from the confirmed bug's own sentence, with 'cannot' substituted for 'may') to confirm prohibition never becomes a stated duty.",
+      "sentence": "The department, in consultation with the department of health, cannot lower the 10 parts per million limit established in subsection (1)(a) and (b) of this section by rule.",
+      "mustContain": ["cannot"],
+      "mustNotContain": ["is responsible for"]
+    }
+  ]
+}
