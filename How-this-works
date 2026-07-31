@@ -111,8 +111,9 @@ renderer side (distinct from L5's different-actor case). Sentence templates come
 Eleven routes:
 
 - `GET  /api/health` — bill index load status + WA Legislature reachability.
-- `GET  /api/testing-stats` — corpus size + cumulative tested-bill count (for the UI
-  validation disclaimer). Reads `bill-index.json` and `test-results.json`.
+- `GET  /api/testing-stats` — corpus size + cumulative tested-bill count. Reads
+  `bill-index.json` and `test-results.json`. No current consumer: it was added for
+  the bill-reader disclaimer, which no longer displays counts.
 - `GET  /api/wa-bill-search` — keyword search over the bill index.
 - `GET  /api/wa-bill-detail` — metadata and status for a bill number.
 - `GET  /api/wa-bill-documents` — documents available for a bill.
