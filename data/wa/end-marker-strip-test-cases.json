@@ -1,0 +1,40 @@
+{
+  "cases": [
+    {
+      "id": "hb-1111-real-anchor-trailing-marker-no-period",
+      "description": "Real anchor shape (HB 1111 rendered output, without the trailing period variant).",
+      "input": "This act may be known and cited as the youth hope act. --- END ---",
+      "expected": "This act may be known and cited as the youth hope act."
+    },
+    {
+      "id": "hb-1111-real-anchor-trailing-marker-with-period",
+      "description": "The exact shape seen in HB 1111 rendered output, including the trailing period after the marker.",
+      "input": "This act may be known and cited as the youth hope act. --- END ---.",
+      "expected": "This act may be known and cited as the youth hope act."
+    },
+    {
+      "id": "trailing-marker-with-surrounding-whitespace-and-newlines",
+      "description": "Extra whitespace/newlines before and after the marker must not stop it from being recognized as trailing.",
+      "input": "This act may be known and cited as the youth hope act.\n\n   --- END ---   \n\n  ",
+      "expected": "This act may be known and cited as the youth hope act."
+    },
+    {
+      "id": "must-not-strip-sentence-merely-containing-the-word-end",
+      "description": "Regression guard: the word 'end' appearing in ordinary bill text must survive untouched.",
+      "input": "The department must end the program on July 1, 2030.",
+      "expected": "The department must end the program on July 1, 2030."
+    },
+    {
+      "id": "must-not-strip-mid-document-occurrence-content-survives",
+      "description": "Regression guard proving the strip is anchored to end-of-document, not a bare global match: a mid-document marker (not expected in real files) followed by further content must be left alone, and the following content must survive.",
+      "input": "Some introductory text. --- END --- This sentence must survive intact after the marker.",
+      "expected": "Some introductory text. --- END --- This sentence must survive intact after the marker."
+    },
+    {
+      "id": "must-not-strip-no-marker-present-unchanged-character-for-character",
+      "description": "Regression guard: a bill body with no marker at all is returned unchanged.",
+      "input": "Sec. 1. RCW 43.06.220 is amended to read as follows: The board may adopt rules necessary for its own government.",
+      "expected": "Sec. 1. RCW 43.06.220 is amended to read as follows: The board may adopt rules necessary for its own government."
+    }
+  ]
+}

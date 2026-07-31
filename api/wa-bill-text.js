@@ -52,6 +52,25 @@ function cleanHtmlToText(html) {
   );
 }
 
+// The Washington Legislature's own end-of-document marker — every bill file
+// at lawfilesext.leg.wa.gov ends with a centered bold "--- END ---" banner.
+// Not bill content, and not something this module generates, but tag
+// stripping keeps the words, so it flows downstream into rendered plain
+// meaning unless removed here. Tolerant of the observed real shape: 3+
+// hyphens, optional whitespace, "END" (case-insensitive), optional
+// whitespace, 3+ hyphens, and an optional trailing period (the exact shape
+// seen in HB 1111's rendered output: "...act. --- END ---."). Anchored to
+// the END of the text only — the marker is a document terminator, so it is
+// always last; a mid-document match must never be touched, since removing
+// text from anywhere but the very end would shift the character offsets of
+// everything before it and could break the L1 lineage invariant (slicing
+// the source at a recorded offset must still reproduce the recorded text).
+const END_MARKER_RE = /\s*-{3,}\s*END\s*-{3,}\s*\.?\s*$/i;
+
+export function stripEndMarker(text) {
+  return String(text || "").replace(END_MARKER_RE, "");
+}
+
 const STRUCTURAL_BREAK_RE = /<br\s*\/?>|<\/p>|<\/div>|<\/tr>/gi;
 const STRUCK_TEXT_RE = /\(\([\s\S]*?\)\)/g;
 const HTML_SECTION_HEADING_RE = /(?:NEW SECTION\.\s*)?Sec\.\s+(\d+)\.?/gi;
@@ -192,10 +211,12 @@ function splitIntoSections(text) {
 export async function fetchBillTextData(billNumber, biennium) {
   const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
   const preStruckText = cleanHtmlToText(rawDocument);
-  const text = preStruckText
-    .replace(/\(\([\s\S]*?\)\)/g, "")
-    .replace(/ {2,}/g, " ")
-    .trim();
+  const text = stripEndMarker(
+    preStruckText
+      .replace(/\(\([\s\S]*?\)\)/g, "")
+      .replace(/ {2,}/g, " ")
+      .trim()
+  );
   const sections = splitIntoSections(text);
   const preSourceLog = buildPreSourceLog(sections, rawDocument, preStruckText);
   return {
@@ -230,10 +251,12 @@ export default async function handler(req, res) {
   try {
     const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
     const preStruckText = cleanHtmlToText(rawDocument);
-    const text = preStruckText
-      .replace(/\(\([\s\S]*?\)\)/g, "")
-      .replace(/ {2,}/g, " ")
-      .trim();
+    const text = stripEndMarker(
+      preStruckText
+        .replace(/\(\([\s\S]*?\)\)/g, "")
+        .replace(/ {2,}/g, " ")
+        .trim()
+    );
     const sections = splitIntoSections(text);
     const preSourceLog = buildPreSourceLog(sections, rawDocument, preStruckText);
 
