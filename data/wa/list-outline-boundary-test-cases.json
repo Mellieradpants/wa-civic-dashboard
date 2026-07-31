@@ -1,0 +1,72 @@
+{
+  "cases": [
+    {
+      "id": "hb-1111-numbered-subsection-does-not-weld-onto-lettered-list-duty",
+      "description": "Real anchor (HB 1111). A numbered marker '(2)' following a lettered list '(a)/(b)' is a new subsection, not a continuation — the expiration sentence must not be welded onto the board's duty.",
+      "sentence": "The board shall prioritize hearings on petitions for early release, in the following descending order with the highest priority given to: (a) Petitioners under the age of 25 in the custody of the department of children, youth, and families; and (b) Petitioners in the custody of the department of corrections. (2) This section expires July 1, 2035.",
+      "minUnitCount": 1,
+      "maxUnitCount": 1,
+      "mustContainWords": ["Petitioners", "corrections"],
+      "mustNotContainWords": ["expires"],
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "The board", "actionContains": "Petitioners in the custody of the department of corrections" }
+      ]
+    },
+    {
+      "id": "hb-1111-two-actor-and-split-numbered-subsection-does-not-weld",
+      "description": "Real anchor shape (HB 1111, two-actor and-split feeding into the lettered list). The department's and the board's duties must both still render, with no welding of the expiration sentence onto either.",
+      "sentence": "Within the limit of 70 petitions per year, the department shall prioritize examinations, and the board shall prioritize hearings in the following order: (a) Petitioners under 25; and (b) Petitioners in custody. (2) This section expires July 1, 2035.",
+      "minUnitCount": 2,
+      "maxUnitCount": 2,
+      "mustNotContainWords": ["expires"],
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "the department", "actionContains": "prioritize examinations" },
+        { "index": 1, "modal": "shall", "actorContains": "the board", "actionContains": "Petitioners in custody" }
+      ]
+    },
+    {
+      "id": "same-level-lettered-continuation-still-binds-regression-guard",
+      "description": "Regression guard: a lettered marker '(c)' following '(a)'/'(b)' in the same list is a genuine same-level continuation and must still inherit the lead-in, exactly as before this fix.",
+      "sentence": "The board shall prioritize hearings in the following order: (a) Petitioners under 25; and (b) Petitioners in custody. (c) Petitioners aged 30 and over.",
+      "minUnitCount": 2,
+      "maxUnitCount": 2,
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "The board", "actionContains": "Petitioners under 25" },
+        { "index": 1, "modal": "shall", "actorContains": "The board", "actionContains": "Petitioners aged 30 and over" }
+      ]
+    },
+    {
+      "id": "following-sentence-with-own-duty-no-marker-unaffected",
+      "description": "Regression guard: an ordinary following sentence with its own duty and no marker at all must render as its own separate provision, unaffected by the list boundary fix.",
+      "sentence": "The board shall prioritize hearings in the following order: (a) Petitioners under 25; and (b) Petitioners in custody. The department shall submit a report by December 1, 2026.",
+      "minUnitCount": 2,
+      "maxUnitCount": 2,
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "The board" },
+        { "index": 1, "modal": "shall", "actorContains": "The department", "actionContains": "submit a report" }
+      ]
+    },
+    {
+      "id": "following-sentence-with-own-duty-and-numbered-marker-unaffected",
+      "description": "Regression guard: same as above, but the following sentence also carries a numbered marker '(3)' — since it has its own modal, it was never a binding candidate either way, but confirms the new outline-level check doesn't disturb it.",
+      "sentence": "The board shall prioritize hearings in the following order: (a) Petitioners under 25; and (b) Petitioners in custody. (3) The department shall submit a report by December 1, 2026.",
+      "minUnitCount": 2,
+      "maxUnitCount": 2,
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "The board" },
+        { "index": 1, "modal": "shall", "actorContains": "The department", "actionContains": "submit a report" }
+      ]
+    },
+    {
+      "id": "numbered-continuation-of-numbered-list-still-binds-regression-guard",
+      "description": "Regression guard: a numbered marker '(2)' continuing an already-numbered list ('(1)') must still behave as today — same-level continuation, not a new subsection.",
+      "sentence": "The board shall prioritize hearings in the following order: (1) Petitioners under 25. (2) Petitioners in custody.",
+      "minUnitCount": 2,
+      "maxUnitCount": 2,
+      "unitChecks": [
+        { "index": 0, "modal": "shall", "actorContains": "The board", "actionContains": "Petitioners under 25" },
+        { "index": 1, "modal": "shall", "actorContains": "The board", "actionContains": "Petitioners in custody" }
+      ]
+    }
+  ]
+}
