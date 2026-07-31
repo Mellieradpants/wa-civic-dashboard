@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "id": "hb-1111-board-may-return-not-must-return",
+      "description": "Real anchor (HB 1111). 'that the offender has committed a new violation, the board may return...' was being swallowed into the 'that' clause's span with no closing boundary, losing the sentence's own 'may' and defaulting to an obligation. The fronted 'If' clause is closed by its own comma before the main clause's 'may' even begins.",
+      "sentence": "If the board finds that the offender has committed a new violation, the board may return the offender to the institution for up to the remainder of the court-imposed term of incarceration.",
+      "mustContain": ["may return"],
+      "mustNotContain": ["must return"]
+    },
+    {
+      "id": "hb-1311-director-may-request-endangered-species",
+      "description": "Independent confirmation on a second, unrelated bill (HB 1311). Same defect shape: 'that a species ... is seriously threatened ..., the director may request' was losing its own 'may'.",
+      "sentence": "If the director determines that a species of wildlife is seriously threatened with extinction in the state of Washington, the director may request its designation as an endangered species.",
+      "mustContain": ["may request"],
+      "mustNotContain": ["must request"]
+    },
+    {
+      "id": "hb-1311-comma-inside-fronted-clause-signal-still-correct",
+      "description": "HB 1311, deleterious exotic wildlife subsection. The fronted 'If' clause itself contains a comma ('...animal kingdom, not native to Washington, is dangerous...') before the true closing comma that ends the clause. This guards that the FIRST depth-0 comma is not always the right cap for the CONDITION TEXT rendered in the sentence (it isn't here — the appended condition note is truncated at that first comma, a separate, pre-existing limitation in the unrelated condition-extraction regex, confirmed to reproduce identically even with no relative clause involved at all, and out of scope for this fix). What this fix is responsible for — the main clause's own modal surviving — is still correct: the signal must be permission, not obligation.",
+      "sentence": "If the director determines that a species of the animal kingdom, not native to Washington, is dangerous to the environment or wildlife of the state, the director may request its designation as deleterious exotic wildlife.",
+      "mustContain": ["may request"],
+      "mustNotContain": ["must request"]
+    },
+    {
+      "id": "fronted-clause-obligation-preserved-department-shall-issue",
+      "description": "Regression guard: a fronted 'If' clause feeding into an OBLIGATION main clause must still render as an obligation — the fix must not swing permission-detection the other way.",
+      "sentence": "If the department determines that the applicant is eligible, the department shall issue the license.",
+      "mustContain": ["must issue"],
+      "mustNotContain": ["may issue"]
+    },
+    {
+      "id": "hb-1111-no-fronted-subordinator-obligation-unaffected",
+      "description": "Regression guard: an ordinary obligation sentence with no fronted subordinator at all (HB 1111) is untouched by this fix.",
+      "sentence": "The board must give public safety considerations the highest priority when making all discretionary decisions regarding the ability for release and conditions of release.",
+      "mustContain": ["must give"],
+      "mustNotContain": ["may give"]
+    },
+    {
+      "id": "hb-1111-relative-clause-no-fronted-subordinator-byte-identical-to-main",
+      "description": "Regression guard: a sentence with a genuine relative clause ('unless ... that, despite such conditions, ...') but NO sentence-initial fronted subordinator. Confirmed byte-identical to current main's rendered output (0 mismatches across 105 real fixture sentences including this one) — asserted here as an exact match, the strongest form of 'unaffected'.",
+      "sentence": "The board must order the person released under such affirmative and other conditions as the board determines appropriate, unless the board determines by a preponderance of the evidence that, despite such conditions, it is more likely than not that the person will commit new criminal law violations if released.",
+      "mustEqual": "The board must order the person released under such affirmative and other conditions as the board determines appropriate, unless the board determines by a preponderance of the evidence that, despite such conditions, it is more likely than not that the person will commit new criminal law violations if released."
+    },
+    {
+      "id": "fronted-clause-parenthesized-comma-does-not-falsely-close",
+      "description": "A comma inside parentheses within the fronted clause ('subsection (1)(a) and (b), of this section') must not be mistaken for the clause-closing comma at depth 0. Note: this exact sentence has no which/that/who marker, so it never actually calls findClauseSpan/frontedClauseEndIndex at all — the modal is found directly by ordinary AAC parsing. Included as specified regardless; the signal must still be permission.",
+      "sentence": "If the limit established in subsection (1)(a) and (b), of this section is exceeded, the department may adjust the limit.",
+      "mustContain": ["may adjust"],
+      "mustNotContain": ["must adjust"]
+    }
+  ]
+}
