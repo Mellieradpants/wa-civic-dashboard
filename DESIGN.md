@@ -6,7 +6,10 @@ current mechanism, not a history of how it got here.
 
 The system turns one section of bill text into plain-English sentences with
 no AI involved. Every output sentence is traceable back to an exact span of
-the original input text. Two stages do this:
+the original input text. This applies to sentences that are rendered. A
+sentence carrying no requirement word (shall, must, may) produces no unit
+and no output, and that omission is not currently surfaced. Two stages do
+this:
 
 1. **The pipeline** (`pipeline.js`, `runPipeline`) — takes raw section text,
    splits it into sentences, finds which sentences contain a rule (an
