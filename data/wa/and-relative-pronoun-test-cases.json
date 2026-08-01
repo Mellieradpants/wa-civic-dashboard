@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "id": "hb-2366-and-which-shall-not-split-orphan-fragment",
+      "description": "Real anchor (HB 2366). 'and which shall substantially conform...' is a relative clause referring back to 'rules and regulations', not a second actor. Splitting there produced an orphan fragment beginning 'Which must...'. Must render as exactly one paragraph, with no content lost.",
+      "sentence": "The school directors, school superintendents, other school representatives or superintendent candidates may be advanced sufficient sums to cover their anticipated expenses in accordance with rules and regulations promulgated by the state auditor and which shall substantially conform to the procedures provided in RCW 43.03.150 through 43.03.210.",
+      "expectedParagraphCount": 1,
+      "mustContain": ["43.03.150"]
+    },
+    {
+      "id": "hb-1111-two-actor-coordinate-still-splits-regression-guard",
+      "description": "Regression guard: a genuine two-actor coordinate clause (department / offender) must still split into two paragraphs.",
+      "sentence": "No later than 180 days from receipt of the petition, the department shall conduct, and the offender shall participate in, an examination of the person.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": ["the department", "the offender"]
+    },
+    {
+      "id": "plain-two-actor-coordinate-still-splits-regression-guard",
+      "description": "Regression guard: a simple, unambiguous two-actor coordinate clause must still split.",
+      "sentence": "The department shall submit the report, and the board shall review the findings.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": ["submit the report", "review the findings"]
+    },
+    {
+      "id": "hb-2366-mid-phrase-that-does-not-false-trigger-anchor-guard",
+      "description": "Real anchor (HB 2366). Contains 'that' mid-phrase ('under this section that is in excess of $3,000...'), guarding that the ^ anchor only rejects a candidate actor STARTING with a relative pronoun, not one merely containing 'that' elsewhere. This sentence is same-actor (the 'and' sits directly before 'may' with nothing between), so detectSecondInstruction's own pre-existing zero-width-gap check already returns null before ever reaching the new guard -- the split into two paragraphs seen in rendered output comes entirely from the renderer's separate, same-actor analyzeCoordinateSplit mechanism, not from detectSecondInstruction. Included to confirm this pre-existing behavior is unchanged.",
+      "sentence": "Compensation provided to a director under this section that is in excess of $3,000 per year must be authorized by the board of directors at a regularly scheduled meeting, and may only be collected from levy funds available for this purpose.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": ["authorized by the board of directors", "may only be collected"]
+    },
+    {
+      "id": "and-that-genuine-second-actor-not-blocked-by-anchor",
+      "description": "Constructed to independently verify the ^ anchor: 'the board that reviews annual filings' is a genuine second actor phrase that merely CONTAINS 'that' (not at its start) -- must still split into two, confirming the guard does not over-reject.",
+      "sentence": "The department shall submit the report, and the board that reviews annual filings shall issue a determination.",
+      "expectedParagraphCount": 2,
+      "paragraphContains": ["submit the report", "the board that reviews annual filings"]
+    }
+  ]
+}
