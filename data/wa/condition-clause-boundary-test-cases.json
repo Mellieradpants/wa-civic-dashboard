@@ -1,0 +1,85 @@
+{
+  "cases": [
+    {
+      "id": "h1006-group-a-new-subject-new-modal",
+      "description": "GROUP A (regression guard): the comma is the correct boundary — what follows is a new subject with its own modal. Must not change.",
+      "sentence": "If the service contract provider or protection product guarantee provider has ceased operation, the service contract holder or protection product guarantee holder may apply directly to the reimbursement insurance company for payment or performance due without waiting 30 days.",
+      "expectedConditionCount": 1,
+      "conditionContains": ["If the service contract provider or protection product guarantee provider has ceased operation"],
+      "conditionMustNotContain": ["may apply directly"]
+    },
+    {
+      "id": "h1064-group-a-new-subject-new-modal",
+      "description": "GROUP A (regression guard): same shape as H1006 — new subject, own modal, right after the comma. Must not change.",
+      "sentence": "When achieving the designated outcomes would be best served through changes in program structures or authorities, the system improvement team must report those findings to the public works board.",
+      "expectedConditionCount": 1,
+      "conditionContains": ["When achieving the designated outcomes would be best served through changes in program structures or authorities"],
+      "conditionMustNotContain": ["must report"]
+    },
+    {
+      "id": "h1054-group-b-list-continuation",
+      "description": "GROUP B: a comma-separated list of acceptable bid-deposit forms. Previously truncated after the first item; must now keep all five.",
+      "sentence": "No bid may be considered for public work unless it is accompanied by a bid deposit in the form of a surety bond, postal money order, cash, cashier's check, or certified check in an amount equal to five percent of the amount of the bid proposed.",
+      "expectedConditionCount": 1,
+      "conditionContains": [
+        "unless it is accompanied by a bid deposit in the form of a surety bond, postal money order, cash, cashier's check, or certified check in an amount equal to five percent of the amount of the bid proposed"
+      ]
+    },
+    {
+      "id": "h1000-group-b-participial-and-that-clause",
+      "description": "GROUP B: a participial phrase then a that-clause carry the entire substance of the condition. Previously truncated to \"if it finds\"; must now keep the full reasoning.",
+      "sentence": "The court may impose a sentence outside the standard sentence range for an offense if it finds, considering the purpose of this chapter, that there are substantial and compelling reasons justifying an exceptional sentence.",
+      "expectedConditionCount": 1,
+      "conditionContains": [
+        "if it finds, considering the purpose of this chapter, that there are substantial and compelling reasons justifying an exceptional sentence"
+      ]
+    },
+    {
+      "id": "h1006-group-b-trailing-alternative",
+      "description": "GROUP B: a trailing \"or ...\" alternative after the condition's own comma. Previously lost; must now be kept.",
+      "sentence": "Service contracts shall require the service contract provider to permit the service contract holder to return the service contract within 20 days of the date the service contract was mailed to the service contract holder or within 10 days of delivery if the service contract is delivered to the service contract holder at the time of sale, or within a longer time period permitted under the service contract.",
+      "expectedConditionCount": 1,
+      "conditionContains": [
+        "if the service contract is delivered to the service contract holder at the time of sale, or within a longer time period permitted under the service contract"
+      ]
+    },
+    {
+      "id": "h1037-group-b-comma-inside-date",
+      "description": "GROUP B: the comma sits inside a date (\"July 1, 2008\"), not at a clause boundary. Previously severed the year; must now keep the full date.",
+      "sentence": "The legislative authority of a city located in a county with a population greater than one million may create a public facilities district, when the city has a total population of less than one hundred fifteen thousand but greater than eighty thousand and commences construction of a regional center prior to July 1, 2008.",
+      "expectedConditionCount": 1,
+      "conditionContains": [
+        "when the city has a total population of less than one hundred fifteen thousand but greater than eighty thousand and commences construction of a regional center prior to July 1, 2008"
+      ]
+    },
+    {
+      "id": "h1000-group-b-courtroom-semicolon-boundary",
+      "description": "GROUP B: the \"when\" condition's own comma-separated list (courtroom, jury room, judge's chamber) must be kept in full, but the semicolon before the second enumerated item \"(ii) if signage...\" remains a hard stop — a deliberate choice, not merging two separately-enumerated conditions into one. Known, documented, pre-existing limitation carried over unchanged: the sentence's own separate \"if signage...\" condition is truncated at the period inside its RCW citation (\"RCW 2.28.200\") — out of scope for this fix.",
+      "sentence": "This subsection shall apply only: (i) During the times when a courtroom, jury room, or judge's chamber is being used for judicial purposes during court proceedings; and (ii) if signage was posted in compliance with RCW 2.28.200 at the time of the offense.",
+      "expectedConditionCount": 2,
+      "conditionContains": [
+        "when a courtroom, jury room, or judge's chamber is being used for judicial purposes during court proceedings"
+      ],
+      "conditionMustNotContain": ["and (ii)"]
+    },
+    {
+      "id": "h1006-group-c-in-which-case-cancellation-fee",
+      "description": "GROUP C: \", in which case ...\" states a follow-on rule for when the condition is met, not a continuation of the condition itself. Deliberate decision: the condition ends before \"in which case\"; the follow-on rule is not captured here (deferred, not silently dropped by accident). Also guards against the coordinate \"and shall refund...\" clause being swallowed into the earlier \"if\" condition.",
+      "sentence": "At a minimum, every provider shall permit the service contract holder to return the contract within 30 days of its purchase if no claim has been made under the contract, and shall refund to the holder the full purchase price of the contract unless the service contract holder returns the contract 10 or more days after its purchase, in which case the provider may charge a cancellation fee not exceeding $25.",
+      "expectedConditionCount": 2,
+      "conditionContains": [
+        "if no claim has been made under the contract",
+        "unless the service contract holder returns the contract 10 or more days after its purchase"
+      ],
+      "conditionMustNotContain": ["in which case", "and shall refund"]
+    },
+    {
+      "id": "h1074-group-c-in-which-case-community-custody",
+      "description": "GROUP C: same \", in which case ...\" shape as H1006 — condition ends before it. Must not change from current (already correct) behavior.",
+      "sentence": "The court may impose up to six months of community custody unless treatment is ordered, in which case the period of community custody may include up to the period of treatment, but shall not exceed one year.",
+      "expectedConditionCount": 1,
+      "conditionContains": ["unless treatment is ordered"],
+      "conditionMustNotContain": ["in which case"]
+    }
+  ]
+}
