@@ -186,8 +186,11 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 ## Validation and compliance
 
-- Output is validated against a 338-bill sample from the 2,517-bill 2025–26 corpus (2,517 distinct bills; the index has 2,808 listings because substitute stages like HB/SHB/2SHB share one underlying bill) at 95% confidence, ±5% margin of error, finite population correction applied.
-- A pass/fail rubric (C1, C4, C5, C6, and L1) defines machine-scoreable structural checks, applied to all 338 bills. Structural correctness claim is defensible.
+- **No accuracy claim.** Output accuracy has never been measured. Do not add a confidence level, a margin of error, an accuracy percentage, or the word "validated" applied to output correctness anywhere in this repository. A claim of that kind requires a run that produced it, and no such run exists.
+- `scripts/test-bills.js` runs five structural checks (C1, C4, C5, C6, L1) over bills walked in fixed numeric order from a saved cursor. This is systematic coverage, not random sampling.
+- What those checks verify: output is non-empty, contains no known formatting artifacts, has no duplicate paragraphs, every rendered sentence's anchor text appears in the source section, and slicing the source at each recorded position reproduces the recorded text.
+- What they do not verify: that the plain-English meaning is correct. Only hand-checking a bill against its official source finds meaning errors.
+- Corpus size: 2,517 distinct bills in the 2025–26 session. The index holds 2,808 listings because substitute stages (HB/SHB/2SHB) share one underlying bill.
 
 ---
 
