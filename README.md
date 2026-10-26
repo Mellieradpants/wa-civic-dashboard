@@ -2,82 +2,23 @@
 
 A civic dashboard that makes Washington State legislation readable in plain English. Search any of the 2,517 distinct 2025–26 bills (2,808 listings in the index, since substitute stages like HB/SHB/2SHB share one underlying bill) and read what each section actually requires in plain language.
 
----
 
-## Project philosophy
-
-This project favors deterministic behavior, traceability, and explicit limitations over inferred or generated output. Documentation describes the current implementation, not future design goals.
-
----
-
-## Status
 
 This is a student project in active development. It is not a legal reference and should not be relied upon for legal purposes. Always consult the official bill text, which is linked on every page.
 
-Output contains known limitations and implementation errors. See "How this is tested" for what is and is not currently verified.
-
+Output contains known limitations and implementation errors. 
 ---
 
 ## How the pipeline works
 
-No AI in the data path. Everything is deterministic. Every rendered sentence is traceable to an exact span of source text. Provisions that carry no requirement word are currently not rendered at all, and that omission is not yet flagged to the reader.
-
+No AI in the data path. Everything is deterministic. Every rendered sentence is traceable to an exact span of source text. 
 Input text runs through a 10-layer pipeline that detects section type, strips deleted text from amendments, and extracts obligations, permissions, and prohibitions. A renderer turns those into output using one of six scope-lens templates.
 
 The bill index is populated from the WA Legislature API by a GitHub Actions workflow that runs daily and can be triggered manually.
 
----
 
-## Known limitations
 
-Known defects are tracked as repository issues. The list is not short, and it includes provisions that are dropped without notice, provisions from adjacent subsections being combined into one sentence, and permissions rendered as obligations in some sentence shapes.
 
----
-
-## How this is tested
-
-Two different things, doing two different jobs.
-
-**Hand-checking bills.** A bill is run through the pipeline and the output is read line by line against the official source text. This is the only way meaning errors are found — a sentence can be well-formed, traceable to source, and still say the wrong thing. It is slow and manual, and it is where every real defect in this project has come from.
-
-**Automated regression suites.** Each defect found by hand-checking gets a test built from the real bill sentence that produced it. Those suites run on every pull request. They do not measure accuracy — they only prove that a bug already found and fixed has not come back.
-
-A separate harness runs five invariant checks over the bill corpus: output is non-empty, contains no formatting artifacts, has no duplicate paragraphs, every rendered sentence's anchor text appears in the source, and every recorded position reproduces its recorded text when the source is sliced. These check that output is well-formed and traceable to its source. They do not check that the plain-English meaning is correct.
-
-### From hand-checking to merged code
-
-Every fix in this project follows the same path.
-
-1. **Read one bill against its source.** The official bill text and the rendered output are read side by side, line by line, looking for where they diverge — content dropped, two provisions welded into one sentence, a permission stated as an obligation, a sentence left without its object.
-
-2. **Trace the defect to the code.** The exact sentence that failed is run through the pipeline on its own to find which function produced the wrong result. The cause has to be reproduced before anything is written.
-
-3. **Require a real example.** No fix is built without a real bill sentence proving the problem actually occurs in real text. If no real example exists, the idea is written down as a future direction instead of being built.
-
-4. **Fix on a branch.** Nothing is pushed directly to the main branch.
-
-5. **Lock the fix with the real sentence.** The verbatim sentence that exposed the defect is added to a regression suite with its correct expected result, so the bug cannot come back unnoticed. Test cases are real bill text, never invented examples.
-
-6. **Open a pull request.** An automated check re-runs the harness on a sample of bills and blocks the merge on any new failure, while allowing failures that were already present before the change.
-
-7. **Merge, then re-render the same bill.** The fix is confirmed on the bill that exposed it, and the rest of the corpus is compared before and after to confirm nothing else moved.
-
-8. **Repeat on the same bill** until it renders clean, then move to the next bill.
-
-Fixes are made one at a time, each in its own pull request, rather than batched. Each defect gets its own detector or correction so that a change to one does not quietly alter another.
-
----
-
-## Designed, Not Yet Implemented
-
-Design work and open questions, listed separately so they are not mistaken for things the code currently does.
-
-- **Value terms.** When a bill uses a term such as "good faith" or "equity", the pipeline checks whether the bill resolves it: defined within the bill, handed to a named authority to decide, or left open. Detection for "handed to an authority" and "left open" is implemented. Surfacing any of it to the reader is not.
-- **Conditions, exceptions, and limits.** Showing a rule's conditions and exceptions separately from the rule itself, rather than blending them into a single sentence. Designed, not implemented.
-- **RCW citations.** Bills cross-reference RCW sections throughout. Those citations are currently treated as plain text and are never resolved.
-- **Flagging omitted provisions.** A provision with no requirement word currently produces no output. It should at minimum be shown as unrendered rather than omitted silently.
-
----
 
 ## Tech stack
 
