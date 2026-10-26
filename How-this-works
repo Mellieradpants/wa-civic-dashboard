@@ -1,10 +1,4 @@
-#Engineering Architecture and Functional Reference
 
-Purpose of this document: describe what the service is, what each part does, and
-the process run against it, in enough detail for another engineer to take over.
-Every statement names an identifier that can be checked against the code. Where a
-name is a real term from an established field, it is labeled as such. Facts that
-could read as problems are stated without evaluation.
 
 Verified against the repository and GitHub Actions run history on 2026-07-28.
 
