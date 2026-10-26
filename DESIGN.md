@@ -1,8 +1,7 @@
 # WA Civic Dashboard — Design
 
 This describes how `lib/plain-meaning/pipeline.js` and
-`lib/plain-meaning/renderer.js` work right now. It's a description of the
-current mechanism, not a history of how it got here.
+`lib/plain-meaning/renderer.js` work right now. 
 
 The system turns one section of bill text into plain-English sentences with
 no AI involved. Every output sentence is traceable back to an exact span of
