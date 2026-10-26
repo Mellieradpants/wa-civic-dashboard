@@ -1,13 +1,11 @@
 # Washington Civic Dashboard
 
-A civic dashboard that makes Washington State legislation readable in plain English. Search any of the 2,517 distinct 2025–26 bills (2,808 listings in the index, since substitute stages like HB/SHB/2SHB share one underlying bill) and read what each section actually requires in plain language.
+A civic dashboard that makes Washington State legislation readable in plain meaning. Search any of the 2,517 distinct 2025–26 bills (2,808 listings in the index, since substitute stages like HB/SHB/2SHB share one underlying bill) and read what each section actually requires in plain language.
 
 
 
 This is a student project in active development. It is not a legal reference and should not be relied upon for legal purposes. Always consult the official bill text, which is linked on every page.
 
-Output contains known limitations and implementation errors. 
----
 
 ## How the pipeline works
 
