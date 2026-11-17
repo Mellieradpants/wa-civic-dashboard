@@ -10,7 +10,7 @@ This is a student project in active development. It is not a legal reference and
 ## How the pipeline works
 
 No AI in the data path. Everything is deterministic. Every rendered sentence is traceable to an exact span of source text. 
-Input text runs through a 10-layer pipeline that detects section type, strips deleted text from amendments, and extracts obligations, permissions, and prohibitions. A renderer turns those into output using one of six scope-lens templates.
+Input text runs through a nine-stage pipeline that detects section type, strips deleted text from amendments, and extracts obligations, permissions, and prohibitions. A renderer turns those into output using one of six scope-lens templates.
 
 The bill index is populated from the WA Legislature API by a GitHub Actions workflow that runs daily and can be triggered manually.
 
@@ -56,7 +56,7 @@ vercel.json                 Vercel deployment config
 api/                        One file per endpoint
 lib/
   plain-meaning/
-    pipeline.js             10-layer deterministic pipeline
+    pipeline.js             nine-stage deterministic pipeline
     renderer.js             Scope-lens template renderer
     templates.js            Scope-lens template functions
   english-verbs.json        Verb list for the pipeline's obligation-language check

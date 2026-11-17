@@ -57,10 +57,6 @@ actually does, in order, for one section of text:
    become a unit.
 9. **For each signal-bearing sentence, build one ISC unit** (`buildUnit`).
    Inside this step, the remaining layers run against that single sentence:
-   - **L3 CFS** — constraint filter. If the sentence matches an
-     intent/narrative pattern (`intends to`, `seeks to`, `aims to`,
-     `designed to`, `purpose is to`), the sentence is dropped here and
-     produces no unit. A lineage record is made either way.
    - **L4 LNS** — normalize: strip a leading `Sec. N.` / `Section N` header
      and collapse whitespace.
    - **L5 AAC** — actor/action/condition parsing
@@ -156,7 +152,7 @@ the record sits in the `records` array.
 **Two record lists come back from `runPipeline`:**
 - `lineage.section.records` — the section-level preamble chain (one
   straight line: root → markup strip → whitespace collapse → header strips
-  → marker strips), plus every L3 CFS record.
+  → marker strips).
 - `lineage.sentences` — one record per candidate sentence found by L2 SSE,
   each parented to the same record: the final preamble record.
 
@@ -177,12 +173,7 @@ siblings of each other, not a continuing sequence, and that relationship
 is explicit in the data rather than something a reader has to infer from
 array order.
 
-For a sentence that survives to become a unit, `buildUnit`'s constraint
-filter (L3 CFS) adds one more record, parented to that sentence's own
-`sentence_split` record — a **child**, not an ancestor. So the full path
-for one unit isn't a straight line from root to leaf; it's the preamble
-chain, then a sibling fan-out to the unit's own sentence record, then one
-more record hanging off that.
+For a sentence that survives to become a unit, inclusion-list detection may add a child record to its `sentence_split` record. The preamble chain and sentence fan-out remain source-traceable.
 
 ### What `position` and `locateFailed` actually mean
 
@@ -361,7 +352,6 @@ unit with the same `lineage` shape) and returns either `null` or:
     { producedBy: "strikeout_strip", rule: "(( )) markup", matched: false, text: "...", position: [...] },
     ... // every preamble step, in order
     { producedBy: "sentence_split", rule: "OBLIGATION_RE", matched: true, text: "...", position: [...] },
-    { producedBy: "L3 CFS", rule: null, matched: false, text: "...", position: [...] },
   ],
 }
 ```
@@ -374,9 +364,7 @@ How it builds that:
 2. Walk `parentNodeId` from that record back to the root (`parentNodeId:
    null`), collecting every record visited, then reverse the list so it
    reads in the order the pipeline actually ran.
-3. Find the unit's own `L3 CFS` record — the one whose `parentNodeId`
-   equals the sentence record's id — and append it after the walked
-   chain, since it's a child step, not an ancestor.
+3. Find the unit's inclusion-list detection record, if present, and append it after the walked chain, since it's a child step, not an ancestor.
 4. Build `sourceSpan` by slicing the *root* record's `text` (the section's
    original, untouched input) at the sentence record's own `position`.
    That slice is the literal span of source text this sentence came from.
