@@ -18,14 +18,14 @@ Run these before assuming anything below is still current — verify reality fir
 
 A Washington State civic information dashboard. Backend is an Express 4 API deployed on Render (`server.js` + `render.yaml`). Frontend is three HTML pages (`index.html`, `legislation.html`, `voting.html`) served by the same Express server. The API also serves `/lib` as static ES modules for browser imports.
 
-The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The 10-layer pipeline and scope-lens renderer produce plain meaning from legalese — English only. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
+The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The nine-stage pipeline and scope-lens renderer produce plain meaning from legalese — English only. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
 
 ---
 
 ## Architecture rules — do not break these
 
 ### Plain meaning is deterministic — no exceptions
-`/api/plain-meaning` runs text through the 10-layer pipeline (`lib/plain-meaning/pipeline.js`) and the scope-lens renderer (`lib/plain-meaning/renderer.js`). No AI call is made anywhere in that path. The dashboard's "Plain meaning" card in `legislation.html` calls `/api/wa-bill-text` → `/api/plain-meaning`. Do not reroute either of these through Anthropic or any other model.
+`/api/plain-meaning` runs text through the nine-stage pipeline (`lib/plain-meaning/pipeline.js`) and the scope-lens renderer (`lib/plain-meaning/renderer.js`). No AI call is made anywhere in that path. The dashboard's "Plain meaning" card in `legislation.html` calls `/api/wa-bill-text` → `/api/plain-meaning`. Do not reroute either of these through Anthropic or any other model.
 
 ### The `units` input path is the primary TCS integration point
 `POST /api/plain-meaning` accepts either `{ text }` (raw string, runs the full JS pipeline — fallback only) or `{ units }` (pre-processed ISC array from the TCS Python pipeline — primary path). The `units` path skips directly to the renderer. Do not remove or change the `units` input schema — it is the integration contract with the TCS pipeline.
@@ -38,12 +38,11 @@ The core product commitment: the entire service is **fully deterministic with ze
 
 ---
 
-## Pipeline — 10 layers, all deterministic
+## Pipeline — nine stages, all deterministic
 
 ```
 L1  5WIH   — who/what/when/where/why/how assembly
 L2  SSE    — signal detection (obligation / permission / prohibition)
-L3  CFS    — constraint filter (blocks intent/narrative language)
 L4  LNS    — language normalization (strips section headers)
 L5  AAC    — actor-action-condition parsing
 L6  TPS    — temporal parsing (deadlines, triggers, sequence)
@@ -102,7 +101,7 @@ The first node of the value-term / applicability-modifiers layer. `detectDelegat
 - **Every "actor named right before a trigger verb" capture is capped at one or two words, not a character count.** A real actor in this position is always short (a pronoun or a short institutional name) — JS regex tries the leftmost successful start position, so a looser cap lets a lazy backward capture walk back across the sentence's own modal and verb to satisfy the same trigger phrase further left, corrupting the captured actor/value phrase. This was confirmed to actually happen during development (a 40-character cap let "if it finds that" capture "only if it" instead of "it"); a same-cue forward capture (e.g. the holder after "as determined by") doesn't need this, since it isn't searching backward.
 - **A holder captured as a bare back-reference pronoun** (it/they/he/she/this/these — reusing `BACK_REFERENCE_PRONOUNS`, the same set the second-instruction detector treats as "refers back, not a new actor") **resolves to the sentence's own main actor** rather than being left as a pronoun. Only the capture's own last word is checked, not the whole captured string, so a little leading context picked up by the capture (e.g. "only if it") doesn't change what the actor resolves to.
 - **Guard against the external-reference case**: "as defined in/under RCW|chapter|section|U.S.C.|CFR" is a later, separate case (external reference), not this one. None of the three cue patterns can textually overlap the external-reference phrase today, so the explicit check in code is a defensive guard rather than something the current fixtures exercise.
-- **No lineage record.** Unlike inclusion-list detection, this node does not add an `L3 CFS`-style lineage record — out of scope for this first node; deliberate, not an oversight.
+- **No lineage record.** Unlike inclusion-list detection, this node does not add an additional lineage record — out of scope for this first node; deliberate, not an oversight.
 - **Every fixture is a verbatim bill excerpt, not a reconstruction.** An earlier pass built fixtures around real cue fragments but invented the surrounding sentence, and one case asserted the wrong value term (HB 1433's real delegated term is "conflict of interest," not "cultural competency," which was never in the bill at all). `data/wa/value-delegation-test-cases.json`'s sentences are now copied verbatim from the cited bills (list markers and terminal punctuation trimmed only).
 - **Two cues from the original spec were dropped for lacking a working real anchor**, per the project rule that a pattern without a real example that actually works does not ship: "as defined by rules of `<authority>`" (delegated rulemaking) — HB 1433's real sentence is a non-modal enumerated item where the value term ("conflict of interest") is detached from the cue by "is presented," so the detector produces zero findings on its own real source; and "in the (sole) discretion of `<authority>`" — no real WA bill anchor was found for it at all. Both may return in a later pass once a working real anchor is found.
 
@@ -253,7 +252,7 @@ api/
 
 lib/
   plain-meaning/
-    pipeline.js                  — 10-layer deterministic pipeline (runPipeline)
+    pipeline.js                  — nine-stage deterministic pipeline (runPipeline)
                                    includes pre-pipeline section type classification
     renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
                                    English-only — produces plain meaning from legalese, no translation
