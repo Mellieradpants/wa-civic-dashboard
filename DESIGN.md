@@ -156,7 +156,7 @@ the record sits in the `records` array.
 **Two record lists come back from `runPipeline`:**
 - `lineage.section.records` — the section-level preamble chain (one
   straight line: root → markup strip → whitespace collapse → header strips
-  → marker strips), plus every L3 CFS record.
+  → marker strips).
 - `lineage.sentences` — one record per candidate sentence found by L2 SSE,
   each parented to the same record: the final preamble record.
 
@@ -177,12 +177,7 @@ siblings of each other, not a continuing sequence, and that relationship
 is explicit in the data rather than something a reader has to infer from
 array order.
 
-For a sentence that survives to become a unit, `buildUnit`'s constraint
-filter (L3 CFS) adds one more record, parented to that sentence's own
-`sentence_split` record — a **child**, not an ancestor. So the full path
-for one unit isn't a straight line from root to leaf; it's the preamble
-chain, then a sibling fan-out to the unit's own sentence record, then one
-more record hanging off that.
+For a sentence that survives to become a unit, inclusion-list detection may add a child record to its `sentence_split` record. The preamble chain and sentence fan-out remain source-traceable.
 
 ### What `position` and `locateFailed` actually mean
 
@@ -361,7 +356,6 @@ unit with the same `lineage` shape) and returns either `null` or:
     { producedBy: "strikeout_strip", rule: "(( )) markup", matched: false, text: "...", position: [...] },
     ... // every preamble step, in order
     { producedBy: "sentence_split", rule: "OBLIGATION_RE", matched: true, text: "...", position: [...] },
-    { producedBy: "L3 CFS", rule: null, matched: false, text: "...", position: [...] },
   ],
 }
 ```
