@@ -47,13 +47,12 @@ External data sources the code contacts: `app.leg.wa.gov` (bill text) and
 ## 4. The parsing pipeline (`lib/plain-meaning/pipeline.js`)
 
 Exported entry point: `runPipeline(rawText, context = {})`. About 1,580 lines. The
-file header declares it deterministic, no AI, each layer a pure function. Ten layers,
+file header declares it deterministic, no AI, each layer a pure function. Nine active stages,
 run in order (acronyms are project-internal names defined in the file header, not
 standard external terminology):
 
 - L1  5WIH — who/what/when/where/why/how assembly
 - L2  SSE  — source statement extraction (signal-anchored spans)
-- L3  CFS  — constraint filter (removes intent, emotion, narrative)
 - L4  LNS  — language normalization
 - L5  AAC  — actor-action-condition parsing
 - L6  TPS  — temporal parsing (deadlines, triggers, sequence)
