@@ -57,10 +57,6 @@ actually does, in order, for one section of text:
    become a unit.
 9. **For each signal-bearing sentence, build one ISC unit** (`buildUnit`).
    Inside this step, the remaining layers run against that single sentence:
-   - **L3 CFS** — constraint filter. If the sentence matches an
-     intent/narrative pattern (`intends to`, `seeks to`, `aims to`,
-     `designed to`, `purpose is to`), the sentence is dropped here and
-     produces no unit. A lineage record is made either way.
    - **L4 LNS** — normalize: strip a leading `Sec. N.` / `Section N` header
      and collapse whitespace.
    - **L5 AAC** — actor/action/condition parsing
@@ -368,9 +364,7 @@ How it builds that:
 2. Walk `parentNodeId` from that record back to the root (`parentNodeId:
    null`), collecting every record visited, then reverse the list so it
    reads in the order the pipeline actually ran.
-3. Find the unit's own `L3 CFS` record — the one whose `parentNodeId`
-   equals the sentence record's id — and append it after the walked
-   chain, since it's a child step, not an ancestor.
+3. Find the unit's inclusion-list detection record, if present, and append it after the walked chain, since it's a child step, not an ancestor.
 4. Build `sourceSpan` by slicing the *root* record's `text` (the section's
    original, untouched input) at the sentence record's own `position`.
    That slice is the literal span of source text this sentence came from.
