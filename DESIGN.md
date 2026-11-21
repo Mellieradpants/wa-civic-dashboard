@@ -28,3 +28,20 @@ Extraction and alignment are conservative and pattern-based. The parser does not
 ## Regression testing
 
 Run `npm test`. The acceptance suite uses the HTTP handlers that serve the dashboard and replays saved official responses for HB 1111, 2024 session law chapter 118, HB 2108 and RCW 13.40.200. Any unrecorded fetch fails. The suite also exercises missing context, individual lenses, source locators, determinism, authority links, and format validation.
+
+## Old map to new map
+
+The six numbered layers below are the production sequence. The old JS layer numbers are historical.
+
+| New layer | Old responsibilities that move here | Boundary |
+|---|---|---|
+| 1. Input | Capture responsibilities previously split between the Washington adapter and the parser preamble | Decode and validate the received representation. Preserve the decoded input and media type. Stop indexing on rejection. |
+| 2. Structure | The ordered span and anchor work from SSE, and structural extraction previously done during text cleanup | Assign source locators and preserve the evidence. Navigation and paragraph projection for the reader do not define this index. |
+| 3. Selection | The part of SSE concerned with choosing evidence, and the former section-selection endpoint | Return node IDs and literal, path, length or order reasons. Selection does not normalize, attach a modal, or remove nodes from the index. |
+| 4. Meaning | Relevant parts of 5WIH, LNS, AAC, TPS, SJM, MPS and ISC | Normalize analysis text locally, describe provisions, resolve context through the full index, map authority and compare the same provision pair in each lens. Limit production analysis to the six specified lenses. |
+| 5. Origin | Source identity and provenance formerly spread across the adapter and lineage | Observe metadata directly from Input. Keep distribution signals separate from Meaning. |
+| 6. Verification routing | The new assertion-to-record handoff | Identify the kind of assertion and where to check it. Distinguish an unresolved candidate that was not checked from a lookup that was attempted and failed. |
+
+The orchestrator captures all supplied inputs, indexes accepted inputs, builds their selections, and then constructs Meaning. Origin reads the captured input. Verification routing receives the assertions and observed lookup attempts. The Washington adapter discovers a prior record from a Meaning amendment instruction only after those first four stages have run on the bill.
+
+`selectionRules` on the standalone API can specify `firstOrder`, `lastOrder`, `minimumLength`, `maximumLength`, `pathPrefix`, or `containsLiteral`. Selecting a narrow working set leaves the index and source locations unchanged. For comparison and reference resolution, the prior and cited provisions can be outside that working set.

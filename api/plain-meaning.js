@@ -24,12 +24,12 @@ export default async function handler(req, res) {
     }
   }
 
-  const { text, units, debug, documents, afterId, beforeId, lenses, alignment } = body || {};
+  const { text, units, debug, documents, afterId, beforeId, lenses, alignment, selectionRules } = body || {};
 
   if (units === undefined) {
     if (!documents && typeof text !== "string") return res.status(400).json({ message: "Provide captured documents or a text string." });
     try {
-      const result = await analyzeLegislation({ documents: documents ?? [{ id: "input", format: "text", source: text }], afterId, beforeId, lenses, alignment });
+      const result = await analyzeLegislation({ documents: documents ?? [{ id: "input", format: "text", source: text }], afterId, beforeId, lenses, alignment, selectionRules });
       return res.status(200).json(result);
     } catch (error) {
       return res.status(400).json({ message: error.message });

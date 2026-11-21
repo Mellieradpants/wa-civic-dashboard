@@ -1,4 +1,4 @@
-import { MAX_SOURCE_BYTES } from "../lib/legislation/evidence.js";
+import { MAX_SOURCE_BYTES } from "../lib/legislation/input.js";
 import { analyzeCapturedBill } from "../lib/legislation/washington.js";
 
 const DOCUMENT_SEARCH_BASE = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
@@ -174,14 +174,10 @@ export async function fetchWashingtonDocument(docUrl) {
   if (url.protocol !== "https:" || !["app.leg.wa.gov", "lawfilesext.leg.wa.gov"].includes(url.hostname) || url.username || url.password || url.port) {
     throw new Error("Expected an HTTPS Washington Legislature document URL.");
   }
-  const docRes = await fetch(url, { signal: AbortSignal.timeout(12000), redirect: "error", headers: { Accept: "text/html, text/plain, */*" } });
+  const docRes = await fetch(url, { signal: AbortSignal.timeout(12000), redirect: "error", headers: { Accept: "text/html, application/xml, application/json, text/plain, */*" } });
   if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
 
   const contentType = docRes.headers.get("content-type") || "";
-  if (!/^(?:text\/html|text\/plain)\b/i.test(contentType)) {
-    throw new Error(`Expected HTML document but got content-type: ${contentType} (url: ${docUrl})`);
-  }
-
   const encoding = /charset\s*=\s*["\x27]?([^;\s"\x27]+)/i.exec(contentType)?.[1] || "utf-8";
   const reader = docRes.body.getReader();
   const chunks = [];
@@ -197,8 +193,11 @@ export async function fetchWashingtonDocument(docUrl) {
     chunks.push(Buffer.from(value));
   }
   const bytes = Buffer.concat(chunks, length);
+  const mediaType = contentType.split(";")[0].trim().toLowerCase();
+  const formats = { "text/html": "html", "text/plain": "text", "application/xml": "xml", "text/xml": "xml", "application/json": "json" };
+  const format = formats[mediaType] || (mediaType.endsWith("+xml") ? "xml" : mediaType.endsWith("+json") ? "json" : "unsupported");
   const html = new TextDecoder(encoding, { fatal: true, ignoreBOM: true }).decode(bytes);
-  return { html, sourceUrl: url.href, format: /^text\/html\b/i.test(contentType) ? "html" : "text", encoding };
+  return { html, sourceUrl: url.href, format, encoding, mediaType };
 }
 
 function splitIntoSections(text) {
@@ -238,7 +237,11 @@ function splitIntoSections(text) {
 export async function fetchBillTextData(billNumber, biennium, { documentUrl, beforeUrl, contextUrls = [], includeAnalysis = false, autoRetrieve = true } = {}) {
   const captured = documentUrl ? await fetchWashingtonDocument(documentUrl) : await fetchBillHtml(billNumber, biennium);
   const { html: rawDocument, sourceUrl } = captured;
-  const preStruckText = cleanHtmlToText(rawDocument);
+  const analysis = includeAnalysis ? await analyzeCapturedBill(captured, { billNumber, biennium, beforeUrl, contextUrls, autoRetrieve, fetchDocument: fetchWashingtonDocument }) : null;
+  if (analysis && analysis.documents[0].structure.status !== "indexed") {
+    return { billNumber, biennium, sourceDocument: { url: sourceUrl, file_type: captured.format }, sections: [], text: "", preSourceLog: [], analysis };
+  }
+  const preStruckText = captured.format === "html" ? cleanHtmlToText(rawDocument) : rawDocument;
   const text = stripEndMarker(
     preStruckText
       .replace(/\(\([\s\S]*?\)\)/g, "")
@@ -247,12 +250,11 @@ export async function fetchBillTextData(billNumber, biennium, { documentUrl, bef
   );
   const sections = splitIntoSections(text);
   const preSourceLog = buildPreSourceLog(sections, rawDocument, preStruckText);
-  const analysis = includeAnalysis ? await analyzeCapturedBill(captured, { billNumber, biennium, beforeUrl, contextUrls, autoRetrieve, fetchDocument: fetchWashingtonDocument }) : null;
   return {
     billNumber,
     biennium,
     ...(analysis ? { analysis } : {}),
-    sourceDocument: { url: sourceUrl, file_type: "html" },
+    sourceDocument: { url: sourceUrl, file_type: captured.format },
     sections,
     text,
     preSourceLog,

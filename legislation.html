@@ -831,7 +831,7 @@
         return;
       }
 
-      billSectionsSummary.textContent = `${sections.length} section${sections.length === 1 ? "" : "s"} loaded from the official bill text. This is raw source text for validation before structure parsing.`;
+      billSectionsSummary.textContent = `${sections.length} section${sections.length === 1 ? "" : "s"} loaded from the official bill text. The display omits marked deletions. Open the official bill document to read the amendment markup.`;
 
       sections.forEach((section, index) => {
         const card = document.createElement("section");
@@ -1006,13 +1006,6 @@
           ? await textDataPromise
           : await fetch(`/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium, view: "reader" })}`, { cache: "no-store" })
               .then(r => { if (!r.ok) throw new Error(`Bill text fetch: HTTP ${r.status}`); return r.json(); });
-
-        const sections = (textData?.sections || []).filter(s => s.text?.trim());
-
-        if (!sections.length) {
-          billDocPlainSummary.textContent = "No bill text available for plain meaning extraction.";
-          return;
-        }
 
         const analysis = textData.analysis;
         const reviewed = analysis?.documents.find(document => document.input.id === analysis.meaning.afterId);

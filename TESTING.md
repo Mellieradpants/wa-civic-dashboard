@@ -7,3 +7,8 @@ Run `npm ci` and `npm test`. The suite replays the HTTP responses listed in `dat
 - **Scope and confidence.** Test missing version and cited context, duty effects linked to their cause, retained authority chains, individual-lens equivalence, determinism, source locations, provenance conflicts and supported formats.
 
 The previous per-bill C1/C4/C5/C6/L1 score files are historical results. The new suite asserts provision-level behavior, including legal force, supporting context and exact source locations. Its checks do not measure corpus-wide accuracy.
+
+The migration tests also verify that literal Selection leaves prior and cited
+context available to Meaning, that malformed Washington source stops before
+indexing and linked lookup, and that verification reports a failed lookup
+separately from an unchecked reference.

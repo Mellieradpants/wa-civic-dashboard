@@ -224,3 +224,97 @@ test("Intake validates each format and preserves source, node order and provenan
   assert.equal(result.origin[3].distribution[0].value, "Distribution title");
   assert.ok(result.documents[3].provisions.every(item => !item.text.includes("Distribution title")));
 });
+
+test("The new map preserves indexed evidence across selection and Meaning", async () => {
+  const before = textDocument("before",
+    "Sec. 1. Rule.\n(1) The court may hold a hearing pursuant to RCW 4.5.6.\n(2) This section expires July 1, 2035.");
+  const after = textDocument("after",
+    "Sec. 1. Rule.\n(1) The court must hold a hearing pursuant to RCW 4.5.6.\n(2) This section expires July 1, 2035.");
+  const basis = textDocument("basis", "(1) The court is authorized to hold a hearing.", "RCW 4.5.6");
+  const body = { documents: [before, after, basis], beforeId: "before", afterId: "after" };
+  const full = await analyze(body);
+  const result = await analyze({ ...body, selectionRules: { containsLiteral: "must hold a hearing", pathPrefix: "/section-1" } });
+  assert.deepEqual(result.documents.map(doc => doc.structure), full.documents.map(doc => doc.structure));
+  assert.equal(result.documents[0].selection.entries.length, 0);
+  assert.equal(result.documents[2].selection.entries.length, 0);
+  assert.equal(latest(result).selection.entries.length, 1);
+  assert.match(latest(result).selection.entries[0].reason, /containsLiteral.*pathPrefix/);
+  assert.equal(result.meaning.descriptions.length, 1);
+  const duty = latest(result).provisions[0];
+  const modality = finding(result, "modality_shift", duty);
+  assert.deepEqual([modality.before, modality.after], ["permitted", "required"]);
+  assert.equal(finding(result, "duty_effect", duty).cause, modality.id);
+  const reference = result.meaning.references.find(entry => entry.provisionId === duty.id && entry.target === "RCW 4.5.6");
+  assert.equal(reference.status, "located");
+  assert.match(locate(result, reference.targetLocations[0]), /court is authorized to hold a hearing/);
+  assert.equal(result.verification.find(entry => entry.assertion === duty.text).lookupStatus, "located");
+  const expiry = full.verification.find(entry => entry.assertion === "This section expires July 1, 2035.");
+  assert.equal(expiry.type, "effective_period");
+  assert.match(locate(full, expiry.locator), /expires July 1, 2035/);
+});
+
+test("Rejected Washington source reaches Intake and never runs linked lookup or reader projection", async () => {
+  const url = "https://lawfilesext.leg.wa.gov/biennium/test/malformed.htm";
+  const source = "<p invalid_attribute='";
+  responses.set(url, { body: source, contentType: "text/html; charset=utf-8", status: 200 });
+  try {
+    const result = await request(billText, { method: "GET", query: {
+      billNumber: "1111", biennium: "2025-26", documentUrl: url, beforeUrl: manifest["laws-2024-ch118"].url,
+    } });
+    assert.equal(result.analysis.documents[0].input.source, source);
+    assert.equal(result.analysis.documents[0].input.status, "malformed");
+    assert.equal(result.analysis.documents[0].structure.status, "unavailable");
+    assert.equal(result.analysis.documents[0].selection.status, "unavailable");
+    assert.deepEqual(result.analysis.lookups, []);
+    assert.deepEqual(result.analysis.meaning.descriptions, []);
+    assert.deepEqual(result.analysis.verification, []);
+    assert.deepEqual(result.sections, []);
+    assert.equal(result.analysis.origin[0].fields.sourceUrl.observations[0].value, url);
+  } finally {
+    responses.delete(url);
+  }
+});
+
+test("Verification distinguishes unchecked from attempted and unavailable", async () => {
+  const url = manifest["rcw-13.40.200"].url;
+  const original = responses.get(url);
+  const getRoute = result => result.verification.find(entry => entry.assertion.includes("the court may impose sanctions"))
+    .lookupLocations.find(record => record.target === "RCW 13.40.200");
+  assert.equal(getRoute(await getBill("2108", { retrieve: "false" })).status, "not_checked");
+  responses.set(url, { ...original, status: 503 });
+  try {
+    const result = await getBill("2108", { retrieve: "false", contextUrl: url });
+    assert.equal(result.lookups[0].status, "unavailable");
+    assert.equal(getRoute(result).status, "unavailable");
+    assert.match(result.plainMeaning, /court may impose sanctions/);
+  } finally {
+    responses.set(url, original);
+  }
+});
+
+
+test("The Washington adapter carries supported media types into the same Input and Structure stages", async () => {
+  const entries = [
+    ["json", "application/json; charset=utf-8", '{"title":"Evidence title","provision":"The board may hold a hearing."}'],
+    ["xml", "application/xml", "<legislation><title>Evidence title</title><provision>The board may hold a hearing.</provision></legislation>"],
+    ["text", "text/plain", "The board may hold a hearing."],
+  ];
+  for (const [format, contentType, source] of entries) {
+    const url = "https://lawfilesext.leg.wa.gov/biennium/test/record." + format;
+    responses.set(url, { body: source, contentType, status: 200 });
+    try {
+      const result = await getBill("1111", { documentUrl: url, retrieve: "false" });
+      assert.equal(latest(result).input.format, format);
+      assert.equal(latest(result).input.source, source);
+      assert.equal(latest(result).structure.status, "indexed");
+      assert.equal(result.origin[0].fields.contentType.observations[0].value, contentType.split(";")[0]);
+      assert.match(result.plainMeaning, /The board may hold a hearing/);
+      if (format !== "text") {
+        assert.equal(result.origin[0].fields.title.observations[0].value, "Evidence title");
+        assert.doesNotMatch(result.plainMeaning, /Evidence title/);
+      }
+    } finally {
+      responses.delete(url);
+    }
+  }
+});
