@@ -3,9 +3,15 @@ name: Pipeline PR check
 on:
   pull_request:
     paths:
+      - '.github/workflows/pipeline-pr-check.yml'
+      - 'api/plain-meaning.js'
+      - 'api/wa-bill-text.js'
+      - 'lib/legislation/**'
       - 'lib/plain-meaning/**'
+      - 'legislation.html'
       - 'scripts/test-bills.js'
-      - 'data/wa/test-bills.json'
+      - 'data/wa/parser-fixtures/**'
+      - 'package*.json'
 
 permissions:
   contents: read
@@ -14,77 +20,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Start server
-        run: node server.js &
-
-      - name: Wait for server
-        run: |
-          for i in $(seq 1 30); do
-            curl -sf http://localhost:3000/api/health && break
-            if [ "$i" = "30" ]; then
-              echo "Server did not start within 30 seconds"
-              exit 1
-            fi
-            sleep 1
-          done
-
-      - name: Snapshot pre-run results as baseline
-        run: cp data/wa/test-results.json /tmp/test-results-baseline.json
-
-      - name: Run test harness
-        env:
-          TEST_SAMPLE_SIZE: '40'
-        run: node scripts/test-bills.js
-
-      - name: Fail on check failures introduced by this PR
-        run: |
-          node -e '
-            const fs = require("fs");
-            const baseline = JSON.parse(fs.readFileSync("/tmp/test-results-baseline.json", "utf8"));
-            const current = JSON.parse(fs.readFileSync("data/wa/test-results.json", "utf8"));
-
-            // latestResults already holds one current snapshot per bill, so a
-            // bill this run never sampled has an identical entry in both
-            // baseline and current — comparing the whole map is equivalent to
-            // comparing only the bills this run actually touched.
-            const newFailures = [];
-            const preExisting = [];
-            let checkedBills = 0;
-            for (const [billNumber, entry] of Object.entries(current.latestResults)) {
-              checkedBills++;
-              for (const [check, result] of Object.entries(entry.results)) {
-                if (!result.pass) {
-                  const line = `bill ${billNumber} ${check}: ${result.reason || "failed"}`;
-                  // Only a confirmed prior failure for this exact bill+check
-                  // excuses it. No prior sample at all (undefined) or a prior
-                  // pass both count as new, so a real regression can never
-                  // hide behind "this bill was never checked before."
-                  const priorPass = baseline.latestResults?.[billNumber]?.results?.[check]?.pass;
-                  (priorPass === false ? preExisting : newFailures).push(line);
-                }
-              }
-            }
-
-            if (preExisting.length) {
-              console.log("Pre-existing failures (already failing the last time this bill+check was sampled, not blocking):");
-              for (const f of preExisting) console.log("  " + f);
-            }
-            if (newFailures.length) {
-              console.error("New check failures introduced by this PR:");
-              for (const f of newFailures) console.error("  " + f);
-              process.exit(1);
-            }
-            console.log("No new check failures — " + checkedBills + " bills checked.");
-          '
+      - run: npm ci
+      - run: npm test

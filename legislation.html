@@ -690,42 +690,6 @@
       summaryActions.style.display = "flex";
     }
 
-    // Run each bill section through the pipeline independently, then join non-empty results.
-    // Per-section processing prevents 10-section bills from becoming one joined text blob.
-    // Returns { text, sectionTypes }.
-    async function fetchPlainMeaning(sections) {
-      const results = await Promise.allSettled(
-        sections.map(section =>
-          fetch("/api/plain-meaning", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ text: section.text }),
-          })
-            .then(r => r.ok ? r.json() : null)
-            .catch(() => null)
-        )
-      );
-      const meanings = [];
-      const sectionTypes = [];
-      const seenParagraphs = new Set();
-      results.forEach((r, i) => {
-        if (r.status !== "fulfilled" || !r.value) return;
-        const { plainMeaning, sectionType, hasContent } = r.value;
-        if (!hasContent) return;
-        const survivors = plainMeaning.split("\n\n").filter(p => {
-          if (seenParagraphs.has(p)) return false;
-          seenParagraphs.add(p);
-          return true;
-        });
-        if (!survivors.length) return;
-        meanings.push(survivors.join("\n\n"));
-        if (sectionType && sectionType !== "standard") {
-          sectionTypes.push({ sectionId: sections[i].id || `section_${i + 1}`, type: sectionType });
-        }
-      });
-      return { text: meanings.join("\n\n"), sectionTypes };
-    }
-
     summaryCopyBtn.addEventListener("click", () => {
       if (!englishSummary) return;
       const text = billDocPlainSummary.textContent;
@@ -803,7 +767,7 @@
       const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
       const biennium = detail?.biennium || record.session || "2025-26";
       if (!billNum) return null;
-      return `/api/wa-bill-text?billNumber=${encodeURIComponent(billNum)}&biennium=${encodeURIComponent(biennium)}`;
+      return `/api/wa-bill-text?billNumber=${encodeURIComponent(billNum)}&biennium=${encodeURIComponent(biennium)}&view=reader`;
     }
 
     function getBillType(billId) {
@@ -898,70 +862,16 @@
       });
     }
 
-    function buildSelectionPath(record, detail = null) {
-      const billNum = record.bill_number || detail?.billNumber || String(record.bill_id_display || "").replace(/[^0-9]/g, "");
-      const biennium = detail?.biennium || record.session || "2025-26";
-      if (!billNum) return null;
-      return `/api/wa-bill-selection?${new URLSearchParams({ billNumber: billNum, biennium }).toString()}`;
-    }
-
-    function cleanLegalText(text) {
-      return String(text || "")
-        .replace(/\bshall not\b/g, "may not")
-        .replace(/\bshall\b/g, "must")
-        .replace(/\bpursuant to\b/gi, "under")
-        .replace(/\bprior to\b/gi, "before")
-        .replace(/\bsubsequent to\b/gi, "after")
-        .trim();
-    }
-
-    function interpretSectionNodes(sectionRuleUnits, sectionSelectedUnits) {
-      if (!sectionRuleUnits.length && !sectionSelectedUnits.length) return "";
-
-      const usedUnitIds = new Set(sectionRuleUnits.flatMap(r => r.sourceUnitIds || []));
-      const sentences = [];
-
-      // 1. Situation: definition units that establish what this section is about
-      sectionSelectedUnits
-        .filter(u => u.primaryType === "definition" && !usedUnitIds.has(u.id))
-        .slice(0, 1)
-        .forEach(u => sentences.push(cleanLegalText(u.sourceSpan)));
-
-      // 2+3+4. Who/What/When: each rule unit with its attached conditions
-      sectionRuleUnits.forEach(rule => {
-        sentences.push(cleanLegalText(rule.sourceSpan));
-        // Conditions that are separate sentences from the main span
-        (rule.conditions || [])
-          .filter(c => c !== rule.sourceSpan)
-          .forEach(c => sentences.push(cleanLegalText(c)));
-      });
-
-      // 5. How: reference or exception units not consumed by any rule
-      sectionSelectedUnits
-        .filter(u => (u.primaryType === "reference" || u.primaryType === "exception") && !usedUnitIds.has(u.id))
-        .slice(0, 2)
-        .forEach(u => sentences.push(cleanLegalText(u.sourceSpan)));
-
-      return sentences.filter(Boolean).join(". ");
-    }
-
-    function renderSectionInterpretations(selectionData) {
-      const ruleUnits = selectionData?.ruleUnits || [];
-      const selectedUnits = selectionData?.selectedUnits || [];
-
-      const rulesBySectionId = {};
-      ruleUnits.forEach(rule => { (rulesBySectionId[rule.sectionId] ||= []).push(rule); });
-
-      const unitsBySectionId = {};
-      selectedUnits.forEach(unit => { (unitsBySectionId[unit.sectionId] ||= []).push(unit); });
-
+    function renderSectionInterpretations(analysis) {
+      const bySection = new Map();
+      for (const finding of analysis?.meaning?.descriptions || []) {
+        const id = "section_" + finding.sectionNumber;
+        const entries = bySection.get(id) || [];
+        entries.push(finding.renderedText);
+        bySection.set(id, entries);
+      }
       billSectionsList.querySelectorAll("[data-section-id]").forEach(card => {
-        const sectionId = card.dataset.sectionId;
-        const prose = interpretSectionNodes(
-          rulesBySectionId[sectionId] || [],
-          unitsBySectionId[sectionId] || []
-        );
-        card.dataset.interpretation = prose || "";
+        card.dataset.interpretation = (bySection.get(card.dataset.sectionId) || []).join("\n\n");
       });
     }
 
@@ -1072,13 +982,7 @@
         }));
         renderSections(textData);
 
-        const selectionPath = buildSelectionPath(record, detail);
-        if (selectionPath) {
-          fetch(selectionPath, { cache: "no-store" })
-            .then(r => r.ok ? r.json() : null)
-            .then(d => { if (d) renderSectionInterpretations(d); })
-            .catch(() => {});
-        }
+        renderSectionInterpretations(textData.analysis);
       } catch (error) {
         console.error("Washington bill text lookup failed:", error);
         billSectionsSummary.textContent = "Raw bill sections are unavailable right now.";
@@ -1100,7 +1004,7 @@
       try {
         const textData = textDataPromise
           ? await textDataPromise
-          : await fetch(`/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium })}`, { cache: "no-store" })
+          : await fetch(`/api/wa-bill-text?${new URLSearchParams({ billNumber: billNum, biennium, view: "reader" })}`, { cache: "no-store" })
               .then(r => { if (!r.ok) throw new Error(`Bill text fetch: HTTP ${r.status}`); return r.json(); });
 
         const sections = (textData?.sections || []).filter(s => s.text?.trim());
@@ -1110,12 +1014,27 @@
           return;
         }
 
-        const { text: plainMeaning, sectionTypes } = await fetchPlainMeaning(sections);
+        const analysis = textData.analysis;
+        const reviewed = analysis?.documents.find(document => document.input.id === analysis.meaning.afterId);
+        if (!reviewed || reviewed.structure.status !== "indexed") {
+          throw new Error(reviewed?.input.issues.join("; ") || reviewed?.structure.issue || "Source indexing failed.");
+        }
+        const { plainMeaning, sectionTypes } = analysis;
         if (sectionTypes.length) applySectionTypeBadges(sectionTypes);
 
         if (plainMeaning) {
-          billDocPlainSummary.textContent = plainMeaning;
-          showSummaryControls(billNum, biennium, plainMeaning);
+          const comparisons = analysis.meaning.lenses.flatMap(({ lens, findings }) => findings
+            .filter(finding => finding.status === "supported")
+            .map(finding => {
+              const value = item => Array.isArray(item) ? item.join("; ") : item ?? "none stated";
+              const label = lens.replaceAll("_", " ");
+              return label + ": " + value(finding.before) + " → " + value(finding.after);
+            }));
+          const lookupWarnings = (analysis.lookups || []).filter(lookup => lookup.status === "unavailable");
+          const status = lookupWarnings.length ? "\n\nSome linked material could not be retrieved." : "";
+          const output = comparisons.length ? plainMeaning + "\n\nSupported comparisons\n" + comparisons.join("\n") : plainMeaning;
+          billDocPlainSummary.textContent = output + status;
+          showSummaryControls(billNum, biennium, output + status);
         } else {
           billDocPlainSummary.textContent = "No actionable provisions were identified in this bill text.";
         }

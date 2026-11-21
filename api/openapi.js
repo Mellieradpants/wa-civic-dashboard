@@ -134,7 +134,7 @@ function buildSpec(baseUrl) {
           operationId: "getBillText",
           summary: "Extract bill text and sections",
           description:
-            "Fetches the official HTML bill document, strips markup, and splits the result into sections.",
+            "Fetches official bill text, captures the source and returns sections and source-anchored analysis.",
           parameters: [
             {
               name: "billNumber",
@@ -148,6 +148,8 @@ function buildSpec(baseUrl) {
               required: false,
               schema: { type: "string" },
             },
+            ...["documentUrl", "beforeUrl", "retrieve", "view"].map(name => ({ name, in: "query", schema: { type: "string" } })),
+            { name: "contextUrl", in: "query", schema: { type: "array", items: { type: "string", format: "uri" } } },
           ],
           responses: {
             200: {
@@ -164,35 +166,9 @@ function buildSpec(baseUrl) {
       },
       "/api/wa-bill-selection": {
         get: {
-          operationId: "getBillSelection",
-          summary: "Extract rule candidate units from bill text",
-          description:
-            "Classifies sentences from the bill text into signal types (obligation, prohibition, permission, condition, exception, definition, reference) and groups them into rule candidate units.",
-          parameters: [
-            {
-              name: "billNumber",
-              in: "query",
-              required: true,
-              schema: { type: "string" },
-            },
-            {
-              name: "biennium",
-              in: "query",
-              required: false,
-              schema: { type: "string" },
-            },
-          ],
-          responses: {
-            200: {
-              description: "Selected meaning units",
-              content: {
-                "application/json": {
-                  schema: { $ref: "#/components/schemas/BillSelectionResponse" },
-                },
-              },
-            },
-            400: { $ref: "#/components/responses/BadRequest" },
-          },
+          operationId: "getBillSelection", deprecated: true,
+          summary: "Retired; use the selection in the bill-text analysis",
+          responses: { 410: { description: "Selection is returned by GET /api/wa-bill-text." } },
         },
       },
       "/api/wa-bill-plain-summary": {
@@ -234,7 +210,7 @@ function buildSpec(baseUrl) {
           operationId: "generatePlainMeaning",
           summary: "Generate plain-language sentences (deterministic, no AI)",
           description:
-            "Runs text through the 9-layer parsing pipeline (5WIH → SSE → LNS → AAC → TPS → SJM → MPS → RDS → ISC) then applies scope-lens sentence templates to produce plain-meaning output. No AI calls. Accepts raw text or pre-processed ISC units from the TCS pipeline.",
+            "Analyzes captured documents or plain text, or renders preprocessed ISC units for legacy callers.",
           requestBody: {
             required: true,
             content: {
@@ -279,7 +255,7 @@ function buildSpec(baseUrl) {
               description: "Plain-meaning output",
               content: {
                 "application/json": {
-                  schema: { $ref: "#/components/schemas/PlainMeaningResponse" },
+                  schema: { oneOf: [{ $ref: "#/components/schemas/SourceAnchoredAnalysis" }, { $ref: "#/components/schemas/PlainMeaningResponse" }] },
                 },
               },
             },
@@ -419,6 +395,7 @@ function buildSpec(baseUrl) {
         BillTextResponse: {
           type: "object",
           properties: {
+            analysis: { oneOf: [{ $ref: "#/components/schemas/SourceAnchoredAnalysis" }, { $ref: "#/components/schemas/ReaderAnalysis" }] },
             billNumber: { type: "string" },
             biennium: { type: "string" },
             textCharacterCount: { type: "integer" },
@@ -426,15 +403,17 @@ function buildSpec(baseUrl) {
             sections: { type: "array", items: { $ref: "#/components/schemas/BillSection" } },
           },
         },
-        BillSelectionResponse: {
+        ReaderAnalysis: {
           type: "object",
+          required: ["architecture", "documents", "meaning", "plainMeaning", "lookups"],
+          not: { required: ["origin"] },
           properties: {
-            billNumber: { type: "string" },
-            biennium: { type: "string" },
-            sectionCount: { type: "integer" },
-            selectionSummary: { type: "object" },
-            selectedUnits: { type: "array", items: { type: "object" } },
-            ruleUnits: { type: "array", items: { type: "object" } },
+            architecture: { const: "source-anchored-v1" },
+            documents: { type: "array", items: { type: "object" } },
+            meaning: { type: "object" },
+            plainMeaning: { type: "string" },
+            sectionTypes: { type: "array", items: { type: "object" } },
+            lookups: { type: "array", items: { type: "object" } },
           },
         },
         PlainSummaryResponse: {
@@ -444,6 +423,34 @@ function buildSpec(baseUrl) {
             biennium: { type: "string" },
             summary: { type: "string", description: "3–5 sentence plain-language summary." },
             cached: { type: "boolean" },
+          },
+        },
+        SourceDocumentInput: {
+          type: "object",
+          required: ["id", "format", "source"],
+          properties: {
+            id: { type: "string" },
+            format: { type: "string", enum: ["text", "html", "xml", "json"] },
+            source: { type: "string" },
+            encoding: { type: "string", default: "utf-8" },
+            url: { type: "string", format: "uri" },
+            instrument: { type: "string" },
+            version: { type: "string" },
+          },
+        },
+        SourceAnchoredAnalysis: {
+          type: "object",
+          required: ["architecture", "documents", "meaning", "origin", "verification", "plainMeaning"],
+          properties: {
+            architecture: { const: "source-anchored-v1" },
+            documents: { type: "array", items: { type: "object", required: ["input", "structure", "selection", "provisions"] } },
+            meaning: { type: "object", required: ["mode", "descriptions", "lenses", "references", "authority"] },
+            origin: { type: "array", items: { type: "object" } },
+            verification: { type: "array", items: { type: "object" } },
+            lookups: { type: "array", items: { type: "object" } },
+            plainMeaning: { type: "string" },
+            hasContent: { type: "boolean" },
+            sectionTypes: { type: "array", items: { type: "object" } },
           },
         },
         PlainMeaningRequest: {
@@ -457,12 +464,20 @@ function buildSpec(baseUrl) {
           },
           oneOf: [
             {
+              required: ["documents"],
+              properties: {
+                documents: { type: "array", minItems: 1, maxItems: 8, items: { $ref: "#/components/schemas/SourceDocumentInput" } },
+                beforeId: { type: "string" }, afterId: { type: "string" },
+                lenses: { type: "array", items: { type: "string", enum: ["modality_shift", "applicability_change", "allocation_of_power", "governed_action_change", "threshold_change", "duty_effect"] } },
+                alignment: { type: "array", items: { type: "object", required: ["before", "after"], properties: { before: { type: "string" }, after: { type: "string" } } } },
+              },
+            },
+            {
               required: ["text"],
               properties: {
                 text: {
                   type: "string",
-                  maxLength: 50000,
-                  description: "Raw bill or policy text. The full 9-layer pipeline runs on this input.",
+                  description: "Plain text source document. The UTF-8 intake limit is 4 MiB; server request limits may be lower."
                 },
               },
             },
@@ -606,6 +621,7 @@ function buildSpec(baseUrl) {
         },
         PlainMeaningResponse: {
           type: "object",
+          required: ["plainMeaning", "sentences", "pipeline"],
           properties: {
             plainMeaning: {
               type: "string",
