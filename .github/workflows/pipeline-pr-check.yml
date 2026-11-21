@@ -10,6 +10,7 @@ on:
       - 'lib/plain-meaning/**'
       - 'legislation.html'
       - 'scripts/test-bills.js'
+      - 'scripts/test-structure-selection.js'
       - 'data/wa/parser-fixtures/**'
       - 'package*.json'
 
