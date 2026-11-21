@@ -24,8 +24,8 @@ this:
 
 ## The pipeline, in actual execution order
 
-The file's layer numbering (L1–L10) is the conceptual model, not the run
-order. L1 (5WIH) and L10 (ISC) are both assembly steps — they run last,
+The file's layer numbering (L1–L9) is the conceptual model, not the run
+order. L1 (5WIH) and L9 (ISC) are both assembly steps — they run last,
 combining what every other layer produced. Here's what `runPipeline`
 actually does, in order, for one section of text:
 
@@ -57,34 +57,30 @@ actually does, in order, for one section of text:
    become a unit.
 9. **For each signal-bearing sentence, build one ISC unit** (`buildUnit`).
    Inside this step, the remaining layers run against that single sentence:
-   - **L3 CFS** — constraint filter. If the sentence matches an
-     intent/narrative pattern (`intends to`, `seeks to`, `aims to`,
-     `designed to`, `purpose is to`), the sentence is dropped here and
-     produces no unit. A lineage record is made either way.
-   - **L4 LNS** — normalize: strip a leading `Sec. N.` / `Section N` header
+   - **L3 LNS** — normalize: strip a leading `Sec. N.` / `Section N` header
      and collapse whitespace.
-   - **L5 AAC** — actor/action/condition parsing
+   - **L4 AAC** — actor/action/condition parsing
      (`parseActorActionCondition`): find the modal verb via `MODAL_RE`,
      split the sentence into the text before it (the actor) and after it
      (the action), and pull out condition clauses (`if`, `when`, `unless`,
      `except`, `provided that`, `subject to`, `upon`, `only if`).
-   - **L6 TPS** — temporal parsing: pull deadlines (`within N days`, `no
+   - **L5 TPS** — temporal parsing: pull deadlines (`within N days`, `no
      later than ...`), triggers (`upon`, `after`, `following`, `once`), and
      sequence phrases (`before`, `after`, `then`, `prior to`, `subsequent
      to`).
-   - **L7 SJM** — jurisdiction mapping: tag Washington State vs. federal,
+   - **L6 SJM** — jurisdiction mapping: tag Washington State vs. federal,
      and pull a controlling entity ("the department of ...") if present.
-   - **L8 MPS** — mechanism parsing: pull a "by/through/via/using/pursuant
+   - **L7 MPS** — mechanism parsing: pull a "by/through/via/using/pursuant
      to" mechanism phrase and an enforcement phrase (`penalty`, `fine`,
      `violation`, `failure to comply`, `subject to a fine/penalty`, or the
      literal word `enforcement`).
-   - **L9 RDS** — risk decomposition: pull likelihood phrases (`may`,
+   - **L8 RDS** — risk decomposition: pull likelihood phrases (`may`,
      `might`, `could`, `likely`, `possible`, `probable`) and consequence
      phrases (`resulting in`, `subject to`, `leading to`, `cause(s/d)`, or
      the literal word `consequence`).
    - **L1 5WIH** — assemble all of the above into the `what` / `who` /
      `where` / `when` / `why` / `how` fields.
-   - **L10 ISC** — assemble the final unit object (shape below).
+   - **L9 ISC** — assemble the final unit object (shape below).
 10. Return `{ inputLength, sentenceCount, unitCount, units, lineage }` for
     the whole section.
 
@@ -156,7 +152,7 @@ the record sits in the `records` array.
 **Two record lists come back from `runPipeline`:**
 - `lineage.section.records` — the section-level preamble chain (one
   straight line: root → markup strip → whitespace collapse → header strips
-  → marker strips), plus every L3 CFS record.
+  → marker strips), plus sentence and inclusion-list detection records.
 - `lineage.sentences` — one record per candidate sentence found by L2 SSE,
   each parented to the same record: the final preamble record.
 
@@ -177,12 +173,8 @@ siblings of each other, not a continuing sequence, and that relationship
 is explicit in the data rather than something a reader has to infer from
 array order.
 
-For a sentence that survives to become a unit, `buildUnit`'s constraint
-filter (L3 CFS) adds one more record, parented to that sentence's own
-`sentence_split` record — a **child**, not an ancestor. So the full path
-for one unit isn't a straight line from root to leaf; it's the preamble
-chain, then a sibling fan-out to the unit's own sentence record, then one
-more record hanging off that.
+For each signal-bearing sentence, `buildUnit` adds an
+`inclusion_list_detect` record as a child of its `sentence_split` record.
 
 ### What `position` and `locateFailed` actually mean
 
@@ -227,7 +219,7 @@ sentence:
     sourceSystem: "plain_meaning_pipeline",
     sourceLocation: string,       // "sentence_N"
     anchorText: string,           // the original sentence text
-    sourceDerivedText: string,    // the L4-normalized text
+    sourceDerivedText: string,    // the L3-normalized text
     matchedSignals: ["obligation"|"permission"|"prohibition"],
     traceReason: string,
   },
@@ -361,7 +353,7 @@ unit with the same `lineage` shape) and returns either `null` or:
     { producedBy: "strikeout_strip", rule: "(( )) markup", matched: false, text: "...", position: [...] },
     ... // every preamble step, in order
     { producedBy: "sentence_split", rule: "OBLIGATION_RE", matched: true, text: "...", position: [...] },
-    { producedBy: "L3 CFS", rule: null, matched: false, text: "...", position: [...] },
+    { producedBy: "inclusion_list_detect", rule: null, matched: false, text: "...", position: [...] },
   ],
 }
 ```
@@ -374,9 +366,7 @@ How it builds that:
 2. Walk `parentNodeId` from that record back to the root (`parentNodeId:
    null`), collecting every record visited, then reverse the list so it
    reads in the order the pipeline actually ran.
-3. Find the unit's own `L3 CFS` record — the one whose `parentNodeId`
-   equals the sentence record's id — and append it after the walked
-   chain, since it's a child step, not an ancestor.
+3. Append the sentence’s `inclusion_list_detect` child record when present.
 4. Build `sourceSpan` by slicing the *root* record's `text` (the section's
    original, untouched input) at the sentence record's own `position`.
    That slice is the literal span of source text this sentence came from.
