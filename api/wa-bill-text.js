@@ -1,3 +1,6 @@
+import { MAX_SOURCE_BYTES } from "../lib/legislation/input.js";
+import { analyzeCapturedBill } from "../lib/legislation/washington.js";
+
 const DOCUMENT_SEARCH_BASE = "https://app.leg.wa.gov/bi/tld/documentsearchresults";
 
 function extractBillNumber(text) {
@@ -156,22 +159,45 @@ function findHtmlDocumentUrl(html, billNumber) {
 
 async function fetchBillHtml(billNumber, biennium) {
   const searchUrl = `${DOCUMENT_SEARCH_BASE}?${new URLSearchParams({ biennium, documentType: "1", name: billNumber })}`;
-  const searchRes = await fetch(searchUrl, { headers: { Accept: "text/html, */*" } });
+  const searchRes = await fetch(searchUrl, { signal: AbortSignal.timeout(12000), headers: { Accept: "text/html, */*" } });
   if (!searchRes.ok) throw new Error(`Document search failed: HTTP ${searchRes.status}`);
 
   const searchHtml = await searchRes.text();
   const docUrl = findHtmlDocumentUrl(searchHtml, billNumber);
   if (!docUrl) throw new Error("No HTML bill document found in document search results");
 
-  const docRes = await fetch(docUrl, { headers: { Accept: "text/html, text/plain, */*" } });
+  return fetchWashingtonDocument(docUrl);
+}
+
+export async function fetchWashingtonDocument(docUrl) {
+  const url = new URL(docUrl);
+  if (url.protocol !== "https:" || !["app.leg.wa.gov", "lawfilesext.leg.wa.gov"].includes(url.hostname) || url.username || url.password || url.port) {
+    throw new Error("Expected an HTTPS Washington Legislature document URL.");
+  }
+  const docRes = await fetch(url, { signal: AbortSignal.timeout(12000), redirect: "error", headers: { Accept: "text/html, application/xml, application/json, text/plain, */*" } });
   if (!docRes.ok) throw new Error(`Bill document fetch failed: HTTP ${docRes.status}`);
 
   const contentType = docRes.headers.get("content-type") || "";
-  if (!/^(?:text\/html|text\/plain)\b/i.test(contentType)) {
-    throw new Error(`Expected HTML document but got content-type: ${contentType} (url: ${docUrl})`);
+  const encoding = /charset\s*=\s*["\x27]?([^;\s"\x27]+)/i.exec(contentType)?.[1] || "utf-8";
+  const reader = docRes.body.getReader();
+  const chunks = [];
+  let length = 0;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    length += value.byteLength;
+    if (length > MAX_SOURCE_BYTES) {
+      await reader.cancel();
+      throw new Error("Washington document exceeds the 4 MiB intake limit.");
+    }
+    chunks.push(Buffer.from(value));
   }
-
-  return { html: await docRes.text(), sourceUrl: docUrl };
+  const bytes = Buffer.concat(chunks, length);
+  const mediaType = contentType.split(";")[0].trim().toLowerCase();
+  const formats = { "text/html": "html", "text/plain": "text", "application/xml": "xml", "text/xml": "xml", "application/json": "json" };
+  const format = formats[mediaType] || (mediaType.endsWith("+xml") ? "xml" : mediaType.endsWith("+json") ? "json" : "unsupported");
+  const html = new TextDecoder(encoding, { fatal: true, ignoreBOM: true }).decode(bytes);
+  return { html, sourceUrl: url.href, format, encoding, mediaType };
 }
 
 function splitIntoSections(text) {
@@ -208,9 +234,14 @@ function splitIntoSections(text) {
   return sections;
 }
 
-export async function fetchBillTextData(billNumber, biennium) {
-  const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
-  const preStruckText = cleanHtmlToText(rawDocument);
+export async function fetchBillTextData(billNumber, biennium, { documentUrl, beforeUrl, contextUrls = [], includeAnalysis = false, autoRetrieve = true } = {}) {
+  const captured = documentUrl ? await fetchWashingtonDocument(documentUrl) : await fetchBillHtml(billNumber, biennium);
+  const { html: rawDocument, sourceUrl } = captured;
+  const analysis = includeAnalysis ? await analyzeCapturedBill(captured, { billNumber, biennium, beforeUrl, contextUrls, autoRetrieve, fetchDocument: fetchWashingtonDocument }) : null;
+  if (analysis && analysis.documents[0].structure.status !== "indexed") {
+    return { billNumber, biennium, sourceDocument: { url: sourceUrl, file_type: captured.format }, sections: [], text: "", preSourceLog: [], analysis };
+  }
+  const preStruckText = captured.format === "html" ? cleanHtmlToText(rawDocument) : rawDocument;
   const text = stripEndMarker(
     preStruckText
       .replace(/\(\([\s\S]*?\)\)/g, "")
@@ -222,10 +253,30 @@ export async function fetchBillTextData(billNumber, biennium) {
   return {
     billNumber,
     biennium,
-    sourceDocument: { url: sourceUrl, file_type: "html" },
+    ...(analysis ? { analysis } : {}),
+    sourceDocument: { url: sourceUrl, file_type: captured.format },
     sections,
     text,
     preSourceLog,
+  };
+}
+
+function readerView(analysis) {
+  const { architecture, documents, meaning, plainMeaning, sectionTypes, lookups } = analysis;
+  return {
+    architecture,
+    documents: documents.map(({ input, structure }) => ({
+      input: { id: input.id, issues: input.issues, url: input.url },
+      structure: { status: structure.status, issue: structure.issue },
+    })),
+    meaning: {
+      afterId: meaning.afterId,
+      descriptions: meaning.descriptions,
+      lenses: meaning.lenses.map(({ lens, findings }) => ({
+        lens, findings: findings.filter(finding => finding.status === "supported"),
+      })),
+    },
+    plainMeaning, sectionTypes, lookups,
   };
 }
 
@@ -249,28 +300,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { html: rawDocument, sourceUrl } = await fetchBillHtml(billNumber, biennium);
-    const preStruckText = cleanHtmlToText(rawDocument);
-    const text = stripEndMarker(
-      preStruckText
-        .replace(/\(\([\s\S]*?\)\)/g, "")
-        .replace(/ {2,}/g, " ")
-        .trim()
-    );
-    const sections = splitIntoSections(text);
-    const preSourceLog = buildPreSourceLog(sections, rawDocument, preStruckText);
-
-    return res.status(200).json({
+    const contextUrls = [].concat(req.query.contextUrl || []).slice(0, 6);
+    const data = await fetchBillTextData(billNumber, biennium, {
+      documentUrl: req.query.documentUrl, beforeUrl: req.query.beforeUrl, contextUrls, includeAnalysis: true, autoRetrieve: req.query.retrieve !== "false",
+    });
+    const { text, analysis, ...response } = data;
+    response.analysis = req.query.view === "reader" ? readerView(analysis) : analysis;
+    return res.status(200).json({ ...response,
       sourceSystem: "Washington State Legislature official bill document",
-      billNumber,
-      biennium,
-      sourceDocument: { url: sourceUrl, file_type: "html" },
-      textCharacterCount: text.length,
-      sectionCount: sections.length,
-      sections,
-      preSourceLog,
+      textCharacterCount: text.length, sectionCount: data.sections.length,
       textPreview: text.slice(0, 1200),
-      note: "This endpoint extracts source text and rough sections only. Structural node parsing and plain meaning are later steps.",
     });
   } catch (error) {
     return res.status(500).json({

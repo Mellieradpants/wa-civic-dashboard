@@ -1,0 +1,58 @@
+{
+  "hb1111-search": {
+    "url": "https://app.leg.wa.gov/bi/tld/documentsearchresults?biennium=2025-26&documentType=1&name=1111",
+    "responseUrl": "https://app.leg.wa.gov/bi/tld/documentsearchresults?biennium=2025-26&documentType=1&name=1111",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "file": "hb1111-search.html",
+    "sha256": "36d0892e4919b1611d98f9f1e4f3b69a8950156c82d1ff6cfe5912be5143c6c9"
+  },
+  "hb2108-search": {
+    "url": "https://app.leg.wa.gov/bi/tld/documentsearchresults?biennium=2025-26&documentType=1&name=2108",
+    "responseUrl": "https://app.leg.wa.gov/bi/tld/documentsearchresults?biennium=2025-26&documentType=1&name=2108",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "file": "hb2108-search.html",
+    "sha256": "5ac84c0bf579384d7e91cd5362e0ed63c2b96ac033209a45a7a5e971c420f54c"
+  },
+  "hb1111": {
+    "url": "https://lawfilesext.leg.wa.gov/biennium/2025-26/Htm/Bills/House%20Bills/1111.htm",
+    "responseUrl": "https://lawfilesext.leg.wa.gov/biennium/2025-26/Htm/Bills/House%20Bills/1111.htm",
+    "status": 200,
+    "contentType": "text/html",
+    "file": "hb1111.html",
+    "sha256": "cc4f33688e8b098488fd6e2a5bbbf149a8dc5fe0365b0d5d59032344f8259a47"
+  },
+  "hb2108": {
+    "url": "https://lawfilesext.leg.wa.gov/biennium/2025-26/Htm/Bills/House%20Bills/2108.htm",
+    "responseUrl": "https://lawfilesext.leg.wa.gov/biennium/2025-26/Htm/Bills/House%20Bills/2108.htm",
+    "status": 200,
+    "contentType": "text/html",
+    "file": "hb2108.html",
+    "sha256": "53f93ef0275f8b4cf2d36d4f9814dad145f336ca3687aad375873961bcf6500a"
+  },
+  "laws-2024-ch118": {
+    "url": "https://lawfilesext.leg.wa.gov/biennium/2023-24/Htm/Bills/Session%20Laws/House/2303-S.SL.htm",
+    "responseUrl": "https://lawfilesext.leg.wa.gov/biennium/2023-24/Htm/Bills/Session%20Laws/House/2303-S.SL.htm",
+    "status": 200,
+    "contentType": "text/html",
+    "file": "laws-2024-ch118.html",
+    "sha256": "af5e294a862c8d862e25fe6c44f0d37b2e66997a3b3dcb5d2d67098e2c6b800b"
+  },
+  "rcw-13.40.200": {
+    "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=13.40.200",
+    "responseUrl": "https://app.leg.wa.gov/RCW/default.aspx?cite=13.40.200",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "file": "rcw-13.40.200.html",
+    "sha256": "98457ce28f6bd76e40e0628c097cbcd6caef93a6e66fae4069a66da08092da2e"
+  },
+  "rcw-9.94A.730": {
+    "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=9.94A.730",
+    "responseUrl": "https://app.leg.wa.gov/RCW/default.aspx?cite=9.94A.730",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "file": "rcw-9.94A.730.html",
+    "sha256": "aefabf920d7260724b700a4bc04270d71d3027596ba64993403702ec1a9d4af1"
+  }
+}

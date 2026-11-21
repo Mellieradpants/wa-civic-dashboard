@@ -10,7 +10,7 @@ This is a student project in active development. It is not a legal reference and
 ## How the pipeline works
 
 No AI in the data path. Everything is deterministic. Every rendered sentence is traceable to an exact span of source text. 
-Input text runs through a 9-layer pipeline that detects section type, strips deleted text from amendments, and extracts obligations, permissions, and prohibitions. A renderer turns those into output using one of six scope-lens templates.
+The bill reader captures the official document, indexes and selects source nodes, analyzes provisions with six independent lenses, and records provenance and verification routes. See [DESIGN.md](DESIGN.md).
 
 The bill index is populated from the WA Legislature API by a GitHub Actions workflow that runs daily and can be triggered manually.
 
@@ -39,9 +39,9 @@ Full spec at `/api/openapi`.
 | GET | `/api/wa-bill-search` | Keyword or bill-number search against local index |
 | GET | `/api/wa-bill-detail` | Official bill metadata from WA Legislature API |
 | GET | `/api/wa-bill-documents` | Document links (PDF, HTML, Word) |
-| GET | `/api/wa-bill-text` | Raw bill text split into sections |
-| GET | `/api/wa-bill-selection` | Sentence classification into rule units |
-| POST | `/api/plain-meaning` | Plain-meaning extraction — accepts `{ text }` or `{ units }` |
+| GET | `/api/wa-bill-text` | Official bill sections and source-anchored analysis |
+| GET | `/api/wa-bill-selection` | Retired. Read selection from the bill-text analysis. |
+| POST | `/api/plain-meaning` | Source-anchored analysis for captured documents or plain text, with legacy ISC unit rendering |
 | GET | `/api/openapi` | OpenAPI 3.1 spec |
 
 ---
@@ -56,7 +56,7 @@ vercel.json                 Vercel deployment config
 api/                        One file per endpoint
 lib/
   plain-meaning/
-    pipeline.js             9-layer deterministic pipeline
+    pipeline.js             Legacy parser and its historical regressions
     renderer.js             Scope-lens template renderer
     templates.js            Scope-lens template functions
   english-verbs.json        Verb list for the pipeline's obligation-language check
@@ -69,14 +69,13 @@ voting.html                 Voting resources
 scripts/
   populate-bill-index.js    Populates data/wa/bill-index.json from WA Legislature API
   build-bill-corpus.js      One-time corpus builder for phrase-scanning and validation work
-  test-bills.js             Test harness — runs C1/C4/C5/C6/L1 checks against a local server
+  test-bills.js             Offline parser acceptance using saved official responses
   test-*.js                 One regression suite per fixed defect, each paired with its own
                              fixture file in data/wa/ (see "How this is tested" above)
 
 data/wa/
   bill-index.json           Active 2025-26 bills with sponsor, committee, and status fields
-  test-bills.json           Test harness configuration — round-robin sample size, fixed
-                             sentinel bills, known no-document bills, known boilerplate,
+  parser-fixtures/          Saved Washington API and document responses for acceptance
                              and known per-bill check exemptions
   test-results.json         Output from test-bills.js — per-bill, per-criterion results
   *-test-cases.json         Fixtures for the scripts/test-*.js regression suites — each

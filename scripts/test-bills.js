@@ -1,535 +1,320 @@
-#!/usr/bin/env node
-// Test harness — runs C1/C4/C5/C6/L1 checks against a local server.
-// Usage: node scripts/test-bills.js
-// Requires server running at http://localhost:3000
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { test } from "node:test";
+import billText from "../api/wa-bill-text.js";
+import plainMeaning from "../api/plain-meaning.js";
 
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+const fixtures = new URL("../data/wa/parser-fixtures/", import.meta.url);
+const manifest = JSON.parse(await readFile(new URL("manifest.json", fixtures)));
+const responses = new Map(await Promise.all(Object.values(manifest).map(async info => {
+  const body = await readFile(new URL(info.file, fixtures));
+  assert.equal(createHash("sha256").update(body).digest("hex"), info.sha256, info.file);
+  return [info.url, { ...info, body }];
+})));
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = path.join(__dirname, "../data/wa");
-
-const BASE_URL = "http://localhost:3000";
-const BIENNIUM = "2025-26";
-const BATCH_SIZE = 5;
-const BATCH_DELAY_MS = 1000;
-
-const TEST_BILLS_CONFIG = JSON.parse(readFileSync(path.join(DATA_DIR, "test-bills.json"), "utf8"));
-const BILL_INDEX = JSON.parse(readFileSync(path.join(DATA_DIR, "bill-index.json"), "utf8"));
-const RESULTS_PATH = path.join(DATA_DIR, "test-results.json");
-
-// Cached by build-bill-corpus.js — when present, bill text comes from here
-// instead of a live wa-bill-text fetch, so results don't depend on whether
-// WA Legislature's servers happen to be reachable on test day.
-const CORPUS_PATH = path.join(DATA_DIR, "bill-corpus.json");
-const BILL_CORPUS = existsSync(CORPUS_PATH)
-  ? new Map(JSON.parse(readFileSync(CORPUS_PATH, "utf8")).map(b => [String(b.bill_number), b]))
-  : null;
-
-const REQUEST_TIMEOUT_MS = 30000;
-
-const SAMPLE_SIZE = process.env.TEST_SAMPLE_SIZE ? Number(process.env.TEST_SAMPLE_SIZE) : TEST_BILLS_CONFIG.sampleSize;
-const SENTINELS = TEST_BILLS_CONFIG.sentinels;
-const NO_DOCUMENT_BILLS = TEST_BILLS_CONFIG.noDocumentBills || [];
-const KNOWN_BOILERPLATE = TEST_BILLS_CONFIG.knownBoilerplate || [];
-const KNOWN_ISSUES = TEST_BILLS_CONFIG.knownIssues || {};
-
-const existing = existsSync(RESULTS_PATH)
-  ? JSON.parse(readFileSync(RESULTS_PATH, "utf8"))
-  : { latestResults: {}, coverageSeenBillNumbers: [] };
-
-// ─── Round-robin coverage sampling ─────────────────────────────────────────
-// Walks the full bill pool in a fixed order so every bill is guaranteed to be
-// tested at least once, instead of relying on random sampling.
-
-function buildCoveragePool() {
-  // Gubernatorial appointment records confirmed (repeatedly, across every prior
-  // sample) to have no HTML bill document at all — wa-bill-text fails before
-  // any check can run, so knownIssues can't help; they'd sit "untested"
-  // forever otherwise. Not a blanket SGA-range exclusion — only the numbers
-  // actually confirmed to fail this way.
-  const excluded = new Set([...SENTINELS, ...NO_DOCUMENT_BILLS]);
-  const numbers = BILL_INDEX.map(b => Number(b.bill_number)).filter(n => !excluded.has(n));
-  return [...new Set(numbers)].sort((a, b) => a - b);
+async function request(handler, req) {
+  let code;
+  let result;
+  const res = {
+    setHeader() {},
+    status(value) { code = value; return this; },
+    json(value) { result = value; },
+  };
+  await handler(req, res);
+  assert.equal(code, 200, JSON.stringify(result));
+  return result;
 }
 
-const coveragePool = buildCoveragePool();
-const cursorStart = existing.coverageCursor || 0;
-const fillCount = Math.max(0, SAMPLE_SIZE - SENTINELS.length);
-const picked = [];
-for (let i = 0; i < fillCount; i++) {
-  picked.push(coveragePool[(cursorStart + i) % coveragePool.length]);
+async function getBill(billNumber, query = {}) {
+  const response = await request(billText, { method: "GET", query: { billNumber, biennium: "2025-26", ...query } });
+  assert.equal(response.analysis.architecture, "source-anchored-v1");
+  return response.analysis;
 }
-const cursorEnd = (cursorStart + fillCount) % coveragePool.length;
-const passesCompletedThisRun = Math.floor((cursorStart + fillCount) / coveragePool.length);
 
-const billNumbers = [...SENTINELS, ...picked];
+function analyze(body) {
+  return request(plainMeaning, { method: "POST", body });
+}
 
-// ─── Static boilerplate paragraphs (legitimate cross-section duplicates) ──────
-// Exact entries checked first; knownBoilerplate from config matched as prefixes.
+function locate(result, location) {
+  assert.ok(location);
+  const { input } = result.documents.find(doc => doc.input.id === location.documentId);
+  assert.ok(Number.isInteger(location.start) && location.start >= 0 && location.end > location.start);
+  assert.ok(location.end <= input.source.length);
+  return input.source.slice(location.start, location.end);
+}
 
-// renderISC prepends one of four section-type prefixes to a section's first sentence
-// (see SECTION_PREFIX_RE below); the no-obligation message renders identically across
-// every section of the same type, which is expected, not a duplication bug. The
-// "Effective …" prefix carries a dynamic date, so it's matched by pattern, not a literal.
-const PREFIXED_NO_OBLIGATION_RE = /^(?:New law|Amends existing law|Funding|Effective [^—\n]+) — No obligation or change detected in this section\.$/;
+function latest(result) {
+  return result.documents.find(doc => doc.input.id === result.meaning.afterId);
+}
 
-const STATIC_PARAGRAPHS = {
-  _exact: new Set([
-    "No obligation or change detected in this section.",
-    "This section is repealed and no longer in effect.",
-  ]),
-  has(p) {
-    return this._exact.has(p) || PREFIXED_NO_OBLIGATION_RE.test(p) || KNOWN_BOILERPLATE.some(prefix => p.startsWith(prefix));
-  },
+function finding(result, lens, provision, status = "supported") {
+  const entry = result.meaning.lenses.find(item => item.lens === lens);
+  return entry.findings.find(item => item.status === status && item.provisions.after === provision.id);
+}
+
+function assertAuthority(result) {
+  const authority = result.meaning.authority.find(item => item.power === "impose sanctions" && item.locator.documentId === "current");
+  assert.ok(authority, "Expected the HB 2108 court sanctions authority");
+  assert.equal(authority.holder, "the court");
+  assert.equal(authority.holderPassage.text, "the court");
+  assert.match(locate(result, authority.holderPassage.locator), /the court may impose sanctions/);
+  assert.equal(authority.kind, "exercise");
+  assert.equal(authority.basis.length, 1, "The court's cited legal basis must be linked");
+  const reference = result.meaning.references.find(item => item.id === authority.basis[0]);
+  assert.equal(reference.target, "RCW 13.40.200");
+  assert.equal(reference.function, "enabling_provision");
+  assert.equal(reference.scope, "external");
+  assert.equal(reference.status, "located", "The cited provision must be available");
+  assert.ok(reference.targetLocations.some(location =>
+    /\b(?:modify|sanction|confinement|fails to comply)\b/i.test(locate(result, location))));
+  assert.ok(result.meaning.references.some(item =>
+    item.target === "RCW 13.40.165" && item.function === "amendment_target" && item.scope === "external"));
+  return authority;
+}
+
+// No fixture test can fall back to the network, including linked lookups.
+globalThis.fetch = async url => {
+  const info = responses.get(String(url));
+  if (!info) throw new Error("Unrecorded fixture request: " + url);
+  return new Response(info.body, { status: info.status, headers: { "content-type": info.contentType } });
 };
 
-// ─── Fetch helpers ────────────────────────────────────────────────────────────
+test("HB 1111 compares petition eligibility against the cited 2024 session law", async () => {
+  const result = await getBill("1111");
+  const current = latest(result);
+  assert.equal(result.meaning.mode, "comparison");
+  assert.equal(result.lookups.find(lookup => lookup.type === "baseline").url, manifest["laws-2024-ch118"].url);
+  const petition = current.provisions.find(item =>
+    item.target === "9.94A.730" && item.coreAction === "petition the indeterminate sentence review board for early release");
+  assert.equal(petition.force, "permitted");
+  const threshold = finding(result, "threshold_change", petition);
+  assert.deepEqual(threshold.before, ["after serving no less than 20 years of total confinement"]);
+  assert.deepEqual(threshold.after, ["after reaching the age of 24 or older"]);
+  assert.equal(threshold.versions.before, manifest["laws-2024-ch118"].url);
+  assert.equal(threshold.versions.after, manifest.hb1111.url);
+  assert.match(locate(result, threshold.locations.before), /20<\/span> years of total confinement/);
+  assert.match(locate(result, threshold.locations.after), /reaching the age of 24 or older/);
+  assert.equal(finding(result, "applicability_change", petition).cause, threshold.id);
+  assert.ok(finding(result, "modality_shift", petition, "no_change_found"));
+  assert.ok(finding(result, "duty_effect", petition, "no_change_found"));
+  assert.match(result.plainMeaning, /This section expires July 1, 2035\./);
+  assert.ok(current.provisions.some(item => item.type === "amendment_instruction" && item.target === "9.94A.730"));
+});
 
-async function getJSON(url) {
-  const res = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
-  if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    throw new Error(body?.error ? `HTTP ${res.status}: ${body.error}` : `HTTP ${res.status}`);
+test("HB 2108 preserves the court, power, cited authority, and original documents", async () => {
+  const options = { retrieve: "false", contextUrl: manifest["rcw-13.40.200"].url };
+  const result = await getBill("2108", options);
+  const authority = assertAuthority(result);
+  assert.match(result.plainMeaning, /The tool must be designed to limit bias/);
+  const duty = latest(result).provisions.find(item => item.text.includes("The tool must be designed to limit bias"));
+  assert.match(locate(result, duty.locator), /The tool must be designed to limit bias/);
+
+  const withoutContext = await getBill("2108", { retrieve: "false" });
+  assert.equal(withoutContext.meaning.authority.find(item => item.id === authority.id).basisStatus, "unresolved");
+  assert.throws(() => assertAuthority(withoutContext), /cited provision must be available/);
+  assert.match(withoutContext.plainMeaning, /court may impose sanctions/);
+
+  const withoutLink = structuredClone(result);
+  withoutLink.meaning.authority.find(item => item.id === authority.id).basis = [];
+  assert.throws(() => assertAuthority(withoutLink), /cited legal basis must be linked/);
+});
+
+test("An amendment instruction remains available when the prior version is withheld", async () => {
+  const raw = await getBill("1111", { retrieve: "false" });
+  const input = latest(raw).input;
+  const result = await analyze({ documents: [input], beforeId: "prior" });
+  assert.equal(result.meaning.contextStatus, "insufficient_context");
+  assert.ok(result.meaning.descriptions.some(entry => entry.type === "amendment_instruction" && entry.text.includes("9.94A.730")));
+  assert.ok(result.meaning.lenses.every(lens =>
+    lens.findings.length && lens.findings.every(item => item.status === "insufficient_context")));
+});
+
+test("Identical inputs are deterministic and each lens agrees with the full run", async () => {
+  const result = await getBill("1111");
+  const documents = result.documents.map(doc => doc.input);
+  const input = { documents, beforeId: "prior", afterId: "current" };
+  const full = await analyze(input);
+  assert.deepEqual(await analyze(input), full);
+  for (const lens of full.meaning.lenses) {
+    const single = await analyze({ ...input, lenses: [lens.lens] });
+    assert.deepEqual(single.meaning.lenses, [lens]);
   }
-  return res.json();
-}
-
-// wa-bill-text proxies app.leg.wa.gov — a failure there means WA Legislature's
-// servers weren't reachable, not that our own pipeline is broken. Keep that
-// distinct from a genuine application-level failure so a network outage
-// can't masquerade as a pipeline regression in the results.
-const UNREACHABLE_RE = /document search failed|bill document fetch failed|fetch failed|ECONNREFUSED|ENOTFOUND|ETIMEDOUT|AbortError|timed? ?out/i;
-function classifyFetchFailure(err) {
-  return UNREACHABLE_RE.test(err.message) ? "unreachable" : "error";
-}
-
-async function postJSON(url, body) {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-}
-
-// ─── Criteria scorers ────────────────────────────────────────────────────────
-
-function scoreC1(text, responses) {
-  if (!text || !text.trim()) {
-    const reasons = responses.map(r => r.emptyReason).filter(Boolean);
-    const detail = reasons.length ? ` (emptyReason: ${reasons.join(", ")})` : "";
-    return { pass: false, reason: `output is empty${detail}` };
-  }
-  if (text.includes("Failure to comply:")) {
-    return { pass: false, reason: '"Failure to comply:" found in output' };
-  }
-  return { pass: true };
-}
-
-// L1: position fidelity — does slicing sec.text at a lineage record's own
-// recorded [start, end] actually reproduce that record's text? Catches a
-// record whose position silently points at the wrong span, as opposed to
-// C4 (which only checks the final anchorText survives somewhere in the
-// section). Records with position: null (locateFailed) are skipped — those
-// are already honestly flagged as unverified, not silently wrong.
-// Reads the top-level lineage field so zero-unit sections (no surviving
-// units to carry a copy of the chain) are still checked.
-function scoreL1(sectionPairs) {
-  for (const { sectionText, response } of sectionPairs) {
-    const records = response.lineage?.records;
-    if (!records) continue;
-    for (const r of records) {
-      if (r.position == null || r.locateFailed) continue;
-      const [start, end] = r.position;
-      const slice = sectionText.slice(start, end);
-      if (slice !== r.text) {
-        const truncate = (s) => `${s.slice(0, 60)}${s.length > 60 ? "…" : ""}`;
-        return {
-          pass: false,
-          reason: `position [${start}, ${end}] (producedBy=${r.producedBy}, id=${r.id}) sliced to "${truncate(slice)}" but record text is "${truncate(r.text)}"`,
-        };
-      }
+  for (const doc of full.documents) {
+    const ids = new Set(doc.structure.nodes.map(node => node.id));
+    assert.equal(ids.size, doc.structure.nodes.length);
+    for (const [order, node] of doc.structure.nodes.entries()) {
+      assert.equal(node.order, order);
+      assert.ok(node.parentId === null || ids.has(node.parentId));
+      assert.ok(locate(full, node.locator));
     }
+    assert.ok(doc.selection.entries.every(item => ids.has(item.nodeId) && item.reason));
   }
-  return { pass: true };
+});
+
+function textDocument(id, source, instrument = "RCW 1.2.3") {
+  return { id, source, instrument, version: id + "-version", format: "text" };
 }
 
-function scoreC5(text) {
-  const m = text.match(/\$\d+,\s\d{3}/);
-  if (m) return { pass: false, reason: `Dollar spacing artifact: "${m[0]}"` };
-  return { pass: true };
+async function compare(before, after, additions = []) {
+  const documents = [
+    textDocument("before", "Sec. 1. Scope.\n(1) " + before),
+    textDocument("after", "Sec. 1. Scope.\n(1) " + after),
+    ...additions,
+  ];
+  const result = await analyze({ documents, beforeId: "before", afterId: "after" });
+  const provision = latest(result).provisions.find(item => item.outline === "1:0");
+  return { result, provision };
 }
 
-// C4 lineage diagnosis — when an anchor can't be found in the source text,
-// walk that sentence's lineage chain (via parentNodeId) from the leaf
-// (sentence_split) back to the root (sec.text), re-running L1's own
-// position-fidelity check at EVERY record in the chain instead of just the
-// leaf. The first record where that check actually fails is the real point
-// of divergence; everything downstream of it just inherited the broken
-// text rather than caused it.
-// A record matching the known-risk pattern (subsection_marker_strip skipped
-// right after a semicolon/colon) is NOT treated as a divergence on its own —
-// that pattern is normal, correct behavior most of the time, and stopping
-// there without checking the fidelity slice would blame an innocent step
-// while a real break later in the chain goes unfound. It's only surfaced as
-// extra context when the fidelity check at that same record actually fails.
-// Position fidelity is checked whitespace-tolerant (collapsing runs to a
-// single space before comparing), not byte-exact like L1's own check —
-// collapseRunsAndTrim legitimately turns a single "\n" into " " on the very
-// first whole-section record, which a contiguous slice can never reproduce
-// byte-for-byte even though nothing meaningful changed; C4 itself already
-// treats whitespace as insignificant (it's whitespace-normalized before the
-// substring check), so this diagnostic should match that same tolerance
-// instead of flagging every multi-line section at the same harmless step.
-function diagnoseLineageDivergence(sectionText, records, anchorText) {
-  const leaf = records.find(r => r.producedBy === "sentence_split" && r.text === anchorText);
-  if (!leaf) {
-    return "no sentence_split record matches this anchor — divergence is happening somewhere lineage doesn't cover";
+test("The six lenses distinguish changes, linked effects, and dependency gaps", async () => {
+  let c = await compare("The agency may file the report.", "The agency must file the report.");
+  const modality = finding(c.result, "modality_shift", c.provision);
+  assert.deepEqual([modality.before, modality.after], ["permitted", "required"]);
+  assert.equal(finding(c.result, "duty_effect", c.provision).cause, modality.id);
+
+  c = await compare("The agency must file the report except during a closure.", "The agency must file the report.");
+  const applicability = finding(c.result, "applicability_change", c.provision);
+  assert.equal(applicability.before, "except during a closure.");
+  assert.equal(finding(c.result, "duty_effect", c.provision).effect, "extended");
+  assert.equal(finding(c.result, "duty_effect", c.provision).cause, applicability.id);
+
+  c = await compare("The agency must file the report.", "The agency must publish the report.");
+  assert.equal(finding(c.result, "governed_action_change", c.provision).after, "publish the report.");
+
+  c = await compare("The board is authorized to issue permits.", "The department is authorized to issue permits.");
+  assert.equal(finding(c.result, "allocation_of_power", c.provision).kind, "holder_changed");
+
+  c = await compare("The board may issue permits pursuant to RCW 4.5.6.", "The board may issue permits pursuant to RCW 4.5.7.");
+  assert.equal(finding(c.result, "allocation_of_power", c.provision).kind, "cited_basis_changed");
+  assert.equal(finding(c.result, "allocation_of_power", c.provision).contextStatus, "insufficient_context");
+  assert.ok(finding(c.result, "duty_effect", c.provision, "insufficient_context"));
+
+  c = await compare("The board may issue permits pursuant to RCW 4.5.6.", "The board may issue permits pursuant to RCW 4.5.6.", [
+    textDocument("authority", "The board is authorized to issue permits pursuant to RCW 5.6.7.", "RCW 4.5.6"),
+    textDocument("delegation", "The department is delegated authority to set the permit standard.", "RCW 5.6.7"),
+  ]);
+  const reference = c.result.meaning.references.find(item => item.provisionId === c.provision.id);
+  assert.equal(reference.status, "located");
+  assert.ok(reference.nextReferences.some(id =>
+    c.result.meaning.references.some(item => item.id === id && item.target === "RCW 5.6.7" && item.status === "located")));
+  assert.ok(finding(c.result, "allocation_of_power", c.provision, "no_change_found"));
+});
+
+test("Intake validates each format and preserves source, node order and provenance conflicts", async () => {
+  const documents = [
+    textDocument("text", "The agency must file the report."),
+    { id: "json", format: "json", source: '{"label":"The agency may act.","2":"second","1":"third"}' },
+    { id: "xml", format: "xml", source: "<root><clause>The agency must act.</clause><empty/></root>" },
+    { id: "html", format: "html", url: "https://example.org/doc", source:
+      "<!doctype html><title>Bill A</title><meta name='author' content='Alice'><meta property='og:title' content='Distribution title'><script type='application/ld+json'>{\"author\":{\"name\":\"Bob\"}}</script><p>The agency may act.</p>" },
+    { id: "broken-json", format: "json", source: '{"broken":}' },
+    { id: "broken-xml", format: "xml", source: "<root><missing></root>" },
+    { id: "broken-html", format: "html", source: "<p attribute='" },
+    { id: "unsupported", format: "pdf", source: "%PDF" },
+  ];
+  const result = await analyze({ documents });
+  assert.deepEqual(result.documents.map(doc => doc.input.status),
+    ["accepted", "accepted", "accepted", "accepted", "malformed", "malformed", "malformed", "unsupported"]);
+  assert.equal(result.documents[4].input.source, '{"broken":}');
+  assert.deepEqual(result.documents[1].structure.nodes.map(node => node.locator.pointer), ["", "/label", "/2", "/1"]);
+  const [, clause] = result.documents[2].structure.nodes;
+  assert.equal(locate(result, clause.locator), "<clause>The agency must act.</clause>");
+  assert.equal(result.origin[3].fields.author.state, "conflicting");
+  assert.equal(result.origin[3].distribution[0].value, "Distribution title");
+  assert.ok(result.documents[3].provisions.every(item => !item.text.includes("Distribution title")));
+});
+
+test("The new map preserves indexed evidence across selection and Meaning", async () => {
+  const before = textDocument("before",
+    "Sec. 1. Rule.\n(1) The court may hold a hearing pursuant to RCW 4.5.6.\n(2) This section expires July 1, 2035.");
+  const after = textDocument("after",
+    "Sec. 1. Rule.\n(1) The court must hold a hearing pursuant to RCW 4.5.6.\n(2) This section expires July 1, 2035.");
+  const basis = textDocument("basis", "(1) The court is authorized to hold a hearing.", "RCW 4.5.6");
+  const body = { documents: [before, after, basis], beforeId: "before", afterId: "after" };
+  const full = await analyze(body);
+  const result = await analyze({ ...body, selectionRules: { containsLiteral: "must hold a hearing", pathPrefix: "/section-1" } });
+  assert.deepEqual(result.documents.map(doc => doc.structure), full.documents.map(doc => doc.structure));
+  assert.equal(result.documents[0].selection.entries.length, 0);
+  assert.equal(result.documents[2].selection.entries.length, 0);
+  assert.equal(latest(result).selection.entries.length, 1);
+  assert.match(latest(result).selection.entries[0].reason, /containsLiteral.*pathPrefix/);
+  assert.equal(result.meaning.descriptions.length, 1);
+  const duty = latest(result).provisions[0];
+  const modality = finding(result, "modality_shift", duty);
+  assert.deepEqual([modality.before, modality.after], ["permitted", "required"]);
+  assert.equal(finding(result, "duty_effect", duty).cause, modality.id);
+  const reference = result.meaning.references.find(entry => entry.provisionId === duty.id && entry.target === "RCW 4.5.6");
+  assert.equal(reference.status, "located");
+  assert.match(locate(result, reference.targetLocations[0]), /court is authorized to hold a hearing/);
+  assert.equal(result.verification.find(entry => entry.assertion === duty.text).lookupStatus, "located");
+  const expiry = full.verification.find(entry => entry.assertion === "This section expires July 1, 2035.");
+  assert.equal(expiry.type, "effective_period");
+  assert.match(locate(full, expiry.locator), /expires July 1, 2035/);
+});
+
+test("Rejected Washington source reaches Intake and never runs linked lookup or reader projection", async () => {
+  const url = "https://lawfilesext.leg.wa.gov/biennium/test/malformed.htm";
+  const source = "<p invalid_attribute='";
+  responses.set(url, { body: source, contentType: "text/html; charset=utf-8", status: 200 });
+  try {
+    const result = await request(billText, { method: "GET", query: {
+      billNumber: "1111", biennium: "2025-26", documentUrl: url, beforeUrl: manifest["laws-2024-ch118"].url,
+    } });
+    assert.equal(result.analysis.documents[0].input.source, source);
+    assert.equal(result.analysis.documents[0].input.status, "malformed");
+    assert.equal(result.analysis.documents[0].structure.status, "unavailable");
+    assert.equal(result.analysis.documents[0].selection.status, "unavailable");
+    assert.deepEqual(result.analysis.lookups, []);
+    assert.deepEqual(result.analysis.meaning.descriptions, []);
+    assert.deepEqual(result.analysis.verification, []);
+    assert.deepEqual(result.sections, []);
+    assert.equal(result.analysis.origin[0].fields.sourceUrl.observations[0].value, url);
+  } finally {
+    responses.delete(url);
   }
+});
 
-  const byId = new Map(records.map(r => [r.id, r]));
-  const chain = [];
-  for (let r = leaf; r; r = r.parentNodeId == null ? null : byId.get(r.parentNodeId)) {
-    chain.push(r);
+test("Verification distinguishes unchecked from attempted and unavailable", async () => {
+  const url = manifest["rcw-13.40.200"].url;
+  const original = responses.get(url);
+  const getRoute = result => result.verification.find(entry => entry.assertion.includes("the court may impose sanctions"))
+    .lookupLocations.find(record => record.target === "RCW 13.40.200");
+  assert.equal(getRoute(await getBill("2108", { retrieve: "false" })).status, "not_checked");
+  responses.set(url, { ...original, status: 503 });
+  try {
+    const result = await getBill("2108", { retrieve: "false", contextUrl: url });
+    assert.equal(result.lookups[0].status, "unavailable");
+    assert.equal(getRoute(result).status, "unavailable");
+    assert.match(result.plainMeaning, /court may impose sanctions/);
+  } finally {
+    responses.set(url, original);
   }
-  chain.reverse(); // root → leaf
+});
 
-  const truncate = (s) => `${s.slice(0, 60)}${s.length > 60 ? "…" : ""}`;
-  const collapse = (s) => s.replace(/\s+/g, " ");
-  const isKnownRiskPattern = (r) =>
-    r.producedBy === "subsection_marker_strip" &&
-    r.rule === "marker after semicolon/colon — not a sentence boundary" &&
-    r.matched === true;
 
-  for (const r of chain) {
-    if (r.position == null || r.locateFailed) continue;
-    const [start, end] = r.position;
-    const slice = sectionText.slice(start, end);
-    if (collapse(slice) !== collapse(r.text)) {
-      const riskNote = isKnownRiskPattern(r) ? ` [known risk pattern: ${r.rule}]` : "";
-      return `divergence at step "${r.producedBy}" (id=${r.id})${riskNote} — position [${start}, ${end}] sliced to "${truncate(slice)}" but record text is "${truncate(r.text)}"`;
-    }
-  }
-
-  return "lineage chain checks out end-to-end (root to leaf) — divergence is happening somewhere lineage doesn't cover";
-}
-
-function scoreC4(sectionPairs) {
-  for (const { sectionText, response } of sectionPairs) {
-    const normalized = sectionText.replace(/\s+/g, " ");
-    for (const s of (response.sentences || [])) {
-      if (s.lens === "fallback" || !s.anchorText) continue;
-      const anchor = s.anchorText.replace(/\s+/g, " ").trim();
-      if (!normalized.includes(anchor)) {
-        const records = response.lineage?.records;
-        const diagnosis = records
-          ? diagnoseLineageDivergence(sectionText, records, s.anchorText)
-          : "no lineage data on this response — can't trace divergence";
-        return {
-          pass: false,
-          reason: `anchor not found in source — "${anchor.slice(0, 60)}${anchor.length > 60 ? "…" : ""}" (${diagnosis})`,
-        };
-      }
-    }
-  }
-  return { pass: true };
-}
-
-// The four section-type prefixes renderISC prepends to the first sentence of a section.
-// "Effective …" carries a dynamic date, so it is matched by pattern rather than literal.
-const SECTION_PREFIX_RE = /^(?:New law|Amends existing law|Funding|Effective .+) — $/;
-
-// Look up the anchorText for a rendered paragraph within one section's API response.
-// sentences[].sentence does not include the section-type prefix; plainMeaning does.
-// Paragraphs that are the first sentence of a section carry a prefix like
-// "Amends existing law — " or "New law — ". Strip it before comparing against
-// sentences[].sentence, but only when the leftover is exactly one of the four known
-// prefixes — not merely anything that ends with " — ".
-function getAnchorText(paragraph, response) {
-  const sentences = response?.sentences;
-  if (!Array.isArray(sentences)) return null;
-  for (const s of sentences) {
-    if (!s.sentence) continue;
-    if (s.sentence === paragraph) return s.anchorText ?? null;
-    if (paragraph.endsWith(s.sentence)) {
-      const prefix = paragraph.slice(0, paragraph.length - s.sentence.length);
-      if (SECTION_PREFIX_RE.test(prefix)) return s.anchorText ?? null;
-    }
-    // A compound-action split renders one source sentence as two clauses
-    // joined by "\n\n" within a single sentence field. scoreC6 splits the
-    // combined output on that same "\n\n" as part of normal paragraph
-    // separation, cutting this one record into two paragraph pieces that
-    // neither equal nor end with the full sentence field. Check each half
-    // of the compound sentence directly so both pieces still resolve back
-    // to the record they actually came from.
-    if (s.sentence.includes("\n\n")) {
-      const clauses = s.sentence.split("\n\n").map(c => c.trim());
-      if (clauses.includes(paragraph)) return s.anchorText ?? null;
-    }
-  }
-  return null;
-}
-
-function scoreC6(text, sectionPairs) {
-  if (text.includes("bE")) {
-    const idx = text.indexOf("bE");
-    const ctx = text.slice(Math.max(0, idx - 15), idx + 20);
-    return { pass: false, reason: `"bE" artifact: "${ctx}"` };
-  }
-  const corruptionMatch = text.match(/(^|\n|[.!?]\s)([ЗС] )(?=[A-Za-z])/);
-  if (corruptionMatch) {
-    const idx = corruptionMatch.index + corruptionMatch[1].length;
-    const ctx = text.slice(Math.max(0, idx - 15), idx + 20);
-    return { pass: false, reason: `Stray capitalized Cyrillic preposition "${corruptionMatch[2].trim()}": "${ctx}"` };
-  }
-  if (text.includes("Failure to comply:")) {
-    return { pass: false, reason: '"Failure to comply:" found in output' };
-  }
-
-  // Build a provenance-aware paragraph list so each entry carries the anchorText
-  // of the source phrase that produced it. When sectionPairs is available, pull
-  // paragraphs from each section's response directly; otherwise fall back to the
-  // combined string (anchorText will be null, so duplicates are still flagged).
-  const entries = [];
-  if (Array.isArray(sectionPairs) && sectionPairs.length) {
-    for (const { response } of sectionPairs) {
-      if (!response?.plainMeaning) continue;
-      for (const p of response.plainMeaning.split("\n\n").map(s => s.trim()).filter(Boolean)) {
-        entries.push({ p, anchorText: getAnchorText(p, response) });
-      }
-    }
-  } else {
-    for (const p of text.split("\n\n").map(s => s.trim()).filter(Boolean)) {
-      entries.push({ p, anchorText: null });
-    }
-  }
-
-  const seen = new Map(); // paragraph → anchorText from first occurrence
-  for (const { p, anchorText } of entries) {
-    if (STATIC_PARAGRAPHS.has(p)) continue;
-    if (seen.has(p)) {
-      const firstAnchor = seen.get(p);
-      // Both occurrences share the same non-null anchorText → the pipeline
-      // deterministically produced identical output from the same source phrase.
-      // That is expected behavior, not a pipeline bug — skip it.
-      if (firstAnchor != null && anchorText != null && firstAnchor === anchorText) continue;
-      return { pass: false, reason: `Full duplication: "${p.slice(0, 80)}${p.length > 80 ? "…" : ""}"` };
-    }
-    seen.set(p, anchorText);
-  }
-  return { pass: true };
-}
-
-// ─── Cumulative coverage across all bills ─────────────────────────────────────
-// latestResults already holds exactly one current snapshot per bill (a bill
-// re-sampled after the round-robin pool wraps just overwrites its own entry),
-// so this is a direct pass over the map — no history to re-scan.
-
-function computeCumulativeStats(latestResults) {
-  const byCheck = {};
-  for (const { results } of Object.values(latestResults)) {
-    for (const [check, result] of Object.entries(results)) {
-      if (!byCheck[check]) byCheck[check] = { passed: 0, failed: 0 };
-      byCheck[check][result.pass ? "passed" : "failed"]++;
-    }
-  }
-  const testedBillNumbers = Object.keys(latestResults).sort((a, b) => Number(a) - Number(b));
-  return { testedBills: testedBillNumbers.length, testedBillNumbers, byCheck };
-}
-
-// ─── XFAIL resolution ────────────────────────────────────────────────────────
-
-function resolveKnownIssues(billNumber, rawResults) {
-  const knownIssue = KNOWN_ISSUES[String(billNumber)] || {};
-  const results = {};
-  for (const [check, r] of Object.entries(rawResults)) {
-    results[check] = (!r.pass && knownIssue[check])
-      ? { pass: true, xfail: knownIssue[check] }
-      : r;
-  }
-  for (const [check, reason] of Object.entries(knownIssue)) {
-    if (!(check in results)) results[check] = { pass: true, xfail: reason };
-  }
-  return results;
-}
-
-function logAndReturn(billNumber, results, failures, textSource) {
-  const xfailCount = Object.values(results).filter(r => r.xfail).length;
-  if (xfailCount) {
-    console.log(`    PASS (${xfailCount} XFAIL)`);
-    for (const [check, result] of Object.entries(results)) {
-      if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
-    }
-  }
-  return { billNumber, results, failures, textSource };
-}
-
-// ─── Per-bill test ────────────────────────────────────────────────────────────
-
-async function testBill(billNumber) {
-  console.log(`  Testing bill ${billNumber}…`);
-
-  const failures = [];
-
-  // Fetch bill text sections — cached corpus first, live fetch as fallback.
-  let textData;
-  let textSource = "corpus";
-  const cached = BILL_CORPUS?.get(billNumber);
-  if (cached?.sections?.length) {
-    textData = cached;
-  } else {
-    textSource = "live";
+test("The Washington adapter carries supported media types into the same Input and Structure stages", async () => {
+  const entries = [
+    ["json", "application/json; charset=utf-8", '{"title":"Evidence title","provision":"The board may hold a hearing."}'],
+    ["xml", "application/xml", "<legislation><title>Evidence title</title><provision>The board may hold a hearing.</provision></legislation>"],
+    ["text", "text/plain", "The board may hold a hearing."],
+  ];
+  for (const [format, contentType, source] of entries) {
+    const url = "https://lawfilesext.leg.wa.gov/biennium/test/record." + format;
+    responses.set(url, { body: source, contentType, status: 200 });
     try {
-      textData = await getJSON(
-        `${BASE_URL}/api/wa-bill-text?${new URLSearchParams({ billNumber, biennium: BIENNIUM })}`
-      );
-    } catch (err) {
-      const kind = classifyFetchFailure(err);
-      console.log(`    SKIP: wa-bill-text ${kind} — ${err.message}`);
-      failures.push({ billNumber, stage: "wa-bill-text", kind, error: err.message });
-      // No fetch, no checks ran — leave results empty rather than letting
-      // resolveKnownIssues backfill an XFAIL "pass" for a check that never
-      // executed, which would make an untested bill look tested.
-      return logAndReturn(billNumber, {}, failures, textSource);
+      const result = await getBill("1111", { documentUrl: url, retrieve: "false" });
+      assert.equal(latest(result).input.format, format);
+      assert.equal(latest(result).input.source, source);
+      assert.equal(latest(result).structure.status, "indexed");
+      assert.equal(result.origin[0].fields.contentType.observations[0].value, contentType.split(";")[0]);
+      assert.match(result.plainMeaning, /The board may hold a hearing/);
+      if (format !== "text") {
+        assert.equal(result.origin[0].fields.title.observations[0].value, "Evidence title");
+        assert.doesNotMatch(result.plainMeaning, /Evidence title/);
+      }
+    } finally {
+      responses.delete(url);
     }
   }
-
-  const sections = (textData?.sections || []).filter(s => s.text?.trim());
-  if (!sections.length) {
-    console.log(`    SKIP: no sections found`);
-    failures.push({ billNumber, stage: "wa-bill-text", kind: "error", error: "no sections found" });
-    return logAndReturn(billNumber, {}, failures, textSource);
-  }
-
-  // Run plain-meaning pipeline for each section (English)
-  const responses = [];
-  const sectionPairs = [];
-  let combined = "";
-  for (const sec of sections) {
-    try {
-      const r = await postJSON(`${BASE_URL}/api/plain-meaning`, { text: sec.text });
-      responses.push(r);
-      sectionPairs.push({ sectionText: sec.text, response: r });
-      if (r.plainMeaning) combined += (combined ? "\n\n" : "") + r.plainMeaning;
-    } catch (err) {
-      // A failure here can mean the local server itself died mid-run — a
-      // dead pipeline service, not a pipeline regression. Partial output
-      // must never be scored: C4/C6 compare across sections, so a bill
-      // with some sections missing is as corrupted as a bill with all
-      // sections missing. Stop immediately with empty results, exactly
-      // like the wa-bill-text unreachable path above — no check ever runs
-      // against partial or empty accumulated output, and this bill's
-      // latestResults entry is left untouched rather than overwritten with
-      // a false failure like "C1: output is empty".
-      const kind = classifyFetchFailure(err);
-      console.log(`    SKIP: plain-meaning ${kind} — section ${sec.id}: ${err.message}`);
-      failures.push({ billNumber, stage: "plain-meaning", kind, error: `section ${sec.id}: ${err.message}` });
-      return logAndReturn(billNumber, {}, failures, textSource);
-    }
-  }
-
-  const rawResults = {
-    C1: scoreC1(combined, responses),
-    C4: scoreC4(sectionPairs),
-    C5: scoreC5(combined),
-    C6: scoreC6(combined, sectionPairs),
-    L1: scoreL1(sectionPairs),
-  };
-
-  const results = resolveKnownIssues(billNumber, rawResults);
-
-  // Log a one-line summary
-  const failCount = Object.values(results).filter(c => !c.pass).length;
-  const xfailCount = Object.values(results).filter(c => c.xfail).length;
-  const statusLine = failCount > 0 ? `${failCount} FAIL(s)` : xfailCount > 0 ? `PASS (${xfailCount} XFAIL)` : "PASS";
-  console.log(`    ${statusLine}`);
-  for (const [check, result] of Object.entries(results)) {
-    if (!result.pass) console.log(`      ${check}: ${result.reason}`);
-    if (result.xfail) console.log(`      ${check}: XFAIL — ${result.xfail}`);
-  }
-
-  return { billNumber, results, failures, textSource };
-}
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
-
-const run = { runAt: new Date().toISOString(), cursorStart, cursorEnd, sentinels: SENTINELS, sampledBills: billNumbers, bills: [] };
-
-console.log(`Running tests for ${billNumbers.length} bills in batches of ${BATCH_SIZE}…\n`);
-
-for (let i = 0; i < billNumbers.length; i += BATCH_SIZE) {
-  const batch = billNumbers.slice(i, i + BATCH_SIZE);
-  console.log(`Batch ${Math.floor(i / BATCH_SIZE) + 1}: bills ${batch.join(", ")}`);
-
-  const batchResults = await Promise.all(batch.map(n => testBill(String(n))));
-  for (const r of batchResults) {
-    run.bills.push(r);
-  }
-
-  if (i + BATCH_SIZE < billNumbers.length) {
-    await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS));
-  }
-}
-
-// Each bill's row is overwritten in place — a bill re-sampled after the
-// round-robin pool wraps just replaces its own prior snapshot, so this file
-// never grows past one entry per distinct bill, no matter how many more runs
-// happen after this one.
-const runAt = new Date().toISOString();
-for (const bill of run.bills) {
-  if (Object.keys(bill.results).length) {
-    existing.latestResults[bill.billNumber] = {
-      lastTestedAt: runAt,
-      textSource: bill.textSource,
-      results: bill.results,
-    };
-  }
-}
-const seenBillNumbers = new Set(existing.coverageSeenBillNumbers);
-for (const n of run.sampledBills) seenBillNumbers.add(n);
-existing.coverageSeenBillNumbers = [...seenBillNumbers].sort((a, b) => a - b);
-existing.coverageCursor = cursorEnd;
-existing.coveragePasses = (existing.coveragePasses || 0) + passesCompletedThisRun;
-existing.cumulativeStats = computeCumulativeStats(existing.latestResults);
-writeFileSync(RESULTS_PATH, JSON.stringify(existing, null, 2));
-
-const totalChecks = run.bills.flatMap(b => Object.values(b.results)).length;
-const totalFails = run.bills.flatMap(b => Object.values(b.results)).filter(c => !c.pass).length;
-const totalXfails = run.bills.flatMap(b => Object.values(b.results)).filter(c => c.xfail).length;
-
-// Both stages can leave a bill untested (empty results): wa-bill-text
-// failing before any check runs, or plain-meaning failing mid-section —
-// e.g. the local server dying mid-run. Either way the bill's results are
-// empty rather than scored, so both count toward the same "untested" line.
-const stageFailures = run.bills.flatMap(b => b.failures).filter(f => f.stage === "wa-bill-text" || f.stage === "plain-meaning");
-const unreachableCount = stageFailures.filter(f => f.kind === "unreachable").length;
-const otherStageFailureCount = stageFailures.length - unreachableCount;
-const actuallyTestedCount = run.bills.filter(b => Object.keys(b.results).length).length;
-const corpusSourcedCount = run.bills.filter(b => b.textSource === "corpus").length;
-
-const totalUniqueBills = coveragePool.length + SENTINELS.length;
-const coveragePct = (existing.coverageSeenBillNumbers.length / totalUniqueBills * 100).toFixed(1);
-
-console.log(`\nDone. ${run.bills.length} bills attempted, ${actuallyTestedCount} actually tested, ${totalChecks} checks, ${totalFails} failures${totalXfails ? `, ${totalXfails} expected` : ""}.`);
-if (stageFailures.length) {
-  console.log(`Untested: ${stageFailures.length} (${unreachableCount} WA Legislature/service unreachable, ${otherStageFailureCount} other stage error) — these are excluded from cumulative pass/fail stats below.`);
-}
-if (corpusSourcedCount) {
-  console.log(`Bill text source: ${corpusSourcedCount} from cached corpus, ${run.bills.length - corpusSourcedCount} from live fetch.`);
-}
-console.log(`Coverage: ${existing.coverageSeenBillNumbers.length}/${totalUniqueBills} unique bills tested at least once (${coveragePct}%), ${existing.coveragePasses} full pass(es) of the bill pool completed.`);
-
-const { testedBills: cumulativeTested, byCheck: cumulativeByCheck } = existing.cumulativeStats;
-const cumulativePct = (cumulativeTested / totalUniqueBills * 100).toFixed(1);
-console.log(`Cumulative results across all runs (${cumulativeTested}/${totalUniqueBills} bills, ${cumulativePct}%):`);
-for (const [check, { passed, failed }] of Object.entries(cumulativeByCheck)) {
-  console.log(`  ${check}: ${passed} passed, ${failed} failed`);
-}
-console.log(`Results written to ${RESULTS_PATH}`);
-
-console.log("\nFull results (bill-labeled, this run only):");
-console.log(JSON.stringify(run.bills, null, 2));
+});

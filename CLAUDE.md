@@ -6,10 +6,7 @@ Run these before assuming anything below is still current — verify reality fir
 
 1. Hit the deployed API's root route and `/api/openapi` — confirm what endpoints actually exist right now. The production URL is documented under "Server and deployment" below — use that one, not a guessed URL.
 2. Check `git status` and recent merges on `main` — know what's actually landed before assuming the state of any in-progress work.
-3. Check the test harness's cumulative stats (`data/wa/test-results.json` or the latest CI artifact) for current pass/fail numbers — don't reuse a number from a previous session without confirming it's still current.
-
-`data/wa/test-results.json` is committed back to the repo automatically after every CI run of `run-tests.yml` — it is not just a build artifact. Read it directly from the repo for current pass/fail numbers; no need to pull an artifact.
-
+3. Run the saved-record acceptance tests with npm test.
 4. Note the Node version and dependency versions currently in use, in case anything's gone stale since the last session.
 
 ---
@@ -18,114 +15,13 @@ Run these before assuming anything below is still current — verify reality fir
 
 A Washington State civic information dashboard. Backend is an Express 4 API deployed on Render (`server.js` + `render.yaml`). Frontend is three HTML pages (`index.html`, `legislation.html`, `voting.html`) served by the same Express server. The API also serves `/lib` as static ES modules for browser imports.
 
-The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The 9-layer pipeline and scope-lens renderer produce plain meaning from legalese — English only. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
+The core product commitment: the entire service is **fully deterministic with zero external AI API calls**. The six-layer source-anchored parser describes provisions and compares identifiable versions. Search uses synonym expansion from `lib/synonymMap.json`. No Anthropic, Gemini, or any other LLM is called at runtime.
 
 ---
 
-## Architecture rules — do not break these
+## Architecture
 
-### Plain meaning is deterministic — no exceptions
-`/api/plain-meaning` runs text through the 9-layer pipeline (`lib/plain-meaning/pipeline.js`) and the scope-lens renderer (`lib/plain-meaning/renderer.js`). No AI call is made anywhere in that path. The dashboard's "Plain meaning" card in `legislation.html` calls `/api/wa-bill-text` → `/api/plain-meaning`. Do not reroute either of these through Anthropic or any other model.
-
-### The `units` input path is the primary TCS integration point
-`POST /api/plain-meaning` accepts either `{ text }` (raw string, runs the full JS pipeline — fallback only) or `{ units }` (pre-processed ISC array from the TCS Python pipeline — primary path). The `units` path skips directly to the renderer. Do not remove or change the `units` input schema — it is the integration contract with the TCS pipeline.
-
-### ISC unit schema — current shape
-`parse.who` contains `responsibleParty` (string | null) and `modal` (string | null). The `actors` array and `decisionAuthority` field were removed — both were always equal to `responsibleParty` and neither was read by the renderer. TCS integration was confirmed inactive; there is no external pipeline consuming this schema.
-
-### The 6 scope lenses are fixed
-`modality_shift`, `actor_power_shift`, `scope_change`, `threshold_shift`, `action_domain_shift`, `obligation_removal`. These mirror the meaning-buddy taxonomy. New lenses require updating both `LENS_PATTERNS` in `renderer.js` and the `PlainMeaningSentence` schema in `openapi.js`.
-
----
-
-## Pipeline — 9 layers, all deterministic
-
-```
-L1  5WIH   — who/what/when/where/why/how assembly
-L2  SSE    — signal detection (obligation / permission / prohibition)
-L3  LNS    — language normalization (strips section headers)
-L4  AAC    — actor-action-condition parsing
-L5  TPS    — temporal parsing (deadlines, triggers, sequence)
-L6  SJM    — system/jurisdiction mapping
-L7  MPS    — mechanism parsing (how + enforcement)
-L8  RDS    — risk decomposition
-L9  ISC    — information set construction (assembles the unit)
-```
-
-All layers are in `lib/plain-meaning/pipeline.js`. The renderer (`lib/plain-meaning/renderer.js`) is a separate step that runs after the pipeline.
-
-### Known design decisions in the pipeline (do not revert)
-- `MODAL_RE` includes `is responsible for|are responsible for` before `is required to` — needed so SSE detects actor-authority sentences without a modal verb.
-- `MODAL_RE` also includes `must be adjusted|must be rounded` — obligation signals for rounding/adjustment clauses that have no traditional modal verb.
-- `cleanAction` does NOT strip `of each X` — that was removed because it lost meaningful target context.
-- `obligation_removal` template checks for co-present threshold data and appends it — a conditional removal is not rendered as a blanket removal.
-- `TEMPORAL_SUFFIX_RE` uses `[^;.]` not `[^,;.]` — allows commas inside dates like "no later than January 1, 2026".
-- Lens classifier order is intentional: `obligation_removal` → `threshold_shift` → `actor_power_shift` → `action_domain_shift` → `scope_change` → default `modality_shift`. First match wins.
-- `threshold_shift` cash-rounding template only fires when text contains **both** rounding language AND a cent-amount pattern — prevents false positives on non-monetary rounding.
-- `(( ))` WA legislative markup (struck/substituted text) is stripped in two places: (1) in `pipeline.js` before SSE runs, (2) in `wa-bill-text.js` before the text is returned from the API. Both strips are required; removing either causes raw markup to appear in output.
-- Amendment header strip runs in `runPipeline` **after** section type detection but **before** SSE — the "is amended to read as follows:" phrase is needed for type detection and must be removed before sentence extraction so it never becomes an actor.
-- Subsection navigation markers `(1)`, `(2)(a)`, `(a)`, `(b)` etc. are stripped in `runPipeline` after the amendment header strip. They are structural navigation artifacts that pollute actor/action extraction; they carry no semantic content.
-- `renderISC` joins multiple obligation sentences with `"\n\n"` not `" "` — multiple obligations within one section must render as distinct paragraphs, not a run-on block.
-- `modalVerb` gives SSE signal priority over the positional MODAL_RE string match — `signal === "obligation"` returns "must" before `m === "may"` is checked. This prevents sentences where "may" appears before "shall" in the text from rendering as permission.
-- `parseActorActionCondition` (L4 AAC) strips leading condition clauses from the actor string. If the pre-modal text starts with `if/when/unless/until/except/provided that/in the event`, the actor is taken from the text after the last comma, with prepositional-fragment tails rejected. No clean tail → actor is null.
-- `cleanAction` strips a leading comma+space from the action string — prevents `"must , at intervals..."` artifacts when a mid-clause modal is followed by a comma-delimited adverbial phrase.
-- `scope_change` lens trigger is intentionally narrow: only `throughout`, `across all`, `all covered`, `applies? to`, `regardless of`. Generic words like `all/each/any` were removed to prevent false-positive scope_change classification on nearly every section.
-- C6 (duplicate-paragraph check in `scripts/test-bills.js`) compares the source anchor text behind two matching rendered paragraphs before flagging a failure. Same source text producing the same output is expected and cleared; only genuinely different source text producing identical output counts as a real failure.
-- `parseActorActionCondition` (L4 AAC) returns an **array** of one or two instruction groups, not always exactly one. A sentence with two independent, equally-weighted instructions joined by "and" — different actor, different requirement each, e.g. "The matter must be heard de novo and the court must include written findings" — produces two full ISC units instead of one unit with the second instruction's actor and modal silently swallowed into the first unit's action text. `runPipeline`'s sentence→unit mapping is a `flatMap`, not a `map`+`filter`, because of this; `sourceLocation` is assigned after flattening (a running count across the section's units, not each sentence's own index) for the same reason. Detection only fires on a genuinely distinct second actor: a modal sitting immediately after "and" with nothing between is the already-handled same-actor case (`renderer.js`'s `analyzeCoordinateSplit`, see "And-split rule" below) and is deliberately left alone; a back-reference whose own last word is a bare pronoun (`it/they/he/she/this/these`) is treated as pointing back to the first actor, not a new one — but a non-pronoun back-reference ("such board", "the college board") is not rejected just because it's a back-reference, only a bare-pronoun one is. Identical wording between the two actors is never on its own a reason to reject — two teams both named "one of the teams" serving different cities are still two real, distinct instructions. Only catches exactly two instructions (a third "and"-joined clause is not detected) and only "and"-joined pairs (not semicolon-joined). The second instruction's own `conditions`/`deadlines`/`jurisdiction`/`mechanism`/`enforcement`/`risk` are left empty rather than duplicating the first instruction's onto it, since L5-L8 still run once on the whole sentence text and can't be reliably attributed to one clause or the other — the same choice `renderer.js`'s `analyzeCoordinateSplit` already makes for the same-actor coordinate-split case. The second-instruction scan has its own "May [date]" guard (a bare "may" immediately followed by a day-number doesn't count as a modal) — this guard is scoped to the second-instruction detector only; the primary modal match's own susceptibility to the same "May [date]" collision (see "Known pipeline limitations" below) is unchanged.
-
-### Section type detection (pre-pipeline step — do not remove)
-Before L1, each section is classified by type. The 6 types are: `addition`, `amendment`, `repeal`, `delayed`, `appropriation`, `standard`. The type is stored on the ISC unit as `sectionType`. This classification runs in `pipeline.js` (look for `detectSectionType`). Do not move this into a lens or post-render step — it must tag the unit before extraction so the renderer can use it.
-
-### Inclusion/exclusion list detection — `tetherAnchor.inclusionLists`
-`detectInclusionLists` (`pipeline.js`) finds every "including"/"excluding" list in a sentence and records `{marker, classification, start, end, listText}` per marker — a sentence can hold more than one. It is detection only: it never restructures the sentence. The 7 classifications (`REVERSED`, `NOT_A_LIST`, `NON_SENTENCE`, `PARENTHETICAL`, `COLON_SUBLIST`, `COMMA_BOUNDED`, `SENTENCE_END`) and the gate/stop logic behind them come from a rule validated over five rounds against 615 real bill sentences — do not re-derive or "simplify" the stop conditions without re-validating against real text; the guards (May-date, to-be coordination, relative/interrogative-clause shield) each exist because a real sentence broke without them.
-- `stripInclusionListSpans` removes only the classifications with real `listText` (not REVERSED/NOT_A_LIST/NON_SENTENCE) from a **copy** of the normalized text before it reaches L4 AAC, so a detected list is never part of the derived actor/action/modal — `tetherAnchor.sourceDerivedText` itself stays the untouched L3 LNS output.
-- `inclusionLists` is attributed only to the first instruction of an "and"-joined split sentence (`isSplit ? [] : ...`), same reasoning as `subordinateClauseSignals` — a detected list can't be reliably assigned to one clause or the other.
-- Gate 3(a)'s bill-number-range check (`parseBillNumberFromId`) only fires when `billId` happens to contain digits — real production callers (`api/plain-meaning.js`) never supply a `billId` at all, so this gate is skipped, not falsely triggered, in the normal request path. It only matters when a caller supplies a real bill number (as test/diagnostic harnesses do).
-- Known, accepted limitations carried over from the validated rule (not fixed, not in scope to fix without re-validating): table-formatted sections can leak past the table gate; a post-list participial modifier (", determined/anticipated to be...") always ends the list even describing the last item (safe direction — instruction preserved); a tucked-in alternative ("abuse, including sexual contact, or neglect of a child") ends at ", or", landing the trailing alternative outside the list; nested markers are captured as one outer list, no inner list is extracted; STOP-3's reference-tag exception only recognizes "...in ..." citations (misses "authorized by"); STOP-4's relative-clause shield doesn't extend to STOP-2's comma-based "shortly reached" check.
-- Renderer (`renderer.js`'s `buildInclusionNotes`) surfaces each detected list as a trailing note on the rendered sentence — "Named examples: ..." for `including`, "Does not include: ..." for `excluding` and `REVERSED`. `REVERSED`/`NOT_A_LIST`/`NON_SENTENCE` never have `listText`, so they never render a note — this is deliberate, not a gap.
-- **Fail-open invariant (do not revert): extracting a detected list must never reduce a sentence's unit count.** A nested `including:` inside a lettered sub-item (e.g. bill 1433's `"(a) Establishing requirements..., including:\n(i) ...\n(ii) ..."`) can legitimately consume real obligation text along with its own lettered items — there is no shape rule that safely tells the two apart in general, so `buildUnit` checks the *result* instead: it parses the action both with and without the strip applied, and if stripping would produce fewer units than not stripping, or would leave any resulting unit's action empty or effectively empty (`isEffectivelyEmptyAction` — nothing left but whitespace, punctuation, or bare connective words), the strip is rolled back for the whole sentence. Every unit derived from that sentence then keeps its original, unstripped action text; the list is still recorded in `tetherAnchor.inclusionLists` with `extracted: false` (and the `inclusion_list_detect` lineage record notes why) so the detection isn't silently lost — `buildInclusionNotes` skips rendering a note for any entry with `extracted: false`, since the content is still fully present inline. Checking unit *count* is required, not just whether the affected unit's own action looks empty — a nested list can swallow a genuine second instruction whole (via `detectSecondInstruction`) while the first unit's own action still looks non-empty, so an empty-action check alone misses it.
-
-### Colon-lettered/numbered list binding — `pipeline.js`'s `detectListBindings`
-A colon is not a sentence boundary for `splitSentences`, so the item right after it stays glued to the lead-in and survives with it — but every later item, once a period separates it from the lead-in, becomes its own standalone sentence, and if it carries no requirement word of its own (shall/must/may/will), L2 SSE drops it before it can ever become a unit. Confirmed, repeatedly, against real pipeline output on real bills (e.g. bill 5218's "the transfer of a motor vehicle held: (a) For lease...; (b) In a fleet..." — both items were completely absent from all 11 of that section's units; bill 1749 and bill 5063's factor lists produced **zero units for the whole section** — neither the lead-in nor any item had a recognized force-word anywhere).
-- **The gate for "is this a genuine list at all"** (`listLeadInFirstItemText`) is reused, unmodified, from a rule validated over two discovery rounds and a corpus-wide drop measurement (`tmp-scan-colon-lettered-duties-r2.js` and `tmp-measure-colon-list-item-drops-results.txt`, both on `main`, from that validation work): a colon introduces a list only when the lead-in plus its first item reads as one continuous sentence — the first item must not be independently a complete sentence with its own subject and finite verb (`isListItemIndependentClause`). This is what keeps ordinary statute-amendment subsection numbering ("...read as follows: (1) The superior court ... shall have jurisdiction ...") correctly un-bound — item (1) there is already a complete sentence, so nothing is bound and both amended subsections keep producing their own separate, already-correct units exactly as before.
-- **`isListItemIndependentClause` is a disclosed, approximate proxy**, not a parser: a subject-like opening word plus a modal/auxiliary/copula verb appearing *anywhere* in the item's text. A verb of this kind sitting inside a relative clause ("...in which controlled substances were sold...") is indistinguishable, by this heuristic, from the item's own main verb, and can misread a genuine dependent list item as an independent sentence — a known, carried-over limitation, not something this feature attempts to resolve.
-- **Two survival paths, both applied before the requirement-word filter runs**: (1) a whole list crammed into one un-split, semicolon-joined piece (no period until the very end) survives even when neither the lead-in nor any item has a requirement word anywhere — the same fail-safe used elsewhere in this project: preserving the sentence, even in an unassigned form (`actor: null, modal: null`, full text as `action`), always beats losing it outright; (2) a later, period-separated continuation item with no requirement word of its own inherits the lead-in's actor and modal (`detectListBindings`), the same low-error mechanism that already keeps a semicolon-joined list's items together today whenever its lead-in does carry a requirement word (the already-working SHARED-DUTY shape).
-- **An item that does carry its own requirement word is never bound** — `bound = !isSplit && !aac.modal && listBinding`, so a continuation with its own `shall`/`must`/`may` keeps its own actor and modal untouched, exactly as the MIXED and EACH-ITEM-OWN-FORCE shapes already did before this change.
-- **Binding must be computed on the PROVISIONAL sentence split, before subsection-marker stripping runs** — that step (`MID_SUBSECTION_RE`) removes exactly the markers ("(b)", "(c)"...) a continuation item needs to be recognized by, so by the time `extractSignalSentences` would otherwise see the final pieces, there is no marker left to detect at all. `runPipeline` calls `splitSentences` a second, earlier time (right before subsection-marker stripping) purely to compute `detectListBindings` on markers-still-present text, then applies the result to the final pieces **by index position** — safe because marker stripping only removes characters, never adds or removes a sentence-ending period, so the two splits produce the same number of pieces in the same order. `extractSignalSentences` re-checks this length match and falls back to no bindings if it's ever wrong, rather than risk applying a binding to the wrong piece.
-
-### Value-term delegation detection — `tetherAnchor.valueResolution`
-The first node of the value-term / applicability-modifiers layer. `detectDelegatedValues` (`pipeline.js`) finds where a bill hands the meaning of an evaluative or discretionary value term to a named authority's judgment or rulemaking, rather than fixing the term itself. Detection only, runs on the same L3-normalized text the inclusion/exclusion detector uses, and never feeds back into AAC extraction — no strip/rollback step, unlike inclusion lists. Emits into `tetherAnchor.valueResolution`, an additive array field (empty when no value term is present) shaped `{ valueTerm, resolutionState, resolutionHolder, cue }` — this node only ever emits `resolutionState: "delegated"`; later cases (external reference, bare/open, internal) are expected to emit the same shape into the same field. Same split-attribution rule as `inclusionLists`/`subordinateClauseSignals`: attributed only to the first instruction of an "and"-split sentence.
-- **Value lexicon is three-tiered and accumulates with evidence.** Evaluative (good faith, fair, reasonable, undue, hardship, good cause, unconscionable, arbitrary, capricious, best interest(s), public interest, ...) counts as a real value term. Functional (appropriate, adequate, suitable, relevant, applicable) never counts — measured trap in the 397-bill sample behind this detector: 213 functional vs. 114 evaluative duty-occurrences, so this exclusion is load-bearing, not decorative. Term-of-art (reasonable time, fair market value, reasonable notice, reasonable cost) counts the same as evaluative for this node; a future case may split it out at lower confidence.
-- **Three delegation cues, each with its own object-finding rule** — the cue phrase alone doesn't tell you where the value term is: "as `<ACTOR>` deems/may deem `<VALUE>`" and "if `<ACTOR>` finds that `<VALUE>` exists" both have the value term inline, right after the cue; "as (determined|prescribed) by `<ACTOR>`" modifies a noun rather than introduce one, so the value term is found by scanning the whole sentence for a lexicon match instead (confirmed necessary by the real HB 1263 sentence, which states "good cause" as the sentence's own subject, well before the cue).
-- **"Deem" does not require lexicon membership.** The real bill behind the deems/may-deem cue (HB 1278) uses "necessary," which isn't on the evaluative lexicon — but "deem" itself means to judge or form an opinion, so its object is evaluative by construction. This cue is gated only against the functional list, not the evaluative one.
-- **Every "actor named right before a trigger verb" capture is capped at one or two words, not a character count.** A real actor in this position is always short (a pronoun or a short institutional name) — JS regex tries the leftmost successful start position, so a looser cap lets a lazy backward capture walk back across the sentence's own modal and verb to satisfy the same trigger phrase further left, corrupting the captured actor/value phrase. This was confirmed to actually happen during development (a 40-character cap let "if it finds that" capture "only if it" instead of "it"); a same-cue forward capture (e.g. the holder after "as determined by") doesn't need this, since it isn't searching backward.
-- **A holder captured as a bare back-reference pronoun** (it/they/he/she/this/these — reusing `BACK_REFERENCE_PRONOUNS`, the same set the second-instruction detector treats as "refers back, not a new actor") **resolves to the sentence's own main actor** rather than being left as a pronoun. Only the capture's own last word is checked, not the whole captured string, so a little leading context picked up by the capture (e.g. "only if it") doesn't change what the actor resolves to.
-- **Guard against the external-reference case**: "as defined in/under RCW|chapter|section|U.S.C.|CFR" is a later, separate case (external reference), not this one. None of the three cue patterns can textually overlap the external-reference phrase today, so the explicit check in code is a defensive guard rather than something the current fixtures exercise.
-- **No lineage record.** Unlike inclusion-list detection, this node does not add a lineage record — out of scope for this first node; deliberate, not an oversight.
-- **Every fixture is a verbatim bill excerpt, not a reconstruction.** An earlier pass built fixtures around real cue fragments but invented the surrounding sentence, and one case asserted the wrong value term (HB 1433's real delegated term is "conflict of interest," not "cultural competency," which was never in the bill at all). `data/wa/value-delegation-test-cases.json`'s sentences are now copied verbatim from the cited bills (list markers and terminal punctuation trimmed only).
-- **Two cues from the original spec were dropped for lacking a working real anchor**, per the project rule that a pattern without a real example that actually works does not ship: "as defined by rules of `<authority>`" (delegated rulemaking) — HB 1433's real sentence is a non-modal enumerated item where the value term ("conflict of interest") is detached from the cue by "is presented," so the detector produces zero findings on its own real source; and "in the (sole) discretion of `<authority>`" — no real WA bill anchor was found for it at all. Both may return in a later pass once a working real anchor is found.
-
-### And-split rule — `renderer.js`'s `analyzeCoordinateSplit`
-Separates two or more duties joined by "and" where a later duty doesn't repeat its actor — e.g. "the office ... shall award grants ... and shall adopt rules" — so each renders as its own duty with its own force, rather than the second duty being buried inside the first one's action text. Validated over four rounds against a 212-bill sample before implementation; runs entirely at render time in `renderer.js`, not in `pipeline.js`'s L4 AAC, so it does **not** change `runPipeline`'s unit count — this is a hard requirement, covered by `data/wa/split-instruction-test-cases.json`'s `baseline-same-actor-zero-gap-compound` case. It replaces the old single-split `splitCompoundAction`/`findCompoundSplitOffset`/`clause2Fields`, which only found one "and [modal]" boundary with no gates and no chain support.
-- **Trigger**: "and" (optionally preceded by `,` or `;`) immediately followed by `shall`/`must`/`may` (optionally followed by `not`), or by `cannot`. "will" is never a trigger — observed cases are ordinary future tense. `cannot` isn't part of the validated rule but was already supported as a second-clause modal before this change; kept for that reason, not because it was validated.
-- A sentence can contain more than one trigger (a chain); each is evaluated independently against the three block conditions below, and a blocked trigger doesn't stop the scan for later ones.
-- **Chain-testing**: any check that examines "the text before the trigger" must examine it from the start of the text being scanned, not just since the most recent split — otherwise a third stacked instruction is wrongly blocked because its own local segment carries no requirement word (it inherited one from an earlier split).
-- **Three block conditions**: (1) SHARED_ENDING — the first half ends on a bare "to" (with or without a trailing comma), meaning both halves share the words that follow and splitting would strand the first half unfinished; (2) SECOND_SIDE_NO_ACTOR — the second half's main verb is one of `occur/exist/happen/remain/continue/lapse/expire/consist/apply/differ/arise/result` (+ `-s` forms), describing something happening rather than someone acting, **except** when that verb is immediately followed by "to" + another verb not itself on the list ("continue to make provisions" evaluates "make" instead and allows the split; "continue to be employed" still blocks — a bare "be" reached this way is still an ongoing state, not a new action, so it does not get the passive exception below); (3) the fail-safe — if splitting would leave either half empty or effectively empty, don't split (same invariant as the inclusion list detector's `isEffectivelyEmptyAction`, duplicated locally rather than imported since the two serve different rollback decisions).
-- **A passive second half is never blocked.** "must be collected", "may be seized" are performed by someone even when nobody is named — this is the largest group of genuine duties the rule recovers.
-- **Actor-swallowed status recovery**: L4 AAC extracts the actor by taking everything before the sentence's first modal. When the true first clause has no requirement word of its own ("The tax rate is three percent ... and must be assessed on the seller"), that naive extraction swallows the whole status clause plus the "and" into the actor — so `analyzeCoordinateSplit` treats an actor ending on a bare "and" as the fingerprint of exactly this case and re-derives the split from `tetherAnchor.sourceDerivedText` (the untouched sentence) instead of trusting the actor/action AAC already produced. In every other case (actor doesn't end in "and"), the already-correctly-extracted `fields.action` is split directly — no need to re-derive from raw text.
-- **A force-less first half is a condition, not a duty.** Detection finds it like any other half; organization (`attachStatusPrefix`) is what decides it's presented as a leading "Because X, " clause on the duty that follows, never as its own "must"/"may" item — a reader must never see obligation language for something that isn't an obligation. No actor is inherited in this case, since a force-less first half means no clause in the sentence names one.
-- **Status-attached wording always follows the detected force.** `templates.js`'s no-actor phrasing ("This section {verb}: X") is produced by a single `requirementVerb(modal)` helper shared by every template that needs it (`modality_shift`, `threshold_shift`, `action_domain_shift`) — "must" reads as "requires", "may" as "allows", "cannot" as "prohibits". No template may hardcode "requires"; a modal the helper doesn't recognize returns `null`, and the caller bails rather than guess a wording for a force that wasn't detected.
-- **A status clause's own subject is carried onto the duty when it can be pulled out cleanly.** `renderer.js`'s `extractStatusSubject` takes the status text up to its own first copula/linking verb ("The tax is in addition to..." → "The tax") and uses it as the duty's actor, so the duty reads as a complete sentence ("The tax must be collected...") instead of a bare passive fragment ("must be collected..."). "Cleanly" means no internal comma/semicolon in the candidate (a comma there means a leading adverbial got included, not a plain subject — "Once filed, the exemption" is rejected) and no more than `MAX_STATUS_SUBJECT_WORDS` (12, mirrors pipeline.js's `MAX_SECOND_ACTOR_WORDS`) words. When extraction fails, the sentence falls back to the existing `attachStatusPrefix` "Because X, ..." framing instead of a malformed subject.
-- **Known gap, not in scope**: sentences inside legislative-findings sections still split (e.g. a sentence describing a hardship residents face can read as an obligation on residents). Identifying findings sections is separate, unvalidated work.
-
----
-
-## Known pipeline limitations — confirmed, not fixable without scoped pipeline changes
-
-- **"May [date]"** — month "May" triggers modal substitution before the temporal parser can protect date context.
-- **"shall be construed"** — misidentifies as wrong modal frame.
-
----
+The dashboard uses the analysis from GET /api/wa-bill-text, implemented in lib/legislation. See DESIGN.md for the six-layer contracts and TESTING.md for the saved-record acceptance suite. The POST /api/plain-meaning units input remains the external TCS integration contract. Its renderer and regression scripts live under lib/plain-meaning and scripts respectively.
 
 ## Git and branch conventions
 
@@ -164,11 +60,8 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 ### wa-bill-text exports fetchBillTextData for direct use
 `api/wa-bill-text.js` exports a named function `fetchBillTextData(billNumber, biennium)` in addition to its default HTTP handler. This is the same logic the handler runs — HTML fetch, `(( ))` strip, section split — but callable without HTTP. Use it when another module needs bill text data during a single request.
 
-### wa-bill-selection uses fetchBillTextData directly — no HTTP self-call
-`api/wa-bill-selection.js` imports `fetchBillTextData` from `./wa-bill-text.js` and calls it directly. There is no `getBaseUrl` / self-referential HTTP fetch. Do not reintroduce an HTTP self-call here.
-
-### legislation.html: bill text fetched once per load, shared via Promise
-`legislation.html` uses `makeBillTextPromise(record)` to create a single `fetch` Promise for the bill text endpoint. Both `loadBillText` and `loadBillPlainSummary` receive this Promise as `textDataPromise` and `await` it. The underlying HTTP request fires once; both consumers share the resolved value. The selection fetch inside `loadBillText` is fire-and-forget (not awaited).
+### The bill view shares the source analysis
+Both the summary and section display read the single bill-text response. The former selection endpoint returns 410.
 
 ---
 
@@ -176,19 +69,15 @@ Every handler that accepts user-supplied bill input uses a local `extractBillNum
 
 `data/wa/bill-index.json` — the search index consumed by `/api/wa-bill-search`. Generated by `scripts/populate-bill-index.js`.
 
-- **Run from a network-permitted environment** — `wslwebservices.leg.wa.gov` returns 403 from Render's container. Run the script locally or from CI with outbound access: `node scripts/populate-bill-index.js`.
 - **Per-bill fields in the index**: `bill_id_display`, `bill_id_normalized`, `bill_number`, `chamber`, `title`, `legal_title`, `session`, `status`, `sponsor`, `introducedDate`, `historyLine`, `committee`, `source_url`, `detail_api_path`. The `sponsor`, `introducedDate`, `historyLine`, and `committee` fields are populated from the WA Legislature XML API during the populate run.
 - **`mapRecord()` in `wa-bill-search.js`** passes `sponsor`, `introducedDate`, `historyLine`, `committee`, and `legal_title` through to the search API response. `legislation.html` uses these as fallbacks when the live detail API is unavailable.
-- **`data/wa/test-bills.json`'s `noDocumentBills`** lists bill numbers confirmed, repeatedly, to have no HTML bill document at all (currently five Senate Gubernatorial Appointment records: 9241–9245) — `scripts/test-bills.js` excludes them from the round-robin sample pool the same way it excludes sentinels, since `wa-bill-text` fails before any check can run and they'd otherwise sit "untested" forever. This is not a blanket exclusion of the whole SGA range (9000–9999) — only numbers with confirmed repeated failures are listed; other SGA bills, like sentinel 9117, do return a document.
 
 ---
 
 ## Validation and compliance
 
 - **No accuracy claim.** Output accuracy has never been measured. Do not add a confidence level, a margin of error, an accuracy percentage, or the word "validated" applied to output correctness anywhere in this repository. A claim of that kind requires a run that produced it, and no such run exists.
-- `scripts/test-bills.js` runs five structural checks (C1, C4, C5, C6, L1) over bills walked in fixed numeric order from a saved cursor. This is systematic coverage, not random sampling.
-- What those checks verify: output is non-empty, contains no known formatting artifacts, has no duplicate paragraphs, every rendered sentence's anchor text appears in the source section, and slicing the source at each recorded position reproduces the recorded text.
-- What they do not verify: that the plain-English meaning is correct. Only hand-checking a bill against its official source finds meaning errors.
+- npm test exercises saved official records and focused input-format cases. Historical corpus results are separate from current acceptance.
 - Corpus size: 2,517 distinct bills in the 2025–26 session. The index holds 2,808 listings because substitute stages (HB/SHB/2SHB) share one underlying bill.
 
 ---
@@ -229,52 +118,4 @@ No AI API keys are required or used. Redis failures are always silent (`try/catc
 
 ## Files map
 
-```
-server.js                        — Express server, route registration, static file serving
-                                   NOTE: 404 handler registered inside registerHandlers().then()
-                                   — must stay there to register after all API routes
-render.yaml                      — Render deployment config
-package.json                     — dependencies: express, @upstash/redis
-
-api/
-  health.js                      — GET  /api/health
-  openapi.js                     — GET  /api/openapi (full OpenAPI 3.1 spec)
-  plain-meaning.js               — POST /api/plain-meaning (deterministic, no AI)
-  wa-bill-search.js              — GET  /api/wa-bill-search
-  wa-bill-detail.js              — GET  /api/wa-bill-detail (has BILL_TYPE_RULES for routing)
-  wa-bill-documents.js           — GET  /api/wa-bill-documents
-  wa-bill-text.js                — GET  /api/wa-bill-text
-                                   ALSO exports fetchBillTextData(billNumber, biennium) for direct use
-  wa-bill-selection.js           — GET  /api/wa-bill-selection
-                                   imports fetchBillTextData directly — no HTTP self-call
-  wa-bill-plain-summary.js       — GET  /api/wa-bill-plain-summary (410 stub — replaced by /api/plain-meaning)
-  analyze.js                     — POST /api/analyze (410 stub — replaced by /api/plain-meaning)
-
-lib/
-  plain-meaning/
-    pipeline.js                  — 9-layer deterministic pipeline (runPipeline)
-                                   includes pre-pipeline section type classification
-    renderer.js                  — scope-lens template renderer (renderISC, renderUnit)
-                                   English-only — produces plain meaning from legalese, no translation
-  synonymMap.json                — termMap (word → RCW titles) + parentTerms (phrase → plain word)
-  wa-adapter/
-    index.js                     — WA Legislature API adapter (getNormalizedBill)
-                                   calls fetchFromLiveApi directly — no local file candidates
-
-data/
-  wa/
-    bill-index.json              — bill search index; run populate-bill-index.js to regenerate
-    bill-corpus.json             — full bill text corpus for phrase scanning and validation;
-                                   not present in repo by default — generated by build-bill-corpus.js workflow
-
-index.html                       — dashboard home
-legislation.html                 — bill reader (search, plain meaning, sections)
-                                   uses makeBillTextPromise() to share one fetch across consumers
-                                   Last Action field removed — redundant with Where Is This Bill Now
-voting.html                      — voting resources
-scripts/populate-bill-index.js   — build-time script; fetches bill metadata from WA Legislature API, no AI
-                                   must be run from a network-permitted environment (not Render)
-scripts/build-bill-corpus.js     — one-time corpus builder; fetches full text for all 2,808 bills
-                                   via fetchBillTextData, writes data/wa/bill-corpus.json.
-                                   Run from GitHub Actions only — not from Render.
-```
+See README.md and DESIGN.md for the API entry points and source-anchored parser.
