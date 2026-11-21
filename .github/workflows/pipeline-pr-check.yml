@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'lib/plain-meaning/**'
+      - '.github/workflows/pipeline-pr-check.yml'
+      - 'scripts/test-duty-source-trace.js'
       - 'scripts/test-bills.js'
       - 'data/wa/test-bills.json'
 
@@ -22,6 +24,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      - name: Verify rendered duty source trace
+        run: node scripts/test-duty-source-trace.js
 
       - name: Install dependencies
         run: npm ci
