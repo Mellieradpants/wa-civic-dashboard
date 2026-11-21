@@ -32,7 +32,7 @@ export default async function handler(req, res) {
     return res.status(400).json({
       message: "Provide text (raw string) or units (pre-processed ISC array).",
       schema: {
-        text: "string — bill or policy text; runs the full 10-layer pipeline",
+        text: "string — bill or policy text; runs the full 9-layer pipeline",
         units:
           "array — pre-processed ISC output from TCS; skips pipeline, goes straight to renderer",
       },
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 
     if (units) {
       // Primary path: pre-processed ISC units from the TCS Python pipeline.
-      // Caller has already run the 10-layer pipeline; we go straight to the renderer.
+      // Caller has already run the 9-layer pipeline; we go straight to the renderer.
       iscOutput = { units };
     } else {
       // Fallback only: raw text triggers the full JS pipeline internally.

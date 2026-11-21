@@ -234,7 +234,7 @@ function buildSpec(baseUrl) {
           operationId: "generatePlainMeaning",
           summary: "Generate plain-language sentences (deterministic, no AI)",
           description:
-            "Runs text through the 10-layer parsing pipeline (5WIH → SSE → CFS → LNS → AAC → TPS → SJM → MPS → RDS → ISC) then applies scope-lens sentence templates to produce plain-meaning output. No AI calls. Accepts raw text or pre-processed ISC units from the TCS pipeline.",
+            "Runs text through the 9-layer parsing pipeline (5WIH → SSE → LNS → AAC → TPS → SJM → MPS → RDS → ISC) then applies scope-lens sentence templates to produce plain-meaning output. No AI calls. Accepts raw text or pre-processed ISC units from the TCS pipeline.",
           requestBody: {
             required: true,
             content: {
@@ -462,7 +462,7 @@ function buildSpec(baseUrl) {
                 text: {
                   type: "string",
                   maxLength: 50000,
-                  description: "Raw bill or policy text. The full 10-layer pipeline runs on this input.",
+                  description: "Raw bill or policy text. The full 9-layer pipeline runs on this input.",
                 },
               },
             },

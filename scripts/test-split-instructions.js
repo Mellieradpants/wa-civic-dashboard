@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Regression suite for the "and"-joined two-instruction split (L5 AAC) — a
+// Regression suite for the "and"-joined two-instruction split (L4 AAC) — a
 // fixed set of real, bill-derived sentences with confirmed-correct answers,
 // independent of the bill-sampling harness (scripts/test-bills.js). Mirrors
 // scripts/test-modal-classifier.js's approach: runs the real, exported
